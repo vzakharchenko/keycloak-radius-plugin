@@ -1,0 +1,17 @@
+version: 2 # use CircleCI 2.0
+jobs:
+  build:
+    working_directory: ~/radius-plugin # directory where steps will run
+
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:11.0.2-node
+    environment:
+      COVERALLS_REPO_TOKEN: 2xA4TIqqxVf1yNknI6CCrgmReVBMIc168
+
+    steps: # a collection of executable commands
+
+      - checkout # check out source code to working directory
+
+      - run:
+          name: build and test plugins
+          command: cd keycloak-plugins && mvn clean install -Dcoveralls=true -DrepoToken=${COVERALLS_REPO_TOKEN}

@@ -29,6 +29,7 @@ keycloak.json
 .env.json
 storage.json
 .idea/
+target/
 public
 
 .settings
