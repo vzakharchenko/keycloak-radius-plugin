@@ -3,7 +3,7 @@ package ua.zaskarius.keycloak.plugins.radius.configuration;
 public final class RadiusConfigHelper {
 
     private static IRadiusConfiguration
-            configuration = new FlowRadiusConfiguration();
+            configuration = new DBRadiusConfiguration();
 
     private RadiusConfigHelper() {
     }
@@ -15,4 +15,6 @@ public final class RadiusConfigHelper {
     public static void setFlowConfiguration(IRadiusConfiguration flowConfiguration) {
         configuration = flowConfiguration;
     }
+
+
 }

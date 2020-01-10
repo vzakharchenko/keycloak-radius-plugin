@@ -1,13 +1,10 @@
 package ua.zaskarius.keycloak.plugins.radius.configuration;
 
 
+import org.keycloak.models.*;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusCommonSettings;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProviderFactory;
-import org.keycloak.models.AuthenticationExecutionModel;
-import org.keycloak.models.AuthenticationFlowModel;
-import org.keycloak.models.AuthenticatorConfigModel;
-import org.keycloak.models.RealmModel;
 
 import java.util.*;
 
@@ -65,9 +62,14 @@ public class FlowRadiusConfiguration implements IRadiusConfiguration {
     }
 
     @Override
+    public RadiusServerSettings getRadiusSettings(KeycloakSession session) {
+       return null;
+    }
+
+    @Override
     public RadiusCommonSettings getCommonSettings(RealmModel realm) {
         Map<String, String> config = getConfig(realm,
-                MIKROTIK_SETTINGS, RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS);
+                RADIUS_SETTINGS, RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS);
 
         RadiusCommonSettings mikrotikSetting = new RadiusCommonSettings();
         String provider = config.get(RadiusCommonSettingFactory.RADIUS_PROVIDERS);
@@ -93,7 +95,7 @@ public class FlowRadiusConfiguration implements IRadiusConfiguration {
     @Override
     public RadiusServerSettings getRadiusSettings(RealmModel realm) {
         Map<String, String> config = getConfig(realm,
-                MIKROTIK_SETTINGS, RadiusSettingFactory.RADIUS_SETTINGS);
+                RADIUS_SETTINGS, RadiusSettingFactory.RADIUS_SETTINGS);
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setSecret(config.get(RadiusSettingFactory.RADIUS_SERVER_SECRET));
         radiusServerSettings.setUrl(Arrays.asList(Objects.toString(config
@@ -108,6 +110,11 @@ public class FlowRadiusConfiguration implements IRadiusConfiguration {
         return commonSettings.isUseRadius();
     }
 
+    @Override
+    public boolean isUsedRadius(KeycloakSession session) {
+        return true;
+    }
+
     public List<String> getExecutions() {
         return Arrays.asList(RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS,
                 RadiusSettingFactory.RADIUS_SETTINGS);
@@ -116,7 +123,7 @@ public class FlowRadiusConfiguration implements IRadiusConfiguration {
     @Override
     public boolean init(RealmModel realmModel) {
         boolean changed = false;
-        AuthenticationFlowModel flow = getFlow(realmModel, MIKROTIK_SETTINGS);
+        AuthenticationFlowModel flow = getFlow(realmModel, RADIUS_SETTINGS);
         if (flow == null) {
             changed = true;
             AuthenticationFlowModel authenticationFlowModel = new AuthenticationFlowModel();
@@ -128,7 +135,7 @@ public class FlowRadiusConfiguration implements IRadiusConfiguration {
                     .addAuthenticationFlow(authenticationFlowModel);
 
             flow = new AuthenticationFlowModel();
-            flow.setAlias(MIKROTIK_SETTINGS);
+            flow.setAlias(RADIUS_SETTINGS);
             flow.setDescription("Radius Server Configuration");
             flow.setProviderId("form-flow");
             flow.setTopLevel(false);

@@ -1,16 +1,16 @@
 package ua.zaskarius.keycloak.plugins.radius;
 
+import org.keycloak.credential.CredentialModel;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.RealmModel;
+import org.keycloak.models.RoleModel;
+import org.keycloak.models.UserModel;
 import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusCommonSettings;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusConnectionProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider;
-import org.keycloak.credential.CredentialModel;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.RealmModel;
-import org.keycloak.models.RoleModel;
-import org.keycloak.models.UserModel;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -52,7 +52,7 @@ public final class RadiusHelper {
             UserModel userModel
     ) {
         RoleModel role = realm
-                .getRole(RadiusRadiusProvider.READ_MIKROTIK_PASSWORD);
+                .getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD);
         return role != null &&
                 userModel.isEnabled()
                 && userModel
@@ -67,7 +67,7 @@ public final class RadiusHelper {
         if (!hasPasswordReadPermission(realm, userModel)) {
             throw new IllegalStateException(userModel.getUsername() +
                     " does not have role " +
-                    RadiusRadiusProvider.READ_MIKROTIK_PASSWORD);
+                    RadiusRadiusProvider.READ_RADIUS_PASSWORD);
         }
         String currentPassword = getCurrentPassword(keycloakSession, realm, userModel);
         if (currentPassword == null) {

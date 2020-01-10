@@ -445,6 +445,7 @@
                         <exclude>**/client/*</exclude>
                         <exclude>**/Abstract**</exclude>
                         <exclude>**/MSCHAPHelper**</exclude>
+                        <exclude>**/KeycloakStaticHelper**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

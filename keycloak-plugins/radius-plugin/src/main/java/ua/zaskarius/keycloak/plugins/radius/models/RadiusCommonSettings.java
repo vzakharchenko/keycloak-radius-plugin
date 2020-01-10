@@ -1,7 +1,7 @@
 package ua.zaskarius.keycloak.plugins.radius.models;
 
 import java.util.List;
-
+@Deprecated
 public class RadiusCommonSettings {
     private String provider;
 

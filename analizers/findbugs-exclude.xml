@@ -68,4 +68,8 @@
     <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1"/>
     <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
   </Match>
+  <Match>
+    <Bug pattern="CFS_CONFUSING_FUNCTION_SEMANTICS"/>
+    <Class name="ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigJPA"/>
+  </Match>
 </FindBugsFilter>

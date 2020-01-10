@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider.READ_MIKROTIK_PASSWORD;
+import static ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider.READ_RADIUS_PASSWORD;
 
 public abstract class AbstractAuthentificatorAction implements AdminEventAction {
 
@@ -72,9 +72,9 @@ public abstract class AbstractAuthentificatorAction implements AdminEventAction 
         }
         realm.setAdminEventsEnabled(true);
         realm.setEventsEnabled(true);
-        RoleModel role = realm.getRole(READ_MIKROTIK_PASSWORD);
+        RoleModel role = realm.getRole(READ_RADIUS_PASSWORD);
         if (role == null) {
-            realm.addRole(READ_MIKROTIK_PASSWORD);
+            realm.addRole(READ_RADIUS_PASSWORD);
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class RadiusRadiusProvider implements IRadiusConnectionProvider {
 
-    public static final String READ_MIKROTIK_PASSWORD = "READ_MIKROTIK_PASSWORD";
+    public static final String READ_RADIUS_PASSWORD = "READ_RADIUS_PASSWORD";
 
     @Override
     public void createIfNotExists(RealmModel realmModel, UserModel userModel, String password) {

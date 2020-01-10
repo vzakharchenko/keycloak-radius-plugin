@@ -1,12 +1,12 @@
 package ua.zaskarius.keycloak.plugins.radius.transaction;
 
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.services.managers.AuthenticationManager;
 import org.testng.annotations.Test;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class KeycloakRadiusUtilsTest extends AbstractRadiusTest {
 
@@ -54,7 +54,7 @@ public class KeycloakRadiusUtilsTest extends AbstractRadiusTest {
                     }
                 });
         assertNull(res);
-        verify(keycloakTransactionManager,never()).rollback();
+        verify(keycloakTransactionManager, never()).rollback();
         verify(keycloakTransactionManager).rollback();
     }
 
@@ -66,6 +66,16 @@ public class KeycloakRadiusUtilsTest extends AbstractRadiusTest {
                     throw new IllegalStateException("test");
                 });
         assertNull(res);
-        verify(keycloakTransactionManager,never()).rollback();
+        verify(keycloakTransactionManager, never()).rollback();
+    }
+
+    @Test
+    public void testGetKeycloakHelper() {
+        KeycloakHelper keycloakHelper = KeycloakRadiusUtils.getKeycloakHelper();
+        assertNotNull(keycloakHelper);
+        AuthenticationManager.AuthResult authResult = keycloakHelper.getAuthResult(session);
+        assertNotNull(authResult);
+        assertEquals(authResult.getUser(), userModel);
+        assertEquals(authResult.getSession(), userSessionModel);
     }
 }

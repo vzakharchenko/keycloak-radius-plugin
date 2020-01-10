@@ -64,7 +64,7 @@ public class FlowConfigurationTest extends AbstractRadiusTest {
         );
         commonExecutionModel = new AuthenticationExecutionModel();
         radiusExecutionModel = new AuthenticationExecutionModel();
-        authenticationFlowModel.setAlias(IRadiusConfiguration.MIKROTIK_SETTINGS);
+        authenticationFlowModel.setAlias(IRadiusConfiguration.RADIUS_SETTINGS);
         authenticationFlowModel.setId(FLOW_ID);
         radiusExecutionModel.setFlowId(FLOW_ID);
         commonExecutionModel.setFlowId(FLOW_ID);
@@ -91,7 +91,7 @@ public class FlowConfigurationTest extends AbstractRadiusTest {
     public void testGetFlow() {
         assertEquals(flowConfiguration
                 .getFlow(realmModel,
-                        IRadiusConfiguration.MIKROTIK_SETTINGS), authenticationFlowModel);
+                        IRadiusConfiguration.RADIUS_SETTINGS), authenticationFlowModel);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class FlowConfigurationTest extends AbstractRadiusTest {
     @Test
     public void testGetConfig() {
         Map<String, String> config = flowConfiguration
-                .getConfig(realmModel, IRadiusConfiguration.MIKROTIK_SETTINGS, RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS);
+                .getConfig(realmModel, IRadiusConfiguration.RADIUS_SETTINGS, RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS);
         assertEquals(config.get(RadiusCommonSettingFactory.RADIUS_PROVIDERS), "provider");
         assertEquals(config.get(RadiusCommonSettingFactory.USE_RADIUS), "true");
         assertEquals(config.get(RadiusCommonSettingFactory.RADIUS_CLIENTS), "111.111.111.111,222.222.222.222");
@@ -141,7 +141,7 @@ public class FlowConfigurationTest extends AbstractRadiusTest {
     @Test
     public void testGetConfigFlowExecutionNull() {
         Map<String, String> config = flowConfiguration
-                .getConfig(realmModel, IRadiusConfiguration.MIKROTIK_SETTINGS, "Execution null");
+                .getConfig(realmModel, IRadiusConfiguration.RADIUS_SETTINGS, "Execution null");
         assertTrue(config.isEmpty());
     }
 
@@ -151,7 +151,7 @@ public class FlowConfigurationTest extends AbstractRadiusTest {
         when(realmModel.getAuthenticatorConfigById(CONFIG_ID))
                 .thenReturn(null);
         Map<String, String> config = flowConfiguration
-                .getConfig(realmModel, IRadiusConfiguration.MIKROTIK_SETTINGS, RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS);
+                .getConfig(realmModel, IRadiusConfiguration.RADIUS_SETTINGS, RadiusCommonSettingFactory.RADIUS_PROVIDER_SETTINGS);
         assertTrue(config.isEmpty());
     }
 

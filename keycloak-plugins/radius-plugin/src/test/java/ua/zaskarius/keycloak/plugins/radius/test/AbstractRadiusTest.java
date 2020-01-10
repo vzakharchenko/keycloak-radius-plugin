@@ -1,19 +1,13 @@
 package ua.zaskarius.keycloak.plugins.radius.test;
 
-import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
-import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
-import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
-import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocolFactory;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
-import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.keycloak.common.ClientConnection;
+import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.*;
 import org.keycloak.provider.Provider;
+import org.keycloak.representations.AccessToken;
+import org.keycloak.services.managers.AuthenticationManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
@@ -21,9 +15,24 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.tinyradius.dictionary.DictionaryParser;
 import org.tinyradius.dictionary.WritableDictionary;
+import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
+import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
+import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusConfigModel;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocolFactory;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
+import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.server.KeycloakRadiusServer;
+import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakHelper;
+import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakRadiusUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
 import java.security.Security;
 import java.util.*;
@@ -81,12 +90,30 @@ public abstract class AbstractRadiusTest {
     protected AuthProtocolFactory radiusAuthProtocolFactory;
     @Mock
     protected AuthProtocol authProtocol;
+    @Mock
+    protected KeycloakContext keycloakContext;
+
+    @Mock
+    protected KeycloakUriInfo keycloakUriInfo;
+    @Mock
+    protected HttpHeaders httpHeaders;
+
+    @Mock
+    protected KeycloakHelper keycloakHelper;
+
+    @Mock
+    protected EntityManager entityManager;
+
+    @Mock
+    protected TypedQuery query;
 
     protected WritableDictionary realDictionary;
 
     protected RadiusUserInfo radiusUserInfo;
 
     protected EventBuilder eventBuilder;
+    protected AccessToken accessToken;
+
 
     protected Map<Class, Provider> providerByClass = new HashMap<>();
 
@@ -103,6 +130,10 @@ public abstract class AbstractRadiusTest {
         try {
             RadiusConfigHelper.setFlowConfiguration(configuration);
             RadiusAuthProtocolFactory.setInstance(radiusAuthProtocolFactory);
+            KeycloakRadiusUtils.setKeycloakHelper(keycloakHelper);
+            when(keycloakHelper.getAuthResult(session))
+                    .thenReturn(new AuthenticationManager.AuthResult(userModel,
+                            userSessionModel, accessToken));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -124,7 +155,13 @@ public abstract class AbstractRadiusTest {
         reset(clientConnection);
         reset(radiusAuthProtocolFactory);
         reset(authProtocol);
+        reset(keycloakContext);
+        reset(httpHeaders);
+        reset(keycloakUriInfo);
+        reset(entityManager);
+        reset(query);
         providerByClass.clear();
+        accessToken = new AccessToken();
         Answer<Object> providerAnswer = invocation -> {
             Object parameter = invocation.getArguments()[0];
             Class<? extends Provider> classToMock = (Class<? extends Provider>) parameter;
@@ -153,6 +190,12 @@ public abstract class AbstractRadiusTest {
         when(session.getProvider(any(), anyString())).thenAnswer(providerAnswer);
         when(session.getAllProviders(any())).thenAnswer(providerAnswers);
         when(session.getTransactionManager()).thenReturn(keycloakTransactionManager);
+        when(session.getContext()).thenReturn(keycloakContext);
+        when(keycloakContext.getRealm()).thenReturn(realmModel);
+        when(keycloakContext.getConnection()).thenReturn(clientConnection);
+        when(keycloakContext.getClient()).thenReturn(clientModel);
+        when(keycloakContext.getUri()).thenReturn(keycloakUriInfo);
+        when(keycloakContext.getRequestHeaders()).thenReturn(httpHeaders);
         radiusUserInfo = new RadiusUserInfo();
         radiusUserInfo.setUserModel(userModel);
         radiusUserInfo.setRealmModel(realmModel);
@@ -179,7 +222,7 @@ public abstract class AbstractRadiusTest {
         when(realmModel.getName()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.getId()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.isEventsEnabled()).thenReturn(false);
-        when(realmModel.getRole(RadiusRadiusProvider.READ_MIKROTIK_PASSWORD))
+        when(realmModel.getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD))
                 .thenReturn(radiusRole);
         when(session.users()).thenReturn(userProvider);
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(userModel);
@@ -210,6 +253,14 @@ public abstract class AbstractRadiusTest {
         when(authProtocol.getRealm()).thenReturn(realmModel);
         when(authProtocol.verifyPassword(anyString())).thenReturn(true);
         when(authProtocol.isValid(any())).thenReturn(true);
+
+        JpaConnectionProvider jpaConnectionProvider = session
+                .getProvider(JpaConnectionProvider.class);
+        when(jpaConnectionProvider.getEntityManager()).thenReturn(entityManager);
+        when(entityManager.createQuery(anyString(), any())).thenReturn(query);
+        when(query.getResultList()).thenReturn(Collections
+                .singletonList(createRadiusConfigModel()));
+
         eventBuilder = new EventBuilder(realmModel, session, clientConnection);
         List<?> objects = resetMock();
         if (objects != null) {
@@ -242,5 +293,16 @@ public abstract class AbstractRadiusTest {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public RadiusConfigModel createRadiusConfigModel(){
+        RadiusConfigModel configModel = new RadiusConfigModel();
+        configModel.setmDate(new Date(1L));
+        configModel.setmUserId("111");
+        configModel.setAccountPort(111);
+        configModel.setAuthPort(11);
+        configModel.setRadiusShared("234");
+        configModel.setStart(true);
+        return configModel;
     }
 }

@@ -22,7 +22,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testHasPasswordReadPermission_Role_Does_not_exists() {
-        when(realmModel.getRole(RadiusRadiusProvider.READ_MIKROTIK_PASSWORD)).thenReturn(null);
+        when(realmModel.getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD)).thenReturn(null);
         assertFalse(RadiusHelper.hasPasswordReadPermission(realmModel, userModel));
     }
 
@@ -56,9 +56,9 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test(expectedExceptions = IllegalStateException.class,
             expectedExceptionsMessageRegExp = "USER does not have role "
-                    + RadiusRadiusProvider.READ_MIKROTIK_PASSWORD)
+                    + RadiusRadiusProvider.READ_RADIUS_PASSWORD)
     public void testPasswordWithoutPermission() {
-        when(realmModel.getRole(RadiusRadiusProvider.READ_MIKROTIK_PASSWORD)).thenReturn(null);
+        when(realmModel.getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD)).thenReturn(null);
         RadiusHelper.getPassword(session, realmModel, userModel);
     }
 
@@ -80,7 +80,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testCurrentPasswordWithoutPermission() {
-        when(realmModel.getRole(RadiusRadiusProvider.READ_MIKROTIK_PASSWORD)).thenReturn(null);
+        when(realmModel.getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD)).thenReturn(null);
         assertNull(RadiusHelper.getCurrentPassword(session, realmModel, userModel));
     }
 
