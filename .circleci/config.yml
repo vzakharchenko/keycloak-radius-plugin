@@ -5,8 +5,6 @@ jobs:
 
     docker: # run the steps with Docker
       - image: circleci/openjdk:11.0.2-node
-    environment:
-      COVERALLS_REPO_TOKEN: 2xA4TIqqxVf1yNknI6CCrgmReVBMIc168
 
     steps: # a collection of executable commands
 
@@ -14,4 +12,4 @@ jobs:
 
       - run:
           name: build and test plugins
-          command: cd keycloak-plugins && mvn clean install -Dcoveralls=true -DrepoToken=${COVERALLS_REPO_TOKEN}
+          command: cd keycloak-plugins && mvn clean install && mvn coveralls:report -Dcoveralls=true -DrepoToken=$COVERALLS_TOKEN
