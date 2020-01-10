@@ -12,4 +12,4 @@ jobs:
 
       - run:
           name: build and test plugins
-          command: cd keycloak-plugins && mvn clean install && mvn coveralls:report -Dcoveralls=true -DrepoToken=$COVERALLS_TOKEN
+          command: cd keycloak-plugins && mvn clean install && mvn coveralls:report -Dcoveralls=false -DrepoToken=$COVERALLS_TOKEN
