@@ -11,7 +11,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -21,3 +20,71 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+.DS_STORE
+
+node_modules
+package-lock.json
+keycloak.json
+.env.json
+storage.json
+.idea/
+public
+
+.settings
+.metadata
+
+# temp/backup files #
+#####################
+*~
+*.tmp
+.*.swp
+junk
+vimsession
+tags
+tmp/
+*/tmp/*
+
+# compiled source #
+###################
+*.swf
+*.swc
+*.com
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+
+*.zip
+
+# Logs and databases #
+######################
+#*.sql
+*.sqliteqq
+*.trc
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+!uimodules/base/uifw/ui/images/icons
+Thumbs.db
+
+*.iml
+*.idea
+.env
+keycloak.properties
+keycloak.json
+

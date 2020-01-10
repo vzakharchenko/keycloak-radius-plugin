@@ -1,0 +1,50 @@
+# MikroTik vendor specific dictionary
+# Copyright (C) MikroTikls, SIA
+#
+# You may freely redistribute and use this software or any part of it in source
+# and/or binary forms, with or without modification for any purposes without
+# limitations, provided that you respect the following statement:
+#
+# This software is provided 'AS IS' without a warranty of any kind, expressed or
+# implied, including, but not limited to, the implied warranty of
+# merchantability and fitness for a particular purpose. In no event shall
+# MikroTikls SIA be liable for direct or indirect, incidental, consequential or
+# other damages that may result from the use of this software, including, but
+# not limited to, loss of data, time and (or) profits.
+#
+# $Id: dictionary.mikrotik,v 1.8 2019/12/20 11:02:37 strods Exp $
+#
+# MikroTik Attributes
+
+VENDOR          14988   Mikrotik
+
+VENDORATTR   14988    Mikrotik-Recv-Limit             1   integer
+VENDORATTR   14988    Mikrotik-Xmit-Limit             2   integer
+VENDORATTR   14988    Mikrotik-Group                  3   string
+VENDORATTR   14988    Mikrotik-Wireless-Forward       4   integer
+VENDORATTR   14988    Mikrotik-Wireless-Skip-Dot1x    5   integer
+VENDORATTR   14988    Mikrotik-Wireless-Enc-Algo      6   integer
+VENDORATTR   14988    Mikrotik-Wireless-Enc-Key       7   string
+VENDORATTR   14988    Mikrotik-Rate-Limit             8   string
+VENDORATTR   14988    Mikrotik-Realm                  9   string
+VENDORATTR   14988    Mikrotik-Host-IP                10  ipaddr
+VENDORATTR   14988    Mikrotik-Mark-Id                11  string
+VENDORATTR   14988    Mikrotik-Advertise-URL          12  string
+VENDORATTR   14988    Mikrotik-Advertise-Interval     13  integer
+VENDORATTR   14988    Mikrotik-Recv-Limit-Gigawords   14  integer
+VENDORATTR   14988    Mikrotik-Xmit-Limit-Gigawords   15  integer
+VENDORATTR   14988    Mikrotik-Wireless-PSK           16  string
+VENDORATTR   14988    Mikrotik-Total-Limit            17  integer
+VENDORATTR   14988    Mikrotik-Total-Limit-Gigawords  18  integer
+VENDORATTR   14988    Mikrotik-Address-List           19  string
+VENDORATTR   14988    Mikrotik-Wireless-MPKey         20  string
+VENDORATTR   14988    Mikrotik-Wireless-Comment       21  string
+VENDORATTR   14988    Mikrotik-Delegated-IPv6-Pool    22  string
+VENDORATTR   14988    Mikrotik-DHCP-Option-Set        23  string
+VENDORATTR   14988    Mikrotik-DHCP-Option-Param-STR1 24  string
+VENDORATTR   14988    Mikortik-DHCP-Option-Param-STR2 25  string
+VENDORATTR   14988    Mikrotik-Wireless-VLANID        26  integer
+VENDORATTR   14988    Mikrotik-Wireless-VLANIDtype    27  integer
+VENDORATTR   14988    Mikrotik-Wireless-Minsignal     28  string
+VENDORATTR   14988    Mikrotik-Wireless-Maxsignal     29  string
+VENDORATTR   14988    Mikrotik-Switching-Filter       30  string

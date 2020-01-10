@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="DataHub Rules"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+  <description>Remove rules</description>
+
+
+  <description>
+    Mikrotik PMD rule set
+  </description>
+  <exclude-pattern>.*/src/*/.*</exclude-pattern>
+  <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+    <properties>
+      <property name="problemDepth" value="5" />
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ExcessiveImports">
+    <properties>
+      <property name="minimum" value="35.0" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/TooManyMethods">
+    <properties>
+      <property name="maxmethods" value="14" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/bestpractices.xml">
+    <exclude name="AbstractClassWithoutAbstractMethod"/>
+    <exclude name="GuardLogStatement"/>
+    <exclude name="AccessorMethodGeneration"/>
+  </rule>
+  <rule ref="category/java/codestyle.xml">
+    <exclude name="AtLeastOneConstructor"/>
+    <exclude name="UnnecessaryAnnotationValueElement"/>
+    <exclude name="MethodArgumentCouldBeFinal"/>
+    <exclude name="LocalVariableCouldBeFinal"/>
+    <exclude name="ShortVariable"/>
+    <exclude name="ShortClassName"/>
+    <exclude name="LongVariable"/>
+    <exclude name="FieldNamingConventions"/>
+    <exclude name="MethodNamingConventions"/>
+    <exclude name="FormalParameterNamingConventions"/>
+    <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+    <exclude name="GenericsNaming"/>
+    <exclude name="ConfusingTernary"/>
+    <exclude name="OnlyOneReturn"/>
+    <exclude name="UselessParentheses"/>
+  </rule>
+  <rule ref="category/java/design.xml">
+    <exclude name="DataClass"/>
+    <exclude name="LawOfDemeter"/>
+    <exclude name="AvoidCatchingGenericException"/>
+    <exclude name="AvoidRethrowingException"/>
+    <exclude name="ExcessivePublicCount"/>
+    <exclude name="UseObjectForClearerAPI"/>
+    <exclude name="ExcessiveMethodLength"/>
+    <exclude name="NcssCount"/>
+<!--    <exclude name="CyclomaticComplexity"/>-->
+<!--    <exclude name="NPathComplexity"/>-->
+    <exclude name="AbstractClassWithoutAnyMethod"/>
+  </rule>
+  <rule ref="category/java/errorprone.xml">
+    <exclude name="BeanMembersShouldSerialize"/>
+    <exclude name="DataflowAnomalyAnalysis"/>
+    <exclude name="MissingSerialVersionUID"/>
+<!--    <exclude name="AvoidFieldNameMatchingMethodName"/>-->
+  </rule>
+  <rule ref="category/java/multithreading.xml">
+    <exclude name="UseConcurrentHashMap"/>
+  </rule>
+  <rule ref="category/java/performance.xml">
+    <exclude name="AvoidFileStream"/>
+    <exclude name="AvoidInstantiatingObjectsInLoops"/>
+<!--    <exclude name="RedundantFieldInitializer"/>-->
+  </rule>
+  <rule ref="category/java/security.xml"/>
+
+</ruleset>

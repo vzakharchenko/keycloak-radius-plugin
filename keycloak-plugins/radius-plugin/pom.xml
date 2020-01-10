@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>plugins</artifactId>
+        <groupId>ua.in.zaskarius.keycloak</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>radius-plugin</artifactId>
+
+
+    <properties>
+        <checkStyleLocation>../../analizers</checkStyleLocation>
+        <pmdLocation>${basedir}/../../analizers/</pmdLocation>
+        <findBugsLocation>${basedir}/../../analizers/</findBugsLocation>
+    </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.tinyradius/tinyradius -->
+        <!-- https://mvnrepository.com/artifact/com.hynnet/tinyradius -->
+        <!-- https://mvnrepository.com/artifact/com.globalreachtech/tinyradius-netty -->
+        <dependency>
+            <groupId>com.globalreachtech</groupId>
+            <artifactId>tinyradius-netty</artifactId>
+            <version>1.0.19</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.64</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
+    </dependencies>
+
+</project>
