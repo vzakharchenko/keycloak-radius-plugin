@@ -1,10 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.provider;
 
-import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusConnectionProvider;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusProviderFactory;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 import org.testng.annotations.Test;
+import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProviderFactory;
+import ua.zaskarius.keycloak.plugins.radius.radius.server.RadiusServerProviderFactory;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class KeycloakRadiusServerProviderFactoryTest extends AbstractRadiusTest {
-    private RadiusRadiusProviderFactory providerFactory = new RadiusRadiusProviderFactory();
+    private RadiusServerProviderFactory providerFactory = new RadiusServerProviderFactory();
 
 
     @Override
@@ -25,7 +26,7 @@ public class KeycloakRadiusServerProviderFactoryTest extends AbstractRadiusTest 
     public void testMethods() {
         providerFactory.close();
         assertNotNull(providerFactory.create(session));
-        assertEquals(providerFactory.getId(), RadiusRadiusProviderFactory.KEYCLOAK_RADIUS_SERVER);
+        assertEquals(providerFactory.getId(), RadiusServerProviderFactory.RADIUS_PROVIDER);
         providerFactory.init(null);
         providerFactory.close();
     }
@@ -35,15 +36,13 @@ public class KeycloakRadiusServerProviderFactoryTest extends AbstractRadiusTest 
         providerFactory.postInit(keycloakSessionFactory);
         ConfigurationScheduledTask instance = (ConfigurationScheduledTask)
                 ConfigurationScheduledTask.getInstance();
-        Map<Class<? extends IRadiusProviderFactory>,
-                IRadiusProviderFactory<? extends IRadiusConnectionProvider>>
+        Map<Class<? extends IRadiusServerProviderFactory>,
+                IRadiusServerProviderFactory<? extends IRadiusServerProvider>>
                 connectionProviderMap = instance.connectionProviderMap;
         assertEquals(connectionProviderMap.size(), 1);
-        IRadiusProviderFactory<? extends IRadiusConnectionProvider> providerFactory =
-                connectionProviderMap.get(RadiusRadiusProviderFactory.class);
+        IRadiusServerProviderFactory<? extends IRadiusServerProvider> providerFactory =
+                connectionProviderMap.get(RadiusServerProviderFactory.class);
         assertEquals(providerFactory, this.providerFactory);
-        assertEquals(instance.flowConfigurations.size(), 1);
-
 
 
     }

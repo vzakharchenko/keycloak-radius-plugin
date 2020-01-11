@@ -1,5 +1,8 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers;
 
+import org.keycloak.events.EventBuilder;
+import org.keycloak.events.EventType;
+import org.keycloak.models.*;
 import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
@@ -9,24 +12,17 @@ import ua.zaskarius.keycloak.plugins.radius.radius.handlers.clientconnection.Rad
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakRadiusUtils;
-import org.jboss.logging.Logger;
-import org.keycloak.events.EventBuilder;
-import org.keycloak.events.EventType;
-import org.keycloak.models.*;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-import static ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper.RADIUS_SESSION_PASSWORD;
 import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
+import static ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper.RADIUS_SESSION_PASSWORD;
 
 public class KeycloakSecretProvider implements IKeycloakSecretProvider {
-
-    private static final Logger LOGGER = Logger
-            .getLogger(KeycloakSecretProvider.class);
 
     private final KeycloakSessionFactory sessionFactory;
 
@@ -37,71 +33,9 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
     @Override
     public String getSharedSecret(InetSocketAddress address) {
         return KeycloakRadiusUtils.runJobInTransaction(sessionFactory,
-                threadSession -> {
-                    List<RealmModel> reams = getRealmsByShared(address, threadSession);
-                    if (reams.isEmpty()) {
-
-                        LOGGER.warn("Radius Realm does not found for host : " +
-                                address.getHostName());
-                        EventBuilder event = EventLoggerFactory
-                                .createMasterEvent(threadSession,
-                                        new RadiusClientConnection(address));
-                        event.event(EventType.LOGIN).detail(EventLoggerFactory.RADIUS_MESSAGE,
-                                "Shared Secret not found. ")
-                                .error("Shared Secret not found");
-                        return null;
-                    } else {
-                        RealmModel realm = reams.get(0);
-                        String secret = getSharedSecret(address, realm);
-                        if (secret != null) {
-                            EventBuilder event = EventLoggerFactory
-                                    .createEvent(threadSession, realm,
-                                            new RadiusClientConnection(address));
-                            event.event(EventType.LOGIN).detail(EventLoggerFactory.RADIUS_MESSAGE,
-                                    "Shared secret found.");
-                        }
-                        return secret;
-                    }
-                });
-
+                threadSession -> getSharedSecret(address, threadSession));
     }
 
-    public List<RealmModel> getRealmsByShared(InetSocketAddress address,
-                                              KeycloakSession localSession) {
-        List<RealmModel> realms = new ArrayList<>();
-        try {
-            RealmProvider provider = localSession.getProvider(RealmProvider.class);
-            for (RealmModel realm : provider.getRealms()) {
-                RadiusServerSettings radiusSettings = RadiusConfigHelper.getConfig()
-                        .getRadiusSettings(realm);
-
-                if (radiusSettings != null
-                        && radiusSettings.getUrl() != null &&
-                        RadiusConfigHelper.getConfig().isUsedRadius(realm)) {
-                    for (String url : radiusSettings.getUrl()) {
-                        if (Objects.equals(url,
-                                address.getAddress().getHostAddress())) {
-                            realms.add(realm);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("getSharedSecret error", e);
-            try {
-                EventBuilder event = EventLoggerFactory
-                        .createMasterEvent(localSession,
-                                new RadiusClientConnection(address));
-                event.event(EventType.LOGIN).detail(EventLoggerFactory.RADIUS_MESSAGE,
-                        "Secret Error .").error(e.getMessage());
-            } catch (RuntimeException ex) {
-                LOGGER.error("send event error", e);
-            } catch (Exception ex) {
-                LOGGER.error("send event error", e);
-            }
-        }
-        return realms;
-    }
 
     private List<String> getSessionPasswords(
             KeycloakSession keycloakSession,
@@ -171,7 +105,7 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
                         realm);
                 radiusUserInfo.setRadiusSecret(getSharedSecret(
                         address,
-                        realm));
+                        threadSession));
                 radiusUserInfo.setClientConnection(new RadiusClientConnection(address));
                 KeycloakSessionUtils.addRadiusUserInfo(threadSession, radiusUserInfo);
                 successInit = true;
@@ -187,18 +121,25 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
         return successInit;
     }
 
-    private String getSharedSecret(InetSocketAddress address,
-                                   RealmModel realm) {
-        RadiusServerSettings radiusSettings = RadiusConfigHelper
-                .getConfig()
-                .getRadiusSettings(realm);
-        if (radiusSettings.getUrl().contains(address
-                .getAddress()
-                .getHostAddress())) {
-            return radiusSettings.getSecret();
-        } else {
+    private String getSharedSecret(InetSocketAddress address, KeycloakSession session) {
+        InetAddress inetAddress = address
+                .getAddress();
+        if (inetAddress == null) {
             return null;
         }
+        String hostAddress = inetAddress
+                .getHostAddress();
+        RadiusServerSettings radiusSettings = RadiusConfigHelper
+                .getConfig()
+                .getRadiusSettings(session);
+        String secret;
+        if (radiusSettings.getAccessMap() != null) {
+            secret = radiusSettings.getAccessMap().get(hostAddress);
+            if (secret != null) {
+                return secret;
+            }
+        }
+        return radiusSettings.getSecret();
     }
 
     @Override

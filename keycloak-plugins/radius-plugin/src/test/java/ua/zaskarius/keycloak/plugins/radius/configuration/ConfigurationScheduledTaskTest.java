@@ -1,11 +1,12 @@
 package ua.zaskarius.keycloak.plugins.radius.configuration;
 
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusProviderFactory;
-import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
+import org.keycloak.models.RequiredActionProviderModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProviderFactory;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +18,9 @@ public class ConfigurationScheduledTaskTest extends AbstractRadiusTest {
             configurationScheduledTask =
             (ConfigurationScheduledTask) ConfigurationScheduledTask.getInstance();
     @Mock
-    private IRadiusProviderFactory connectionProviderFactory;
+    private IRadiusServerProviderFactory connectionProviderFactory;
     @Mock
-    private RadiusRadiusProvider connectionProvider;
+    private IRadiusServerProvider connectionProvider;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -28,10 +29,26 @@ public class ConfigurationScheduledTaskTest extends AbstractRadiusTest {
 
     @Test
     public void testRun() {
-        ConfigurationScheduledTask.addConfiguration(configuration);
+        when(connectionProvider.init(realmModel)).thenReturn(true);
         ConfigurationScheduledTask.addConnectionProviderMap(connectionProviderFactory);
         configurationScheduledTask.run(session);
-        verify(configuration).init(realmModel);
+        verify(connectionProvider).init(realmModel);
+
+    }
+
+    @Test
+    public void testRunNotChange() {
+        ConfigurationScheduledTask.addConnectionProviderMap(connectionProviderFactory);
+        configurationScheduledTask.run(session);
+        verify(connectionProvider).init(realmModel);
+
+    }
+
+    @Test(expectedExceptions = Exception.class)
+    public void testRunException() {
+        when(connectionProvider.init(realmModel)).thenThrow(new Exception());
+        ConfigurationScheduledTask.addConnectionProviderMap(connectionProviderFactory);
+        configurationScheduledTask.run(session);
         verify(connectionProvider).init(realmModel);
 
     }
@@ -39,7 +56,6 @@ public class ConfigurationScheduledTaskTest extends AbstractRadiusTest {
     @Test
     public void testRunWithoutConfigurations() {
         configurationScheduledTask.run(session);
-        verify(configuration, never()).init(realmModel);
         verify(connectionProvider, never()).init(realmModel);
     }
 

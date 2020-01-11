@@ -1,12 +1,12 @@
 package ua.zaskarius.keycloak.plugins.radius.mappers;
 
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusCommonSettings;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusConnectionProvider;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import org.keycloak.models.*;
 import org.keycloak.protocol.oidc.mappers.*;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.representations.IDToken;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +58,12 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
                             UserSessionModel userSession,
                             KeycloakSession keycloakSession,
                             ClientSessionContext clientSessionCtx) {
-        RealmModel realm = userSession.getRealm();
 
-        RadiusCommonSettings commonSettings = RadiusConfigHelper.getConfig()
-                .getCommonSettings(realm);
+        RadiusServerSettings commonSettings = RadiusConfigHelper.getConfig()
+                .getRadiusSettings(keycloakSession);
         if (commonSettings.isUseRadius()) {
-            IRadiusConnectionProvider provider = keycloakSession
-                    .getProvider(IRadiusConnectionProvider.class,
+            IRadiusServerProvider provider = keycloakSession
+                    .getProvider(IRadiusServerProvider.class,
                             commonSettings.getProvider());
             RadiusSessionPasswordManager radiusSessionPasswordManager =
                     RadiusSessionPasswordManager.getInstance();

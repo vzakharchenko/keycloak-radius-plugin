@@ -1,11 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.configuration;
 
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusConnectionProvider;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusProviderFactory;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.timer.ScheduledTask;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProviderFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,22 +17,15 @@ public final class ConfigurationScheduledTask implements ScheduledTask {
 
     private static final ConfigurationScheduledTask INSTANCE = new ConfigurationScheduledTask();
 
-    public Map<Class<? extends IRadiusConfiguration>, IRadiusConfiguration>
-            flowConfigurations = new HashMap<>();
-
-    public Map<Class<? extends IRadiusProviderFactory>,
-            IRadiusProviderFactory<? extends IRadiusConnectionProvider>>
+    public Map<Class<? extends IRadiusServerProviderFactory>,
+            IRadiusServerProviderFactory<? extends IRadiusServerProvider>>
             connectionProviderMap = new HashMap<>();
 
     private ConfigurationScheduledTask() {
     }
 
-    public static void addConfiguration(IRadiusConfiguration configuration) {
-        INSTANCE.flowConfigurations.put(configuration.getClass(), configuration);
-    }
-
     public static void addConnectionProviderMap(
-            IRadiusProviderFactory<? extends IRadiusConnectionProvider>
+            IRadiusServerProviderFactory<? extends IRadiusServerProvider>
                     connectionProvider) {
         INSTANCE.connectionProviderMap.put(connectionProvider.getClass(), connectionProvider);
     }
@@ -47,16 +40,9 @@ public final class ConfigurationScheduledTask implements ScheduledTask {
         LOGGER.info("Start Radius configuration job ");
         List<RealmModel> realms = session.realms().getRealms();
         for (RealmModel realm : realms) {
-            for (IRadiusConfiguration configuration : flowConfigurations.values()) {
-                boolean changed = configuration.init(realm);
-                if (changed) {
-                    LOGGER.info(" Radius configuration for Realm " + realm.getName()
-                            + " changed ");
-                }
-            }
-            for (IRadiusProviderFactory<? extends IRadiusConnectionProvider>
+            for (IRadiusServerProviderFactory<? extends IRadiusServerProvider>
                     connectionProvider : connectionProviderMap.values()) {
-                IRadiusConnectionProvider provider = connectionProvider.create(session);
+                IRadiusServerProvider provider = connectionProvider.create(session);
                 try {
                     boolean changed = provider.init(realm);
                     if (changed) {

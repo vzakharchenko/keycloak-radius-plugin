@@ -20,10 +20,6 @@ public class RadiusEventProvider extends AbstractRadiusEventProvider {
 
     public RadiusEventProvider(KeycloakSession session) {
         super(session);
-        adminEventActionMap.put(ResourceType.AUTHENTICATOR_CONFIG,
-                AuthentificatorConfigAction.class);
-        adminEventActionMap.put(ResourceType.AUTH_EXECUTION,
-                AuthentificatorExecutionAction.class);
     }
 
     @Override

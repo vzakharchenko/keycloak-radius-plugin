@@ -1,11 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers;
 
-import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
-import ua.zaskarius.keycloak.plugins.radius.test.ModelBuilder;
 import org.keycloak.models.RealmProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
+import ua.zaskarius.keycloak.plugins.radius.test.ModelBuilder;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
+import static ua.zaskarius.keycloak.plugins.radius.test.ModelBuilder.SHARED;
 
 public class KeycloakSecretProviderTest extends AbstractRadiusTest {
 
@@ -28,16 +29,16 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testSharedSecret() {
+    public void testIpSharedSecret() {
         String sharedSecret = keycloakSecretProvider.getSharedSecret(inetSocketAddress);
-        assertEquals(sharedSecret, ModelBuilder.SHARED);
+        assertEquals(sharedSecret, "ip_secret");
     }
 
     @Test
     public void testSharedSecretWrong() {
         String sharedSecret = keycloakSecretProvider
                 .getSharedSecret(new InetSocketAddress("111.111.111.111", 0));
-        assertNull(sharedSecret);
+        assertEquals(sharedSecret, SHARED);
     }
 
     @Test
@@ -52,7 +53,6 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
         when(authProtocol.getRealm()).thenReturn(null);
         assertFalse(keycloakSecretProvider
                 .init(inetSocketAddress, USER, authProtocol, session));
-
     }
 
     @Test

@@ -1,12 +1,10 @@
 package ua.zaskarius.keycloak.plugins.radius.test;
 
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusCommonSettings;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
-import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProviderFactory;
 import org.keycloak.credential.CredentialModel;
 
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class ModelBuilder {
 
@@ -16,7 +14,13 @@ public class ModelBuilder {
     public static RadiusServerSettings createRadiusServerSettings() {
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setSecret(SHARED);
-        radiusServerSettings.setUrl(Arrays.asList("127.0.0.1", IP));
+        HashMap<String, String> accessList = new HashMap<>();
+        accessList.put(IP,"ip_secret");
+        radiusServerSettings.setAccessMap(accessList);
+        radiusServerSettings.setProvider("testProvider");
+        radiusServerSettings.setUseRadius(true);
+        radiusServerSettings.setAccountPort(9813);
+        radiusServerSettings.setAuthPort(9812);
         return radiusServerSettings;
     }
 
@@ -39,15 +43,5 @@ public class ModelBuilder {
         credentialModel.setSecretData(secret);
         credentialModel.setCredentialData("{}");
         return credentialModel;
-    }
-
-    public static RadiusCommonSettings getRadiusCommonSettings() {
-        RadiusCommonSettings radiusCommonSettings = new RadiusCommonSettings();
-        radiusCommonSettings.setId("id");
-        radiusCommonSettings.setExecutionId("execId");
-        radiusCommonSettings.setProvider(RadiusRadiusProviderFactory
-                .KEYCLOAK_RADIUS_SERVER);
-        radiusCommonSettings.setUseRadius(true);
-        return radiusCommonSettings;
     }
 }

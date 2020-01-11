@@ -1,9 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.configuration;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public final class RadiusConfigHelper {
 
     private static IRadiusConfiguration
-            configuration = new DBRadiusConfiguration();
+            configuration = new FileRadiusConfiguration();
 
     private RadiusConfigHelper() {
     }
@@ -12,7 +14,8 @@ public final class RadiusConfigHelper {
         return configuration;
     }
 
-    public static void setFlowConfiguration(IRadiusConfiguration flowConfiguration) {
+    @VisibleForTesting
+    public static void setConfiguration(IRadiusConfiguration flowConfiguration) {
         configuration = flowConfiguration;
     }
 

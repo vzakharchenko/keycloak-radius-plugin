@@ -1,13 +1,13 @@
 package ua.zaskarius.keycloak.plugins.radius.mappers;
 
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusCommonSettings;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusConnectionProvider;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
-import ua.zaskarius.keycloak.plugins.radius.test.ModelBuilder;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
 import org.keycloak.representations.IDToken;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
+import ua.zaskarius.keycloak.plugins.radius.test.ModelBuilder;
 
 import static org.keycloak.protocol.oidc.mappers.AbstractOIDCProtocolMapper.TOKEN_MAPPER_CATEGORY;
 import static org.mockito.Mockito.when;
@@ -33,8 +33,8 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
 
     @BeforeMethod
     public void beforeMethods() {
-        IRadiusConnectionProvider provider = session
-                .getProvider(IRadiusConnectionProvider.class);
+        IRadiusServerProvider provider = session
+                .getProvider(IRadiusServerProvider.class);
         when(provider.fieldName()).thenReturn("n");
         when(provider.fieldPassword()).thenReturn("np");
     }
@@ -62,9 +62,9 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
 
     @Test
     public void testWithoutRadius() {
-        RadiusCommonSettings radiusCommonSettings = ModelBuilder.getRadiusCommonSettings();
+        RadiusServerSettings radiusCommonSettings = ModelBuilder.createRadiusServerSettings();
         radiusCommonSettings.setUseRadius(false);
-        when(configuration.getCommonSettings(realmModel))
+        when(configuration.getRadiusSettings(session))
                 .thenReturn(radiusCommonSettings);
         IDToken token = create();
         passwordMapper.setClaim(token, null, userSessionModel, session, null);

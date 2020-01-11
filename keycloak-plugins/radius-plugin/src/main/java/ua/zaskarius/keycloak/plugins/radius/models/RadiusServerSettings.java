@@ -1,14 +1,14 @@
 package ua.zaskarius.keycloak.plugins.radius.models;
 
-import java.util.List;
+import java.util.Map;
 
 public class RadiusServerSettings {
     private String secret;
     private int authPort;
+    private boolean isUseRadius;
     private int accountPort;
-    private boolean useRadius;
-    @Deprecated
-    private List<String> url;
+    private String provider;
+    private Map<String, String> accessMap;
 
     public String getSecret() {
         return secret;
@@ -16,14 +16,6 @@ public class RadiusServerSettings {
 
     public void setSecret(String secret) {
         this.secret = secret;
-    }
-
-    public List<String> getUrl() {
-        return url;
-    }
-
-    public void setUrl(List<String> url) {
-        this.url = url;
     }
 
     public int getAuthPort() {
@@ -42,11 +34,27 @@ public class RadiusServerSettings {
         this.accountPort = accountPort;
     }
 
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public Map<String, String> getAccessMap() {
+        return accessMap;
+    }
+
+    public void setAccessMap(Map<String, String> accessMap) {
+        this.accessMap = accessMap;
+    }
+
     public boolean isUseRadius() {
-        return useRadius;
+        return isUseRadius;
     }
 
     public void setUseRadius(boolean useRadius) {
-        this.useRadius = useRadius;
+        isUseRadius = useRadius;
     }
 }

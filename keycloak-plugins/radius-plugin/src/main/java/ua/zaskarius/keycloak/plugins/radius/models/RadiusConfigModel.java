@@ -1,52 +1,32 @@
 package ua.zaskarius.keycloak.plugins.radius.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
 
-@Entity
-@Table(name = "RADIUS_CONFIGURATION", uniqueConstraints = {
-})
+import java.util.List;
+
+import static ua.zaskarius.keycloak.plugins.radius.radius.server.RadiusServerProviderFactory.RADIUS_PROVIDER;
+
 public class RadiusConfigModel {
-    @Id
-    @Column(name = "RADIUS_ID", length = 36)
-    private String id;
+    private String provider = RADIUS_PROVIDER;
+    private String sharedSecret;
+    private int authPort = 1812;
+    private int accountPort = 1813;
+    private List<RadiusAccessModel> radiusIpAccess;
+    private boolean useRadius;
 
-    @Column(name = "AUTO_START")
-    private boolean start;
-
-    @Column(name = "AUTH_PORT")
-    private int authPort;
-
-
-    @Column(name = "ACCOUNT_PORT")
-    private int accountPort;
-
-    @Column(name = "LAST_MODIFICATION")
-    private Date mDate;
-
-    @Column(name = "LAST_MODIFICATION_USER_ID")
-    private String mUserId;
-
-    @Column(name = "RADIUS_SHARED")
-    private String radiusShared;
-
-    public String getId() {
-        return id;
+    public String getProvider() {
+        return provider;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 
-    public boolean isStart() {
-        return start;
+    public String getSharedSecret() {
+        return sharedSecret;
     }
 
-    public void setStart(boolean start) {
-        this.start = start;
+    public void setSharedSecret(String sharedSecret) {
+        this.sharedSecret = sharedSecret;
     }
 
     public int getAuthPort() {
@@ -65,28 +45,19 @@ public class RadiusConfigModel {
         this.accountPort = accountPort;
     }
 
-    public Date getmDate() {
-        return mDate != null ? (Date) mDate.clone() : null;
+    public List<RadiusAccessModel> getRadiusIpAccess() {
+        return radiusIpAccess;
     }
 
-    public void setmDate(Date mDate) {
-        this.mDate = mDate != null ? (Date) mDate.clone() : null;
+    public void setRadiusIpAccess(List<RadiusAccessModel> radiusIpAccess) {
+        this.radiusIpAccess = radiusIpAccess;
     }
 
-    public String getmUserId() {
-        return mUserId;
+    public boolean isUseRadius() {
+        return useRadius;
     }
 
-    public void setmUserId(String mUserId) {
-        this.mUserId = mUserId;
-    }
-
-    public String getRadiusShared() {
-        return radiusShared;
-    }
-
-    public void setRadiusShared(String radiusShared) {
-        this.radiusShared = radiusShared;
+    public void setUseRadius(boolean useRadius) {
+        this.useRadius = useRadius;
     }
 }
-

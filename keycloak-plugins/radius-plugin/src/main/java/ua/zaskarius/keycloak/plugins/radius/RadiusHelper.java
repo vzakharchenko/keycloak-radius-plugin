@@ -3,14 +3,12 @@ package ua.zaskarius.keycloak.plugins.radius;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
 import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusCommonSettings;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusConnectionProvider;
-import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -33,30 +31,16 @@ public final class RadiusHelper {
             RealmModel realm,
             UserModel userModel
     ) {
-        if (hasPasswordReadPermission(realm, userModel)) {
-            List<CredentialModel> credentials = keycloakSession
-                    .userCredentialManager()
-                    .getStoredCredentialsByType(realm, userModel, RadiusCredentialModel.TYPE);
-            if (!credentials.isEmpty()) {
-                CredentialModel credentialModel = credentials.get(0);
-                RadiusCredentialModel model = RadiusCredentialModel
-                        .createFromCredentialModel(credentialModel);
-                return model.getSecret().getPassword();
-            }
+        List<CredentialModel> credentials = keycloakSession
+                .userCredentialManager()
+                .getStoredCredentialsByType(realm, userModel, RadiusCredentialModel.TYPE);
+        if (!credentials.isEmpty()) {
+            CredentialModel credentialModel = credentials.get(0);
+            RadiusCredentialModel model = RadiusCredentialModel
+                    .createFromCredentialModel(credentialModel);
+            return model.getSecret().getPassword();
         }
         return null;
-    }
-
-    public static boolean hasPasswordReadPermission(
-            RealmModel realm,
-            UserModel userModel
-    ) {
-        RoleModel role = realm
-                .getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD);
-        return role != null &&
-                userModel.isEnabled()
-                && userModel
-                .hasRole(role);
     }
 
     public static String getPassword(
@@ -64,11 +48,6 @@ public final class RadiusHelper {
             RealmModel realm,
             UserModel userModel
     ) {
-        if (!hasPasswordReadPermission(realm, userModel)) {
-            throw new IllegalStateException(userModel.getUsername() +
-                    " does not have role " +
-                    RadiusRadiusProvider.READ_RADIUS_PASSWORD);
-        }
         String currentPassword = getCurrentPassword(keycloakSession, realm, userModel);
         if (currentPassword == null) {
             throw new IllegalStateException(userModel.getUsername() +
@@ -77,20 +56,19 @@ public final class RadiusHelper {
         return currentPassword;
     }
 
-    public static IRadiusConnectionProvider getProvider(KeycloakSession session,
-                                                        RealmModel realm) {
+    public static IRadiusServerProvider getProvider(KeycloakSession session) {
         IRadiusConfiguration config = RadiusConfigHelper
                 .getConfig();
-        RadiusCommonSettings commonSettings = config
-                .getCommonSettings(realm);
+        RadiusServerSettings radiusSettings = config
+                .getRadiusSettings(session);
         return session
-                .getProvider(IRadiusConnectionProvider.class,
-                        commonSettings.getProvider());
+                .getProvider(IRadiusServerProvider.class,
+                        radiusSettings.getProvider());
     }
 
-    public static boolean isUseRadius(RealmModel realm) {
+    public static boolean isUseRadius(KeycloakSession session) {
         IRadiusConfiguration config = RadiusConfigHelper.getConfig();
-        return config.isUsedRadius(realm);
+        return config.getRadiusSettings(session).isUseRadius();
     }
 
 }

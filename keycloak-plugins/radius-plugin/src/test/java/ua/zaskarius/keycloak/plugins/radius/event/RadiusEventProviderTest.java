@@ -16,7 +16,7 @@ public class RadiusEventProviderTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods(){
-        assertEquals(radiusEventProvider.getAdminEventActionMap().size(),2);
+        assertEquals(radiusEventProvider.getAdminEventActionMap().size(),0);
         assertEquals(radiusEventProvider.getEventActionMap().size(),0);
         radiusEventProvider.close();
     }

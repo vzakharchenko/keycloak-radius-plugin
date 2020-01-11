@@ -24,9 +24,9 @@ import java.util.concurrent.TimeUnit;
 public class UpdateRadiusPassword implements RequiredActionProvider,
         RequiredActionFactory, DisplayTypeRequiredActionFactory {
     private static final Logger LOGGER = Logger.getLogger(UpdateRadiusPassword.class);
-    public static final String UPDATE_RADIUS_PASSWORD = "UPDATE_MIKROTIK_PASSWORD";
+    public static final String UPDATE_RADIUS_PASSWORD_ID = "UPDATE_RADIUS_PASSWORD";
     public static final String USERNAME = "username";
-    public static final String RADIUS_UPDATE_PASSWORD = "RADIUS_UPDATE_PASSWORD";
+    public static final String RADIUS_UPDATE_PASSWORD = UPDATE_RADIUS_PASSWORD_ID;
     public static final String UPDATE_PASSWORD_ERROR = "UPDATE_PASSWORD_ERROR";
 
     @Override
@@ -196,7 +196,7 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
 
     @Override
     public String getId() {
-        return UPDATE_RADIUS_PASSWORD;
+        return UPDATE_RADIUS_PASSWORD_ID;
     }
 
     @Override

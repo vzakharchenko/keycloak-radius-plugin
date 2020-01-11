@@ -1,3 +1,3 @@
-ua.zaskarius.keycloak.plugins.radius.providers.RadiusProviderSpi
 ua.zaskarius.keycloak.plugins.radius.providers.RadiusServerSpi
 ua.zaskarius.keycloak.plugins.radius.providers.AttributeSpi
+ua.zaskarius.keycloak.plugins.radius.providers.RadiusDictionarySpi

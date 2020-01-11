@@ -100,7 +100,7 @@ public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
         updateRadiusPassword.postInit(keycloakSessionFactory);
         assertEquals(updateRadiusPassword.initiatedActionSupport(),
                 InitiatedActionSupport.SUPPORTED);
-        assertEquals(updateRadiusPassword.getId(), UpdateRadiusPassword.UPDATE_RADIUS_PASSWORD);
+        assertEquals(updateRadiusPassword.getId(), UpdateRadiusPassword.UPDATE_RADIUS_PASSWORD_ID);
         assertEquals(updateRadiusPassword.getDisplayText(), "Update Radius Password");
         assertTrue(updateRadiusPassword.isOneTimeAction());
         assertTrue(updateRadiusPassword.isOneTimeAction());

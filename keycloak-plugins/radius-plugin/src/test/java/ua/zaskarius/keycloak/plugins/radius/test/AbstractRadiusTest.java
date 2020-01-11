@@ -19,13 +19,13 @@ import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduled
 import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusConfigModel;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
+import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.DictionaryLoader;
+import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.IDictionaryLoader;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocolFactory;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
-import ua.zaskarius.keycloak.plugins.radius.radius.provider.RadiusRadiusProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.server.KeycloakRadiusServer;
 import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakHelper;
 import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakRadiusUtils;
@@ -106,6 +106,8 @@ public abstract class AbstractRadiusTest {
 
     @Mock
     protected TypedQuery query;
+    @Mock
+    protected IDictionaryLoader dictionaryLoader;
 
     protected WritableDictionary realDictionary;
 
@@ -126,11 +128,11 @@ public abstract class AbstractRadiusTest {
         ConfigurationScheduledTask instance = (ConfigurationScheduledTask)
                 ConfigurationScheduledTask.getInstance();
         instance.connectionProviderMap.clear();
-        instance.flowConfigurations.clear();
         try {
-            RadiusConfigHelper.setFlowConfiguration(configuration);
+            RadiusConfigHelper.setConfiguration(configuration);
             RadiusAuthProtocolFactory.setInstance(radiusAuthProtocolFactory);
             KeycloakRadiusUtils.setKeycloakHelper(keycloakHelper);
+            DictionaryLoader.setDictionaryLoader(dictionaryLoader);
             when(keycloakHelper.getAuthResult(session))
                     .thenReturn(new AuthenticationManager.AuthResult(userModel,
                             userSessionModel, accessToken));
@@ -222,8 +224,6 @@ public abstract class AbstractRadiusTest {
         when(realmModel.getName()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.getId()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.isEventsEnabled()).thenReturn(false);
-        when(realmModel.getRole(RadiusRadiusProvider.READ_RADIUS_PASSWORD))
-                .thenReturn(radiusRole);
         when(session.users()).thenReturn(userProvider);
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(userModel);
         when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(userModel);
@@ -231,13 +231,8 @@ public abstract class AbstractRadiusTest {
         when(userModel.getEmail()).thenReturn(USER);
         when(userModel.isEnabled()).thenReturn(true);
         when(userModel.hasRole(radiusRole)).thenReturn(true);
-        when(configuration
-                .getRadiusSettings(realmModel))
-                .thenReturn(ModelBuilder
-                        .createRadiusServerSettings());
-        when(configuration.isUsedRadius(realmModel)).thenReturn(true);
-        when(configuration.getCommonSettings(realmModel))
-                .thenReturn(ModelBuilder.getRadiusCommonSettings());
+        when(configuration.getRadiusSettings(session))
+                .thenReturn(ModelBuilder.createRadiusServerSettings());
         when(userCredentialManager
                 .getStoredCredentialsByType(realmModel, userModel,
                         RadiusCredentialModel.TYPE))
@@ -258,8 +253,8 @@ public abstract class AbstractRadiusTest {
                 .getProvider(JpaConnectionProvider.class);
         when(jpaConnectionProvider.getEntityManager()).thenReturn(entityManager);
         when(entityManager.createQuery(anyString(), any())).thenReturn(query);
-        when(query.getResultList()).thenReturn(Collections
-                .singletonList(createRadiusConfigModel()));
+
+        when(dictionaryLoader.loadDictionary(session)).thenReturn(realDictionary);
 
         eventBuilder = new EventBuilder(realmModel, session, clientConnection);
         List<?> objects = resetMock();
@@ -293,16 +288,5 @@ public abstract class AbstractRadiusTest {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public RadiusConfigModel createRadiusConfigModel(){
-        RadiusConfigModel configModel = new RadiusConfigModel();
-        configModel.setmDate(new Date(1L));
-        configModel.setmUserId("111");
-        configModel.setAccountPort(111);
-        configModel.setAuthPort(11);
-        configModel.setRadiusShared("234");
-        configModel.setStart(true);
-        return configModel;
     }
 }

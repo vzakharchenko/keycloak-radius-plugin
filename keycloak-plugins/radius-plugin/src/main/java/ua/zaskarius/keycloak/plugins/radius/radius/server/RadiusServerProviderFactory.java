@@ -1,18 +1,19 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.server;
 
 import com.google.common.annotations.VisibleForTesting;
-import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProviderFactory;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.services.scheduled.ClusterAwareScheduledTaskRunner;
 import org.keycloak.timer.TimerProvider;
+import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProviderFactory;
 
 public class RadiusServerProviderFactory
         implements IRadiusServerProviderFactory<IRadiusServerProvider> {
 
+    public static final String RADIUS_PROVIDER = "radius-provider";
     private IRadiusServerProvider mikrotikRadiusServer;
 
     @Override
@@ -30,6 +31,8 @@ public class RadiusServerProviderFactory
 
     @Override
     public void postInit(KeycloakSessionFactory factory) {
+        ConfigurationScheduledTask
+                .addConnectionProviderMap(this);
         KeycloakSession session = factory.create();
         session.getTransactionManager().begin();
         try {
@@ -53,7 +56,7 @@ public class RadiusServerProviderFactory
 
     @Override
     public String getId() {
-        return "radius-provider";
+        return RADIUS_PROVIDER;
     }
 
     @VisibleForTesting
