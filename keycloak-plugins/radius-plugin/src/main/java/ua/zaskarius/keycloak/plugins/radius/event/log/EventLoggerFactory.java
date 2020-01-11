@@ -1,5 +1,6 @@
 package ua.zaskarius.keycloak.plugins.radius.event.log;
 
+import org.keycloak.models.ClientModel;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import org.keycloak.Config;
 import org.keycloak.common.ClientConnection;
@@ -32,6 +33,21 @@ public final class EventLoggerFactory {
         return new EventBuilder(realmModel, session, clientConnection)
                 .detail(RADIUS,
                 RadiusConfigHelper.getConfig().getRadiusSettings(session).getProvider())
+                .detail(RADIUS_HOST,
+                        clientConnection.getRemoteAddr());
+    }
+
+
+    public static EventBuilder createEvent(
+            KeycloakSession session,
+            RealmModel realmModel,
+            ClientModel clientModel,
+            ClientConnection clientConnection) {
+
+        return new EventBuilder(realmModel, session, clientConnection)
+                .detail(RADIUS,
+                RadiusConfigHelper.getConfig().getRadiusSettings(session).getProvider())
+                .client(clientModel)
                 .detail(RADIUS_HOST,
                         clientConnection.getRemoteAddr());
     }

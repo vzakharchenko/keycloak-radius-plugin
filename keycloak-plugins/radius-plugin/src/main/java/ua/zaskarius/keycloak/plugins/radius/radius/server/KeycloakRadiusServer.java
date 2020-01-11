@@ -21,7 +21,6 @@ import org.tinyradius.server.handler.AcctHandler;
 import org.tinyradius.server.handler.DeduplicatorHandler;
 import org.tinyradius.server.handler.RequestHandler;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
-import ua.zaskarius.keycloak.plugins.radius.event.RadiusEventListenerProviderFactory;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.DictionaryLoader;
@@ -30,9 +29,6 @@ import ua.zaskarius.keycloak.plugins.radius.radius.handlers.IKeycloakSecretProvi
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.KeycloakSecretProvider;
 
 import java.net.InetSocketAddress;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static ua.zaskarius.keycloak.plugins.radius.password.UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD;
@@ -107,19 +103,6 @@ public class KeycloakRadiusServer
     @Override
     public boolean init(RealmModel realmModel) {
         boolean changed = false;
-        String el = realmModel
-                .getEventsListeners()
-                .stream().filter(s -> Objects
-                        .equals(s, RadiusEventListenerProviderFactory
-                                .RADIUS_EVENT_LISTENER))
-                .findFirst().orElse(null);
-        if (el == null) {
-            Set<String> els = new LinkedHashSet<>(realmModel
-                    .getEventsListeners());
-            els.add(RadiusEventListenerProviderFactory.RADIUS_EVENT_LISTENER);
-            realmModel.setEventsListeners(els);
-            changed = true;
-        }
         if (realmModel
                 .getRequiredActionProviderByAlias(
                         RADIUS_UPDATE_PASSWORD) == null) {

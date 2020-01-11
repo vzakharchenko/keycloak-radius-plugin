@@ -80,6 +80,22 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testclientEmpty() {
+        when(realmModel.getClients()).thenReturn(Collections.emptyList());
+        assertFalse(keycloakSecretProvider
+                .init(inetSocketAddress, USER, authProtocol, session));
+
+    }
+
+    @Test
+    public void testclientWithoutRadius() {
+        when(clientModel.getProtocol()).thenReturn("test");
+        assertFalse(keycloakSecretProvider
+                .init(inetSocketAddress, USER, authProtocol, session));
+
+    }
+
+    @Test
     public void testgetRadiusPasswordsWithoutPassword() {
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Collections.emptyList());

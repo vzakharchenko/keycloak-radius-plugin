@@ -15,7 +15,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.tinyradius.dictionary.DictionaryParser;
 import org.tinyradius.dictionary.WritableDictionary;
-import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
 import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper;
@@ -40,6 +39,7 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;
+import static ua.zaskarius.keycloak.plugins.radius.client.RadiusLoginProtocolFactory.RADIUS_PROTOCOL;
 
 public abstract class AbstractRadiusTest {
 
@@ -125,9 +125,6 @@ public abstract class AbstractRadiusTest {
 
 
     void resetStatic() {
-        ConfigurationScheduledTask instance = (ConfigurationScheduledTask)
-                ConfigurationScheduledTask.getInstance();
-        instance.connectionProviderMap.clear();
         try {
             RadiusConfigHelper.setConfiguration(configuration);
             RadiusAuthProtocolFactory.setInstance(radiusAuthProtocolFactory);
@@ -217,6 +214,7 @@ public abstract class AbstractRadiusTest {
         when(session.realms()).thenReturn(realmProvider);
         when(clientModel.getRealm()).thenReturn(realmModel);
         when(clientModel.getClientId()).thenReturn(CLIENT_ID);
+        when(clientModel.getProtocol()).thenReturn(RADIUS_PROTOCOL);
         when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(realmModel);
         when(realmProvider.getRealm(anyString())).thenReturn(realmModel);
         when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel));
@@ -224,6 +222,7 @@ public abstract class AbstractRadiusTest {
         when(realmModel.getName()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.getId()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.isEventsEnabled()).thenReturn(false);
+        when(realmModel.getClients()).thenReturn(Arrays.asList(clientModel));
         when(session.users()).thenReturn(userProvider);
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(userModel);
         when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(userModel);

@@ -1,7 +1,6 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.provider;
 
 import org.testng.annotations.Test;
-import ua.zaskarius.keycloak.plugins.radius.configuration.ConfigurationScheduledTask;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProviderFactory;
 import ua.zaskarius.keycloak.plugins.radius.radius.server.RadiusServerProviderFactory;
@@ -34,15 +33,6 @@ public class KeycloakRadiusServerProviderFactoryTest extends AbstractRadiusTest 
     @Test
     public void testInit() {
         providerFactory.postInit(keycloakSessionFactory);
-        ConfigurationScheduledTask instance = (ConfigurationScheduledTask)
-                ConfigurationScheduledTask.getInstance();
-        Map<Class<? extends IRadiusServerProviderFactory>,
-                IRadiusServerProviderFactory<? extends IRadiusServerProvider>>
-                connectionProviderMap = instance.connectionProviderMap;
-        assertEquals(connectionProviderMap.size(), 1);
-        IRadiusServerProviderFactory<? extends IRadiusServerProvider> providerFactory =
-                connectionProviderMap.get(RadiusServerProviderFactory.class);
-        assertEquals(providerFactory, this.providerFactory);
 
 
     }

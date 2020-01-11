@@ -77,10 +77,7 @@ tmp/
 
 # OS generated files #
 ######################
-.DS_Store*
-ehthumbs.db
-Icon?
-!uimodules/base/uifw/ui/images/icons
+.DS_Store
 Thumbs.db
 
 *.iml

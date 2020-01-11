@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import ua.zaskarius.keycloak.plugins.radius.event.RadiusEventListenerProviderFactory;
 import ua.zaskarius.keycloak.plugins.radius.radius.server.KeycloakRadiusServer;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
@@ -23,19 +22,14 @@ import static org.testng.Assert.assertTrue;
 public class MikrotikRadiusProviderTest extends AbstractRadiusTest {
 
     private KeycloakRadiusServer provider;
-    private Set<String> eventListeners = new HashSet<>();
     @Mock
     private EventListenerProvider eventListenerProvider;
 
     @BeforeMethod
     public void beforeMethod() {
         provider = new KeycloakRadiusServer(session);
-        eventListeners.clear();
         when(realmModel.getRequiredActionProviderByAlias(any()))
                 .thenReturn(new RequiredActionProviderModel());
-        eventListeners.add(RadiusEventListenerProviderFactory.RADIUS_EVENT_LISTENER);
-        when(realmModel.getEventsListeners()).thenReturn(
-                eventListeners);
     }
 
     @Override
@@ -57,12 +51,6 @@ public class MikrotikRadiusProviderTest extends AbstractRadiusTest {
 
     @Test
     public void testInitTrue() {
-        eventListeners.clear();
-        assertTrue(provider.init(realmModel));
-    }
-
-    @Test
-    public void testInitProviders() {
         when(realmModel.getRequiredActionProviderByAlias(any()))
                 .thenReturn(null);
         assertTrue(provider.init(realmModel));

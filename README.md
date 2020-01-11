@@ -17,7 +17,7 @@ features:
 -  example <pre><code>{
   "provider" : "radius-provider",
   "sharedSecret" : "radius sharedSecret",
-  "authPort" : 1813,
+  "authPort" : 1812,
   "accountPort" : 1813,
   "radiusIpAccess" : [ {
     "ip" : "193.138.164.214",

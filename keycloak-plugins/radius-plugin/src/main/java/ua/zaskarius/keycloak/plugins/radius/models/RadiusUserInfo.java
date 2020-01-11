@@ -1,9 +1,10 @@
 package ua.zaskarius.keycloak.plugins.radius.models;
 
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import org.keycloak.common.ClientConnection;
+import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class RadiusUserInfo {
     private String radiusSecret;
     private RealmModel realmModel;
     private AuthProtocol protocol;
+    private ClientModel clientModel;
     private ClientConnection clientConnection;
 
     public List<String> getPasswords() {
@@ -70,5 +72,13 @@ public class RadiusUserInfo {
 
     public void setClientConnection(ClientConnection clientConnection) {
         this.clientConnection = clientConnection;
+    }
+
+    public ClientModel getClientModel() {
+        return clientModel;
+    }
+
+    public void setClientModel(ClientModel clientModel) {
+        this.clientModel = clientModel;
     }
 }
