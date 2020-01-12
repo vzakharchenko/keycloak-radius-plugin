@@ -1,11 +1,5 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols;
 
-import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributeProvider;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.KeycloakAttributesType;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.clientconnection.RadiusClientConnection;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
@@ -13,8 +7,16 @@ import org.keycloak.models.RealmModel;
 import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
+import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributeProvider;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.KeycloakAttributesType;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.clientconnection.RadiusClientConnection;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractAuthProtocol implements AuthProtocol {
@@ -26,20 +28,25 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         this.session = session;
     }
 
-    private String getRealmName() {
-        RadiusAttribute attribute = accessRequest.getAttribute(VendorUtils.MIKROTIK_VENDOR,
-                VendorUtils.MIKROTIK_REALM);
+    private String getRealmName(String attributeName) {
+        RadiusAttribute attribute = accessRequest.getAttribute(attributeName);
         return (attribute != null) ? attribute.getValueString() : null;
+    }
+
+    private RealmModel getRealm(List<String> attributes) {
+        for (String attribute : attributes) {
+            String realmName = getRealmName(attribute);
+            if (realmName != null) {
+                return session.realms().getRealm(realmName);
+            }
+        }
+        return null;
     }
 
     @Override
     public RealmModel getRealm() {
-        String realmName = getRealmName();
-        if (realmName != null) {
-            return session.realms().getRealm(realmName);
-        } else {
-            return null;
-        }
+        List<String> attributes = RadiusHelper.getRealmAttributes(session);
+        return getRealm(attributes);
     }
 
     protected abstract void answer(RadiusPacket answer, RadiusUserInfo radiusUserInfo);

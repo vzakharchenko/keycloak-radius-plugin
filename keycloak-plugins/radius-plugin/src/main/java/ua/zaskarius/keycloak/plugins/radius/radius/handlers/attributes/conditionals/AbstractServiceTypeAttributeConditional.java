@@ -53,6 +53,6 @@ public abstract class AbstractServiceTypeAttributeConditional<T>
                 return true;
             }
         }
-        return false;
+        return true;
     }
 }

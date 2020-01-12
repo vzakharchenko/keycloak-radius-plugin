@@ -49,4 +49,9 @@ public class DefaultDictionaryProviderFactory
     public List<String> getResources() {
         return Collections.singletonList("org/tinyradius/dictionary/default_dictionary");
     }
+
+    @Override
+    public List<String> getRealmAttributes() {
+        return null;
+    }
 }

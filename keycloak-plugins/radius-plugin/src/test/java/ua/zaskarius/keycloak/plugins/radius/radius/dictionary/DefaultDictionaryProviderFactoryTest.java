@@ -3,8 +3,7 @@ package ua.zaskarius.keycloak.plugins.radius.radius.dictionary;
 import org.testng.annotations.Test;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 
 public class DefaultDictionaryProviderFactoryTest extends AbstractRadiusTest {
     private DefaultDictionaryProviderFactory dictionaryProviderFactory =
@@ -15,6 +14,7 @@ public class DefaultDictionaryProviderFactoryTest extends AbstractRadiusTest {
         dictionaryProviderFactory.close();
         dictionaryProviderFactory.init(null);
         dictionaryProviderFactory.postInit(null);
+        assertNull(dictionaryProviderFactory.getRealmAttributes());
         assertNotNull(dictionaryProviderFactory.create(session));
         assertNotNull(dictionaryProviderFactory.getDictionaryParser());
         assertEquals(dictionaryProviderFactory.getId(), "Default-Dictionary");

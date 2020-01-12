@@ -49,4 +49,9 @@ public class MikrotikDictionaryProviderFactory
     public List<String> getResources() {
         return Collections.singletonList("mikrotik");
     }
+
+    @Override
+    public List<String> getRealmAttributes() {
+        return Collections.singletonList("Mikrotik-Realm");
+    }
 }

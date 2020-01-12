@@ -1,10 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserModel;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserKeycloakAttributes extends AbstractKeycloakAttributes<UserModel> {
 
@@ -25,16 +26,11 @@ public class UserKeycloakAttributes extends AbstractKeycloakAttributes<UserModel
     }
 
     @Override
-    protected List<String> getAttributes(UserModel userModel,
-                                         String attributeName) {
-        List<String> attributes = new ArrayList<>();
-        userModel.getAttributes().entrySet().stream().filter(entry ->
-                attributeName.equalsIgnoreCase(entry.getKey())).forEach(entry -> {
-            if (entry.getValue() != null) {
-                attributes.addAll(entry.getValue());
-            }
-        });
-        return attributes;
+    protected Map<String, Set<String>> getAttributes(UserModel userModel) {
+        return userModel.getAttributes().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        entry -> entry.getValue() != null ?
+                                new HashSet<>(entry.getValue()) : new HashSet<>()));
     }
 
     @Override

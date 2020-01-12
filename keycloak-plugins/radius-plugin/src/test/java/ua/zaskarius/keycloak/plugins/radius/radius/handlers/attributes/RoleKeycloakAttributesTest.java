@@ -37,10 +37,9 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
         when(userModel.getRoleMappings()).thenReturn(
                 new HashSet<>(Collections.singletonList(roleModel)));
         HashMap<String, List<String>> map = new HashMap<>();
-        map.put("testAttribute", Arrays.asList("v1", "v2"));
+        map.put("testAttribute", Arrays.asList("0002", "004b"));
         map.put("testAttribute2", Collections.emptyList());
         map.put("testAttribute3", null);
-        map.put(AbstractKeycloakAttributes.RADIUS_ATTRIBUTES, Arrays.asList("testAttribute", "testAttribute2"));
         when(roleModel.getAttributes()).thenReturn(map);
         attributeType = new AttributeType(0, 1,
                 "testAttribute", "string");
@@ -65,23 +64,10 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
 
     @Test
     public void getAttributes() {
-        List<String> testattribute = roleKeycloakAttributes
-                .getAttributes(roleModel, "testattribute");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 2);
-        testattribute = roleKeycloakAttributes
-                .getAttributes(roleModel, "testAttribute2");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
-        testattribute = roleKeycloakAttributes
-                .getAttributes(roleModel, "testAttribute3");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
-
-        testattribute = roleKeycloakAttributes
-                .getAttributes(roleModel, "testAttribute4");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
+        Map<String, Set<String>> attributes = roleKeycloakAttributes
+                .getAttributes(roleModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 3);
 
     }
 

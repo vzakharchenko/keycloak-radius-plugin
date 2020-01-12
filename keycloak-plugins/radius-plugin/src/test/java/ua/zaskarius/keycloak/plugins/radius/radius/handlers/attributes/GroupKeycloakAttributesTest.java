@@ -1,7 +1,5 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 import org.keycloak.models.GroupModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -10,6 +8,8 @@ import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.*;
 
@@ -36,10 +36,10 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
         when(userModel.getGroups()).thenReturn(
                 new HashSet<>(Collections.singletonList(groupModel)));
         HashMap<String, List<String>> map = new HashMap<>();
-        map.put("testAttribute", Arrays.asList("v1", "v2"));
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
         map.put("testAttribute2", Collections.emptyList());
         map.put("testAttribute3", null);
-        map.put(AbstractKeycloakAttributes.RADIUS_ATTRIBUTES, Arrays.asList("testAttribute", "testAttribute2"));
+
         when(groupModel.getAttributes()).thenReturn(map);
         attributeType = new AttributeType(0, 1,
                 "testAttribute", "string");
@@ -64,25 +64,13 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
 
     @Test
     public void getAttributes() {
-        List<String> testattribute = groupKeycloakAttributes
-                .getAttributes(groupModel, "testattribute");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 2);
-        testattribute = groupKeycloakAttributes
-                .getAttributes(groupModel, "testAttribute2");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
-        testattribute = groupKeycloakAttributes
-                .getAttributes(groupModel, "testAttribute3");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
-
-        testattribute = groupKeycloakAttributes
-                .getAttributes(groupModel, "testAttribute4");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
-
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 3);
     }
+
+
 
     @Test
     public void getRead() {

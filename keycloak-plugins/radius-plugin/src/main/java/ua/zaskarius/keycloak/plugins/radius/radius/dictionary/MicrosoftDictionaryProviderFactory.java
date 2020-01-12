@@ -49,4 +49,9 @@ public class MicrosoftDictionaryProviderFactory
     public List<String> getResources() {
         return Collections.singletonList("MS");
     }
+
+    @Override
+    public List<String> getRealmAttributes() {
+        return null;
+    }
 }

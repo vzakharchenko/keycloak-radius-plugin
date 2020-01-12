@@ -8,4 +8,5 @@ import java.util.List;
 public interface IRadiusDictionaryProvider extends Provider {
     DictionaryParser getDictionaryParser();
     List<String> getResources();
+    List<String> getRealmAttributes();
 }

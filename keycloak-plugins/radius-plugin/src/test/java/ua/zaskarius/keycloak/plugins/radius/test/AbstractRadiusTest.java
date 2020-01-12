@@ -15,6 +15,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.tinyradius.dictionary.DictionaryParser;
 import org.tinyradius.dictionary.WritableDictionary;
+import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper;
@@ -133,6 +134,7 @@ public abstract class AbstractRadiusTest {
             when(keycloakHelper.getAuthResult(session))
                     .thenReturn(new AuthenticationManager.AuthResult(userModel,
                             userSessionModel, accessToken));
+            RadiusHelper.setRealmAttributes(Collections.singletonList("realm-radius"));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -222,6 +224,7 @@ public abstract class AbstractRadiusTest {
         when(realmModel.getName()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.getId()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.isEventsEnabled()).thenReturn(false);
+        when(realmModel.getAttributes()).thenReturn(new HashMap<>());
         when(realmModel.getClients()).thenReturn(Arrays.asList(clientModel));
         when(session.users()).thenReturn(userProvider);
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(userModel);
@@ -230,6 +233,7 @@ public abstract class AbstractRadiusTest {
         when(userModel.getEmail()).thenReturn(USER);
         when(userModel.isEnabled()).thenReturn(true);
         when(userModel.hasRole(radiusRole)).thenReturn(true);
+        when(userModel.getAttributes()).thenReturn(new HashMap<>());
         when(configuration.getRadiusSettings(session))
                 .thenReturn(ModelBuilder.createRadiusServerSettings());
         when(userCredentialManager

@@ -1,10 +1,5 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
-import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusAttributeHolder;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 import org.jboss.logging.Logger;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
@@ -13,6 +8,11 @@ import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusAttributeHolder;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements KeycloakAttributes {
 
-    public static final String RADIUS_ATTRIBUTES = "Radius Attributes";
     private static final Logger LOGGER = Logger.getLogger(AbstractKeycloakAttributes.class);
     protected final KeycloakSession session;
     protected final RadiusUserInfo radiusUserInfo;
@@ -38,20 +37,18 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
 
     protected abstract Set<KEYCLOAK_TYPE> getKeycloakTypes();
 
-    protected abstract List<String> getAttributes(KEYCLOAK_TYPE type,
-                                                  String attributeName);
+    protected abstract Map<String, Set<String>> getAttributes(KEYCLOAK_TYPE type);
 
     @Override
     public KeycloakAttributes read() {
         Set<KEYCLOAK_TYPE> groups = getKeycloakTypes();
         for (KEYCLOAK_TYPE type : groups) {
-            List<String> radiusAttributes = getAttributes(type, RADIUS_ATTRIBUTES);
-            if (radiusAttributes != null) {
-                for (String radiusAttribute : radiusAttributes) {
+            Map<String, Set<String>> attributes = getAttributes(type);
+            if (attributes != null) {
+                for (Map.Entry<String, Set<String>> entry : attributes.entrySet()) {
                     RadiusAttributeHolder<KEYCLOAK_TYPE> attributeHolder =
                             new RadiusAttributeHolder<>(getType(), type);
-                    attributeHolder.addAttribute(radiusAttribute,
-                            getAttributes(type, radiusAttribute));
+                    attributeHolder.addAttribute(entry.getKey(), entry.getValue());
                     attributeHolders.add(attributeHolder);
                 }
             }
@@ -115,8 +112,8 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     @Override
     public void fillAnswer(RadiusPacket answer) {
         for (RadiusAttributeHolder<KEYCLOAK_TYPE> attributeHolder : attributeHolders) {
-            Map<String, List<String>> attributes = attributeHolder.getAttributes();
-            for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
+            Map<String, Set<String>> attributes = attributeHolder.getAttributes();
+            for (Map.Entry<String, Set<String>> entry : attributes.entrySet()) {
                 String attributeName = entry.getKey();
                 for (String value : entry.getValue()) {
                     answer.addAttribute(attributeName, value);

@@ -1,14 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.GroupServiceTypeAttributeConditional;
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.GroupServiceTypeAttributeConditional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupModel> {
 
@@ -27,15 +24,9 @@ public class GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupMod
     }
 
     @Override
-    protected List<String> getAttributes(GroupModel groupModel,
-                                         String attributeName) {
-        List<String> attributes = new ArrayList<>();
-        groupModel.getAttributes().entrySet().stream().filter(entry ->
-                attributeName.equalsIgnoreCase(entry.getKey())).forEach(entry -> {
-            if (entry.getValue() != null) {
-                attributes.addAll(entry.getValue());
-            }
-        });
+    protected Map<String, Set<String>> getAttributes(GroupModel groupModel) {
+        Map<String, Set<String>> attributes = new HashMap<>();
+        AttributeWalkerUtils.groupWalker(groupModel, attributes);
         return attributes;
     }
 

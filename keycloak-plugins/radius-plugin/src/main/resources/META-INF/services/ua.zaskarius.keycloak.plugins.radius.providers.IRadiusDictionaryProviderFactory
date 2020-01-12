@@ -1,4 +1,3 @@
 ua.zaskarius.keycloak.plugins.radius.radius.dictionary.DefaultDictionaryProviderFactory
 ua.zaskarius.keycloak.plugins.radius.radius.dictionary.MikrotikDictionaryProviderFactory
 ua.zaskarius.keycloak.plugins.radius.radius.dictionary.MicrosoftDictionaryProviderFactory
-ua.zaskarius.keycloak.plugins.radius.radius.dictionary.ExternalDictionaryProviderFactory

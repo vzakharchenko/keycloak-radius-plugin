@@ -1,5 +1,7 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
+import org.tinyradius.packet.AccessRequest;
+import org.tinyradius.packet.RadiusPacket;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 import org.keycloak.models.UserModel;
@@ -8,8 +10,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
-import org.tinyradius.packet.AccessRequest;
-import org.tinyradius.packet.RadiusPacket;
 
 import java.util.*;
 
@@ -32,10 +32,9 @@ public class UserKeycloakAttributesTest extends AbstractRadiusTest {
         userKeycloakAttributes =
                 new UserKeycloakAttributes(session);
         HashMap<String, List<String>> map = new HashMap<>();
-        map.put("testAttribute", Arrays.asList("v1", "v2"));
+        map.put("testAttribute", Arrays.asList("0000", "0001"));
         map.put("testAttribute2", Collections.emptyList());
         map.put("testAttribute3", null);
-        map.put(AbstractKeycloakAttributes.RADIUS_ATTRIBUTES, Arrays.asList("testAttribute", "testAttribute2"));
         when(userModel.getAttributes()).thenReturn(map);
         attributeType = new AttributeType(0, 1,
                 "testAttribute", "string");
@@ -60,24 +59,23 @@ public class UserKeycloakAttributesTest extends AbstractRadiusTest {
 
     @Test
     public void getAttributes() {
-        List<String> testattribute = userKeycloakAttributes
-                .getAttributes(userModel, "testattribute");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 2);
-        testattribute = userKeycloakAttributes
-                .getAttributes(userModel, "testAttribute2");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
-        testattribute = userKeycloakAttributes
-                .getAttributes(userModel, "testAttribute3");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
+        Map<String, Set<String>> attributes = userKeycloakAttributes
+                .getAttributes(userModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 3);
 
-        testattribute = userKeycloakAttributes
-                .getAttributes(userModel, "testAttribute4");
-        assertNotNull(testattribute);
-        assertEquals(testattribute.size(), 0);
+    }
 
+    @Test
+    public void getRead() {
+        AccessRequest accessRequest = new AccessRequest(dictionary, 1, new byte[16]);
+        accessRequest.addAttribute(attributeType.create(dictionary, "test"));
+        KeycloakAttributes keycloakAttributes = userKeycloakAttributes.read();
+        keycloakAttributes.ignoreUndefinedAttributes(dictionary);
+        keycloakAttributes.filter(accessRequest);
+        RadiusPacket answer = new RadiusPacket(dictionary, 2, 1);
+        keycloakAttributes.fillAnswer(answer);
+        assertNotNull(answer.getAttributes());
     }
 
 
