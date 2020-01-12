@@ -67,6 +67,7 @@ public class AuthHandler implements RequestHandler<AccessRequest,
             answer = RadiusPackets.create(request.getDictionary(),
                     ACCESS_REJECT, request.getIdentifier());
         }
+        request.getAttributes(33).forEach(answer::addAttribute);
         return answer;
     }
 
