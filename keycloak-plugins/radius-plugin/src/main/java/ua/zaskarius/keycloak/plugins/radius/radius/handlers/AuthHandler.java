@@ -2,17 +2,17 @@ package ua.zaskarius.keycloak.plugins.radius.radius.handlers;
 
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.Promise;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
-import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakRadiusUtils;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 import org.tinyradius.server.handler.RequestHandler;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
+import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakRadiusUtils;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -44,6 +44,32 @@ public class AuthHandler implements RequestHandler<AccessRequest,
         return false;
     }
 
+    private RadiusPacket handleAnswer(AccessRequest request,
+                                      AuthProtocol authProtocol,
+                                      KeycloakSession threadSession,
+                                      InetSocketAddress remoteAddress,
+                                      IKeycloakSecretProvider secretProvider) {
+        boolean init = secretProvider.init(remoteAddress, request.getUserName(),
+                authProtocol,
+                threadSession);
+        RadiusPacket answer;
+        if (init) {
+            int type = verifyPassword(authProtocol, threadSession) ? ACCESS_ACCEPT :
+                    ACCESS_REJECT;
+            secretProvider.afterAuth(type,
+                    threadSession);
+            answer = RadiusPackets.create(request.getDictionary(),
+                    type, request.getIdentifier());
+            if (type != ACCESS_REJECT) {
+                authProtocol.prepareAnswer(answer);
+            }
+        } else {
+            answer = RadiusPackets.create(request.getDictionary(),
+                    ACCESS_REJECT, request.getIdentifier());
+        }
+        return answer;
+    }
+
     @Override
     public Promise<RadiusPacket> handlePacket(Channel channel,
                                               AccessRequest request,
@@ -58,25 +84,14 @@ public class AuthHandler implements RequestHandler<AccessRequest,
                                 .getInstance()
                                 .create(request, threadSession);
                         boolean isProtocolValid = authProtocol.isValid(remoteAddress);
-                        boolean init = isProtocolValid && secretProvider
-                                .init(remoteAddress,
-                                        request.getUserName(),
-                                        authProtocol,
-                                        threadSession);
-                        int type = init && verifyPassword(authProtocol, threadSession) ?
-                                ACCESS_ACCEPT : ACCESS_REJECT;
+                        RadiusPacket answer;
                         if (isProtocolValid) {
-                            secretProvider.afterAuth(type, remoteAddress, request.getUserName(),
-                                    authProtocol, threadSession);
+                            answer = handleAnswer(request,
+                                    authProtocol, threadSession, remoteAddress, secretProvider);
+                        } else {
+                            answer = RadiusPackets.create(request.getDictionary(),
+                                    ACCESS_REJECT, request.getIdentifier());
                         }
-                        RadiusPacket answer = RadiusPackets.create(request.getDictionary(),
-                                type, request.getIdentifier());
-                        request.getAttributes(33)
-                                .forEach(answer::addAttribute);
-                        if (init) {
-                            authProtocol.prepareAnswer(answer);
-                        }
-
                         promise.trySuccess(answer);
                     } catch (Exception e) {
                         promise.tryFailure(e);

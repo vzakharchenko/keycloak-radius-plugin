@@ -150,7 +150,7 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Collections.emptyList());
         keycloakSecretProvider
-                .afterAuth(2, inetSocketAddress, USER, authProtocol, session);
+                .afterAuth(2, session);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Collections.emptyList());
         keycloakSecretProvider
-                .afterAuth(4, inetSocketAddress, USER, authProtocol, session);
+                .afterAuth(4, session);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
         RealmProvider realmProvider = getProvider(RealmProvider.class);
         when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(null);
         keycloakSecretProvider
-                .afterAuth(4, inetSocketAddress, USER, authProtocol, session);
+                .afterAuth(4, session);
     }
 
 

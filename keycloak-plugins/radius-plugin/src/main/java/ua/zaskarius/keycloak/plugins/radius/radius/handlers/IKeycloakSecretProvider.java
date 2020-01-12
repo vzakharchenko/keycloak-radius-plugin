@@ -12,8 +12,6 @@ public interface IKeycloakSecretProvider extends SecretProvider {
                  AuthProtocol protocol,
                  KeycloakSession threadSession);
 
-    void afterAuth(int action, InetSocketAddress address,
-                   String username,
-                   AuthProtocol protocol,
+    void afterAuth(int action,
                    KeycloakSession threadSession);
 }

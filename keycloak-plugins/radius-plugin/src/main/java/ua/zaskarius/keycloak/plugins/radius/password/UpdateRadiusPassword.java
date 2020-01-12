@@ -34,15 +34,19 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
         return InitiatedActionSupport.SUPPORTED;
     }
 
+    protected IRadiusCredentialProvider getProvider(RequiredActionContext context) {
+        return
+                (IRadiusCredentialProvider) context.getSession()
+                        .getProvider(CredentialProvider.class,
+                                RadiusCredentialProviderFactory.RADIUS_PROVIDER_ID);
+    }
+
     @Override
     public void evaluateTriggers(RequiredActionContext context) {
         int daysToExpirePassword = context.getRealm().getPasswordPolicy()
                 .getDaysToExpirePassword();
         if (daysToExpirePassword != -1) {
-            IRadiusCredentialProvider passwordProvider =
-                    (IRadiusCredentialProvider) context.getSession()
-                            .getProvider(CredentialProvider.class,
-                                    RadiusCredentialProviderFactory.RADIUS_PROVIDER_ID);
+            IRadiusCredentialProvider passwordProvider = getProvider(context);
             CredentialModel password = passwordProvider
                     .getPassword(context.getRealm(), context.getUser());
             if (password != null) {
@@ -72,6 +76,81 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
         context.challenge(challenge);
     }
 
+    protected EventBuilder createEvent(RequiredActionContext context,
+                                     EventBuilder event) {
+        return event.clone().event(EventType.UPDATE_PASSWORD_ERROR)
+                .client(context.getAuthenticationSession().getClient())
+                .user(context.getAuthenticationSession().getAuthenticatedUser())
+                .detail(
+                        UPDATE_PASSWORD_ERROR,
+                        "Update Radius Server password error");
+    }
+
+    protected void blankResponse(RequiredActionContext context,
+                               EventBuilder errorEvent) {
+        Response challenge = context.form()
+                .setAttribute(USERNAME, context.getAuthenticationSession()
+                        .getAuthenticatedUser().getUsername())
+                .setError(Messages.MISSING_PASSWORD)
+                .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
+        context.challenge(challenge);
+        errorEvent.error(Errors.PASSWORD_MISSING);
+    }
+
+    protected void notEqualsResponse(RequiredActionContext context,
+                                   EventBuilder errorEvent) {
+        Response challenge = context.form()
+                .setAttribute(USERNAME, context.getAuthenticationSession()
+                        .getAuthenticatedUser().getUsername())
+                .setError(Messages.NOTMATCH_PASSWORD)
+                .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
+        context.challenge(challenge);
+        errorEvent.error(Errors.PASSWORD_CONFIRM_ERROR);
+    }
+
+    protected void success(RequiredActionContext context,
+                         String passwordNew) {
+        RealmModel realm = context.getRealm();
+        UserModel user = context.getUser();
+        List<CredentialModel> credentials = context
+                .getSession()
+                .userCredentialManager()
+                .getStoredCredentialsByType(realm,
+                        user,
+                        RadiusCredentialModel.TYPE);
+        RadiusCredentialModel credentialModel = RadiusCredentialModel
+                .createFromValues(passwordNew, user.getId());
+        if (credentials.isEmpty()) {
+            context
+                    .getSession()
+                    .userCredentialManager()
+                    .createCredential(realm, user,
+                            credentialModel);
+        } else {
+            context.getSession().userCredentialManager()
+                    .updateCredential(realm, user,
+                            credentialModel);
+        }
+        context.success();
+    }
+
+    protected void exceptionHandler(EventBuilder errorEvent,
+                                  RequiredActionContext context,
+                                  Exception e) {
+        Object[] parameters = (e instanceof ModelException) ?
+                ((ModelException) e).getParameters() :
+                new Object[0];
+        errorEvent.detail(Details.REASON, e.getMessage()).error(Errors.PASSWORD_REJECTED);
+        Response challenge = context.form()
+                .setAttribute(USERNAME, context
+                        .getAuthenticationSession().getAuthenticatedUser().getUsername())
+                .setError(e.getMessage(), parameters)
+                .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
+        context.challenge(challenge);
+    }
+
+
+
     @Override
     public void processAction(RequiredActionContext context) {
         EventBuilder event = context.getEvent();
@@ -83,75 +162,17 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
                 "Update Radius Server password");
         String passwordNew = formData.getFirst("password-new");
         String passwordConfirm = formData.getFirst("password-confirm");
-
-        EventBuilder errorEvent = event.clone().event(EventType.UPDATE_PASSWORD_ERROR)
-                .client(context.getAuthenticationSession().getClient())
-                .user(context.getAuthenticationSession().getAuthenticatedUser())
-                .detail(
-                        UPDATE_PASSWORD_ERROR,
-                        "Update Radius Server password error");
-
+        EventBuilder errorEvent = createEvent(context, event);
         if (Validation.isBlank(passwordNew)) {
-            Response challenge = context.form()
-                    .setAttribute(USERNAME, context.getAuthenticationSession()
-                            .getAuthenticatedUser().getUsername())
-                    .setError(Messages.MISSING_PASSWORD)
-                    .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
-            context.challenge(challenge);
-            errorEvent.error(Errors.PASSWORD_MISSING);
-            return;
+            blankResponse(context, errorEvent);
         } else if (!passwordNew.equals(passwordConfirm)) {
-            Response challenge = context.form()
-                    .setAttribute(USERNAME, context.getAuthenticationSession()
-                            .getAuthenticatedUser().getUsername())
-                    .setError(Messages.NOTMATCH_PASSWORD)
-                    .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
-            context.challenge(challenge);
-            errorEvent.error(Errors.PASSWORD_CONFIRM_ERROR);
-            return;
-        }
-
-        try {
-            RealmModel realm = context.getRealm();
-            UserModel user = context.getUser();
-            List<CredentialModel> credentials = context
-                    .getSession()
-                    .userCredentialManager()
-                    .getStoredCredentialsByType(realm,
-                            user,
-                            RadiusCredentialModel.TYPE);
-            RadiusCredentialModel credentialModel = RadiusCredentialModel
-                    .createFromValues(passwordNew, user.getId());
-            if (credentials.isEmpty()) {
-                context
-                        .getSession()
-                        .userCredentialManager()
-                        .createCredential(realm, user,
-                                credentialModel);
-            } else {
-                context.getSession().userCredentialManager()
-                        .updateCredential(realm, user,
-                                credentialModel);
+            notEqualsResponse(context, errorEvent);
+        } else {
+            try {
+                success(context, passwordNew);
+            } catch (Exception ape) {
+                exceptionHandler(errorEvent, context, ape);
             }
-            context.success();
-        } catch (ModelException me) {
-            errorEvent.detail(Details.REASON, me.getMessage()).error(Errors.PASSWORD_REJECTED);
-            Response challenge = context.form()
-                    .setAttribute(USERNAME, context
-                            .getAuthenticationSession().getAuthenticatedUser().getUsername())
-                    .setError(me.getMessage(), me.getParameters())
-                    .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
-            context.challenge(challenge);
-            return;
-        } catch (Exception ape) {
-            errorEvent.detail(Details.REASON, ape.getMessage()).error(Errors.PASSWORD_REJECTED);
-            Response challenge = context.form()
-                    .setAttribute(USERNAME, context
-                            .getAuthenticationSession().getAuthenticatedUser().getUsername())
-                    .setError(ape.getMessage())
-                    .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
-            context.challenge(challenge);
-            return;
         }
     }
 

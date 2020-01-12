@@ -51,6 +51,18 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     protected abstract void answer(RadiusPacket answer, RadiusUserInfo radiusUserInfo);
 
+
+    private void prepareAnswerAttributes(IRadiusAttributeProvider provider,
+                                         KeycloakAttributesType attributesType,
+                                         RadiusPacket answer) {
+        provider
+                .createKeycloakAttributes(session, attributesType).read()
+                .ignoreUndefinedAttributes(answer
+                        .getDictionary())
+                .filter(accessRequest)
+                .fillAnswer(answer);
+    }
+
     @Override
     public final void prepareAnswer(RadiusPacket answer) {
         RadiusUserInfo radiusUserInfo = KeycloakSessionUtils.getRadiusUserInfo(session);
@@ -58,27 +70,9 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
             Set<IRadiusAttributeProvider> providers = session
                     .getAllProviders(IRadiusAttributeProvider.class);
             for (IRadiusAttributeProvider provider : providers) {
-                provider
-                        .createKeycloakAttributes(session, KeycloakAttributesType
-                                .GROUP).read()
-                        .ignoreUndefinedAttributes(answer
-                                .getDictionary())
-                        .filter(accessRequest)
-                        .fillAnswer(answer);
-                provider
-                        .createKeycloakAttributes(session, KeycloakAttributesType
-                                .ROLE).read()
-                        .ignoreUndefinedAttributes(answer
-                                .getDictionary())
-                        .filter(accessRequest)
-                        .fillAnswer(answer);
-                provider
-                        .createKeycloakAttributes(session, KeycloakAttributesType
-                                .USER).read()
-                        .ignoreUndefinedAttributes(answer
-                                .getDictionary())
-                        .filter(accessRequest)
-                        .fillAnswer(answer);
+                for (KeycloakAttributesType attributesType : KeycloakAttributesType.values()) {
+                    prepareAnswerAttributes(provider, attributesType, answer);
+                }
             }
             answer(answer, radiusUserInfo);
         }

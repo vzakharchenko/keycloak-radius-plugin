@@ -21,22 +21,7 @@ public final class MSCHAPV2AuthenticatorUtils {
             byte[] userName) throws NoSuchAlgorithmException {
         byte[] pBytes = password;
         if (pBytes == null) {
-            pBytes = new byte[] {0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00};
+            pBytes = new byte[16];
         }
         byte[] passwordHashHash = getPasswordHashHash(pBytes);
 

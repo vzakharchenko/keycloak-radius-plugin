@@ -42,4 +42,8 @@ public class RadiusClientConnection implements ClientConnection {
     public int getLocalPort() {
         return 0;
     }
+
+    public InetSocketAddress getInetSocketAddress() {
+        return inetSocketAddress;
+    }
 }

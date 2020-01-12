@@ -16,6 +16,7 @@ public class RadiusClientConnectionTest {
         assertNotNull(radiusClientConnection.getLocalAddr());
         assertEquals(radiusClientConnection.getLocalPort(), 0);
         assertNotNull(radiusClientConnection.getRemoteAddr());
+        assertNotNull(radiusClientConnection.getInetSocketAddress());
         assertNotNull(radiusClientConnection.getRemoteHost());
         assertEquals(radiusClientConnection.getRemotePort(), 0);
     }

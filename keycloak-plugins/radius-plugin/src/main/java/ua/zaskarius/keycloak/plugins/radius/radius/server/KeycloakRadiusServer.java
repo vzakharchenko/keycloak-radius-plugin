@@ -42,28 +42,47 @@ public class KeycloakRadiusServer
     public static final int TTL_MS = 10000;
     public static final String MIKROTIK = "mikrotik";
     public static final String MS = "MS";
+    public static final int N_THREADS = 4;
+    private HashedWheelTimer timer = new HashedWheelTimer(1, TimeUnit.SECONDS);
 
     private RadiusServer server;
 
-    public KeycloakRadiusServer(KeycloakSession session) {
-        IKeycloakSecretProvider secretProvider = new KeycloakSecretProvider(session);
-        RadiusServerSettings radiusSettings = RadiusConfigHelper
-                .getConfig().getRadiusSettings(session);
-        final PacketEncoder packetEncoder = new PacketEncoder(
+
+    private EventLoopGroup createEventLoopGroup() {
+        return new NioEventLoopGroup(N_THREADS);
+    }
+
+    private PacketEncoder createPacketEncoder(KeycloakSession session) {
+        return new PacketEncoder(
                 DictionaryLoader
                         .getInstance()
                         .loadDictionary(session));
-        final EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
-        HashedWheelTimer timer = new HashedWheelTimer(1, TimeUnit.SECONDS);
-        final RequestHandler<AccessRequest,
-                IKeycloakSecretProvider> authHandler = new DeduplicatorHandler(
+    }
+
+    private RequestHandler<AccessRequest,
+            IKeycloakSecretProvider> createAuthHandler(KeycloakSession session) {
+        return new DeduplicatorHandler(
                 new AuthHandler(session),
                 timer,
                 TTL_MS);
-        RequestHandler<AccountingRequest,
-                SecretProvider> acctHandler = new DeduplicatorHandler<>(
+    }
+
+    private RequestHandler<AccountingRequest,
+            SecretProvider> createAccountHandler() {
+        return new DeduplicatorHandler<>(
                 new AcctHandler(), timer, TTL_MS);
-        server = new RadiusServer(eventLoopGroup,
+    }
+
+    private RadiusServer createRadiusServer(KeycloakSession session,
+                                            EventLoopGroup eventLoopGroup,
+                                            RadiusServerSettings radiusSettings) {
+        IKeycloakSecretProvider secretProvider = new KeycloakSecretProvider(session);
+        final PacketEncoder packetEncoder = createPacketEncoder(session);
+        final RequestHandler<AccessRequest,
+                IKeycloakSecretProvider> authHandler = createAuthHandler(session);
+        final RequestHandler<AccountingRequest,
+                SecretProvider> acctHandler = createAccountHandler();
+        return new RadiusServer(eventLoopGroup,
                 timer,
                 new ReflectiveChannelFactory<>(NioDatagramChannel.class),
                 new HandlerAdapter<>(packetEncoder,
@@ -72,6 +91,13 @@ public class KeycloakRadiusServer
                         acctHandler, timer, secretProvider, AccountingRequest.class),
                 new InetSocketAddress(radiusSettings.getAuthPort()), new InetSocketAddress(
                 radiusSettings.getAccountPort()));
+    }
+
+    public KeycloakRadiusServer(KeycloakSession session) {
+        RadiusServerSettings radiusSettings = RadiusConfigHelper
+                .getConfig().getRadiusSettings(session);
+        final EventLoopGroup eventLoopGroup = createEventLoopGroup();
+        server = createRadiusServer(session, eventLoopGroup, radiusSettings);
         if (radiusSettings.isUseRadius()) {
             final Future<Void> future = server.start();
             future.addListener(future1 -> {

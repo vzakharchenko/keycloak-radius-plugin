@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
+import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 import static ua.zaskarius.keycloak.plugins.radius.client.RadiusLoginProtocolFactory.RADIUS_PROTOCOL;
 import static ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper.RADIUS_SESSION_PASSWORD;
 
@@ -65,7 +66,7 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
             KeycloakSession keycloakSession,
             UserModel userModel,
             AuthProtocol protocol,
-            RealmModel realmModel) {
+            RealmModel realmModel, ClientModel client, RadiusClientConnection clientConnection) {
         RadiusUserInfo radiusUserInfo = new RadiusUserInfo();
         radiusUserInfo.setRealmModel(realmModel);
         List<String> passwords = new ArrayList<>(
@@ -79,6 +80,10 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
         radiusUserInfo.setPasswords(passwords);
         radiusUserInfo.setUserModel(userModel);
         radiusUserInfo.setProtocol(protocol);
+        radiusUserInfo.setRadiusSecret(getSharedSecret(clientConnection.getInetSocketAddress(),
+                keycloakSession));
+        radiusUserInfo.setClientModel(client);
+        radiusUserInfo.setClientConnection(clientConnection);
         return radiusUserInfo;
     }
 
@@ -110,42 +115,41 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
         return null;
     }
 
+    private boolean init(InetSocketAddress address,
+                         String username,
+                         AuthProtocol protocol,
+                         KeycloakSession threadSession,
+                         RealmModel realm,
+                         ClientModel client) {
+        RadiusClientConnection clientConnection = new RadiusClientConnection(address);
+        EventBuilder event = EventLoggerFactory
+                .createEvent(threadSession, realm, client, clientConnection);
+        UserModel user = getUserModel(threadSession, username, realm);
+        if (user != null && user.isEnabled()) {
+            RadiusUserInfo radiusUserInfo = create(
+                    threadSession, user, protocol, realm, client, clientConnection
+            );
+            KeycloakSessionUtils.addRadiusUserInfo(threadSession, radiusUserInfo);
+            return true;
+        } else {
+            event.event(EventType.LOGIN_ERROR).detail(
+                    EventLoggerFactory.RADIUS_MESSAGE, "USER DOES NOT EXIST")
+                    .error("Login to RADIUS" + " fail for user " + username
+                            + ", user disabled or does not exists");
+        }
+        return false;
+    }
+
     @Override
-    public boolean init(InetSocketAddress address, String username,
-                        AuthProtocol protocol,
+    public boolean init(InetSocketAddress address, String username, AuthProtocol protocol,
                         KeycloakSession threadSession) {
         boolean successInit = false;
         RealmModel realm = protocol.getRealm();
         if (realm != null) {
             ClientModel client = getClient(address, threadSession, realm);
             if (client != null) {
-                EventBuilder event = EventLoggerFactory
-                        .createEvent(threadSession, realm,
-                                client,
-                                new RadiusClientConnection(address));
-                UserModel user = getUserModel(threadSession, username, realm);
-                if (user != null && user.isEnabled()) {
-                    RadiusUserInfo radiusUserInfo = create(
-                            threadSession,
-                            user,
-                            protocol,
-                            realm);
-                    radiusUserInfo.setRadiusSecret(getSharedSecret(
-                            address,
-                            threadSession));
-                    radiusUserInfo.setClientModel(client);
-                    radiusUserInfo.setClientConnection(new RadiusClientConnection(address));
-                    KeycloakSessionUtils.addRadiusUserInfo(threadSession, radiusUserInfo);
-                    successInit = true;
-                } else {
-                    event.event(EventType.LOGIN_ERROR).detail(
-                            EventLoggerFactory.RADIUS_MESSAGE, "USER DOES NOT EXIST")
-                            .error("Login to RADIUS" +
-                                    " fail for user " + username
-                                    + ", user disabled or does not exists");
-                }
+                successInit = init(address, username, protocol, threadSession, realm, client);
             }
-
         }
         return successInit;
     }
@@ -173,31 +177,26 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
 
     @Override
     public void afterAuth(int action,
-                          InetSocketAddress address,
-                          String username,
-                          AuthProtocol authProtocol,
                           KeycloakSession threadSession) {
 
-        if (authProtocol.getRealm() != null) {
-            RadiusUserInfo radiusInfo = KeycloakSessionUtils
-                    .getRadiusUserInfo(threadSession);
-            if (radiusInfo != null) {
-                RealmModel realm = radiusInfo.getRealmModel();
-                EventBuilder event = EventLoggerFactory
-                        .createEvent(threadSession, realm,
-                                radiusInfo.getClientModel(),
-                                new RadiusClientConnection(address));
-                UserModel user = radiusInfo.getUserModel();
-                if (action == ACCESS_ACCEPT) {
-                    event.user(user);
-                    event.event(EventType.LOGIN).detail("RADIUS", "success Login to RADIUS" +
-                            " for user " + username).success();
-                } else {
-                    event.user(user);
-                    event.event(EventType.LOGIN_ERROR).detail("RADIUS", "Login to RADIUS" +
-                            " fail for user " + username
-                            + ", please check password and try again").error("RADIUS ERROR");
-                }
+        RadiusUserInfo radiusInfo = KeycloakSessionUtils
+                .getRadiusUserInfo(threadSession);
+        if (radiusInfo != null) {
+            RealmModel realm = radiusInfo.getRealmModel();
+            EventBuilder event = EventLoggerFactory
+                    .createEvent(threadSession, realm,
+                            radiusInfo.getClientModel(),
+                            radiusInfo.getClientConnection());
+            UserModel user = radiusInfo.getUserModel();
+            if (action == ACCESS_ACCEPT) {
+                event.user(user);
+                event.event(EventType.LOGIN).detail("RADIUS", "success Login to RADIUS" +
+                        " for user " + user.getUsername()).success();
+            } else if (action == ACCESS_REJECT) {
+                event.user(user);
+                event.event(EventType.LOGIN_ERROR).detail("RADIUS", "Login to RADIUS" +
+                        " fail for user " + user.getUsername()
+                        + ", please check password and try again").error("RADIUS ERROR");
             }
         }
 
