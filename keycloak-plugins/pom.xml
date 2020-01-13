@@ -302,7 +302,7 @@
                     <dependency>
                         <groupId>net.sourceforge.pmd</groupId>
                         <artifactId>pmd-plsql</artifactId>
-                        <version>6.9.0</version>
+                        <version>6.20.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
