@@ -32,7 +32,7 @@ public final class EventLoggerFactory {
 
         return new EventBuilder(realmModel, session, clientConnection)
                 .detail(RADIUS,
-                RadiusConfigHelper.getConfig().getRadiusSettings(session).getProvider())
+                RadiusConfigHelper.getConfig().getRadiusSettings().getProvider())
                 .detail(RADIUS_HOST,
                         clientConnection.getRemoteAddr());
     }
@@ -46,7 +46,7 @@ public final class EventLoggerFactory {
 
         return new EventBuilder(realmModel, session, clientConnection)
                 .detail(RADIUS,
-                RadiusConfigHelper.getConfig().getRadiusSettings(session).getProvider())
+                RadiusConfigHelper.getConfig().getRadiusSettings().getProvider())
                 .client(clientModel)
                 .detail(RADIUS_HOST,
                         clientConnection.getRemoteAddr());

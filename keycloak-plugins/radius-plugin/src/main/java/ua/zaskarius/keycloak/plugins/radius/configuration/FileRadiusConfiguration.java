@@ -1,6 +1,6 @@
 package ua.zaskarius.keycloak.plugins.radius.configuration;
 
-import org.keycloak.models.KeycloakSession;
+import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.util.JsonSerialization;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusAccessModel;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusConfigModel;
@@ -15,27 +15,32 @@ import java.util.stream.Collectors;
 
 public class FileRadiusConfiguration implements IRadiusConfiguration {
 
+    private RadiusServerSettings radiusSettings = null;
+
     protected FileRadiusConfiguration() {
     }
 
     @Override
-    public RadiusServerSettings getRadiusSettings(KeycloakSession session) {
-        File file = new File("config", "radius.config");
-        if (!file.exists()) {
-            throw new IllegalStateException(file.getAbsolutePath() + " does not exist");
-        }
+    public RadiusServerSettings getRadiusSettings() {
+        if (radiusSettings == null) {
+            File file = new File("config", "radius.config");
+            if (!file.exists()) {
+                throw new IllegalStateException(file.getAbsolutePath() + " does not exist");
+            }
 
-        try (InputStream fileInputStream = Files.newInputStream(Paths
-                .get(file.toURI()))) {
-            RadiusConfigModel configModel = JsonSerialization
-                    .readValue(fileInputStream, RadiusConfigModel.class);
-            return transforn(configModel);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+            try (InputStream fileInputStream = Files.newInputStream(Paths
+                    .get(file.toURI()))) {
+                RadiusConfigModel configModel = JsonSerialization
+                        .readValue(fileInputStream, RadiusConfigModel.class);
+                radiusSettings = transform(configModel);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
+        return radiusSettings;
     }
 
-    private RadiusServerSettings transforn(RadiusConfigModel configModel) {
+    private RadiusServerSettings transform(RadiusConfigModel configModel) {
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setAccountPort(configModel.getAccountPort());
         radiusServerSettings.setAuthPort(configModel.getAuthPort());
@@ -50,5 +55,10 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
                                     RadiusAccessModel::getSharedSecret)));
         }
         return radiusServerSettings;
+    }
+
+    @VisibleForTesting
+    public void setRadiusSettings(RadiusServerSettings radiusSettings) {
+        this.radiusSettings = radiusSettings;
     }
 }

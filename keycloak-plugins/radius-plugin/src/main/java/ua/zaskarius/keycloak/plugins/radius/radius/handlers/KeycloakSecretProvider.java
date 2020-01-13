@@ -12,7 +12,6 @@ import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.clientconnection.RadiusClientConnection;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
-import ua.zaskarius.keycloak.plugins.radius.transaction.KeycloakRadiusUtils;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -30,16 +29,38 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
 
     private static final Logger LOGGER = Logger.getLogger(KeycloakSecretProvider.class);
 
-    private final KeycloakSessionFactory sessionFactory;
 
-    public KeycloakSecretProvider(KeycloakSession session) {
-        this.sessionFactory = session.getKeycloakSessionFactory();
+    private String getSharedByIp(RadiusServerSettings radiusSettings,
+                                 String hostAddress
+    ) {
+        String secret = radiusSettings.getAccessMap().get(hostAddress);
+        if (secret != null) {
+            LOGGER.info("RADIUS " + hostAddress + " connected");
+        }
+        return secret;
     }
 
     @Override
     public String getSharedSecret(InetSocketAddress address) {
-        return KeycloakRadiusUtils.runJobInTransaction(sessionFactory,
-                threadSession -> getSharedSecret(address, threadSession));
+        InetAddress inetAddress = address
+                .getAddress();
+        if (inetAddress == null) {
+            return null;
+        }
+        String hostAddress = inetAddress
+                .getHostAddress();
+        RadiusServerSettings radiusSettings = RadiusConfigHelper.getConfig().getRadiusSettings();
+        String settingsSecret = radiusSettings.getSecret();
+        if (radiusSettings.getAccessMap() != null) {
+            String secret = getSharedByIp(radiusSettings, hostAddress);
+            if (secret != null) {
+                return secret;
+            }
+        }
+        if (settingsSecret == null || settingsSecret.isEmpty()) {
+            LOGGER.warn("RADIUS " + address.getAddress().getHostAddress() + " disconnected");
+        }
+        return settingsSecret;
     }
 
 
@@ -80,8 +101,8 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
         radiusUserInfo.setPasswords(passwords);
         radiusUserInfo.setUserModel(userModel);
         radiusUserInfo.setProtocol(protocol);
-        radiusUserInfo.setRadiusSecret(getSharedSecret(clientConnection.getInetSocketAddress(),
-                keycloakSession));
+        radiusUserInfo.setRadiusSecret(getSharedSecret(clientConnection
+                .getInetSocketAddress()));
         radiusUserInfo.setClientModel(client);
         radiusUserInfo.setClientConnection(clientConnection);
         return radiusUserInfo;
@@ -141,7 +162,9 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
     }
 
     @Override
-    public boolean init(InetSocketAddress address, String username, AuthProtocol protocol,
+    public boolean init(InetSocketAddress address,
+                        String username,
+                        AuthProtocol protocol,
                         KeycloakSession threadSession) {
         boolean successInit = false;
         RealmModel realm = protocol.getRealm();
@@ -154,26 +177,6 @@ public class KeycloakSecretProvider implements IKeycloakSecretProvider {
         return successInit;
     }
 
-    private String getSharedSecret(InetSocketAddress address, KeycloakSession session) {
-        InetAddress inetAddress = address
-                .getAddress();
-        if (inetAddress == null) {
-            return null;
-        }
-        String hostAddress = inetAddress
-                .getHostAddress();
-        RadiusServerSettings radiusSettings = RadiusConfigHelper
-                .getConfig()
-                .getRadiusSettings(session);
-        String secret;
-        if (radiusSettings.getAccessMap() != null) {
-            secret = radiusSettings.getAccessMap().get(hostAddress);
-            if (secret != null) {
-                return secret;
-            }
-        }
-        return radiusSettings.getSecret();
-    }
 
     @Override
     public void afterAuth(int action,

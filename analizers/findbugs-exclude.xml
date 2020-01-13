@@ -1,75 +1,79 @@
 <FindBugsFilter>
-  <Match>
-    <Bug pattern="SE_NO_SERIALVERSIONID"/>
-  </Match>
-  <Match>
-    <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
-  </Match>
-  <Match>
-    <Bug pattern="JAXRS_ENDPOINT"/>
-  </Match>
-  <Match>
-    <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CHECKED"/>
-  </Match>
-  <Match>
-    <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
-  </Match>
-  <Match>
-    <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
-  </Match>
-  <Match>
-    <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
-  </Match>
-  <Match>
-    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
-  </Match>
-  <Match>
-    <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-  </Match>
-  <Match>
-    <Bug pattern="SCII_SPOILED_CHILD_INTERFACE_IMPLEMENTOR"/>
-  </Match>
-  <Match>
-    <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.configuration.FlowRadiusConfiguration"/>
-  </Match>
-  <Match>
-    <Bug pattern="RI_REDUNDANT_INTERFACES"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.event.RadiusEventProvider"/>
-  </Match>
-  <Match>
-    <Bug pattern="WEAK_MESSAGE_DIGEST_MD5"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.CHAPProtocol"/>
-  </Match>
-  <Match>
-    <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialProvider"/>
-  </Match>
-  <Match>
-    <Bug pattern="BL_BURYING_LOGIC"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AbstractAuthProtocol"/>
-  </Match>
-  <Match>
-    <Bug pattern="BL_BURYING_LOGIC"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.AbstractKeycloakAttributes"/>
-  </Match>
-  <Match>
-    <Bug pattern="RFI_SET_ACCESSIBLE"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.RadiusLibraryUtils"/>
-  </Match>
-  <Match>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPHelper"/>
-  </Match>
-  <Match>
-    <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
-  </Match>
-  <Match>
-    <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
-  </Match>
-  <Match>
-    <Bug pattern="CFS_CONFUSING_FUNCTION_SEMANTICS"/>
-    <Class name="ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigJPA"/>
-  </Match>
+    <Match>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+    <Match>
+        <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
+    </Match>
+    <Match>
+        <Bug pattern="JAXRS_ENDPOINT"/>
+    </Match>
+    <Match>
+        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CHECKED"/>
+    </Match>
+    <Match>
+        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Match>
+    <Match>
+        <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
+    </Match>
+    <Match>
+        <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
+    </Match>
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
+    <Match>
+        <Bug pattern="SCII_SPOILED_CHILD_INTERFACE_IMPLEMENTOR"/>
+    </Match>
+    <Match>
+        <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.configuration.FlowRadiusConfiguration"/>
+    </Match>
+    <Match>
+        <Bug pattern="RI_REDUNDANT_INTERFACES"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.event.RadiusEventProvider"/>
+    </Match>
+    <Match>
+        <Bug pattern="WEAK_MESSAGE_DIGEST_MD5"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.CHAPProtocol"/>
+    </Match>
+    <Match>
+        <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialProvider"/>
+    </Match>
+    <Match>
+        <Bug pattern="BL_BURYING_LOGIC"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AbstractAuthProtocol"/>
+    </Match>
+    <Match>
+        <Bug pattern="BL_BURYING_LOGIC"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.AbstractKeycloakAttributes"/>
+    </Match>
+    <Match>
+        <Bug pattern="RFI_SET_ACCESSIBLE"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.RadiusLibraryUtils"/>
+    </Match>
+    <Match>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPHelper"/>
+    </Match>
+    <Match>
+        <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
+    </Match>
+    <Match>
+        <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
+    </Match>
+    <Match>
+        <Bug pattern="CFS_CONFUSING_FUNCTION_SEMANTICS"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigJPA"/>
+    </Match>
+    <Match>
+        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.AuthHandler"/>
+    </Match>
 </FindBugsFilter>

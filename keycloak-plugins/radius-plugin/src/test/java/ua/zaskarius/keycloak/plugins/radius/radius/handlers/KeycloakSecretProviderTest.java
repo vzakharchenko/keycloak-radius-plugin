@@ -24,7 +24,7 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        keycloakSecretProvider = new KeycloakSecretProvider(session);
+        keycloakSecretProvider = new KeycloakSecretProvider();
         inetSocketAddress = new InetSocketAddress(ModelBuilder.IP, 0);
     }
 
@@ -39,13 +39,6 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
         String sharedSecret = keycloakSecretProvider
                 .getSharedSecret(new InetSocketAddress("111.111.111.111", 0));
         assertEquals(sharedSecret, SHARED);
-    }
-
-    @Test
-    public void testSharedSecretWrong2() {
-        String sharedSecret = keycloakSecretProvider
-                .getSharedSecret(InetSocketAddress.createUnresolved("111.111.111.111", 0));
-        assertNull(sharedSecret);
     }
 
     @Test

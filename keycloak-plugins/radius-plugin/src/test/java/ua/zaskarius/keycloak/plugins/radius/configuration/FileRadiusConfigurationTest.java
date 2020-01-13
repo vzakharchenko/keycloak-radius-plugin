@@ -14,7 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     private FileRadiusConfiguration radiusConfiguration = new FileRadiusConfiguration();
@@ -30,33 +31,42 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusAccessModel.setIp("ip");
         radiusAccessModel.setSharedSecret("ip");
         radiusConfigModel.setRadiusIpAccess(Arrays.asList(radiusAccessModel));
+        radiusConfiguration.setRadiusSettings(null);
 
         FileUtils.write(config,
                 JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
     }
 
     @AfterMethod
-    public void afterNethods(){
+    public void afterNethods() {
         FileUtils.deleteQuietly(config);
     }
 
     @Test
     public void testMethods() {
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings(session);
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
         assertNotNull(radiusSettings);
-        assertEquals(radiusSettings.getAccountPort(),1813);
+        assertEquals(radiusSettings.getAccountPort(), 1813);
+    }
+
+    @Test
+    public void testMethods2() {
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        radiusSettings = radiusConfiguration.getRadiusSettings();
+        assertNotNull(radiusSettings);
+        assertEquals(radiusSettings.getAccountPort(), 1813);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testMethodsDoesNotexists() {
         FileUtils.deleteQuietly(config);
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings(session);
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testMethodsWrongStrucure() throws IOException {
         FileUtils.deleteQuietly(config);
-        FileUtils.write(config,"test");
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings(session);
+        FileUtils.write(config, "test");
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
     }
 }

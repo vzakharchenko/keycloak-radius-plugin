@@ -234,7 +234,7 @@ public abstract class AbstractRadiusTest {
         when(userModel.isEnabled()).thenReturn(true);
         when(userModel.hasRole(radiusRole)).thenReturn(true);
         when(userModel.getAttributes()).thenReturn(new HashMap<>());
-        when(configuration.getRadiusSettings(session))
+        when(configuration.getRadiusSettings())
                 .thenReturn(ModelBuilder.createRadiusServerSettings());
         when(userCredentialManager
                 .getStoredCredentialsByType(realmModel, userModel,

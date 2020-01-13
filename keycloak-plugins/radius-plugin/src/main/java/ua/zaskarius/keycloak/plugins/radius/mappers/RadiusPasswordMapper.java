@@ -60,7 +60,7 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
                             ClientSessionContext clientSessionCtx) {
 
         RadiusServerSettings commonSettings = RadiusConfigHelper.getConfig()
-                .getRadiusSettings(keycloakSession);
+                .getRadiusSettings();
         if (commonSettings.isUseRadius()) {
             IRadiusServerProvider provider = keycloakSession
                     .getProvider(IRadiusServerProvider.class,

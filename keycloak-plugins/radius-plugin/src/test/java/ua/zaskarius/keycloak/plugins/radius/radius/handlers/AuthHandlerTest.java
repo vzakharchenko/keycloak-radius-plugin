@@ -1,137 +1,127 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers;
 
-import io.netty.channel.Channel;
-import io.netty.channel.EventLoop;
-import io.netty.util.concurrent.Promise;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
-import org.keycloak.models.KeycloakSession;
+import io.netty.channel.ChannelHandlerContext;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
-import org.tinyradius.packet.RadiusPacket;
+import org.tinyradius.server.RequestCtx;
+import org.tinyradius.util.RadiusEndpoint;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProvider;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.net.InetSocketAddress;
-import java.util.Arrays;
+import java.util.ArrayList;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static ua.zaskarius.keycloak.plugins.radius.radius.handlers.AuthHandler.DEFAULT_AUTH_RADIUS_PROVIDER;
 
 public class AuthHandlerTest extends AbstractRadiusTest {
-
-    private AuthHandler authHandler;
+    private AuthHandler authHandler = new AuthHandler();
+    private RequestCtx requestCtx;
+    private RadiusEndpoint radiusEndpoint;
     @Mock
-    private Dictionary dictionary;
+    private ChannelHandlerContext channelHandlerContext;
+
     @Mock
     private IKeycloakSecretProvider secretProvider;
-    @Mock
-    private Channel channel;
-
-    @Mock
-    private EventLoop eventLoop;
-    @Mock
-    private Promise promise;
-
-    @Mock
-    private AuthProtocol authProtocol;
-
-    private RadiusUserInfo radiusUserInfo;
-
 
     @BeforeMethod
-    public void beforeTests() {
-        authHandler = new AuthHandler(session);
-        radiusUserInfo = new RadiusUserInfo();
-        radiusUserInfo.setPasswords(Arrays.asList("123"));
-        radiusUserInfo.setUserModel(userModel);
-        reset(channel);
-        reset(dictionary);
-        reset(secretProvider);
-        reset(authProtocol);
-        reset(eventLoop);
-        reset(promise);
-        when(secretProvider
-                .init(any(), any(), any(), any(KeycloakSession.class)))
-                .thenReturn(true);
+    public void beforeMethods() {
+        AccessRequest accessRequest = new AccessRequest(realDictionary,
+                0, new byte[16], "test", "p");
+        radiusEndpoint = new RadiusEndpoint(InetSocketAddress.createUnresolved("0", 0),
+                "testSecret");
+        requestCtx = new RequestCtx(accessRequest, radiusEndpoint);
+
         when(radiusAuthProtocolFactory.create(any(), any())).thenReturn(authProtocol);
-        when(authProtocol.verifyPassword(anyString())).thenReturn(true);
-        when(authProtocol.getRealm()).thenReturn(realmModel);
-        when(channel.eventLoop()).thenReturn(eventLoop);
-        when(eventLoop.newPromise()).thenReturn(promise);
-
+        when(secretProvider.init(any(), any(), any(), any())).thenReturn(true);
+        reset(channelHandlerContext);
     }
 
     @Test
-    public void testAuthHandler() {
-        AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("111.111.111.111", 0);
-        Promise<RadiusPacket> promise = authHandler.handlePacket(channel, request, inetSocketAddress, secretProvider);
-        assertNotNull(promise);
-        verify(promise).trySuccess(any());
-        verify(promise, never()).tryFailure(any());
+    public void testMethods() {
+        assertEquals(authHandler.getId(), DEFAULT_AUTH_RADIUS_PROVIDER);
+        IRadiusAuthHandlerProvider iRadiusAuthHandlerProvider = authHandler.create(session);
+        assertNotNull(iRadiusAuthHandlerProvider);
+        authHandler.close();
+        authHandler.init(null);
+        authHandler.postInit(null);
+        assertNotNull(authHandler.getChannelHandler(session));
+        assertEquals(authHandler.acceptedPacketType(), AccessRequest.class);
     }
 
     @Test
-    public void testAuthHandlerIntitFalse() {
-        when(secretProvider
-                .init(any(), any(), any(), any(KeycloakSession.class)))
-                .thenReturn(false);
-        AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("111.111.111.111", 0);
-        Promise<RadiusPacket> promise = authHandler.handlePacket(channel, request, inetSocketAddress, secretProvider);
-        assertNotNull(promise);
-        verify(promise).trySuccess(any());
-        verify(promise, never()).tryFailure(any());
+    public void testChannelRead0() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
     }
 
     @Test
-    public void testAuthHandlerProtocolIsNotValid1() {
-        when(secretProvider
-                .init(any(), any(), any(), any(KeycloakSession.class)))
-                .thenReturn(false);
+    public void testChannelRead0_Protocol_not_Valid() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
         when(authProtocol.isValid(any())).thenReturn(false);
-        AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("111.111.111.111", 0);
-        Promise<RadiusPacket> promise = authHandler.handlePacket(channel, request, inetSocketAddress, secretProvider);
-        assertNotNull(promise);
-        verify(promise).trySuccess(any());
-        verify(promise, never()).tryFailure(any());
+
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
     }
 
     @Test
-    public void testAuthHandlerProtocolIsNotValid2() {
-        when(authProtocol.isValid(any())).thenReturn(false);
-        AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("111.111.111.111", 0);
-        Promise<RadiusPacket> promise = authHandler.handlePacket(channel, request, inetSocketAddress, secretProvider);
-        assertNotNull(promise);
-        verify(promise).trySuccess(any());
-        verify(promise, never()).tryFailure(any());
+    public void testChannelRead0_exception() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        when(authProtocol.isValid(any())).thenThrow(new RuntimeException("1"));
+
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+
+    @Test(expectedExceptions = RuntimeException.class)
+    public void testChannelRead0_exception2() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        when(session.getTransactionManager()).thenThrow(new RuntimeException("1"));
+
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
     }
 
     @Test
-    public void testAuthHandlerFail() {
-        when(radiusAuthProtocolFactory.create(any(), any())).thenReturn(null);
-        AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("111.111.111.111", 0);
-        Promise<RadiusPacket> promise = authHandler.handlePacket(channel, request, inetSocketAddress, secretProvider);
-        assertNotNull(promise);
-        verify(promise, never()).trySuccess(any());
-        verify(promise).tryFailure(any());
+    public void testChannelRead0_session1() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        when(session.getAttribute("RADIUS_INFO",
+                RadiusUserInfo.class))
+                .thenReturn(null);
+
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
     }
 
+    @Test
+    public void testChannelRead0_session2() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        radiusUserInfo.setPasswords(new ArrayList<>());
+
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
 
     @Test
-    public void testAuthHandlerWithoutPassword() {
-        when(authProtocol.verifyPassword(anyString())).thenReturn(false);
-        AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("111.111.111.111", 0);
-        Promise<RadiusPacket> promise = authHandler.handlePacket(channel, request, inetSocketAddress, secretProvider);
-        assertNotNull(promise);
-        verify(promise).trySuccess(any());
-        verify(promise, never()).tryFailure(any());
+    public void testChannelRead0_init() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        when(secretProvider.init(any(), any(), any(), any())).thenReturn(false);
+
+        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
     }
 }

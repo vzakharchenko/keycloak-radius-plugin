@@ -159,20 +159,13 @@
                 <version>3.2.1</version>
                 <configuration>
                     <transformers>
-                        <transformer
-                                implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
-                            <resource>BCKEY.DSA</resource>
-                            <resource>BCKEY.SF</resource>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <manifestEntries>
+                                <Multi-Release>true</Multi-Release>
+                            </manifestEntries>
                         </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                     </transformers>
-                    <filters>
-                        <filter>
-                            <excludes>
-                                <exclude>*.DSA</exclude>
-                                <exclude>*.SF</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
                 </configuration>
                 <executions>
                     <execution>

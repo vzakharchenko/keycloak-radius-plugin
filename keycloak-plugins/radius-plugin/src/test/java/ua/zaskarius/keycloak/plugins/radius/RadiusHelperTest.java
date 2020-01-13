@@ -55,7 +55,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testIsUseRadius() {
-        assertTrue(RadiusHelper.isUseRadius(session));
+        assertTrue(RadiusHelper.isUseRadius());
     }
 
     @Test

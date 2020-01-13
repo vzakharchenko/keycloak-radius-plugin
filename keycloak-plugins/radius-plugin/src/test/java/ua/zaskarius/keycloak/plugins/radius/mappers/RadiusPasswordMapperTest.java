@@ -64,7 +64,7 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
     public void testWithoutRadius() {
         RadiusServerSettings radiusCommonSettings = ModelBuilder.createRadiusServerSettings();
         radiusCommonSettings.setUseRadius(false);
-        when(configuration.getRadiusSettings(session))
+        when(configuration.getRadiusSettings())
                 .thenReturn(radiusCommonSettings);
         IDToken token = create();
         passwordMapper.setClaim(token, null, userSessionModel, session, null);

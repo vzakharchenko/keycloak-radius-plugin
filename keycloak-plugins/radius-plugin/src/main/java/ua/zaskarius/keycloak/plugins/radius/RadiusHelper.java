@@ -65,7 +65,7 @@ public final class RadiusHelper {
         IRadiusConfiguration config = RadiusConfigHelper
                 .getConfig();
         RadiusServerSettings radiusSettings = config
-                .getRadiusSettings(session);
+                .getRadiusSettings();
         return session
                 .getProvider(IRadiusServerProvider.class,
                         radiusSettings.getProvider());
@@ -87,9 +87,9 @@ public final class RadiusHelper {
     }
 
 
-    public static boolean isUseRadius(KeycloakSession session) {
+    public static boolean isUseRadius() {
         IRadiusConfiguration config = RadiusConfigHelper.getConfig();
-        return config.getRadiusSettings(session).isUseRadius();
+        return config.getRadiusSettings().isUseRadius();
     }
 
 

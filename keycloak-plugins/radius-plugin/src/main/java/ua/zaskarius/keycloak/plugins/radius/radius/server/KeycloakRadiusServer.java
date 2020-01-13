@@ -1,35 +1,30 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.server;
 
 import com.google.common.annotations.VisibleForTesting;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.ReflectiveChannelFactory;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.concurrent.Future;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RequiredActionProviderModel;
-import org.tinyradius.packet.AccessRequest;
-import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.PacketEncoder;
-import org.tinyradius.server.HandlerAdapter;
 import org.tinyradius.server.RadiusServer;
-import org.tinyradius.server.SecretProvider;
-import org.tinyradius.server.handler.AcctHandler;
-import org.tinyradius.server.handler.DeduplicatorHandler;
-import org.tinyradius.server.handler.RequestHandler;
+import org.tinyradius.server.handler.ServerPacketCodec;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAccountHandlerProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.DictionaryLoader;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.AuthHandler;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.IKeycloakSecretProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.KeycloakSecretProvider;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
 
 import static ua.zaskarius.keycloak.plugins.radius.password.UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD;
 import static ua.zaskarius.keycloak.plugins.radius.password.UpdateRadiusPassword.UPDATE_RADIUS_PASSWORD_ID;
@@ -37,13 +32,10 @@ import static ua.zaskarius.keycloak.plugins.radius.password.UpdateRadiusPassword
 public class KeycloakRadiusServer
         implements IRadiusServerProvider {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(KeycloakRadiusServer.class);
-    public static final int TTL_MS = 10000;
+    private static final Logger LOGGER = Logger.getLogger(KeycloakRadiusServer.class);
     public static final String MIKROTIK = "mikrotik";
     public static final String MS = "MS";
-    public static final int N_THREADS = 4;
-    private HashedWheelTimer timer = new HashedWheelTimer(1, TimeUnit.SECONDS);
+    public static final int N_THREADS = 10;
 
     private RadiusServer server;
 
@@ -59,53 +51,56 @@ public class KeycloakRadiusServer
                         .loadDictionary(session));
     }
 
-    private RequestHandler<AccessRequest,
-            IKeycloakSecretProvider> createAuthHandler(KeycloakSession session) {
-        return new DeduplicatorHandler(
-                new AuthHandler(session),
-                timer,
-                TTL_MS);
+    private ChannelHandler accountChannel(KeycloakSession session) {
+        IRadiusAccountHandlerProvider provider = session
+                .getProvider(IRadiusAccountHandlerProvider.class);
+        return provider.getChannelHandler(session);
     }
 
-    private RequestHandler<AccountingRequest,
-            SecretProvider> createAccountHandler() {
-        return new DeduplicatorHandler<>(
-                new AcctHandler(), timer, TTL_MS);
+    private ChannelHandler authChannel(KeycloakSession session) {
+        IRadiusAuthHandlerProvider provider = session
+                .getProvider(IRadiusAuthHandlerProvider.class);
+        return provider.getChannelHandler(session);
     }
 
     private RadiusServer createRadiusServer(KeycloakSession session,
-                                            EventLoopGroup eventLoopGroup,
+                                            Bootstrap bootstrap,
                                             RadiusServerSettings radiusSettings) {
-        IKeycloakSecretProvider secretProvider = new KeycloakSecretProvider(session);
+        IKeycloakSecretProvider secretProvider = new KeycloakSecretProvider();
         final PacketEncoder packetEncoder = createPacketEncoder(session);
-        final RequestHandler<AccessRequest,
-                IKeycloakSecretProvider> authHandler = createAuthHandler(session);
-        final RequestHandler<AccountingRequest,
-                SecretProvider> acctHandler = createAccountHandler();
-        return new RadiusServer(eventLoopGroup,
-                timer,
-                new ReflectiveChannelFactory<>(NioDatagramChannel.class),
-                new HandlerAdapter<>(packetEncoder,
-                        authHandler, timer, secretProvider, AccessRequest.class),
-                new HandlerAdapter<>(packetEncoder,
-                        acctHandler, timer, secretProvider, AccountingRequest.class),
+        final ServerPacketCodec serverPacketCodec = new ServerPacketCodec(packetEncoder,
+                secretProvider);
+        return new RadiusServer(bootstrap,
+                new ChannelInitializer<DatagramChannel>() {
+                    @Override
+                    protected void initChannel(DatagramChannel ch) {
+                        ch.pipeline().addLast(serverPacketCodec, authChannel(session));
+                    }
+                },
+                new ChannelInitializer<DatagramChannel>() {
+                    @Override
+                    protected void initChannel(DatagramChannel ch) {
+                        ch.pipeline().addLast(serverPacketCodec, accountChannel(session));
+                    }
+                },
                 new InetSocketAddress(radiusSettings.getAuthPort()), new InetSocketAddress(
                 radiusSettings.getAccountPort()));
     }
 
     public KeycloakRadiusServer(KeycloakSession session) {
         RadiusServerSettings radiusSettings = RadiusConfigHelper
-                .getConfig().getRadiusSettings(session);
+                .getConfig().getRadiusSettings();
         final EventLoopGroup eventLoopGroup = createEventLoopGroup();
-        server = createRadiusServer(session, eventLoopGroup, radiusSettings);
+        final Bootstrap bootstrap = new Bootstrap()
+                .channel(NioDatagramChannel.class).group(eventLoopGroup);
+        server = createRadiusServer(session, bootstrap, radiusSettings);
         if (radiusSettings.isUseRadius()) {
-            final Future<Void> future = server.start();
-            future.addListener(future1 -> {
+            server.isReady().addListener(future1 -> {
                 if (future1.isSuccess()) {
                     LOGGER.info("Server started");
                 } else {
                     LOGGER.info("Failed to start server: " + future1.cause());
-                    server.stop().syncUninterruptibly();
+                    server.close();
                     eventLoopGroup.shutdownGracefully();
                 }
             });
