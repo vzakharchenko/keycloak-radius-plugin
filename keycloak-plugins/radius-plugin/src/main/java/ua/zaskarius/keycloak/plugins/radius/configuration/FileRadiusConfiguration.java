@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class FileRadiusConfiguration implements IRadiusConfiguration {
 
-    private RadiusServerSettings radiusSettings = null;
+    private RadiusServerSettings radiusSettings;
 
     protected FileRadiusConfiguration() {
     }

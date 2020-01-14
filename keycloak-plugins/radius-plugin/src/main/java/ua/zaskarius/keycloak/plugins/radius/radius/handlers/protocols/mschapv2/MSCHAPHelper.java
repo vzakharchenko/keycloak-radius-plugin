@@ -1,4 +1,3 @@
-// CHECKSTYLE:OFF
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2;
 
 import org.jboss.logging.Logger;
@@ -21,13 +20,16 @@ public final class MSCHAPHelper {
     private static final Logger LOGGER = Logger
             .getLogger(MSCHAPHelper.class);
 
+    private static final int AUTH_VECTOR_LENGTH = 16;
+    private static final int MAX_STRING_LENGTH = 254;
 
     /**
      * Random number generator.
      */
     private static SecureRandom random = new SecureRandom();
 
-
+    private MSCHAPHelper() {
+    }
 
     /**
      * Generate the MPPE Master key
@@ -119,6 +121,70 @@ public final class MSCHAPHelper {
         return generateMPPEAssymetricStartKey(masterKey, 16, false);
     }
 
+    private static int getInlen(int room0, byte[] input) {
+        int room = room0;
+        /* Be paranoid. */
+        if (room > 253) {
+            room = 253;
+        }
+        room -= 2;
+        room -= (room & 0x0f);
+        room--;
+
+        int inlen = input.length;
+
+        if (inlen > room) {
+            inlen = room;
+        }
+        return inlen;
+    }
+
+    private static byte[] getPasswd(byte[] input, int inlen) {
+        int saltOffset = 0;
+        byte[] passwd = new byte[MAX_STRING_LENGTH + AUTH_VECTOR_LENGTH];
+        System.arraycopy(input, 0, passwd, 3, inlen);
+        for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
+            passwd[i] = 0;
+        }
+        passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
+                random.generateSeed(1)[0] & 0x07));
+        passwd[1] = random.generateSeed(1)[0];
+        passwd[2] = (byte) inlen; /* length of the password string */
+        return passwd;
+    }
+
+    private static MessageDigest getOriginalMessageDigest(byte[] secret) {
+        try {
+            MessageDigest originalDigest = MessageDigest.getInstance("MD5");
+            originalDigest.update(secret);
+            return originalDigest;
+        } catch (NoSuchAlgorithmException nsae) {
+            throw new IllegalStateException("md5 digest not available", nsae);
+        }
+    }
+
+    private static MessageDigest getMessageDigest(
+            byte[] secret, byte[] vector,
+            byte[] passwd) {
+        try {
+            MessageDigest md5Digest;
+            md5Digest = MessageDigest.getInstance("MD5");
+            md5Digest.update(secret);
+            md5Digest.update(vector, 0, AUTH_VECTOR_LENGTH);
+            md5Digest.update(passwd, 0, 2);
+            return md5Digest;
+        } catch (NoSuchAlgorithmException nsae) {
+            throw new IllegalStateException("md5 digest not available", nsae);
+        }
+    }
+
+
+    private static byte[] getOutput(int len, byte[] passwd) {
+        byte[] output = new byte[len + 2];
+        System.arraycopy(passwd, 0, output, 0, len + 2);
+        return output;
+    }
+
     /**
      * Encrypt an MPPE password
      * Adapted from FreeRadius src/lib/radius.x:make_tunnel_password
@@ -133,122 +199,32 @@ public final class MSCHAPHelper {
     public static byte[] generateEncryptedMPPEPassword(byte[] input,
                                                        int room,
                                                        byte[] secret, byte[] vector) {
-        final int authVectorLength = 16;
-        final int authPasswordLength = authVectorLength;
-        final int maxStringLength = 254;
 
-        // NOTE This could be dodgy!
-        int saltOffset = 0;
 
-        // byte digest[] = new byte[authVectorLength];
-        byte passwd[] = new byte[maxStringLength + authVectorLength];
         int len;
-
-        /*
-         * Be paranoid.
-         */
-        if (room > 253) {
-            room = 253;
-        }
-
-        /*
-         * Account for 2 bytes of the salt, and round the room available down to
-         * the nearest multiple of 16. Then, subtract one from that to account
-         * for the length byte, and the resulting number is the upper bound on
-         * the data to copy.
-         *
-         * We could short-cut this calculation just be forcing inlen to be no
-         * more than 239. It would work for all VSA's, as we don't pack multiple
-         * VSA's into one attribute.
-         *
-         * However, this calculation is more general, if a little complex. And
-         * it will work in the future for all possible kinds of weird attribute
-         * packing.
-         */
-        room -= 2;
-        room -= (room & 0x0f);
-        room--;
-
-        int inlen = input.length;
-
-        if (inlen > room) {
-            inlen = room;
-        }
-
-        /*
-         * Length of the encrypted data is password length plus one byte for the
-         * length of the password.
-         */
+        int inlen = getInlen(room, input);
         len = inlen + 1;
         if ((len & 0x0f) != 0) {
             len += 0x0f;
             len &= ~0x0f;
         }
-
-        /*
-         * Copy the password over.
-         */
-        System.arraycopy(input, 0, passwd, 3, inlen);
-        // memcpy(passwd + 3, input, inlen);
-        for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
-            passwd[i] = 0;
-        }
-        // memset(passwd + 3 + inlen, 0, passwd.length - 3 - inlen);
-
-        /*
-         * Generate salt. The RFC's say:
-         *
-         * The high bit of salt[0] must be set, each salt in a packet should be
-         * unique, and they should be random
-         *
-         * So, we set the high bit, add in a counter, and then add in some
-         * CSPRNG data. should be OK..
-         */
-        passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
-                random.generateSeed(1)[0] & 0x07));
-        passwd[1] = random.generateSeed(1)[0];
-        passwd[2] = (byte) inlen; /* length of the password string */
-
-        MessageDigest md5Digest = null;
-        MessageDigest originalDigest = null;
-
-        MessageDigest currentDigest = null;
-
-        try {
-            md5Digest = MessageDigest.getInstance("MD5");
-            originalDigest = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException nsae) {
-            throw new RuntimeException("md5 digest not available", nsae);
-        }
-
-        md5Digest.update(secret);
-        originalDigest.update(secret);
-
-        currentDigest = md5Digest;
-
-        md5Digest.update(vector, 0, authVectorLength);
-        md5Digest.update(passwd, 0, 2);
-
-        for (int n = 0; n < len; n += authPasswordLength) {
+        byte[] passwd = getPasswd(input, inlen);
+        MessageDigest originalDigest = getOriginalMessageDigest(secret);
+        MessageDigest currentDigest = getMessageDigest(secret, vector, passwd);
+        for (int n = 0; n < len; n += AUTH_VECTOR_LENGTH) {
             if (n > 0) {
                 currentDigest = originalDigest;
-
-                currentDigest.update(passwd, 2 + n - authPasswordLength, authPasswordLength);
+                currentDigest.update(passwd, 2 + n - AUTH_VECTOR_LENGTH, AUTH_VECTOR_LENGTH);
             }
-
-            byte digest[] = currentDigest.digest();
-
-            for (int i = 0; i < authPasswordLength; i++) {
+            byte[] digest = currentDigest.digest();
+            for (int i = 0; i < AUTH_VECTOR_LENGTH; i++) {
                 passwd[i + 2 + n] ^= digest[i];
             }
         }
-        byte output[] = new byte[len + 2];
-        System.arraycopy(passwd, 0, output, 0, len + 2);
-
-        return output;
+        return getOutput(len, passwd);
     }
 
-    private static void parity_key(byte[] szOut, final byte[] szIn, final int offset) {
+    private static void parityKey(byte[] szOut, final byte[] szIn, final int offset) {
         int i;
         int cNext = 0;
         int cWorking = 0;
@@ -264,108 +240,106 @@ public final class MSCHAPHelper {
     }
 
     private static byte[] unicode(byte[] in) {
-        byte b[] = new byte[in.length * 2];
-        for (int i = 0; i < b.length; i++) {
-            b[i] = 0;
-        }
+        byte[] b = new byte[in.length * 2];
+//        for (int i = 0; i < b.length; i++) {
+//            b[i] = 0;
+//        }
         for (int i = 0; i < in.length; i++) {
             b[(2 * i)] = in[i];
         }
         return b;
     }
 
-    public static byte[] ChallengeHash(final byte[] PeerChallenge,
-                                        final byte[] AuthenticatorChallenge,
-                                        final byte[] UserName)
+    public static byte[] challengeHash(final byte[] peerChallenge,
+                                       final byte[] authenticatorChallenge,
+                                       final byte[] userName)
             throws NoSuchAlgorithmException {
-        byte Challenge[] = new byte[8];
+        byte[] challenge = new byte[8];
         MessageDigest md = MessageDigest.getInstance("SHA-1");
-        md.update(PeerChallenge, 0, 16);
-        md.update(AuthenticatorChallenge, 0, 16);
-        md.update(UserName, 0, UserName.length);
-        System.arraycopy(md.digest(), 0, Challenge, 0, 8);
-        return Challenge;
+        md.update(peerChallenge, 0, 16);
+        md.update(authenticatorChallenge, 0, 16);
+        md.update(userName, 0, userName.length);
+        System.arraycopy(md.digest(), 0, challenge, 0, 8);
+        return challenge;
     }
 
-    public static byte[] NtPasswordHash(byte[] Password)
+    public static byte[] ntPasswordHash(byte[] password)
             throws NoSuchAlgorithmException {
-        byte PasswordHash[] = new byte[16];
-        byte uniPassword[] = unicode(Password);
+        byte[] passwordHash = new byte[16];
+        byte[] uniPassword = unicode(password);
         MessageDigest md = MessageDigest.getInstance("MD4");
         md.update(uniPassword, 0, uniPassword.length);
-        System.arraycopy(md.digest(), 0, PasswordHash, 0, 16);
-        return PasswordHash;
+        System.arraycopy(md.digest(), 0, passwordHash, 0, 16);
+        return passwordHash;
     }
 
-    private static void DesEncrypt(byte[] Clear, int clearOffset,
-                                   byte[] Key, int keyOffset, byte[] Cypher, int cypherOffset) {
-        byte szParityKey[] = new byte[8];
-        parity_key(szParityKey, Key, keyOffset);
+    private static void desEncrypt(byte[] clear, int clearOffset,
+                                   byte[] key, int keyOffset, byte[] cypher, int cypherOffset) {
+        byte[] szParityKey = new byte[8];
+        parityKey(szParityKey, key, keyOffset);
 
         try {
             KeySpec ks = new DESKeySpec(szParityKey);
             SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
             SecretKey sk = skf.generateSecret(ks);
             Cipher c = Cipher.getInstance("DES/CBC/NoPadding");
-            IvParameterSpec ips = new IvParameterSpec(new byte[] {0, 0, 0, 0, 0, 0, 0, 0});
+            IvParameterSpec ips = new IvParameterSpec(new byte[8]);
             c.init(Cipher.ENCRYPT_MODE, sk, ips);
 
-            c.doFinal(Clear, clearOffset, Clear
-                    .length - clearOffset, Cypher, cypherOffset);
+            c.doFinal(clear, clearOffset, clear
+                    .length - clearOffset, cypher, cypherOffset);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
     }
 
-    private static byte[] ChallengeResponse(final byte[] Challenge, final byte[] PasswordHash) {
-        byte Response[] = new byte[24];
-        byte ZPasswordHash[] = new byte[21];
+    private static byte[] challengeResponse(final byte[] challenge, final byte[] passwordHash) {
+        byte[] response = new byte[24];
+        byte[] zPasswordHash = new byte[21];
 
-        for (int i = 0; i < 16; i++) {
-            ZPasswordHash[i] = PasswordHash[i];
-        }
+        System.arraycopy(passwordHash, 0, zPasswordHash, 0, 16);
 
         for (int i = 16; i < 21; i++) {
-            ZPasswordHash[i] = 0;
+            zPasswordHash[i] = 0;
         }
 
-        DesEncrypt(Challenge, 0, ZPasswordHash, 0, Response, 0);
-        DesEncrypt(Challenge, 0, ZPasswordHash, 7, Response, 8);
-        DesEncrypt(Challenge, 0, ZPasswordHash, 14, Response, 16);
+        desEncrypt(challenge, 0, zPasswordHash, 0, response, 0);
+        desEncrypt(challenge, 0, zPasswordHash, 7, response, 8);
+        desEncrypt(challenge, 0, zPasswordHash, 14, response, 16);
 
-        return Response;
+        return response;
     }
 
-    private static byte[] GenerateNTResponse(byte[] AuthenticatorChallenge,
-                                             byte[] PeerChallenge, byte[] UserName,
-                                             byte[] Password) throws NoSuchAlgorithmException {
-        byte Challenge[] = ChallengeHash(PeerChallenge, AuthenticatorChallenge, UserName);
-        byte PasswordHash[] = NtPasswordHash(Password);
-        return ChallengeResponse(Challenge, PasswordHash);
+    private static byte[] generateNTResponse(byte[] authenticatorChallenge,
+                                             byte[] peerChallenge, byte[] userName,
+                                             byte[] password) throws NoSuchAlgorithmException {
+        byte[] challenge = challengeHash(peerChallenge, authenticatorChallenge, userName);
+        byte[] passwordHash = ntPasswordHash(password);
+        return challengeResponse(challenge, passwordHash);
     }
 
-    public static boolean verifyMSCHAPv2(byte[] UserName,
-                                         byte[] Password,
-                                         byte[] Challenge,
-                                         byte[] Response) throws NoSuchAlgorithmException {
-        byte peerChallenge[] = new byte[16];
-        byte sentNtResponse[] = new byte[24];
+    public static boolean verifyMSCHAPv2(byte[] userName,
+                                         byte[] password,
+                                         byte[] challenge,
+                                         byte[] response) throws NoSuchAlgorithmException {
+        byte[] peerChallenge = new byte[16];
+        byte[] sentNtResponse = new byte[24];
 
-        System.arraycopy(Response, 2, peerChallenge, 0, 16);
-        System.arraycopy(Response, 26, sentNtResponse, 0, 24);
+        System.arraycopy(response, 2, peerChallenge, 0, 16);
+        System.arraycopy(response, 26, sentNtResponse, 0, 24);
 
-        byte ntResponse[] = GenerateNTResponse(Challenge, peerChallenge, UserName, Password);
+        byte[] ntResponse = generateNTResponse(challenge, peerChallenge, userName, password);
 
         return Arrays.equals(ntResponse, sentNtResponse);
     }
 
 
-    public static byte[] HashNtPasswordHash(byte[] PasswordHash)
+    public static byte[] hashNtPasswordHash(byte[] passwordHash)
             throws NoSuchAlgorithmException {
-        byte PasswordHashHash[] = new byte[16];
+        byte[] passwordHashHash = new byte[16];
         MessageDigest md = MessageDigest.getInstance("MD4");
-        md.update(PasswordHash, 0, 16);
-        System.arraycopy(md.digest(), 0, PasswordHashHash, 0, 16);
-        return PasswordHashHash;
+        md.update(passwordHash, 0, 16);
+        System.arraycopy(md.digest(), 0, passwordHashHash, 0, 16);
+        return passwordHashHash;
     }
 }

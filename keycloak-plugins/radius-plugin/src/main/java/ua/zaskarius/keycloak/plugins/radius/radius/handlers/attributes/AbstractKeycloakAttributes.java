@@ -9,7 +9,7 @@ import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
-import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
+import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerUtils;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusAttributeHolder;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
@@ -24,7 +24,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     protected final RadiusUserInfo radiusUserInfo;
     protected final AccessRequest accessRequest;
 
-    private List<RadiusAttributeHolder<KEYCLOAK_TYPE>> attributeHolders = new ArrayList<>();
+    private final List<RadiusAttributeHolder<KEYCLOAK_TYPE>> attributeHolders = new ArrayList<>();
 
     public AbstractKeycloakAttributes(KeycloakSession session,
                                       AccessRequest accessRequest) {
@@ -98,13 +98,13 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
         if (attributeType == null) {
             String message = "Attribute " + attributeName + " does not exists";
             LOGGER.warn(message);
-            EventBuilder event = EventLoggerFactory
+            EventBuilder event = EventLoggerUtils
                     .createEvent(session, radiusUserInfo.getRealmModel(), radiusUserInfo
                             .getClientConnection());
 
             event.event(EventType
                     .CLIENT_INFO_ERROR)
-                    .detail(EventLoggerFactory.RADIUS_MESSAGE,
+                    .detail(EventLoggerUtils.RADIUS_MESSAGE,
                             message)
                     .user(radiusUserInfo
                             .getUserModel())

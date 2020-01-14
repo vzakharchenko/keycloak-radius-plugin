@@ -8,13 +8,13 @@ import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 
-public final class EventLoggerFactory {
+public final class EventLoggerUtils {
 
     public static final String RADIUS = "RADIUS";
     public static final String RADIUS_HOST = "RADIUS_HOST";
     public static final String RADIUS_MESSAGE = "RADIUS_MESSAGE";
 
-    private EventLoggerFactory() {
+    private EventLoggerUtils() {
     }
 
     public static EventBuilder createMasterEvent(

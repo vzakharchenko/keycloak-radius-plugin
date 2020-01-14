@@ -11,7 +11,7 @@
   <description>
     Mikrotik PMD rule set
   </description>
-  <exclude-pattern>.*/src/*/.*</exclude-pattern>
+<!--  <exclude-pattern>.*/src/*/.*</exclude-pattern>-->
   <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
     <properties>
       <property name="problemDepth" value="5" />
@@ -68,15 +68,12 @@
     <exclude name="BeanMembersShouldSerialize"/>
     <exclude name="DataflowAnomalyAnalysis"/>
     <exclude name="MissingSerialVersionUID"/>
-<!--    <exclude name="AvoidFieldNameMatchingMethodName"/>-->
   </rule>
   <rule ref="category/java/multithreading.xml">
     <exclude name="UseConcurrentHashMap"/>
   </rule>
   <rule ref="category/java/performance.xml">
-    <exclude name="AvoidFileStream"/>
     <exclude name="AvoidInstantiatingObjectsInLoops"/>
-<!--    <exclude name="RedundantFieldInitializer"/>-->
   </rule>
   <rule ref="category/java/security.xml"/>
 

@@ -8,10 +8,10 @@ import static ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.msc
 
 public final class MSCHAPV2AuthenticatorUtils {
 
+    public static final String SHA_1 = "SHA-1";
+
     private MSCHAPV2AuthenticatorUtils() {
     }
-
-    public static final String SHA_1 = "SHA-1";
 
     public static byte[] generateAuthenticatorResponse(
             byte[] password,
@@ -30,7 +30,7 @@ public final class MSCHAPV2AuthenticatorUtils {
         md.update(ntResponse, 0, 24);
         md.update(MSCHAPV2_AUTHENTICATOR_MAGIC_1, 0, 39);
         byte[] digest = md.digest();
-        byte[] challenge = MSCHAPHelper.ChallengeHash(peerChallenge,
+        byte[] challenge = MSCHAPHelper.challengeHash(peerChallenge,
                 authenticatorChallenge, userName);
         MessageDigest md2 = getMessageDigestSHA1();
         md2.update(digest, 0, 20);
@@ -47,8 +47,8 @@ public final class MSCHAPV2AuthenticatorUtils {
 
     public static byte[] getPasswordHashHash(byte[] password)
             throws NoSuchAlgorithmException {
-        byte[] passwordHash = MSCHAPHelper.NtPasswordHash(password);
-        return MSCHAPHelper.HashNtPasswordHash(passwordHash);
+        byte[] passwordHash = MSCHAPHelper.ntPasswordHash(password);
+        return MSCHAPHelper.hashNtPasswordHash(passwordHash);
     }
 
 }

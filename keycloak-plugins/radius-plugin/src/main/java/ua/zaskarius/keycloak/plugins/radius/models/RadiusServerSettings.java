@@ -5,7 +5,7 @@ import java.util.Map;
 public class RadiusServerSettings {
     private String secret;
     private int authPort;
-    private boolean isUseRadius;
+    private boolean useRadius;
     private int accountPort;
     private String provider;
     private Map<String, String> accessMap;
@@ -51,10 +51,10 @@ public class RadiusServerSettings {
     }
 
     public boolean isUseRadius() {
-        return isUseRadius;
+        return useRadius;
     }
 
     public void setUseRadius(boolean useRadius) {
-        isUseRadius = useRadius;
+        this.useRadius = useRadius;
     }
 }

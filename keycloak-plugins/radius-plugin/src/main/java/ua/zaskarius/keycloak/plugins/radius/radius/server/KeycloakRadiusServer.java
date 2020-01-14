@@ -37,7 +37,7 @@ public class KeycloakRadiusServer
     public static final String MS = "MS";
     public static final int N_THREADS = 10;
 
-    private RadiusServer server;
+    private final RadiusServer server;
 
 
     private EventLoopGroup createEventLoopGroup() {

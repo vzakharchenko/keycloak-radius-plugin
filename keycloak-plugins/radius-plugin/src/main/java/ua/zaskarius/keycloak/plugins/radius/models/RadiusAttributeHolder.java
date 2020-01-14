@@ -9,9 +9,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RadiusAttributeHolder<T> {
-    private KeycloakAttributesType type;
+    private final KeycloakAttributesType type;
     private Map<String, Set<String>> attributes = new HashMap<>();
-    private T object;
+    private final T object;
 
     public RadiusAttributeHolder(KeycloakAttributesType type, T object) {
         this.type = type;

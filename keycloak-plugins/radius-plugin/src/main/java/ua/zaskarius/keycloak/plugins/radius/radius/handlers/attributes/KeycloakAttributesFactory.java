@@ -13,6 +13,7 @@ public class KeycloakAttributesFactory implements IRadiusAttributeProvider,
 
     public static final String KEYCLOAK_ATTRIBUTES_DEFAULT = "keycloak-attributes-default";
 
+    @Override
     public KeycloakAttributes createKeycloakAttributes(AccessRequest accessRequest,
                                                        KeycloakSession session,
                                                        KeycloakAttributesType type) {

@@ -281,31 +281,13 @@
                         <id>pmd_execute</id>
                         <goals>
                             <goal>pmd</goal>
+                            <goal>pmd</goal>
                             <goal>check</goal>
+                            <goal>cpd-check</goal>
                         </goals>
                         <phase>verify</phase>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sourceforge.pmd</groupId>
-                        <artifactId>pmd</artifactId>
-                        <version>${pmdVersion}</version>
-                        <type>pom</type>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>com.ibm.icu</groupId>
-                                <artifactId>icu4j</artifactId>
-                            </exclusion>
-                        </exclusions>
-
-                    </dependency>
-                    <dependency>
-                        <groupId>net.sourceforge.pmd</groupId>
-                        <artifactId>pmd-plsql</artifactId>
-                        <version>6.20.0</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>

@@ -8,7 +8,7 @@ import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
-import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
+import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerUtils;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributeProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.KeycloakAttributesType;
@@ -85,10 +85,10 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     public final boolean isValid(InetSocketAddress address) {
         boolean isValid = getRealm() != null && isValidProtocol();
         if (!isValid) {
-            EventBuilder event = EventLoggerFactory
+            EventBuilder event = EventLoggerUtils
                     .createMasterEvent(session,
                             new RadiusClientConnection(address));
-            event.event(EventType.LOGIN).detail(EventLoggerFactory.RADIUS_MESSAGE,
+            event.event(EventType.LOGIN).detail(EventLoggerUtils.RADIUS_MESSAGE,
                     "Protocol " + getClass() + " is not valid.")
                     .error("Please set Realm name in radius configuration");
         }

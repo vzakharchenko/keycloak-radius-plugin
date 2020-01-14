@@ -10,9 +10,9 @@ import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
 import java.util.Set;
 
 public class DictionaryLoader implements IDictionaryLoader {
-    private static IDictionaryLoader dictionaryLoader = new DictionaryLoader();
+    private static IDictionaryLoader loader = new DictionaryLoader();
 
-    private WritableDictionary dictionary = new MemoryDictionary();
+    private final WritableDictionary dictionary = new MemoryDictionary();
 
     protected DictionaryLoader() {
     }
@@ -29,10 +29,10 @@ public class DictionaryLoader implements IDictionaryLoader {
 
     @VisibleForTesting
     public static void setDictionaryLoader(IDictionaryLoader dictionaryLoader) {
-        DictionaryLoader.dictionaryLoader = dictionaryLoader;
+        DictionaryLoader.loader = dictionaryLoader;
     }
 
     public static IDictionaryLoader getInstance() {
-        return dictionaryLoader;
+        return loader;
     }
 }
