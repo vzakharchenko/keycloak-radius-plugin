@@ -11,7 +11,7 @@
   <description>
     Mikrotik PMD rule set
   </description>
-<!--  <exclude-pattern>.*/src/*/.*</exclude-pattern>-->
+  <exclude-pattern>.*/src/test/.*</exclude-pattern>
   <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
     <properties>
       <property name="problemDepth" value="5" />
