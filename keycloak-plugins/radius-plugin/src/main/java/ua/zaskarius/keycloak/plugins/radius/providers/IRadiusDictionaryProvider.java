@@ -1,12 +1,13 @@
 package ua.zaskarius.keycloak.plugins.radius.providers;
 
 import org.keycloak.provider.Provider;
-import org.tinyradius.dictionary.DictionaryParser;
+import org.tinyradius.dictionary.WritableDictionary;
 
 import java.util.List;
 
 public interface IRadiusDictionaryProvider extends Provider {
-    DictionaryParser getDictionaryParser();
-    List<String> getResources();
+
     List<String> getRealmAttributes();
+
+    void parseDictionary(WritableDictionary dictionary);
 }

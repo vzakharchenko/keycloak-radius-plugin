@@ -56,10 +56,9 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
                                          KeycloakAttributesType attributesType,
                                          RadiusPacket answer) {
         provider
-                .createKeycloakAttributes(session, attributesType).read()
+                .createKeycloakAttributes(accessRequest, session, attributesType).read()
                 .ignoreUndefinedAttributes(answer
                         .getDictionary())
-                .filter(accessRequest)
                 .fillAnswer(answer);
     }
 

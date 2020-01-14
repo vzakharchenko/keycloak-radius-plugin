@@ -2,15 +2,17 @@ package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserModel;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
+import org.tinyradius.packet.AccessRequest;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserKeycloakAttributes extends AbstractKeycloakAttributes<UserModel> {
 
-    public UserKeycloakAttributes(KeycloakSession session) {
-        super(session);
+    public UserKeycloakAttributes(KeycloakSession session, AccessRequest accessRequest) {
+        super(session, accessRequest);
     }
 
     @Override
@@ -33,8 +35,4 @@ public class UserKeycloakAttributes extends AbstractKeycloakAttributes<UserModel
                                 new HashSet<>(entry.getValue()) : new HashSet<>()));
     }
 
-    @Override
-    protected List<AttributeConditional<UserModel>> getAttributeConditional() {
-        return Collections.EMPTY_LIST;
-    }
 }

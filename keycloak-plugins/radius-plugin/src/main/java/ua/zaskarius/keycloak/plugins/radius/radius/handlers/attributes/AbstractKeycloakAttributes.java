@@ -8,29 +8,65 @@ import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerFactory;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusAttributeHolder;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements KeycloakAttributes {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractKeycloakAttributes.class);
     protected final KeycloakSession session;
     protected final RadiusUserInfo radiusUserInfo;
+    protected final AccessRequest accessRequest;
 
     private List<RadiusAttributeHolder<KEYCLOAK_TYPE>> attributeHolders = new ArrayList<>();
 
-    public AbstractKeycloakAttributes(KeycloakSession session) {
+    public AbstractKeycloakAttributes(KeycloakSession session,
+                                      AccessRequest accessRequest) {
         this.session = session;
+        this.accessRequest = accessRequest;
         radiusUserInfo = KeycloakSessionUtils.getRadiusUserInfo(session);
+    }
+
+
+    private boolean clearAttributes(Set<String> serviceStrings,
+                                    Collection<IRadiusServiceProvider> providers) {
+        if (serviceStrings != null) {
+            for (String serviceString : serviceStrings) {
+                String[] services = serviceString.split(",");
+                for (String service : services) {
+                    IRadiusServiceProvider provider = providers.stream().filter(
+                            iRadiusServiceProvider ->
+                                    service.equalsIgnoreCase(
+                                            iRadiusServiceProvider.serviceName()))
+                            .findFirst().orElse(null);
+                    if (provider != null) {
+                        return !provider.checkService(accessRequest);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Map<String, Set<String>> filter(Map<String, Set<String>> attributes) {
+        Map<String, List<IRadiusServiceProvider>> serviceMap = RadiusHelper
+                .getServiceMap(session);
+        for (Map.Entry<String, List<IRadiusServiceProvider>> entry : serviceMap.entrySet()) {
+            String attributeName = entry.getKey();
+            List<IRadiusServiceProvider> providers = entry.getValue();
+            Set<String> serviceStrings = attributes.get(attributeName);
+
+            if (clearAttributes(serviceStrings, providers)) {
+                return new HashMap<>();
+            }
+        }
+        return attributes;
     }
 
     protected abstract KeycloakAttributesType getType();
@@ -85,27 +121,6 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
                     !entry.getValue().isEmpty() &&
                     testAttribute(entry.getKey(), dictionary));
         }
-        return this;
-    }
-
-    protected abstract List<AttributeConditional<KEYCLOAK_TYPE>> getAttributeConditional();
-
-    @Override
-    public KeycloakAttributes filter(AccessRequest accessRequest) {
-        this.attributeHolders = this.attributeHolders.stream().filter(rh -> {
-            boolean useRadiusAttributes = true;
-            List<AttributeConditional<KEYCLOAK_TYPE>> attributeConditionals
-                    = getAttributeConditional();
-            if (attributeConditionals != null) {
-                for (AttributeConditional<KEYCLOAK_TYPE>
-                        conditional : attributeConditionals) {
-                    useRadiusAttributes &= conditional
-                            .useAttributes(rh, accessRequest);
-                }
-            }
-            return useRadiusAttributes;
-        }).collect(Collectors.toList());
-
         return this;
     }
 

@@ -8,7 +8,6 @@ import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.*;
@@ -28,11 +27,14 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
 
     private AttributeType attributeType;
 
+    private AccessRequest accessRequest;
+
     @BeforeMethod
     public void beforeMethods() {
+        accessRequest = new AccessRequest(dictionary, 1, new byte[16]);
         reset(groupModel);
         groupKeycloakAttributes =
-                new GroupKeycloakAttributes(session);
+                new GroupKeycloakAttributes(session, accessRequest);
         when(userModel.getGroups()).thenReturn(
                 new HashSet<>(Collections.singletonList(groupModel)));
         HashMap<String, List<String>> map = new HashMap<>();
@@ -52,10 +54,6 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
     @Test
     public void testMethods() {
         assertEquals(groupKeycloakAttributes.getType(), KeycloakAttributesType.GROUP);
-        List<AttributeConditional<GroupModel>> attributeConditional =
-                groupKeycloakAttributes.getAttributeConditional();
-        assertNotNull(attributeConditional);
-        assertEquals(attributeConditional.size(), 1);
         Set<GroupModel> keycloakTypes = groupKeycloakAttributes
                 .getKeycloakTypes();
         assertNotNull(keycloakTypes);
@@ -71,14 +69,12 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
     }
 
 
-
     @Test
     public void getRead() {
         AccessRequest accessRequest = new AccessRequest(dictionary, 1, new byte[16]);
         accessRequest.addAttribute(attributeType.create(dictionary, "test"));
         KeycloakAttributes keycloakAttributes = groupKeycloakAttributes.read();
         keycloakAttributes.ignoreUndefinedAttributes(dictionary);
-        keycloakAttributes.filter(accessRequest);
         RadiusPacket answer = new RadiusPacket(dictionary, 2, 1);
         keycloakAttributes.fillAnswer(answer);
         assertNotNull(answer.getAttributes());

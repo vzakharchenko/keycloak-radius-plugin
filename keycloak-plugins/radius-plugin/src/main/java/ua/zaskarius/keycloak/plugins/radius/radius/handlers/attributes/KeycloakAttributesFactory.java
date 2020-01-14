@@ -1,10 +1,11 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributeProvider;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributesProviderFactory;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
+import org.tinyradius.packet.AccessRequest;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributeProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributesProviderFactory;
 
 public class KeycloakAttributesFactory implements IRadiusAttributeProvider,
         IRadiusAttributesProviderFactory<KeycloakAttributesFactory> {
@@ -12,21 +13,21 @@ public class KeycloakAttributesFactory implements IRadiusAttributeProvider,
 
     public static final String KEYCLOAK_ATTRIBUTES_DEFAULT = "keycloak-attributes-default";
 
-    @Override
-    public KeycloakAttributes createKeycloakAttributes(KeycloakSession session,
+    public KeycloakAttributes createKeycloakAttributes(AccessRequest accessRequest,
+                                                       KeycloakSession session,
                                                        KeycloakAttributesType type) {
         KeycloakAttributes keycloakAttributes;
         switch (type) {
             case USER:
-                keycloakAttributes = new UserKeycloakAttributes(session);
+                keycloakAttributes = new UserKeycloakAttributes(session, accessRequest);
                 break;
 
             case GROUP:
-                keycloakAttributes = new GroupKeycloakAttributes(session);
+                keycloakAttributes = new GroupKeycloakAttributes(session, accessRequest);
                 break;
 
             case ROLE:
-                keycloakAttributes = new RoleKeycloakAttributes(session);
+                keycloakAttributes = new RoleKeycloakAttributes(session, accessRequest);
                 break;
 
             default:

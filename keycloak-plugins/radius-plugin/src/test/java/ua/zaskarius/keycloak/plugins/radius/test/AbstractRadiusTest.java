@@ -21,6 +21,7 @@ import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.DictionaryLoader;
 import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.IDictionaryLoader;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
@@ -110,6 +111,9 @@ public abstract class AbstractRadiusTest {
     @Mock
     protected IDictionaryLoader dictionaryLoader;
 
+    @Mock
+    protected IRadiusServiceProvider radiusServiceProvider;
+
     protected WritableDictionary realDictionary;
 
     protected RadiusUserInfo radiusUserInfo;
@@ -135,6 +139,9 @@ public abstract class AbstractRadiusTest {
                     .thenReturn(new AuthenticationManager.AuthResult(userModel,
                             userSessionModel, accessToken));
             RadiusHelper.setRealmAttributes(Collections.singletonList("realm-radius"));
+            RadiusHelper.getServiceMap0().clear();
+            RadiusHelper.getServiceMap0().put("sName", new ArrayList<>(Collections
+                    .singletonList(radiusServiceProvider)));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -160,6 +167,7 @@ public abstract class AbstractRadiusTest {
         reset(httpHeaders);
         reset(keycloakUriInfo);
         reset(entityManager);
+        reset(radiusServiceProvider);
         reset(query);
         providerByClass.clear();
         accessToken = new AccessToken();
@@ -282,9 +290,6 @@ public abstract class AbstractRadiusTest {
             DictionaryParser dictionaryParser = DictionaryParser.newClasspathParser();
             realDictionary = dictionaryParser
                     .parseDictionary("org/tinyradius/dictionary/default_dictionary");
-            dictionaryParser
-                    .parseDictionary(realDictionary,
-                            KeycloakRadiusServer.MIKROTIK);
             dictionaryParser
                     .parseDictionary(realDictionary,
                             KeycloakRadiusServer.MS);

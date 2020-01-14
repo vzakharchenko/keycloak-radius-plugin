@@ -1,20 +1,20 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.dictionary;
 
+import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.dictionary.Dictionary;
-import org.tinyradius.dictionary.DictionaryParser;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;
 
 public class DictionaryLoaderTest extends AbstractRadiusTest {
+    @Mock
     private IRadiusDictionaryProvider dictionaryProvider;
 
     @BeforeMethod
@@ -24,9 +24,6 @@ public class DictionaryLoaderTest extends AbstractRadiusTest {
                 .getAllProviders(IRadiusDictionaryProvider.class)).thenReturn(iRadiusDictionaryProviders);
         dictionaryProvider = getProvider(IRadiusDictionaryProvider.class);
         iRadiusDictionaryProviders.add(dictionaryProvider);
-        when(dictionaryProvider.getDictionaryParser()).thenReturn(DictionaryParser
-                .newClasspathParser());
-        when(dictionaryProvider.getResources()).thenReturn(Arrays.asList("MS"));
         DictionaryLoader.setDictionaryLoader(new DictionaryLoader());
     }
 
@@ -35,8 +32,8 @@ public class DictionaryLoaderTest extends AbstractRadiusTest {
 
         Dictionary dictionary = DictionaryLoader.getInstance().loadDictionary(session);
         assertNotNull(dictionary);
-        when(dictionaryProvider.getResources()).thenReturn(Collections.emptyList());
         dictionary = DictionaryLoader.getInstance().loadDictionary(session);
+        verify(dictionaryProvider, atLeastOnce()).parseDictionary(any());
         assertNotNull(dictionary);
     }
 }

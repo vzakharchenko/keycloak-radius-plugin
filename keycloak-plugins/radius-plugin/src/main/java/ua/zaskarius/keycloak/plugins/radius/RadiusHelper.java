@@ -1,5 +1,6 @@
 package ua.zaskarius.keycloak.plugins.radius;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -10,16 +11,17 @@ import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class RadiusHelper {
 
     private static List<String> realmAttributes = new ArrayList<>();
+
+    private static Map<String, List<IRadiusServiceProvider>> serviceMap = new HashMap<>();
 
     private RadiusHelper() {
     }
@@ -93,6 +95,31 @@ public final class RadiusHelper {
     }
 
 
+    public static Map<String, List<IRadiusServiceProvider>> getServiceMap(
+            KeycloakSession session) {
+        if (serviceMap.isEmpty()) {
+            Set<IRadiusServiceProvider> allProviders = session
+                    .getAllProviders(IRadiusServiceProvider.class);
+            for (IRadiusServiceProvider provider : allProviders) {
+                String attrbuteName = provider.attrbuteName();
+                List<IRadiusServiceProvider> serviceProviders = serviceMap
+                        .get(attrbuteName);
+                if (serviceProviders == null) {
+                    serviceProviders = new ArrayList<>();
+                    serviceMap.put(attrbuteName, serviceProviders);
+                }
+                serviceProviders.add(provider);
+            }
+        }
+        return serviceMap;
+    }
+
+    @VisibleForTesting
+    public static Map<String, List<IRadiusServiceProvider>> getServiceMap0() {
+        return serviceMap;
+    }
+
+    @VisibleForTesting
     public static void setRealmAttributes(List<String> realmAttributes) {
         RadiusHelper.realmAttributes = realmAttributes;
     }

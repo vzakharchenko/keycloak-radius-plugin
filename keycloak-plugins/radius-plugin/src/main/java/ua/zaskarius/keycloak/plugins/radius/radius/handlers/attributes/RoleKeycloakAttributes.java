@@ -2,15 +2,16 @@ package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RoleModel;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.RoleServiceTypeAttributeConditional;
+import org.tinyradius.packet.AccessRequest;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class RoleKeycloakAttributes extends AbstractKeycloakAttributes<RoleModel> {
 
-    public RoleKeycloakAttributes(KeycloakSession session) {
-        super(session);
+    public RoleKeycloakAttributes(KeycloakSession session, AccessRequest accessRequest) {
+        super(session, accessRequest);
     }
 
     @Override
@@ -27,12 +28,7 @@ public class RoleKeycloakAttributes extends AbstractKeycloakAttributes<RoleModel
     protected Map<String, Set<String>> getAttributes(RoleModel roleModel) {
         Map<String, Set<String>> attributes = new HashMap<>();
         AttributeWalkerUtils.roleWalker(roleModel, attributes);
-        return attributes;
+        return filter(attributes);
     }
 
-    @Override
-    protected List<AttributeConditional<RoleModel>> getAttributeConditional() {
-        return Collections.singletonList(
-                new RoleServiceTypeAttributeConditional(session));
-    }
 }

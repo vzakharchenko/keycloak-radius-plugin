@@ -3,15 +3,13 @@ package ua.zaskarius.keycloak.plugins.radius.radius.dictionary;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
-import org.tinyradius.dictionary.DictionaryParser;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProviderFactory;
 
-import java.util.Collections;
 import java.util.List;
 
 public class DefaultDictionaryProviderFactory
-        implements IRadiusDictionaryProvider,
+        extends AbstractDictionaryProvider
+        implements
         IRadiusDictionaryProviderFactory<DefaultDictionaryProviderFactory> {
 
 
@@ -41,17 +39,12 @@ public class DefaultDictionaryProviderFactory
     }
 
     @Override
-    public DictionaryParser getDictionaryParser() {
-        return DictionaryParser.newClasspathParser();
-    }
-
-    @Override
-    public List<String> getResources() {
-        return Collections.singletonList("org/tinyradius/dictionary/default_dictionary");
-    }
-
-    @Override
     public List<String> getRealmAttributes() {
         return null;
+    }
+
+    @Override
+    protected String getResource() {
+        return "org/tinyradius/dictionary/default_dictionary";
     }
 }

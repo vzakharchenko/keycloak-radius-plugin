@@ -1,7 +1,5 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.conditionals.AttributeConditional;
-import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 import org.keycloak.models.RoleModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -10,6 +8,7 @@ import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.*;
 
@@ -28,12 +27,15 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
 
     private AttributeType attributeType;
 
+    private AccessRequest accessRequest;
+
     @BeforeMethod
     public void beforeMethods() {
         reset(roleModel);
         reset(dictionary);
+        accessRequest = new AccessRequest(dictionary, 1, new byte[16]);
         roleKeycloakAttributes =
-                new RoleKeycloakAttributes(session);
+                new RoleKeycloakAttributes(session, accessRequest);
         when(userModel.getRoleMappings()).thenReturn(
                 new HashSet<>(Collections.singletonList(roleModel)));
         HashMap<String, List<String>> map = new HashMap<>();
@@ -52,10 +54,6 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
     @Test
     public void testMethods() {
         assertEquals(roleKeycloakAttributes.getType(), KeycloakAttributesType.ROLE);
-        List<AttributeConditional<RoleModel>> attributeConditional =
-                roleKeycloakAttributes.getAttributeConditional();
-        assertNotNull(attributeConditional);
-        assertEquals(attributeConditional.size(), 1);
         Set<RoleModel> keycloakTypes = roleKeycloakAttributes
                 .getKeycloakTypes();
         assertNotNull(keycloakTypes);
@@ -77,7 +75,6 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
         accessRequest.addAttribute(attributeType.create(dictionary, "test"));
         KeycloakAttributes keycloakAttributes = roleKeycloakAttributes.read();
         keycloakAttributes.ignoreUndefinedAttributes(dictionary);
-        keycloakAttributes.filter(accessRequest);
         RadiusPacket answer = new RadiusPacket(dictionary, 2, 1);
         keycloakAttributes.fillAnswer(answer);
         assertNotNull(answer.getAttributes());

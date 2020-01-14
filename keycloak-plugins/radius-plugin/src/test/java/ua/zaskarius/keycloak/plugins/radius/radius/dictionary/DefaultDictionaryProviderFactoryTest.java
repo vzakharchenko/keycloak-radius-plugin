@@ -1,7 +1,10 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.dictionary;
 
 import org.testng.annotations.Test;
+import org.tinyradius.dictionary.DictionaryParser;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
+
+import java.io.IOException;
 
 import static org.testng.Assert.*;
 
@@ -10,15 +13,16 @@ public class DefaultDictionaryProviderFactoryTest extends AbstractRadiusTest {
             new DefaultDictionaryProviderFactory();
 
     @Test
-    public void testMethods() {
+    public void testMethods() throws IOException {
         dictionaryProviderFactory.close();
         dictionaryProviderFactory.init(null);
         dictionaryProviderFactory.postInit(null);
         assertNull(dictionaryProviderFactory.getRealmAttributes());
         assertNotNull(dictionaryProviderFactory.create(session));
-        assertNotNull(dictionaryProviderFactory.getDictionaryParser());
+        DictionaryParser dictionaryParser = DictionaryParser.newClasspathParser();
+        realDictionary = dictionaryParser
+                .parseDictionary("MS");
         assertEquals(dictionaryProviderFactory.getId(), "Default-Dictionary");
-        assertEquals(dictionaryProviderFactory.getResources().size(), 1);
-
+        dictionaryProviderFactory.parseDictionary(realDictionary);
     }
 }
