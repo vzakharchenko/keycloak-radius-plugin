@@ -8,11 +8,12 @@
 Run radius server inside keycloak.  
 features:
 - radius server inside keycloak
-- support radsec (Radius over TLS)
-- hotspot:
+- support [radsec](#mikrotik-rad-sec-example) (Radius over TLS)
+- Map Keycloak [Role](#assign-radius-attributes-to-role) [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
+- [Hotspot](hotspot/OAuthRadius.md) :
   - pop,chap authorization
-  - openID connect
-  - login using facebook, google, etc...
+  - [openID connec](hotspot/OAuthRadius.md#how-keycloak-radius-hotspot-works)
+  - login using [facebook](hotspot/OAuthRadius.md#facebook-login-example) , google, etc...
 
 support Mikrotik services: hotspot, login
 ## setup
@@ -57,7 +58,7 @@ where
 ## Run Keycloak Locally
 <pre><code>
 #!/usr/bin/env bash
-set -e
+set -e ## Run Keycloak Locally
 cd target/keycloak/keycloak-8.0.1
 public_ip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' -m 1`
 sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 -Djboss.bind.address.private=${public_ip} -Djboss.node.name=${public_ip} -Djgroups.bind.address=${public_ip} --debug 8190 -Djboss.http.port=8090
@@ -134,6 +135,6 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 9. import Certificate ![import Certificate](docs/import%20Certificate.png)
 10. enable radsec ![radiusRadSec](docs/radiusRadSec.png)
 
-### Mikrotik Hotspot Example (with Facebook login)
+###  Hotspot Example (with Facebook login)
 
-in progress...
+[Hotspot Example (with Facebook login)](hotspot/OAuthRadius.md)
