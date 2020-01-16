@@ -9,8 +9,7 @@ import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.HashSet;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertNotNull;
 
 public class DictionaryLoaderTest extends AbstractRadiusTest {
@@ -33,7 +32,6 @@ public class DictionaryLoaderTest extends AbstractRadiusTest {
         Dictionary dictionary = DictionaryLoader.getInstance().loadDictionary(session);
         assertNotNull(dictionary);
         dictionary = DictionaryLoader.getInstance().loadDictionary(session);
-        verify(dictionaryProvider, atLeastOnce()).parseDictionary(any());
         assertNotNull(dictionary);
     }
 }
