@@ -152,6 +152,11 @@ public class AuthHandler extends RequestHandler
         return (ChannelHandler) create(session);
     }
 
+    @Override
+    public void directRead(ChannelHandlerContext ctx, RequestCtx msg) {
+        channelRead0(ctx, msg);
+    }
+
     @VisibleForTesting
     public void setSecretProvider(IKeycloakSecretProvider secretProvider) {
         this.secretProvider = secretProvider;

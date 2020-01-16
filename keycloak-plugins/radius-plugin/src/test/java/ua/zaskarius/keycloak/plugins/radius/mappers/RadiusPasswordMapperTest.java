@@ -35,8 +35,6 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
     public void beforeMethods() {
         IRadiusServerProvider provider = session
                 .getProvider(IRadiusServerProvider.class);
-        when(provider.fieldName()).thenReturn("n");
-        when(provider.fieldPassword()).thenReturn("np");
     }
 
     @Test
@@ -44,8 +42,8 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
         IDToken token = create();
         passwordMapper.setClaim(token, null, userSessionModel, session, null);
         assertEquals(token.getOtherClaims().get("s"), "123");
-        assertEquals(token.getOtherClaims().get("n"), "n");
-        assertEquals(token.getOtherClaims().get("np"), "np");
+        assertEquals(token.getOtherClaims().get("n"), "preferred_username");
+        assertEquals(token.getOtherClaims().get("np"), "s");
     }
 
     @Test
@@ -56,14 +54,14 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
         IDToken token = create();
         passwordMapper.setClaim(token, null, userSessionModel, session, null);
         assertNotEquals(token.getOtherClaims().get("s"), "123");
-        assertEquals(token.getOtherClaims().get("n"), "n");
-        assertEquals(token.getOtherClaims().get("np"), "np");
+        assertEquals(token.getOtherClaims().get("n"), "preferred_username");
+        assertEquals(token.getOtherClaims().get("np"), "s");
     }
 
     @Test
     public void testWithoutRadius() {
         RadiusServerSettings radiusCommonSettings = ModelBuilder.createRadiusServerSettings();
-        radiusCommonSettings.setUseRadius(false);
+        radiusCommonSettings.setUseUdpRadius(false);
         when(configuration.getRadiusSettings())
                 .thenReturn(radiusCommonSettings);
         IDToken token = create();

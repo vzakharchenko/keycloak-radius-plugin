@@ -3,16 +3,13 @@ package ua.zaskarius.keycloak.plugins.radius.radius.provider;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.models.RequiredActionProviderModel;
 import org.mockito.Mock;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ua.zaskarius.keycloak.plugins.radius.radius.server.KeycloakRadiusServer;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -40,8 +37,6 @@ public class MikrotikRadiusProviderTest extends AbstractRadiusTest {
     @Test
     public void testMethods() {
         provider.close();
-        Assert.assertEquals(provider.fieldName(), "preferred_username");
-        Assert.assertEquals(provider.fieldPassword(), "s");
     }
 
     @Test

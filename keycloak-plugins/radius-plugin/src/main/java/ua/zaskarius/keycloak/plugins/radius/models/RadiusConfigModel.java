@@ -3,23 +3,13 @@ package ua.zaskarius.keycloak.plugins.radius.models;
 
 import java.util.List;
 
-import static ua.zaskarius.keycloak.plugins.radius.radius.server.RadiusServerProviderFactory.RADIUS_PROVIDER;
-
 public class RadiusConfigModel {
-    private String provider = RADIUS_PROVIDER;
     private String sharedSecret;
+    private RadSecSettingsModel radsec;
     private int authPort = 1812;
     private int accountPort = 1813;
     private List<RadiusAccessModel> radiusIpAccess;
-    private boolean useRadius;
-
-    public String getProvider() {
-        return provider;
-    }
-
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
+    private boolean useUdpRadius;
 
     public String getSharedSecret() {
         return sharedSecret;
@@ -53,11 +43,19 @@ public class RadiusConfigModel {
         this.radiusIpAccess = radiusIpAccess;
     }
 
-    public boolean isUseRadius() {
-        return useRadius;
+    public boolean isUseUdpRadius() {
+        return useUdpRadius;
     }
 
-    public void setUseRadius(boolean useRadius) {
-        this.useRadius = useRadius;
+    public void setUseUdpRadius(boolean useUdpRadius) {
+        this.useUdpRadius = useUdpRadius;
+    }
+
+    public RadSecSettingsModel getRadsec() {
+        return radsec;
+    }
+
+    public void setRadsec(RadSecSettingsModel radsec) {
+        this.radsec = radsec;
     }
 }

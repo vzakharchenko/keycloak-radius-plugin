@@ -22,8 +22,6 @@ import ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
-import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.DictionaryLoader;
-import ua.zaskarius.keycloak.plugins.radius.radius.dictionary.IDictionaryLoader;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocolFactory;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
@@ -108,8 +106,6 @@ public abstract class AbstractRadiusTest {
 
     @Mock
     protected TypedQuery query;
-    @Mock
-    protected IDictionaryLoader dictionaryLoader;
 
     @Mock
     protected IRadiusServiceProvider radiusServiceProvider;
@@ -134,7 +130,6 @@ public abstract class AbstractRadiusTest {
             RadiusConfigHelper.setConfiguration(configuration);
             RadiusAuthProtocolFactory.setInstance(radiusAuthProtocolFactory);
             KeycloakRadiusUtils.setKeycloakHelper(keycloakHelper);
-            DictionaryLoader.setDictionaryLoader(dictionaryLoader);
             when(keycloakHelper.getAuthResult(session))
                     .thenReturn(new AuthenticationManager.AuthResult(userModel,
                             userSessionModel, accessToken));
@@ -265,7 +260,6 @@ public abstract class AbstractRadiusTest {
         when(jpaConnectionProvider.getEntityManager()).thenReturn(entityManager);
         when(entityManager.createQuery(anyString(), any())).thenReturn(query);
 
-        when(dictionaryLoader.loadDictionary(session)).thenReturn(realDictionary);
 
         eventBuilder = new EventBuilder(realmModel, session, clientConnection);
         List<?> objects = resetMock();

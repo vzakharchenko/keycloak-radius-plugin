@@ -2,9 +2,7 @@ package ua.zaskarius.keycloak.plugins.radius.configuration;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.util.JsonSerialization;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusAccessModel;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusConfigModel;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
+import ua.zaskarius.keycloak.plugins.radius.models.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,13 +38,23 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         return radiusSettings;
     }
 
+    private RadSecSettings transform(RadSecSettingsModel radSecSettingsModel) {
+        RadSecSettings radSecSettings = new RadSecSettings();
+        if (radSecSettingsModel != null) {
+            radSecSettings.setCertificate(radSecSettingsModel.getCertificate());
+            radSecSettings.setPrivateKey(radSecSettingsModel.getPrivateKey());
+            radSecSettings.setUseRadSec(radSecSettingsModel.isUseRadSec());
+        }
+        return radSecSettings;
+    }
+
     private RadiusServerSettings transform(RadiusConfigModel configModel) {
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setAccountPort(configModel.getAccountPort());
         radiusServerSettings.setAuthPort(configModel.getAuthPort());
         radiusServerSettings.setSecret(configModel.getSharedSecret());
-        radiusServerSettings.setProvider(configModel.getProvider());
-        radiusServerSettings.setUseRadius(configModel.isUseRadius());
+        radiusServerSettings.setRadSecSettings(transform(configModel.getRadsec()));
+        radiusServerSettings.setUseUdpRadius(configModel.isUseUdpRadius());
         if (configModel.getRadiusIpAccess() != null) {
 
             radiusServerSettings

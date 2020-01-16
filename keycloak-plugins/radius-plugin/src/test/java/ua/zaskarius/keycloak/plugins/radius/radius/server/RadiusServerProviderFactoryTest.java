@@ -24,7 +24,7 @@ public class RadiusServerProviderFactoryTest extends AbstractRadiusTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        radiusServerProviderFactory.setMikrotikRadiusServer(mikrotikRadiusServer);
+        radiusServerProviderFactory.setRadiusServer(mikrotikRadiusServer);
         doNothing().when(keycloakSessionFactory)
                 .register(argThat(argument -> {
                     RealmModel.RealmPostCreateEvent postCreateEvent = new RealmModel.RealmPostCreateEvent() {

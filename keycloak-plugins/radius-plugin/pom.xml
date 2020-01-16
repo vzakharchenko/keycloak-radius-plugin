@@ -19,9 +19,6 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.tinyradius/tinyradius -->
-        <!-- https://mvnrepository.com/artifact/com.hynnet/tinyradius -->
-        <!-- https://mvnrepository.com/artifact/com.globalreachtech/tinyradius-netty -->
         <dependency>
             <groupId>com.globalreachtech</groupId>
             <artifactId>tinyradius-netty</artifactId>

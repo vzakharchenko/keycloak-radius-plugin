@@ -53,4 +53,10 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
         accountingHandler.channelRead0(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
+
+    @Test
+    public void testDirectCall() {
+        accountingHandler.directRead(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
 }

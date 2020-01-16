@@ -10,7 +10,6 @@ import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
 
 import java.security.SecureRandom;
@@ -63,16 +62,6 @@ public final class RadiusHelper {
         return currentPassword;
     }
 
-    public static IRadiusServerProvider getProvider(KeycloakSession session) {
-        IRadiusConfiguration config = RadiusConfigHelper
-                .getConfig();
-        RadiusServerSettings radiusSettings = config
-                .getRadiusSettings();
-        return session
-                .getProvider(IRadiusServerProvider.class,
-                        radiusSettings.getProvider());
-    }
-
     public static List<String> getRealmAttributes(KeycloakSession session) {
         if (realmAttributes.isEmpty()) {
             Set<IRadiusDictionaryProvider> providers = session
@@ -91,7 +80,12 @@ public final class RadiusHelper {
 
     public static boolean isUseRadius() {
         IRadiusConfiguration config = RadiusConfigHelper.getConfig();
-        return config.getRadiusSettings().isUseRadius();
+        RadiusServerSettings radiusSettings = config.getRadiusSettings();
+        return radiusSettings
+                .isUseUdpRadius() ||
+                radiusSettings
+                        .getRadSecSettings()
+                        .isUseRadSec();
     }
 
 

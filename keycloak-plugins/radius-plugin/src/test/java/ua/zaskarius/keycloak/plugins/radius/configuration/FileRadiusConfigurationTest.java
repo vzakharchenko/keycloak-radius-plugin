@@ -5,6 +5,7 @@ import org.keycloak.util.JsonSerialization;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import ua.zaskarius.keycloak.plugins.radius.models.RadSecSettingsModel;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusAccessModel;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusConfigModel;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
@@ -14,18 +15,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 
 public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     private FileRadiusConfiguration radiusConfiguration = new FileRadiusConfiguration();
     private File config = new File("config", "radius.config");
 
+    private RadiusConfigModel radiusConfigModel;
+
     @BeforeMethod
     public void beforeMethod() throws IOException {
-        RadiusConfigModel radiusConfigModel = new RadiusConfigModel();
+        radiusConfigModel = new RadiusConfigModel();
         radiusConfigModel.setAuthPort(1813);
-        radiusConfigModel.setProvider("test");
         radiusConfigModel.setSharedSecret("GlobalShared");
         RadiusAccessModel radiusAccessModel = new RadiusAccessModel();
         radiusAccessModel.setIp("ip");
@@ -55,6 +56,41 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusSettings = radiusConfiguration.getRadiusSettings();
         assertNotNull(radiusSettings);
         assertEquals(radiusSettings.getAccountPort(), 1813);
+    }
+
+    @Test
+    public void testRadSecConfigurationDefaultFalse() throws IOException {
+        radiusConfigModel.setRadsec(new RadSecSettingsModel());
+        FileUtils.write(config,
+                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        radiusSettings = radiusConfiguration.getRadiusSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.getRadSecSettings().isUseRadSec());
+    }
+
+    @Test
+    public void testRadSecConfigurationTrue() throws IOException {
+        RadSecSettingsModel radsec = new RadSecSettingsModel();
+        radsec.setUseRadSec(true);
+        radiusConfigModel.setRadsec(radsec);
+        FileUtils.write(config,
+                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        radiusSettings = radiusConfiguration.getRadiusSettings();
+        assertNotNull(radiusSettings);
+        assertTrue(radiusSettings.getRadSecSettings().isUseRadSec());
+    }
+
+    @Test
+    public void testRadSecConfigurationNull() throws IOException {
+        radiusConfigModel.setRadsec(null);
+        FileUtils.write(config,
+                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        radiusSettings = radiusConfiguration.getRadiusSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.getRadSecSettings().isUseRadSec());
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

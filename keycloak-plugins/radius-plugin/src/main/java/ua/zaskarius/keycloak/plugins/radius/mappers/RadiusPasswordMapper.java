@@ -1,12 +1,13 @@
 package ua.zaskarius.keycloak.plugins.radius.mappers;
 
-import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
-import org.keycloak.models.*;
+import org.keycloak.models.ClientSessionContext;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.ProtocolMapperModel;
+import org.keycloak.models.UserSessionModel;
 import org.keycloak.protocol.oidc.mappers.*;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.representations.IDToken;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
+import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
 
     private static final List<ProviderConfigProperty> PROVIDER_CONFIG_PROPERTIES =
             new ArrayList<>();
+    public static final String PREFERRED_USERNAME = "preferred_username";
+    public static final String PASSWORD_FIELD = "s";
 
     static {
         OIDCAttributeMapperHelper.addIncludeInTokensConfig(PROVIDER_CONFIG_PROPERTIES,
@@ -58,22 +61,28 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
                             UserSessionModel userSession,
                             KeycloakSession keycloakSession,
                             ClientSessionContext clientSessionCtx) {
-
-        RadiusServerSettings commonSettings = RadiusConfigHelper.getConfig()
-                .getRadiusSettings();
-        if (commonSettings.isUseRadius()) {
-            IRadiusServerProvider provider = keycloakSession
-                    .getProvider(IRadiusServerProvider.class,
-                            commonSettings.getProvider());
-            RadiusSessionPasswordManager radiusSessionPasswordManager =
-                    RadiusSessionPasswordManager.getInstance();
-            String sessionNote = radiusSessionPasswordManager.password(userSession);
-
-            userSession.setNote(RADIUS_SESSION_PASSWORD, sessionNote);
-            token.getOtherClaims().put("s", sessionNote);
-            token.getOtherClaims().put("n", provider.fieldName());
-            token.getOtherClaims().put("np", provider.fieldPassword());
+        if (RadiusHelper.isUseRadius()) {
+            token.getOtherClaims().put("s", getPassword(userSession));
+            token.getOtherClaims().put("n", userNameFieldMapper());
+            token.getOtherClaims().put("np", passwordFieldMapper());
         }
+    }
+
+    protected String userNameFieldMapper() {
+        return PREFERRED_USERNAME;
+    }
+
+    protected String passwordFieldMapper() {
+        return PASSWORD_FIELD;
+    }
+
+    protected String getPassword(UserSessionModel userSession) {
+        RadiusSessionPasswordManager radiusSessionPasswordManager =
+                RadiusSessionPasswordManager.getInstance();
+        String sessionNote = radiusSessionPasswordManager
+                .password(userSession);
+        userSession.setNote(RADIUS_SESSION_PASSWORD, sessionNote);
+        return sessionNote;
     }
 
 }

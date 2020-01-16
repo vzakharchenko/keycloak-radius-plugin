@@ -5,9 +5,9 @@ import java.util.Map;
 public class RadiusServerSettings {
     private String secret;
     private int authPort;
-    private boolean useRadius;
+    private boolean useUdpRadius;
     private int accountPort;
-    private String provider;
+    private RadSecSettings radSecSettings;
     private Map<String, String> accessMap;
 
     public String getSecret() {
@@ -34,14 +34,6 @@ public class RadiusServerSettings {
         this.accountPort = accountPort;
     }
 
-    public String getProvider() {
-        return provider;
-    }
-
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-
     public Map<String, String> getAccessMap() {
         return accessMap;
     }
@@ -50,11 +42,19 @@ public class RadiusServerSettings {
         this.accessMap = accessMap;
     }
 
-    public boolean isUseRadius() {
-        return useRadius;
+    public boolean isUseUdpRadius() {
+        return useUdpRadius;
     }
 
-    public void setUseRadius(boolean useRadius) {
-        this.useRadius = useRadius;
+    public void setUseUdpRadius(boolean useUdpRadius) {
+        this.useUdpRadius = useUdpRadius;
+    }
+
+    public RadSecSettings getRadSecSettings() {
+        return radSecSettings;
+    }
+
+    public void setRadSecSettings(RadSecSettings radSecSettings) {
+        this.radSecSettings = radSecSettings;
     }
 }

@@ -1,6 +1,5 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.dictionary;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.dictionary.MemoryDictionary;
@@ -9,30 +8,28 @@ import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
 
 import java.util.Set;
 
-public class DictionaryLoader implements IDictionaryLoader {
-    private static IDictionaryLoader loader = new DictionaryLoader();
+public final class DictionaryLoader {
 
-    private final WritableDictionary dictionary = new MemoryDictionary();
+    private static final DictionaryLoader INSTANCE = new DictionaryLoader();
 
-    protected DictionaryLoader() {
+    private WritableDictionary writableDictionary;
+
+    private DictionaryLoader() {
     }
 
-    @Override
     public Dictionary loadDictionary(KeycloakSession session) {
-        Set<IRadiusDictionaryProvider> providers = session
-                .getAllProviders(IRadiusDictionaryProvider.class);
-        for (IRadiusDictionaryProvider provider : providers) {
-            provider.parseDictionary(dictionary);
+        if (writableDictionary == null) {
+            writableDictionary = new MemoryDictionary();
+            Set<IRadiusDictionaryProvider> providers = session
+                    .getAllProviders(IRadiusDictionaryProvider.class);
+            for (IRadiusDictionaryProvider provider : providers) {
+                provider.parseDictionary(writableDictionary);
+            }
         }
-        return dictionary;
+        return writableDictionary;
     }
 
-    @VisibleForTesting
-    public static void setDictionaryLoader(IDictionaryLoader dictionaryLoader) {
-        DictionaryLoader.loader = dictionaryLoader;
-    }
-
-    public static IDictionaryLoader getInstance() {
-        return loader;
+    public static DictionaryLoader getInstance() {
+        return INSTANCE;
     }
 }

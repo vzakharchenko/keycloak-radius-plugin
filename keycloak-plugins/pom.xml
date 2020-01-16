@@ -11,6 +11,7 @@
     <modules>
         <module>radius-plugin</module>
         <module>mikrotik-radius-plugin</module>
+        <module>rad-sec-plugin</module>
     </modules>
 
     <properties>

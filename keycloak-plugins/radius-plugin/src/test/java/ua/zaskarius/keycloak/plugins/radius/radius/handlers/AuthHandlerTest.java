@@ -64,6 +64,14 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testDirectCall() {
+        authHandler.getChannelHandler(session);
+        authHandler.setSecretProvider(secretProvider);
+        authHandler.directRead(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+
+    @Test
     public void testChannelRead0_Protocol_not_Valid() {
         authHandler.getChannelHandler(session);
         authHandler.setSecretProvider(secretProvider);

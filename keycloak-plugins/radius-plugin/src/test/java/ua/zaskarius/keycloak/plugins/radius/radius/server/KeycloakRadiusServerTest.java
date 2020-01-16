@@ -7,6 +7,7 @@ import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.testng.AssertJUnit.assertNull;
 
 public class KeycloakRadiusServerTest extends AbstractRadiusTest {
 
@@ -14,6 +15,7 @@ public class KeycloakRadiusServerTest extends AbstractRadiusTest {
     @Test
     public void testServer() {
         KeycloakRadiusServer keycloakRadiusServer = new KeycloakRadiusServer(session);
+        keycloakRadiusServer.init(realmModel);
         keycloakRadiusServer.getServer().close();
         keycloakRadiusServer.close();
     }
@@ -21,11 +23,10 @@ public class KeycloakRadiusServerTest extends AbstractRadiusTest {
     @Test
     public void testServerSkipStart() {
         RadiusServerSettings serverSettings = new RadiusServerSettings();
-        serverSettings.setUseRadius(false);
+        serverSettings.setUseUdpRadius(false);
         when(configuration.getRadiusSettings()).thenReturn(serverSettings);
         KeycloakRadiusServer keycloakRadiusServer = new KeycloakRadiusServer(session);
-        keycloakRadiusServer.getServer().close();
-        keycloakRadiusServer.close();
+        assertNull(keycloakRadiusServer.getServer());
     }
 
     @Override

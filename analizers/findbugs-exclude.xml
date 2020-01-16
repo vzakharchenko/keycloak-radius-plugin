@@ -80,4 +80,8 @@
         <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
         <Class name="ua.in.zaskarius.keycloak.mikrotik.dictionary.MikrotikDictionaryProviderFactory"/>
     </Match>
+    <Match>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+        <Class name="ua.zaskarius.keycloak.plugins.radsec.server.RadSecServerProvider"/>
+    </Match>
 </FindBugsFilter>

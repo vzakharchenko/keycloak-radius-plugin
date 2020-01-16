@@ -5,7 +5,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusDictionaryProvider;
-import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
@@ -58,13 +57,6 @@ public class RadiusHelperTest extends AbstractRadiusTest {
                         RadiusCredentialModel.TYPE))
                 .thenReturn(new ArrayList<>());
         assertNull(RadiusHelper.getCurrentPassword(session, realmModel, userModel));
-    }
-
-    @Test
-    public void testGetProvider() {
-        IRadiusServerProvider provider = RadiusHelper
-                .getProvider(session);
-        assertNotNull(provider);
     }
 
     @Test

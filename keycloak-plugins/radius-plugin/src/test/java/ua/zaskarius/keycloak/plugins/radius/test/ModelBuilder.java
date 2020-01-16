@@ -1,5 +1,6 @@
 package ua.zaskarius.keycloak.plugins.radius.test;
 
+import ua.zaskarius.keycloak.plugins.radius.models.RadSecSettings;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialModel;
 import org.keycloak.credential.CredentialModel;
@@ -17,8 +18,8 @@ public class ModelBuilder {
         HashMap<String, String> accessList = new HashMap<>();
         accessList.put(IP,"ip_secret");
         radiusServerSettings.setAccessMap(accessList);
-        radiusServerSettings.setProvider("testProvider");
-        radiusServerSettings.setUseRadius(true);
+        radiusServerSettings.setUseUdpRadius(true);
+        radiusServerSettings.setRadSecSettings(new RadSecSettings());
         radiusServerSettings.setAccountPort(9813);
         radiusServerSettings.setAuthPort(9812);
         return radiusServerSettings;

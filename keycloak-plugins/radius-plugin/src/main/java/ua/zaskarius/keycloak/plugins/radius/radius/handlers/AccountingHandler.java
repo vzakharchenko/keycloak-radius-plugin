@@ -67,4 +67,9 @@ public class AccountingHandler
     public ChannelHandler getChannelHandler(KeycloakSession session) {
         return (ChannelHandler) create(session);
     }
+
+    @Override
+    public void directRead(ChannelHandlerContext ctx, RequestCtx msg) {
+        channelRead0(ctx, msg);
+    }
 }

@@ -21,10 +21,10 @@ public class DictionaryLoaderTest extends AbstractRadiusTest {
     public void beforeMethods() {
         HashSet<IRadiusDictionaryProvider> iRadiusDictionaryProviders = new HashSet<>();
         when(session
-                .getAllProviders(IRadiusDictionaryProvider.class)).thenReturn(iRadiusDictionaryProviders);
+                .getAllProviders(IRadiusDictionaryProvider.class))
+                .thenReturn(iRadiusDictionaryProviders);
         dictionaryProvider = getProvider(IRadiusDictionaryProvider.class);
         iRadiusDictionaryProviders.add(dictionaryProvider);
-        DictionaryLoader.setDictionaryLoader(new DictionaryLoader());
     }
 
     @Test
