@@ -16,6 +16,7 @@ import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProvider
 import ua.zaskarius.keycloak.plugins.radsec.providers.IRadiusRadSecHandlerProvider;
 import ua.zaskarius.keycloak.plugins.radsec.providers.IRadiusRadSecHandlerProviderFactory;
 
+@ChannelHandler.Sharable
 public class RadSecHandler
         extends RequestHandler
         implements IRadiusRadSecHandlerProviderFactory,
