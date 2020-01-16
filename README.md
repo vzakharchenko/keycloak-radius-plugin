@@ -124,7 +124,7 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
    "radsec":{
       "privateKey":"config/private.key",
       "certificate":"config/public.crt",
-      "useRadSec":false
+      "useRadSec":true
    }
 }</code></pre>
 ![RadSecWarning](docs/RadSecWarning.png)
@@ -133,3 +133,7 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 8. upload PKCS#12 Certificate  to Mikrotik ![uploadCertificate](docs/uploadCertificate.png)
 9. import Certificate ![import Certificate](docs/import%20Certificate.png)
 10. enable radsec ![radiusRadSec](docs/radiusRadSec.png)
+
+### Mikrotik Hotspot Example (with Facebook login)
+
+in progress...
