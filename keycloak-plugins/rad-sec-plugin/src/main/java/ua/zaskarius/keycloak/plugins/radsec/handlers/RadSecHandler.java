@@ -21,8 +21,6 @@ public class RadSecHandler
         implements IRadiusRadSecHandlerProviderFactory,
         IRadiusRadSecHandlerProvider {
 
-    private RadSecHandler radSecHandler;
-
     public static final String DEFAULT_RADSEC_RADIUS_PROVIDER = "default-radsec-radius-provider";
 
     private KeycloakSessionFactory sessionFactory;
