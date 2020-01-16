@@ -7,28 +7,53 @@
 <a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
 
 features:
-
+- radius server
+- radius rad-sec server(Radius over TLS)
 - hotspot:
   - pop,chap authorization
   - openID connect
   - login using facebook, google, etc...
 - login
   - support api, winbox, web(Mikrotik)
-
+## setup
+### build project
+***requirements***: java jdk 11 and above, maven 3.5 and above
+ - <pre><code>cd keycloak-plugins</pre></code>
+ - <pre><code>mvn clean install</pre></code>
+### Configure keycloak
+***requirements***: [keycloak 8.0.1](https://downloads.jboss.org/keycloak/8.0.1/keycloak-8.0.1.zip) (I think it should work on earlier versions)
+- <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command=module add --name=keycloak.plugins.radius --resources=${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.0-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec</pre></code>
+- <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command=module add --name=keycloak.plugins.rad.sec --resources=${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.0-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius</pre></code>
+- <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command=module add --name=keycloak.plugins.radius.mikrotik --resources=${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.0-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius</pre></code>
+- <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
+- <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
+where
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-8.0.1.zip
+- **SOURCE** - Path where you checked out the code and built the project
 ## Configuration
 ### Radius server config file
--  create file \<Keycloak\>/config/radius.config
+-  create file ${KEYCLOAK_PATH}config/radius.config
 -  example <pre><code>{
-  "provider" : "radius-provider",
-  "sharedSecret" : "radius sharedSecret",
-  "authPort" : 1812,
-  "accountPort" : 1813,
-  "radiusIpAccess" : [ {
-    "ip" : "193.138.164.214",
-    "sharedSecret" : "Shared Secret for Ip"
-  } ],
-  "useRadius" : true
+  {
+   "sharedSecret":"radsec",
+   "authPort":1812,
+   "accountPort":1813,
+   "useUdpRadius":false,
+   "radsec":{
+      "privateKey":"config/private.key",
+      "certificate":"config/public.crt",
+      "useRadSec":true
+   }
 }</code></pre>
+where
+   -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
+   -  **authPort** - Authentication and authorization port
+   -  **accountPort** - Accounting port
+   -  **useUdpRadius** - if true, then listen to authPort and accountPort
+   -  **radsec** - radsec configuration
+   -  **privateKey** - private SSL key (https://netty.io/wiki/sslcontextbuilder-and-private-key.html)
+   -  **certificate** - certificates chain
+   -  **useRadSec** - if true, then listen  radsec port
 
 ### Keycloak Client with Radius Protocol
 ![radiusProtocol](docs/radiusProtocol.png)
