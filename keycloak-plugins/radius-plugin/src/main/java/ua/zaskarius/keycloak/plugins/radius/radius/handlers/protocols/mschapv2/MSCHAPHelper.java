@@ -273,8 +273,10 @@ public final class MSCHAPHelper {
         return passwordHash;
     }
 
-    private static void desEncrypt(byte[] clear, int clearOffset,
+    //CHECKSTYLE:OFF
+    private static void desEncrypt(byte[] clear,
                                    byte[] key, int keyOffset, byte[] cypher, int cypherOffset) {
+        //CHECKSTYLE:ON
         byte[] szParityKey = new byte[8];
         parityKey(szParityKey, key, keyOffset);
 
@@ -286,12 +288,13 @@ public final class MSCHAPHelper {
             IvParameterSpec ips = new IvParameterSpec(new byte[8]);
             c.init(Cipher.ENCRYPT_MODE, sk, ips);
 
-            c.doFinal(clear, clearOffset, clear
-                    .length - clearOffset, cypher, cypherOffset);
+            c.doFinal(clear, 0, clear
+                    .length, cypher, cypherOffset);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
     }
+
 
     private static byte[] challengeResponse(final byte[] challenge, final byte[] passwordHash) {
         byte[] response = new byte[24];
@@ -303,9 +306,9 @@ public final class MSCHAPHelper {
             zPasswordHash[i] = 0;
         }
 
-        desEncrypt(challenge, 0, zPasswordHash, 0, response, 0);
-        desEncrypt(challenge, 0, zPasswordHash, 7, response, 8);
-        desEncrypt(challenge, 0, zPasswordHash, 14, response, 16);
+        desEncrypt(challenge, zPasswordHash, 0, response, 0);
+        desEncrypt(challenge, zPasswordHash, 7, response, 8);
+        desEncrypt(challenge, zPasswordHash, 14, response, 16);
 
         return response;
     }

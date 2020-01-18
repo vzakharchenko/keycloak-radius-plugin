@@ -15,11 +15,11 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.packet.PacketEncoder;
+import org.tinyradius.server.SecretProvider;
 import ua.zaskarius.keycloak.plugins.radius.configuration.IRadiusConfiguration;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadSecSettings;
 import ua.zaskarius.keycloak.plugins.radius.providers.AbstractRadiusServerProvider;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.IKeycloakSecretProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.KeycloakSecretProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.server.KeycloakRadiusServer;
 import ua.zaskarius.keycloak.plugins.radsec.codec.RadSecCodec;
@@ -68,7 +68,7 @@ public class RadSecServerProvider
         super();
         IRadiusConfiguration radiusConfiguration = RadiusConfigHelper.getConfig();
         if (radiusConfiguration.getRadiusSettings().getRadSecSettings().isUseRadSec()) {
-            IKeycloakSecretProvider secretProvider = new KeycloakSecretProvider();
+            SecretProvider secretProvider = new KeycloakSecretProvider();
             final PacketEncoder packetEncoder = createPacketEncoder(session);
             EventLoopGroup bossGroup = new NioEventLoopGroup(3);
             ServerBootstrap serverBootstrap = new ServerBootstrap();

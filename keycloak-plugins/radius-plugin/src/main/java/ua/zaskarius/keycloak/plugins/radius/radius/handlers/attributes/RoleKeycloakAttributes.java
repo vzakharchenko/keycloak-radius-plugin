@@ -21,7 +21,7 @@ public class RoleKeycloakAttributes extends AbstractKeycloakAttributes<RoleModel
 
     @Override
     protected Set<RoleModel> getKeycloakTypes() {
-        return radiusUserInfo.getUserModel().getRoleMappings();
+        return radiusUserInfoGetter.getRadiusUserInfo().getUserModel().getRoleMappings();
     }
 
     @Override

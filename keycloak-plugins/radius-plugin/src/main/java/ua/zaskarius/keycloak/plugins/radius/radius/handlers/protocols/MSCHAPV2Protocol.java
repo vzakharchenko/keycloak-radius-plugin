@@ -8,10 +8,12 @@ import org.tinyradius.attribute.VendorSpecificAttribute;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.models.Attribute26Holder;
 import ua.zaskarius.keycloak.plugins.radius.radius.RadiusLibraryUtils;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPHelper;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -97,10 +99,10 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
     }
 
     @Override
-    public void answer(RadiusPacket answer, RadiusUserInfo radiusUserInfo) {
+    public void answer(RadiusPacket answer, IRadiusUserInfoGetter radiusUserInfoGetter) {
         if (answer.getType() == ACCESS_ACCEPT) {
             try {
-                addMSCHAPV2Response(answer, radiusUserInfo);
+                addMSCHAPV2Response(answer, radiusUserInfoGetter);
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalStateException(e);
             }
@@ -155,19 +157,19 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
     }
 
     private void addMSCHAPV2Response(RadiusPacket responsePacket,
-                                     RadiusUserInfo radiusUserInfo)
+                                     IRadiusUserInfoGetter radiusUserInfoGetter)
             throws NoSuchAlgorithmException {
+        IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
         byte[] password = radiusUserInfo.getActivePassword().getBytes(UTF_8);
         String secret = radiusUserInfo.getRadiusSecret();
         String successResponse = createMSCHAPV2Response(
-                accessRequest.getUserName(),
-                password,
-                (byte) 0x01);
+                accessRequest.getUserName(), password, (byte) 0x01);
         VendorSpecificAttribute msVendor = new VendorSpecificAttribute(dictionary,
                 VendorUtils.MS_VENDOR);
         RadiusAttribute radiusAttribute = RadiusLibraryUtils.get26Attribute(dictionary,
-                msVendor.getVendorId(), "MS-CHAP2-Success",
-                26, successResponse);
+                Attribute26Holder.create().vendor(msVendor.getVendorId()
+                ).attributeName("MS-CHAP2-Success").newType(
+                        26).value(successResponse));
         msVendor.addSubAttribute(radiusAttribute);
         msVendor.addSubAttribute("MS-MPPE-Encryption-Policy", Hex
                 .encodeHexString(new byte[]

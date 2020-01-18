@@ -13,12 +13,14 @@ import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 import org.tinyradius.server.RequestCtx;
 import org.tinyradius.server.handler.RequestHandler;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProviderFactory;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.AuthRequestInitialization;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.IAuthRequestInitialization;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -35,16 +37,17 @@ public class AuthHandler extends RequestHandler
 
     private KeycloakSessionFactory sessionFactory;
 
-    private IKeycloakSecretProvider secretProvider;
+    private IAuthRequestInitialization authRequestInitialization;
 
     private boolean verifyPassword(AuthProtocol authProtocol,
                                    KeycloakSession session) {
-        RadiusUserInfo radiusUserInfo = KeycloakSessionUtils.getRadiusUserInfo(session);
-        if (radiusUserInfo != null) {
-            List<String> passwords = radiusUserInfo.getPasswords();
+        IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
+                .getRadiusUserInfo(session);
+        if (radiusUserInfoGetter != null) {
+            List<String> passwords = radiusUserInfoGetter.getRadiusUserInfo().getPasswords();
             for (String password : passwords) {
                 if (authProtocol.verifyPassword(password)) {
-                    radiusUserInfo.setActivePassword(password);
+                    radiusUserInfoGetter.getBuilder().activePassword(password);
                     return true;
                 }
             }
@@ -56,14 +59,14 @@ public class AuthHandler extends RequestHandler
                                       AuthProtocol authProtocol,
                                       KeycloakSession threadSession,
                                       InetSocketAddress remoteAddress) {
-        boolean init = secretProvider.init(remoteAddress, request.getUserName(),
+        boolean init = authRequestInitialization.init(remoteAddress, request.getUserName(),
                 authProtocol,
                 threadSession);
         RadiusPacket answer;
         if (init) {
             int type = verifyPassword(authProtocol, threadSession) ? ACCESS_ACCEPT :
                     ACCESS_REJECT;
-            secretProvider.afterAuth(type,
+            authRequestInitialization.afterAuth(type,
                     threadSession);
             answer = RadiusPackets.create(request.getDictionary(),
                     type, request.getIdentifier());
@@ -82,7 +85,6 @@ public class AuthHandler extends RequestHandler
     protected Class<? extends RadiusPacket> acceptedPacketType() {
         return AccessRequest.class;
     }
-
 
 
     protected void channelRead0(ChannelHandlerContext ctx, RequestCtx msg,
@@ -122,7 +124,6 @@ public class AuthHandler extends RequestHandler
 
     @Override
     public IRadiusAuthHandlerProvider create(KeycloakSession session) {
-        this.sessionFactory = session.getKeycloakSessionFactory();
         return this;
     }
 
@@ -133,7 +134,9 @@ public class AuthHandler extends RequestHandler
 
     @Override
     public void postInit(KeycloakSessionFactory factory) {
-
+        this.sessionFactory = factory;
+        this.authRequestInitialization = new AuthRequestInitialization(
+                new KeycloakSecretProvider());
     }
 
     @Override
@@ -148,7 +151,6 @@ public class AuthHandler extends RequestHandler
 
     @Override
     public ChannelHandler getChannelHandler(KeycloakSession session) {
-        secretProvider = new KeycloakSecretProvider();
         return (ChannelHandler) create(session);
     }
 
@@ -158,7 +160,8 @@ public class AuthHandler extends RequestHandler
     }
 
     @VisibleForTesting
-    public void setSecretProvider(IKeycloakSecretProvider secretProvider) {
-        this.secretProvider = secretProvider;
+    public void setAuthRequestInitialization(
+            IAuthRequestInitialization authRequestInitialization) {
+        this.authRequestInitialization = authRequestInitialization;
     }
 }

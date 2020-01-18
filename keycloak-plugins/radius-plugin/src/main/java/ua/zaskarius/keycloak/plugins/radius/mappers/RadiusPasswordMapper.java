@@ -42,7 +42,7 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
 
     @Override
     public String getHelpText() {
-        return "Send  Session Password in token";
+        return "Send Session Password in token";
     }
 
     @Override
@@ -55,12 +55,14 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
         return OIDC_RADIUS_PASSWORD_ID;
     }
 
+    //CHECKSTYLE:OFF
     @Override
     protected void setClaim(IDToken token,
                             ProtocolMapperModel mappingModel,
                             UserSessionModel userSession,
                             KeycloakSession keycloakSession,
                             ClientSessionContext clientSessionCtx) {
+        //CHECKSTYLE:ON
         if (RadiusHelper.isUseRadius()) {
             token.getOtherClaims().put("s", getPassword(userSession));
             token.getOtherClaims().put("n", userNameFieldMapper());

@@ -12,13 +12,14 @@ public final class MSCHAPV2AuthenticatorUtils {
 
     private MSCHAPV2AuthenticatorUtils() {
     }
-
+    //CHECKSTYLE:OFF
     public static byte[] generateAuthenticatorResponse(
             byte[] password,
             byte[] ntResponse,
             byte[] peerChallenge,
             byte[] authenticatorChallenge,
             byte[] userName) throws NoSuchAlgorithmException {
+        //CHECKSTYLE:ON
         byte[] pBytes = password;
         if (pBytes == null) {
             pBytes = new byte[16];

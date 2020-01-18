@@ -1,6 +1,5 @@
 package ua.zaskarius.keycloak.plugins.radius.password;
 
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusSecretData;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.*;
 import org.keycloak.models.KeycloakSession;
@@ -9,6 +8,7 @@ import org.keycloak.models.UserModel;
 import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.models.cache.OnUserCache;
 import org.keycloak.models.cache.UserCache;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusSecretData;
 
 import java.util.Collections;
 import java.util.List;

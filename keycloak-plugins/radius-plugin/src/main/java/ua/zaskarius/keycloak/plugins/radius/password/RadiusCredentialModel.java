@@ -1,9 +1,9 @@
 package ua.zaskarius.keycloak.plugins.radius.password;
 
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusCredentialData;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusSecretData;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.util.JsonSerialization;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusCredentialData;
+import ua.zaskarius.keycloak.plugins.radius.models.RadiusSecretData;
 
 import java.io.IOException;
 

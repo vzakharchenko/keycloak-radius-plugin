@@ -14,13 +14,13 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.RequiredActionProviderModel;
 import org.tinyradius.packet.PacketEncoder;
 import org.tinyradius.server.RadiusServer;
+import org.tinyradius.server.SecretProvider;
 import org.tinyradius.server.handler.ServerPacketCodec;
 import ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigHelper;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusServerSettings;
 import ua.zaskarius.keycloak.plugins.radius.providers.AbstractRadiusServerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAccountHandlerProvider;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProvider;
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.IKeycloakSecretProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.KeycloakSecretProvider;
 
 import java.net.InetSocketAddress;
@@ -56,7 +56,7 @@ public class KeycloakRadiusServer
     private RadiusServer createRadiusServer(KeycloakSession session,
                                             Bootstrap bootstrap,
                                             RadiusServerSettings radiusSettings) {
-        IKeycloakSecretProvider secretProvider = new KeycloakSecretProvider();
+        SecretProvider secretProvider = new KeycloakSecretProvider();
         final PacketEncoder packetEncoder = createPacketEncoder(session);
         final ServerPacketCodec serverPacketCodec = new ServerPacketCodec(packetEncoder,
                 secretProvider);

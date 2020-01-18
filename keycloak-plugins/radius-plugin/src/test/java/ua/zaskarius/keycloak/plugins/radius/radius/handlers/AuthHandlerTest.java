@@ -7,8 +7,9 @@ import org.testng.annotations.Test;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.server.RequestCtx;
 import org.tinyradius.util.RadiusEndpoint;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAuthHandlerProvider;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.IAuthRequestInitialization;
 import ua.zaskarius.keycloak.plugins.radius.test.AbstractRadiusTest;
 
 import java.net.InetSocketAddress;
@@ -28,7 +29,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     private ChannelHandlerContext channelHandlerContext;
 
     @Mock
-    private IKeycloakSecretProvider secretProvider;
+    private IAuthRequestInitialization authRequestInitialization;
 
     @BeforeMethod
     public void beforeMethods() {
@@ -39,8 +40,9 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         requestCtx = new RequestCtx(accessRequest, radiusEndpoint);
 
         when(radiusAuthProtocolFactory.create(any(), any())).thenReturn(authProtocol);
-        when(secretProvider.init(any(), any(), any(), any())).thenReturn(true);
+        when(authRequestInitialization.init(any(), any(), any(), any())).thenReturn(true);
         reset(channelHandlerContext);
+        authHandler.postInit(keycloakSessionFactory);
     }
 
     @Test
@@ -58,7 +60,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testChannelRead0() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
         authHandler.channelRead0(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
@@ -66,7 +68,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testDirectCall() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
         authHandler.directRead(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
@@ -74,7 +76,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testChannelRead0_Protocol_not_Valid() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authProtocol.isValid(any())).thenReturn(false);
 
         authHandler.channelRead0(channelHandlerContext, requestCtx);
@@ -84,7 +86,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testChannelRead0_exception() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authProtocol.isValid(any())).thenThrow(new RuntimeException("1"));
 
         authHandler.channelRead0(channelHandlerContext, requestCtx);
@@ -94,7 +96,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test(expectedExceptions = RuntimeException.class)
     public void testChannelRead0_exception2() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(session.getTransactionManager()).thenThrow(new RuntimeException("1"));
 
         authHandler.channelRead0(channelHandlerContext, requestCtx);
@@ -104,9 +106,9 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testChannelRead0_session1() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(session.getAttribute("RADIUS_INFO",
-                RadiusUserInfo.class))
+                IRadiusUserInfoGetter.class))
                 .thenReturn(null);
 
         authHandler.channelRead0(channelHandlerContext, requestCtx);
@@ -116,9 +118,8 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testChannelRead0_session2() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
-        radiusUserInfo.setPasswords(new ArrayList<>());
-
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
+        when(radiusUserInfo.getPasswords()).thenReturn(new ArrayList<>());
         authHandler.channelRead0(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
@@ -126,8 +127,8 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testChannelRead0_init() {
         authHandler.getChannelHandler(session);
-        authHandler.setSecretProvider(secretProvider);
-        when(secretProvider.init(any(), any(), any(), any())).thenReturn(false);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
+        when(authRequestInitialization.init(any(), any(), any(), any())).thenReturn(false);
 
         authHandler.channelRead0(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());

@@ -1,7 +1,7 @@
 package ua.zaskarius.keycloak.plugins.radius.mappers;
 
-import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 import org.keycloak.models.UserSessionModel;
+import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 
 import static ua.zaskarius.keycloak.plugins.radius.mappers.RadiusPasswordMapper.RADIUS_SESSION_PASSWORD;
 

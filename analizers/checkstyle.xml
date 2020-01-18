@@ -42,7 +42,7 @@
             <property name="max" value="25"/>
         </module>
         <module name="ParameterNumber">
-            <property name="max" value="7"/>
+            <property name="max" value="4"/>
         </module>
         <module name="LineLength">
             <property name="max" value="100"/>

@@ -97,7 +97,7 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         MSCHAPV2Protocol chapProtocol = new MSCHAPV2Protocol(request, session);
         assertTrue(chapProtocol.verifyPassword("1"));
         RadiusPacket answer = new RadiusPacket(realDictionary, 2, 1);
-        chapProtocol.answer(answer, radiusUserInfo);
+        chapProtocol.answer(answer, radiusUserInfoGetter);
         List<RadiusAttribute> attributes = answer.getAttributes();
         assertEquals(attributes.size(), 1);
         VendorSpecificAttribute vendorSpecific = (VendorSpecificAttribute) attributes.get(0);
@@ -138,7 +138,7 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         MSCHAPV2Protocol chapProtocol = new MSCHAPV2Protocol(request, session);
         assertFalse(chapProtocol.verifyPassword("2"));
         RadiusPacket answer = new RadiusPacket(realDictionary, 1, 1);
-        chapProtocol.answer(answer, radiusUserInfo);
+        chapProtocol.answer(answer, radiusUserInfoGetter);
         List<RadiusAttribute> attributes = answer.getAttributes();
         assertEquals(attributes.size(), 0);
 
