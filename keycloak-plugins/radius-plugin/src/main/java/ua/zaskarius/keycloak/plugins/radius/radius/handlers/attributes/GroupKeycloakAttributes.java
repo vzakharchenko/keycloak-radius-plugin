@@ -22,7 +22,7 @@ public class GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupMod
 
     @Override
     protected Set<GroupModel> getKeycloakTypes() {
-        return radiusUserInfo.getUserModel().getGroups();
+        return radiusUserInfoGetter.getRadiusUserInfo().getUserModel().getGroups();
     }
 
     @Override

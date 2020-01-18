@@ -1,7 +1,17 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.session;
 
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
+import org.keycloak.common.ClientConnection;
+import org.keycloak.common.util.Resteasy;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.KeycloakTransaction;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+
 
 public final class KeycloakSessionUtils {
 
@@ -14,15 +24,35 @@ public final class KeycloakSessionUtils {
         return session.getAttribute(name, tClass);
     }
 
-    public static RadiusUserInfo getRadiusUserInfo(KeycloakSession session) {
-        return getSessionAttribute(session, RADIUS_INFO_ATTRIBUTE, RadiusUserInfo.class);
+    public static IRadiusUserInfoGetter getRadiusUserInfo(KeycloakSession session) {
+        return getSessionAttribute(session, RADIUS_INFO_ATTRIBUTE, IRadiusUserInfoGetter.class);
     }
 
     public static void addAttribute(KeycloakSession session, String name, Object value) {
         session.setAttribute(name, value);
     }
 
-    public static void addRadiusUserInfo(KeycloakSession session, RadiusUserInfo radiusUserInfo) {
-        addAttribute(session, RADIUS_INFO_ATTRIBUTE, radiusUserInfo);
+    public static void addRadiusUserInfo(KeycloakSession session,
+                                         IRadiusUserInfoGetter radiusUserInfoGetter) {
+        addAttribute(session, RADIUS_INFO_ATTRIBUTE, radiusUserInfoGetter);
+    }
+
+    public static void context(KeycloakSession session,
+                               IRadiusUserInfoGetter radiusUserInfoGetter) {
+        IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
+        Resteasy.getProvider().pushContext(ClientConnection.class,
+                radiusUserInfo.getClientConnection());
+        Resteasy.pushContext(KeycloakSession.class, session);
+        Resteasy.pushContext(KeycloakTransaction.class,
+                session.getTransactionManager());
+        MultivaluedMap<String, String> headers = new MultivaluedHashMap<>();
+        headers.add(HttpHeaders.USER_AGENT, "Radius/v0.01 rev. 001 (" + radiusUserInfo
+                .getClientConnection()
+                .getLocalAddr() + ")");
+        Resteasy.pushContext(HttpHeaders.class, new ResteasyHttpHeaders(headers));
+        session.getContext().setConnection(radiusUserInfo.getClientConnection());
+        session.getContext().setRealm(radiusUserInfo.getRealmModel());
+        session.getContext().setClient(radiusUserInfo.getClientModel());
+
     }
 }

@@ -4,19 +4,17 @@ import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
-import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
 import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerUtils;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusAttributeProvider;
+import ua.zaskarius.keycloak.plugins.radius.radius.RadiusLibraryUtils;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.KeycloakAttributesType;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.clientconnection.RadiusClientConnection;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractAuthProtocol implements AuthProtocol {
@@ -28,28 +26,14 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         this.session = session;
     }
 
-    private String getRealmName(String attributeName) {
-        RadiusAttribute attribute = accessRequest.getAttribute(attributeName);
-        return (attribute != null) ? attribute.getValueString() : null;
-    }
-
-    private RealmModel getRealm(List<String> attributes) {
-        for (String attribute : attributes) {
-            String realmName = getRealmName(attribute);
-            if (realmName != null) {
-                return session.realms().getRealm(realmName);
-            }
-        }
-        return null;
-    }
 
     @Override
     public RealmModel getRealm() {
-        List<String> attributes = RadiusHelper.getRealmAttributes(session);
-        return getRealm(attributes);
+        return RadiusLibraryUtils.getRealm(session, accessRequest);
     }
 
-    protected abstract void answer(RadiusPacket answer, RadiusUserInfo radiusUserInfo);
+    protected abstract void answer(RadiusPacket answer,
+                                   IRadiusUserInfoGetter radiusUserInfoGetter);
 
 
     private void prepareAnswerAttributes(IRadiusAttributeProvider provider,
@@ -64,8 +48,10 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     @Override
     public final void prepareAnswer(RadiusPacket answer) {
-        RadiusUserInfo radiusUserInfo = KeycloakSessionUtils.getRadiusUserInfo(session);
-        if (radiusUserInfo != null) {
+        answer.addAttribute("Acct-Interim-Interval", "60");
+        IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
+                .getRadiusUserInfo(session);
+        if (radiusUserInfoGetter != null) {
             Set<IRadiusAttributeProvider> providers = session
                     .getAllProviders(IRadiusAttributeProvider.class);
             for (IRadiusAttributeProvider provider : providers) {
@@ -73,7 +59,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
                     prepareAnswerAttributes(provider, attributesType, answer);
                 }
             }
-            answer(answer, radiusUserInfo);
+            answer(answer, radiusUserInfoGetter);
         }
     }
 
@@ -87,11 +73,16 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         if (!isValid) {
             EventBuilder event = EventLoggerUtils
                     .createMasterEvent(session,
-                            new RadiusClientConnection(address));
+                            new RadiusClientConnection(address, accessRequest));
             event.event(EventType.LOGIN).detail(EventLoggerUtils.RADIUS_MESSAGE,
                     "Protocol " + getClass() + " is not valid.")
                     .error("Please set Realm name in radius configuration");
         }
         return isValid;
+    }
+
+    @Override
+    public AccessRequest getAccessRequest() {
+        return accessRequest.copy();
     }
 }

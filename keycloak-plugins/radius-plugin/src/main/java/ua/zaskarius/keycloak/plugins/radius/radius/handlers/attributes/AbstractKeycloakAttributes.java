@@ -1,17 +1,14 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes;
 
 import org.jboss.logging.Logger;
-import org.keycloak.events.EventBuilder;
-import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 import ua.zaskarius.keycloak.plugins.radius.RadiusHelper;
-import ua.zaskarius.keycloak.plugins.radius.event.log.EventLoggerUtils;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
 import ua.zaskarius.keycloak.plugins.radius.models.RadiusAttributeHolder;
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import ua.zaskarius.keycloak.plugins.radius.providers.IRadiusServiceProvider;
 import ua.zaskarius.keycloak.plugins.radius.radius.handlers.session.KeycloakSessionUtils;
 
@@ -21,7 +18,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
 
     private static final Logger LOGGER = Logger.getLogger(AbstractKeycloakAttributes.class);
     protected final KeycloakSession session;
-    protected final RadiusUserInfo radiusUserInfo;
+    protected final IRadiusUserInfoGetter radiusUserInfoGetter;
     protected final AccessRequest accessRequest;
 
     private final List<RadiusAttributeHolder<KEYCLOAK_TYPE>> attributeHolders = new ArrayList<>();
@@ -30,7 +27,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
                                       AccessRequest accessRequest) {
         this.session = session;
         this.accessRequest = accessRequest;
-        radiusUserInfo = KeycloakSessionUtils.getRadiusUserInfo(session);
+        this.radiusUserInfoGetter = KeycloakSessionUtils.getRadiusUserInfo(session);
     }
 
 
@@ -97,18 +94,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
         AttributeType attributeType = dictionary.getAttributeTypeByName(attributeName);
         if (attributeType == null) {
             String message = "Attribute " + attributeName + " does not exists";
-            LOGGER.warn(message);
-            EventBuilder event = EventLoggerUtils
-                    .createEvent(session, radiusUserInfo.getRealmModel(), radiusUserInfo
-                            .getClientConnection());
-
-            event.event(EventType
-                    .CLIENT_INFO_ERROR)
-                    .detail(EventLoggerUtils.RADIUS_MESSAGE,
-                            message)
-                    .user(radiusUserInfo
-                            .getUserModel())
-                    .error(message);
+            LOGGER.trace(message);
             return false;
         }
         return true;

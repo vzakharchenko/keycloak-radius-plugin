@@ -1,4 +1,4 @@
-package ua.zaskarius.keycloak.plugins.radius.models;
+package ua.zaskarius.keycloak.plugins.radius.radius.holder;
 
 import org.keycloak.common.ClientConnection;
 import org.keycloak.models.ClientModel;
@@ -8,7 +8,7 @@ import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtoc
 
 import java.util.List;
 
-public class RadiusUserInfo {
+/* default */ class RadiusUserInfo implements IRadiusUserInfo {
     private List<String> passwords;
     private UserModel userModel;
     private String activePassword;
@@ -18,6 +18,7 @@ public class RadiusUserInfo {
     private ClientModel clientModel;
     private ClientConnection clientConnection;
 
+    @Override
     public List<String> getPasswords() {
         return passwords;
     }
@@ -26,6 +27,7 @@ public class RadiusUserInfo {
         this.passwords = passwords;
     }
 
+    @Override
     public String getActivePassword() {
         return activePassword;
     }
@@ -34,6 +36,7 @@ public class RadiusUserInfo {
         this.activePassword = activePassword;
     }
 
+    @Override
     public String getRadiusSecret() {
         return radiusSecret;
     }
@@ -42,6 +45,7 @@ public class RadiusUserInfo {
         this.radiusSecret = radiusSecret;
     }
 
+    @Override
     public UserModel getUserModel() {
         return userModel;
     }
@@ -50,6 +54,7 @@ public class RadiusUserInfo {
         this.userModel = userModel;
     }
 
+    @Override
     public RealmModel getRealmModel() {
         return realmModel;
     }
@@ -58,6 +63,7 @@ public class RadiusUserInfo {
         this.realmModel = realmModel;
     }
 
+    @Override
     public AuthProtocol getProtocol() {
         return protocol;
     }
@@ -66,6 +72,7 @@ public class RadiusUserInfo {
         this.protocol = protocol;
     }
 
+    @Override
     public ClientConnection getClientConnection() {
         return clientConnection;
     }
@@ -74,6 +81,7 @@ public class RadiusUserInfo {
         this.clientConnection = clientConnection;
     }
 
+    @Override
     public ClientModel getClientModel() {
         return clientModel;
     }

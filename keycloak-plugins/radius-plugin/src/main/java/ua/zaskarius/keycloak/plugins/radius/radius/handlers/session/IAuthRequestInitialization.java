@@ -1,12 +1,11 @@
-package ua.zaskarius.keycloak.plugins.radius.radius.handlers;
+package ua.zaskarius.keycloak.plugins.radius.radius.handlers.session;
 
-import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 import org.keycloak.models.KeycloakSession;
-import org.tinyradius.server.SecretProvider;
+import ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AuthProtocol;
 
 import java.net.InetSocketAddress;
 
-public interface IKeycloakSecretProvider extends SecretProvider {
+public interface IAuthRequestInitialization {
     boolean init(InetSocketAddress address,
                  String username,
                  AuthProtocol protocol,

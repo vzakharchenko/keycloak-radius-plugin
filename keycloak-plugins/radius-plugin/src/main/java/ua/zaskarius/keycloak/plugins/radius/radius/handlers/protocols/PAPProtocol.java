@@ -1,9 +1,9 @@
 package ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols;
 
-import ua.zaskarius.keycloak.plugins.radius.models.RadiusUserInfo;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import ua.zaskarius.keycloak.plugins.radius.radius.holder.IRadiusUserInfoGetter;
 
 public class PAPProtocol extends AbstractAuthProtocol {
 
@@ -14,7 +14,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
     }
 
     @Override
-    protected void answer(RadiusPacket answer, RadiusUserInfo radiusUserInfo) {
+    protected void answer(RadiusPacket answer, IRadiusUserInfoGetter radiusUserInfoGetter) {
 
     }
 

@@ -27,7 +27,7 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
         assertEquals(passwordMapper.getDisplayCategory(), TOKEN_MAPPER_CATEGORY);
         assertEquals(passwordMapper.getProtocol(), OIDCLoginProtocol.LOGIN_PROTOCOL);
         assertEquals(passwordMapper.getDisplayType(), "Radius Session Password Mapper");
-        assertEquals(passwordMapper.getHelpText(), "Send  Session Password in token");
+        assertEquals(passwordMapper.getHelpText(), "Send Session Password in token");
         assertEquals(passwordMapper.getId(), RadiusPasswordMapper.OIDC_RADIUS_PASSWORD_ID);
     }
 

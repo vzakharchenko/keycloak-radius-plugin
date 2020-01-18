@@ -23,7 +23,7 @@ public class UserKeycloakAttributes extends AbstractKeycloakAttributes<UserModel
     @Override
     protected Set<UserModel> getKeycloakTypes() {
         Set<UserModel> userModels = new HashSet<>();
-        userModels.add(radiusUserInfo.getUserModel());
+        userModels.add(radiusUserInfoGetter.getRadiusUserInfo().getUserModel());
         return userModels;
     }
 

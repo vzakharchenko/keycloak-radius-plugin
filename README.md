@@ -10,9 +10,10 @@ features:
 - radius server inside keycloak
 - support [radsec](#mikrotik-rad-sec-example) (Radius over TLS)
 - Map Keycloak [Role](#assign-radius-attributes-to-role) [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
+- create/ remove Keycloak Session ![sessionManagment](docs/sessionManagment.png)
 - [Hotspot](hotspot/OAuthRadius.md) :
   - pop,chap authorization
-  - [openID connec](hotspot/OAuthRadius.md#how-keycloak-radius-hotspot-works)
+  - [openID connect](hotspot/OAuthRadius.md#how-keycloak-radius-hotspot-works)
   - login using [facebook](hotspot/OAuthRadius.md#facebook-login-example) , google, etc...
 
 support Mikrotik services: hotspot, login

@@ -30,6 +30,8 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
     public void beforeMethods() {
         AccountingRequest accountingRequest = new AccountingRequest(realDictionary,
                 0, new byte[16], "test", 1);
+        accountingRequest.addAttribute("realm-radius", realmModel.getName());
+        accountingHandler.postInit(keycloakSessionFactory);
         radiusEndpoint = new RadiusEndpoint(InetSocketAddress.createUnresolved("0", 0),
                 "testSecret");
         requestCtx = new RequestCtx(accountingRequest, radiusEndpoint);
