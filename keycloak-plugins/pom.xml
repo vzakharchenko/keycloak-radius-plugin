@@ -314,7 +314,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.0.0-beta5</version>
+                        <version>4.0.0-RC1</version>
                     </dependency>
                 </dependencies>
             </plugin>
