@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.vzakharchenko</groupId>
     <artifactId>keycloak-plugins</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
+
+    <name>Keycloak Radius Server</name>
+    <description>Extension for keycloak for working as Radius Server</description>
+    <url>https://github.com/vzakharchenko/keycloak-radius-plugin</url>
+
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/vzakharchenko/keycloak-radius-plugin</url>
+        <connection>scm:git:https://github.com/vzakharchenko/keycloak-radius-plugin.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>owner</id>
+            <name>Vasyl Zakharchenko</name>
+            <email>vaszakharchenko@gmail.com</email>
+            <timezone>UTC+2</timezone>
+        </developer>
+    </developers>
+
     <modules>
         <module>radius-plugin</module>
         <module>mikrotik-radius-plugin</module>
@@ -33,8 +61,11 @@
         <checkStyleLocation>../analizers</checkStyleLocation>
         <pmdLocation>${basedir}/../analizers/</pmdLocation>
         <findBugsLocation>${basedir}/../analizers/</findBugsLocation>
+        <javadoc>${basedir}/../analizers/javadoc</javadoc>
+        <sources>${basedir}/../analizers/sources</sources>
         <repoToken>repoToken</repoToken>
         <coveralls>true</coveralls>
+        <release-detail-message>a new Release</release-detail-message>
 
     </properties>
 
@@ -140,6 +171,29 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -154,7 +208,7 @@
                                 <Multi-Release>true</Multi-Release>
                             </manifestEntries>
                         </transformer>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                     </transformers>
                 </configuration>
                 <executions>
@@ -250,7 +304,40 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${javadoc}/build.xml</descriptor>
+                        <descriptor>${sources}/build.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -474,13 +561,37 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>radius-plugin/.DS_Store</checkModificationExclude>
+                        <checkModificationExclude>pom.xml</checkModificationExclude>
+                    </checkModificationExcludes>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>v@{project.version}-${keycloak.version}</tagNameFormat>
+                    <branchName>@{project.version}</branchName>
+                    <detail />
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
     <repositories>
         <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype</id>
+            <name>sonatype repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
 </project>

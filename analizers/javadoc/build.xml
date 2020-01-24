@@ -1,0 +1,17 @@
+<assembly>
+    <id>javadoc</id>
+    <!-- START SNIPPET: formats -->
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>${javadoc}/jar</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
