@@ -39,49 +39,45 @@
     </Match>
     <Match>
         <Bug pattern="WEAK_MESSAGE_DIGEST_MD5"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.CHAPProtocol"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.CHAPProtocol"/>
     </Match>
     <Match>
         <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.password.RadiusCredentialProvider"/>
+        <Class name="com.github.vzakharchenko.radius.password.RadiusCredentialProvider"/>
     </Match>
     <Match>
         <Bug pattern="BL_BURYING_LOGIC"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.AbstractAuthProtocol"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.AbstractAuthProtocol"/>
     </Match>
     <Match>
         <Bug pattern="BL_BURYING_LOGIC"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.attributes.AbstractKeycloakAttributes"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.attributes.AbstractKeycloakAttributes"/>
     </Match>
     <Match>
         <Bug pattern="RFI_SET_ACCESSIBLE"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.RadiusLibraryUtils"/>
+        <Class name="com.github.vzakharchenko.radius.radius.RadiusLibraryUtils"/>
     </Match>
     <Match>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPHelper"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.MSCHAPHelper"/>
     </Match>
     <Match>
         <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
     </Match>
     <Match>
         <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
-    </Match>
-    <Match>
-        <Bug pattern="CFS_CONFUSING_FUNCTION_SEMANTICS"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.configuration.RadiusConfigJPA"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
     </Match>
     <Match>
         <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radius.radius.handlers.AuthHandler"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.AuthHandler"/>
     </Match>
     <Match>
         <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
-        <Class name="ua.in.zaskarius.keycloak.mikrotik.dictionary.MikrotikDictionaryProviderFactory"/>
+        <Class name="com.github.vzakharchenko.mikrotik.dictionary.MikrotikDictionaryProviderFactory"/>
     </Match>
     <Match>
         <Bug pattern="PATH_TRAVERSAL_IN"/>
-        <Class name="ua.zaskarius.keycloak.plugins.radsec.server.RadSecServerProvider"/>
+        <Class name="com.github.vzakharchenko.radsec.server.RadSecServerProvider"/>
     </Match>
 </FindBugsFilter>
