@@ -1,1 +1,1 @@
-ua.zaskarius.keycloak.plugins.radius.test.TestResteasyProvider
+com.github.vzakharchenko.radius.test.TestResteasyProvider

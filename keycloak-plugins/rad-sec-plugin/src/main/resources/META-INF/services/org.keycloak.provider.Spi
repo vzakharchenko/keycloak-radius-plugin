@@ -1,2 +1,2 @@
-ua.zaskarius.keycloak.plugins.radsec.providers.RadSecRadiusHandlerSPI
+com.github.vzakharchenko.radsec.providers.RadSecRadiusHandlerSPI
 

@@ -1,7 +1,7 @@
-ua.zaskarius.keycloak.plugins.radius.providers.RadiusServerSpi
-ua.zaskarius.keycloak.plugins.radius.providers.AttributeSpi
-ua.zaskarius.keycloak.plugins.radius.providers.RadiusDictionarySpi
-ua.zaskarius.keycloak.plugins.radius.providers.AccountingRadiusHandlerSPI
-ua.zaskarius.keycloak.plugins.radius.providers.AuthRadiusHandlerSPI
-ua.zaskarius.keycloak.plugins.radius.providers.RadiusServiceSpi
+com.github.vzakharchenko.radius.providers.RadiusServerSpi
+com.github.vzakharchenko.radius.providers.AttributeSpi
+com.github.vzakharchenko.radius.providers.RadiusDictionarySpi
+com.github.vzakharchenko.radius.providers.AccountingRadiusHandlerSPI
+com.github.vzakharchenko.radius.providers.AuthRadiusHandlerSPI
+com.github.vzakharchenko.radius.providers.RadiusServiceSpi
 
