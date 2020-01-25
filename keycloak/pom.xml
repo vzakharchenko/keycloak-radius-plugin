@@ -3,48 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>droid.spy</groupId>
+    <groupId>com.github.vzakharchenko</groupId>
     <artifactId>keycloak</artifactId>
-    <version>REL005-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <properties>
         <keycloak.version>8.0.1</keycloak.version>
         <keyCloakVersion>${keycloak.version}</keyCloakVersion>
         <production>false</production>
-        <keycloak-plugin>1.0-SNAPSHOT</keycloak-plugin>
+        <keycloak-plugin>${project.version}</keycloak-plugin>
     </properties>
-
-    <!--    <repositories>-->
-    <!--        <repository>-->
-    <!--            <id>central</id>-->
-    <!--            <name>libs-release</name>-->
-    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-release</url>-->
-    <!--        </repository>-->
-    <!--        <repository>-->
-    <!--            <id>central-snapshot</id>-->
-    <!--            <name>libs-snapshot</name>-->
-    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-snapshot</url>-->
-    <!--        </repository>-->
-    <!--        <repository>-->
-    <!--            <id>snapshot</id>-->
-    <!--            <name>vassio`s Artifactory-releases</name>-->
-    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-snapshot-local</url>-->
-    <!--        </repository>-->
-    <!--        <repository>-->
-    <!--            <id>release</id>-->
-    <!--            <name>vassio`s Artifactory-releases</name>-->
-    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-release-local</url>-->
-    <!--        </repository>-->
-    <!--        -->
-    <!--    </repositories>-->
-    <!--    <pluginRepositories>-->
-    <!--        <pluginRepository>-->
-    <!--            <id>release</id>-->
-    <!--            <name>vassio`s Artifactory-releases</name>-->
-    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-release-local</url>-->
-    <!--        </pluginRepository>-->
-    <!--    </pluginRepositories>-->
 
     <build>
         <finalName>keycloak</finalName>
@@ -63,12 +32,6 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>smarthome.sso</groupId>
-                                    <artifactId>authentication-plugins</artifactId>
-                                    <version>${keycloak-plugin}</version>
-                                    <outputDirectory>target/artifacts/authentication-plugins</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
                                     <groupId>com.github.vzakharchenko</groupId>
                                     <artifactId>radius-plugin</artifactId>
                                     <version>${keycloak-plugin}</version>
@@ -85,13 +48,6 @@
                                     <artifactId>mikrotik-radius-plugin</artifactId>
                                     <version>${keycloak-plugin}</version>
                                     <outputDirectory>target/artifacts/mikrotik-radius-plugin</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>home.sso</groupId>
-                                    <artifactId>keycloak-theme</artifactId>
-                                    <version>${keycloak-plugin}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>target/artifacts/theme</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -138,7 +94,8 @@
                     <descriptors>
                         <descriptor>assembly/build.xml</descriptor>
                     </descriptors>
-                    <appendAssemblyId>true</appendAssemblyId>
+                    <finalName>keycloak-radius</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
                     <execution>

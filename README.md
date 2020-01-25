@@ -3,6 +3,7 @@
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/vzakharchenko/keycloak-radius-plugin.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vzakharchenko/keycloak-radius-plugin/context:java)  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bfe4a9d54c5048d5b4c05ba6a4cb9b96)](https://www.codacy.com/manual/vzaharchenko/keycloak-radius-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vzakharchenko/keycloak-radius-plugin&amp;utm_campaign=Badge_Grade)  
 [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
 <a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
 
 Run radius server inside keycloak.  
@@ -17,7 +18,13 @@ features:
   - login using [facebook](hotspot/OAuthRadius.md#facebook-login-example) , google, etc...
 
 support Mikrotik services: hotspot, login
-## setup
+## Release Setup
+1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
+2. unzip release <pre><code>unzip keycloak-radius.zip -d keycloak-radius</pre></code>
+3. run keycloak  <pre><code>sh keycloak-radius/bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</pre></code>
+4. open http://localhost:8090
+5. initialize keycloak master realm
+## Manual Setup
 ### build project
 ***requirements***: java jdk 11 and above, maven 3.5 and above
  - <pre><code>cd keycloak-plugins</pre></code>
@@ -59,8 +66,8 @@ where
 ## Run Keycloak Locally
 <pre><code>
 #!/usr/bin/env bash
-set -e ## Run Keycloak Locally
-cd target/keycloak/keycloak-8.0.1
+set -e
+cd keycloak-8.0.1
 public_ip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' -m 1`
 sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 -Djboss.bind.address.private=${public_ip} -Djboss.node.name=${public_ip} -Djgroups.bind.address=${public_ip} --debug 8190 -Djboss.http.port=8090
 </pre></code>

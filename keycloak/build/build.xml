@@ -16,25 +16,13 @@
     <property name="KEYCLOAK_DESTINATION" value="${KEYCLOAK_PATH}/keycloak-${KEYCLOAK_VERSION}"/>
     <property name="KEYCLOAK_CONFIGURATION_HA" value="build/keycloak-ha.cli"/>
     <property name="KEYCLOAK_CONFIGURATION" value="build/keycloak.cli"/>
-    <property name="KEYCLOAK_CONFIGURATION_SSL" value="build/ssl-ha.cli"/>
-    <property name="KEYCLOAK_PROFILE_PROPERTIES" value="build/profile.properties"/>
+    <property name="KEYCLOAK_CONFIGURATION_SSL" value="build/ssl-s.cli"/>
+    <property name="KEYCLOAK_CONFIGURATION_SSL-HA" value="build/ssl-ha.cli"/>
 
-    <property name="KEYCLOAK_DATABASE" value="postgres"/>
-    <!-- IndustryNetwork theme -->
-    <property name="KEYCLOAK_THEME" value="${BUILD_DIR}/artifacts/theme"/>
     <!-- Plugins -->
-    <property name="KEYCLOAK_AUTHENTICATION_PLUGIN" value="${BUILD_DIR}/artifacts/authentication-plugins"/>
     <property name="KEYCLOAK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/radius-plugin"/>
     <property name="KEYCLOAK__MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
     <property name="KEYCLOAK_RAD_SEC_PLUGIN" value="${BUILD_DIR}/artifacts/rad-sec-plugin"/>
-
-    <first id="keycloakThemeZip">
-        <fileset dir="${KEYCLOAK_THEME}" includes="**"/>
-    </first>
-
-    <first id="keycloakAuthenticationZip">
-        <fileset dir="${KEYCLOAK_AUTHENTICATION_PLUGIN}" includes="**"/>
-    </first>
 
     <first id="keycloakRadiusZip">
         <fileset dir="${KEYCLOAK_RADIUS_PLUGIN}" includes="**"/>
@@ -70,24 +58,6 @@
         <!-- select Database-->
         <copydir src="build/ext" dest="${KEYCLOAK_DESTINATION}"/>
 
-        <exec executable="sh">
-            <arg value="${KEYCLOAK_DESTINATION}/bin/change-database.sh"/>
-            <arg value="${KEYCLOAK_DESTINATION}"/>
-            <arg value="${KEYCLOAK_DATABASE}"/>
-        </exec>
-
-        <!-- Install Theme-->
-        <exec executable="sh">
-            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
-            <arg value="--command=module add --name=home.sso.theme --resources=${toString:keycloakThemeZip}"/>
-        </exec>
-
-        <!-- Install Authentication Plugin-->
-        <exec executable="sh">
-            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
-            <arg value="--command=module add --name=home.sso.plugins.authentication --resources=${toString:keycloakAuthenticationZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-model-infinispan,org.infinispan,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,org.keycloak.keycloak-model-jpa,javax.persistence.api,javax.mail.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,org.apache.commons.io,org.jboss.resteasy.resteasy-multipart-provider,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,org.jboss.logging,com.fasterxml.jackson.core.jackson-core"/>
-        </exec>
-
         <!-- Install Radius Plugin-->
         <exec executable="sh">
             <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
@@ -118,15 +88,16 @@
             <arg value="--file=${KEYCLOAK_CONFIGURATION_HA}"/>
         </exec>
 
-        <!--&lt;!&ndash; JDBC PING&ndash;&gt;-->
-        <!--<exec executable="sh">-->
-        <!--<arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>-->
-        <!--<arg value="&#45;&#45;file=${KEYCLOAK_PING_CONFIGURATION}"/>-->
-        <!--</exec>-->
+
         <!-- SSL -->
         <exec executable="sh">
             <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
             <arg value="--file=${KEYCLOAK_CONFIGURATION_SSL}"/>
+        </exec>
+        <!-- SSL HA-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--file=${KEYCLOAK_CONFIGURATION_SSL-HA}"/>
         </exec>
 
     </target>

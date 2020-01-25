@@ -1,5 +1,7 @@
 set -e
 
+PROPERTY_FILE=./keycloak-plugins/release.properties
+
 function help() {
   echo '
 Usage release.sh OPTIONS
@@ -42,7 +44,40 @@ if [[ "x${password}" == "x" ]]; then
   echo "Password is empty"
   exit 1;
 fi
-
+# prepare release
 cd keycloak-plugins
 mvn clean release:prepare -Psign -Darguments=-Dgpg.passphrase=${password} -Dresume=false
+cd ..
+# get release tag name
+tagName=`cat $PROPERTY_FILE | grep "scm.tag" | grep -i -v -E "scm.tagNameFormat" | cut -d'=' -f2`
+# get release version
+tagVersion=`cat $PROPERTY_FILE | grep "project.rel.com.github.vzakharchenko..keycloak-plugins"  | cut -d'=' -f2`
+
+if [[ "x${tagVersion}" == "x" ]]; then
+  echo "tagVersion is empty"
+  exit 1;
+fi
+
+if [[ "x${tagName}" == "x" ]]; then
+  echo "tagName is empty"
+  exit 1;
+fi
+# get perform release
+cd keycloak-plugins
 mvn -Psign clean release:perform -Darguments=-Dgpg.passphrase=${password}
+# build keycloak-radius
+cd ../keycloak
+# update version of keycloak-radius
+mvn versions:set -DnewVersion=$tagVersion
+# build keycloak-radius
+mvn clean install -Dkeycloak-plugin=$tagVersion -Dproduction=true
+
+# create release
+git pull
+hub release create -a target/keycloak-radius.zip -m "Keycloak with radius server ${tagName}
+
+requirements: **openjdk 11**
+installation steps:
+1. download and unzip keycloak-radius.zip <pre>unzip keycloak-radius.zip keycloak-radius</pre>
+2. <pre>sh keycloak-radius/bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</pre>
+3. open http://localhost:8090" $tagName

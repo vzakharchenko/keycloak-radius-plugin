@@ -7,7 +7,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>target/keycloak/keycloak-8.0.1</directory>
+            <directory>target/keycloak/keycloak-${keyCloakVersion}</directory>
             <outputDirectory>.</outputDirectory>
             <includes>
                 <include>**</include>
