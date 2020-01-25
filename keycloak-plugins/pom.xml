@@ -5,7 +5,7 @@
     <groupId>com.github.vzakharchenko</groupId>
     <artifactId>keycloak-plugins</artifactId>
     <packaging>pom</packaging>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3</version>
 
     <name>Keycloak Radius Server</name>
     <description>Extension for keycloak for working as Radius Server</description>
@@ -23,7 +23,7 @@
     <scm>
         <url>https://github.com/vzakharchenko/keycloak-radius-plugin</url>
         <connection>scm:git:https://github.com/vzakharchenko/keycloak-radius-plugin.git</connection>
-        <tag>v0.1.3-8.0.1</tag>
+        <tag>v0.3-8.0.1</tag>
     </scm>
 
     <developers>
@@ -570,7 +570,6 @@
                 <version>3.0.0-M1</version>
                 <configuration>
                     <checkModificationExcludes>
-                        <checkModificationExclude>radius-plugin/.DS_Store</checkModificationExclude>
                         <checkModificationExclude>pom.xml</checkModificationExclude>
                     </checkModificationExcludes>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
