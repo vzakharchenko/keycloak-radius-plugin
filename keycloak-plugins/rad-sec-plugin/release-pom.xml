@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.vzakharchenko</groupId>
   <artifactId>rad-sec-plugin</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.3</version>
   <name>RadSec(Radius over TLS) plugin</name>
   <description>Extension of Radius-plugin for working as RadSec Server.</description>
   <url>https://github.com/vzakharchenko/keycloak-radius-plugin/rad-sec-plugin</url>
@@ -127,13 +127,13 @@
     <dependency>
       <groupId>com.github.vzakharchenko</groupId>
       <artifactId>radius-plugin</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.github.vzakharchenko</groupId>
       <artifactId>radius-plugin</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.3</version>
       <type>test-jar</type>
       <classifier>tests</classifier>
       <scope>test</scope>
@@ -839,7 +839,7 @@
       </testResource>
     </testResources>
     <directory>${project.basedir}/target</directory>
-    <finalName>rad-sec-plugin-0.1.1</finalName>
+    <finalName>rad-sec-plugin-0.1.3</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
