@@ -1,0 +1,17 @@
+<assembly>
+    <id>keycloak</id>
+    <!-- START SNIPPET: formats -->
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target/keycloak/keycloak-8.0.1</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

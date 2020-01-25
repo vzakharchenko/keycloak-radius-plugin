@@ -1,0 +1,135 @@
+<project name="web_service_shell_sample.config" default="build_project" basedir="."
+         xmlns:if="ant:if"
+         xmlns:unless="ant:unless" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="ant:unless ">
+
+    <!-- directory settings -->
+    <property name="BUILD_DIR" value="target"/>
+    <property name="CACHE_DIR" value="cache"/>
+    <property name="KEYCLOAK_VERSION" value="8.0.1"/>
+    <property name="PRODUCTION" value="false"/>
+    <property name="KEYCLOAK_URL"
+              value="https://downloads.jboss.org/keycloak/${KEYCLOAK_VERSION}/keycloak-${KEYCLOAK_VERSION}.zip"/>
+    <property name="KEYCLOAK_PATH" value="${BUILD_DIR}/keycloak"/>
+    <property name="KEYCLOAK_SOURCE" value="${BUILD_DIR}/keycloak_source.zip"/>
+    <property name="KEYCLOAK_SOURCE_LOCAL" value="keycloak_source.zip"/>
+    <property name="KEYCLOAK_DESTINATION" value="${KEYCLOAK_PATH}/keycloak-${KEYCLOAK_VERSION}"/>
+    <property name="KEYCLOAK_CONFIGURATION_HA" value="build/keycloak-ha.cli"/>
+    <property name="KEYCLOAK_CONFIGURATION" value="build/keycloak.cli"/>
+    <property name="KEYCLOAK_CONFIGURATION_SSL" value="build/ssl-ha.cli"/>
+    <property name="KEYCLOAK_PROFILE_PROPERTIES" value="build/profile.properties"/>
+
+    <property name="KEYCLOAK_DATABASE" value="postgres"/>
+    <!-- IndustryNetwork theme -->
+    <property name="KEYCLOAK_THEME" value="${BUILD_DIR}/artifacts/theme"/>
+    <!-- Plugins -->
+    <property name="KEYCLOAK_AUTHENTICATION_PLUGIN" value="${BUILD_DIR}/artifacts/authentication-plugins"/>
+    <property name="KEYCLOAK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/radius-plugin"/>
+    <property name="KEYCLOAK__MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
+    <property name="KEYCLOAK_RAD_SEC_PLUGIN" value="${BUILD_DIR}/artifacts/rad-sec-plugin"/>
+
+    <first id="keycloakThemeZip">
+        <fileset dir="${KEYCLOAK_THEME}" includes="**"/>
+    </first>
+
+    <first id="keycloakAuthenticationZip">
+        <fileset dir="${KEYCLOAK_AUTHENTICATION_PLUGIN}" includes="**"/>
+    </first>
+
+    <first id="keycloakRadiusZip">
+        <fileset dir="${KEYCLOAK_RADIUS_PLUGIN}" includes="**"/>
+    </first>
+    <first id="keycloakMikrotikRadiusZip">
+        <fileset dir="${KEYCLOAK__MIKROTIK_RADIUS_PLUGIN}" includes="**"/>
+    </first>
+    <first id="keycloakRadSecZip">
+        <fileset dir="${KEYCLOAK_RAD_SEC_PLUGIN}" includes="**"/>
+    </first>
+
+
+    <!-- compile -->
+    <target name="build_project">
+
+        <condition property="prod">
+            <istrue value="${PRODUCTION}"/>
+        </condition>
+
+        <get if:set="prod" description="download keycloak ${KEYCLOAK_URL}"
+             src="${KEYCLOAK_URL}"
+             dest="${KEYCLOAK_SOURCE}">
+        </get>
+
+        <exec if:set="prod" executable="unzip">
+            <arg line="-o -q ${KEYCLOAK_SOURCE} -d ${KEYCLOAK_PATH}"/>
+        </exec>
+
+        <exec executable="unzip" unless:set="prod">
+            <arg line="-o -q ${KEYCLOAK_SOURCE_LOCAL} -d ${KEYCLOAK_PATH}"/>
+        </exec>
+
+        <!-- select Database-->
+        <copydir src="build/ext" dest="${KEYCLOAK_DESTINATION}"/>
+
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/change-database.sh"/>
+            <arg value="${KEYCLOAK_DESTINATION}"/>
+            <arg value="${KEYCLOAK_DATABASE}"/>
+        </exec>
+
+        <!-- Install Theme-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=home.sso.theme --resources=${toString:keycloakThemeZip}"/>
+        </exec>
+
+        <!-- Install Authentication Plugin-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=home.sso.plugins.authentication --resources=${toString:keycloakAuthenticationZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-model-infinispan,org.infinispan,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,org.keycloak.keycloak-model-jpa,javax.persistence.api,javax.mail.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,org.apache.commons.io,org.jboss.resteasy.resteasy-multipart-provider,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,org.jboss.logging,com.fasterxml.jackson.core.jackson-core"/>
+        </exec>
+
+        <!-- Install Radius Plugin-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=keycloak.plugins.radius --resources=${toString:keycloakRadiusZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec"/>
+        </exec>
+
+        <!-- Install RadSec Plugin-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=keycloak.plugins.rad.sec --resources=${toString:keycloakRadSecZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"/>
+        </exec>
+
+        <!-- Install Mikrotik Radius Plugin-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=keycloak.plugins.radius.mikrotik --resources=${toString:keycloakMikrotikRadiusZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"/>
+        </exec>
+
+        <!-- Install modules-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--file=${KEYCLOAK_CONFIGURATION}"/>
+        </exec>
+
+        <!-- Install modules HA-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--file=${KEYCLOAK_CONFIGURATION_HA}"/>
+        </exec>
+
+        <!--&lt;!&ndash; JDBC PING&ndash;&gt;-->
+        <!--<exec executable="sh">-->
+        <!--<arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>-->
+        <!--<arg value="&#45;&#45;file=${KEYCLOAK_PING_CONFIGURATION}"/>-->
+        <!--</exec>-->
+        <!-- SSL -->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--file=${KEYCLOAK_CONFIGURATION_SSL}"/>
+        </exec>
+
+    </target>
+
+
+</project>

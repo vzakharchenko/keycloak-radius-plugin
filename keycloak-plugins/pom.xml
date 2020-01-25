@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.vzakharchenko</groupId>
@@ -24,7 +23,7 @@
     <scm>
         <url>https://github.com/vzakharchenko/keycloak-radius-plugin</url>
         <connection>scm:git:https://github.com/vzakharchenko/keycloak-radius-plugin.git</connection>
-        <tag>HEAD</tag>
+        <tag>v0.1.3-8.0.1</tag>
     </scm>
 
     <developers>
@@ -65,7 +64,11 @@
         <sources>${basedir}/../analizers/sources</sources>
         <repoToken>repoToken</repoToken>
         <coveralls>true</coveralls>
-        <release-detail-message>a new Release</release-detail-message>
+        <release-detail-message>
+            installation steps:
+            1. download and unzip keycloak-radius.zip
+            2. sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090
+        </release-detail-message>
 
     </properties>
 
@@ -573,7 +576,8 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>v@{project.version}-${keycloak.version}</tagNameFormat>
                     <branchName>@{project.version}</branchName>
-                    <detail />
+
+                    <detail>${release-detail-message}</detail>
                 </configuration>
             </plugin>
         </plugins>

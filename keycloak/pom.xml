@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>droid.spy</groupId>
+    <artifactId>keycloak</artifactId>
+    <version>REL005-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <keycloak.version>8.0.1</keycloak.version>
+        <keyCloakVersion>${keycloak.version}</keyCloakVersion>
+        <production>false</production>
+        <keycloak-plugin>1.0-SNAPSHOT</keycloak-plugin>
+    </properties>
+
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>central</id>-->
+    <!--            <name>libs-release</name>-->
+    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-release</url>-->
+    <!--        </repository>-->
+    <!--        <repository>-->
+    <!--            <id>central-snapshot</id>-->
+    <!--            <name>libs-snapshot</name>-->
+    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-snapshot</url>-->
+    <!--        </repository>-->
+    <!--        <repository>-->
+    <!--            <id>snapshot</id>-->
+    <!--            <name>vassio`s Artifactory-releases</name>-->
+    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-snapshot-local</url>-->
+    <!--        </repository>-->
+    <!--        <repository>-->
+    <!--            <id>release</id>-->
+    <!--            <name>vassio`s Artifactory-releases</name>-->
+    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-release-local</url>-->
+    <!--        </repository>-->
+    <!--        -->
+    <!--    </repositories>-->
+    <!--    <pluginRepositories>-->
+    <!--        <pluginRepository>-->
+    <!--            <id>release</id>-->
+    <!--            <name>vassio`s Artifactory-releases</name>-->
+    <!--            <url>https://file.zaskarius.in.ua/artifactory/libs-release-local</url>-->
+    <!--        </pluginRepository>-->
+    <!--    </pluginRepositories>-->
+
+    <build>
+        <finalName>keycloak</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>smarthome.sso</groupId>
+                                    <artifactId>authentication-plugins</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/authentication-plugins</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>radius-plugin</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/radius-plugin</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>rad-sec-plugin</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/rad-sec-plugin</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>mikrotik-radius-plugin</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/mikrotik-radius-plugin</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>home.sso</groupId>
+                                    <artifactId>keycloak-theme</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <type>zip</type>
+                                    <outputDirectory>target/artifacts/theme</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>build-configs</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="build/build.xml" inheritRefs="false">
+                                    <target name="build_project"/>
+                                    <property name="KEYCLOAK_VERSION" value="${keyCloakVersion}"/>
+                                    <property name="PRODUCTION" value="${production}"/>
+                                </ant>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.ant/ant-nodeps &ndash;&gt;-->
+                    <!--<dependency>-->
+                    <!--<groupId>org.apache.ant</groupId>-->
+                    <!--<artifactId>ant-nodeps</artifactId>-->
+                    <!--<version>1.8.1</version>-->
+                    <!--</dependency>-->
+
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly/build.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
