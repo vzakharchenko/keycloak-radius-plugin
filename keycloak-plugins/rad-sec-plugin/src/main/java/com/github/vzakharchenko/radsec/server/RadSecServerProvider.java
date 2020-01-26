@@ -1,5 +1,11 @@
 package com.github.vzakharchenko.radsec.server;
 
+import com.github.vzakharchenko.radius.configuration.IRadiusConfiguration;
+import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
+import com.github.vzakharchenko.radius.models.RadSecSettings;
+import com.github.vzakharchenko.radius.providers.AbstractRadiusServerProvider;
+import com.github.vzakharchenko.radius.radius.handlers.KeycloakSecretProvider;
+import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
 import com.github.vzakharchenko.radsec.codec.RadSecCodec;
 import com.github.vzakharchenko.radsec.providers.IRadiusRadSecHandlerProvider;
 import io.netty.bootstrap.ServerBootstrap;
@@ -18,12 +24,6 @@ import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.packet.PacketEncoder;
 import org.tinyradius.server.SecretProvider;
-import com.github.vzakharchenko.radius.configuration.IRadiusConfiguration;
-import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
-import com.github.vzakharchenko.radius.models.RadSecSettings;
-import com.github.vzakharchenko.radius.providers.AbstractRadiusServerProvider;
-import com.github.vzakharchenko.radius.radius.handlers.KeycloakSecretProvider;
-import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
 
 import java.io.File;
 
@@ -67,10 +67,11 @@ public class RadSecServerProvider
     public RadSecServerProvider(KeycloakSession session) {
         super();
         IRadiusConfiguration radiusConfiguration = RadiusConfigHelper.getConfig();
-        if (radiusConfiguration.getRadiusSettings().getRadSecSettings().isUseRadSec()) {
+        RadSecSettings radSecSettings = radiusConfiguration.getRadiusSettings().getRadSecSettings();
+        if (radSecSettings.isUseRadSec()) {
             SecretProvider secretProvider = new KeycloakSecretProvider();
             final PacketEncoder packetEncoder = createPacketEncoder(session);
-            EventLoopGroup bossGroup = new NioEventLoopGroup(3);
+            EventLoopGroup bossGroup = new NioEventLoopGroup(radSecSettings.getnThreads());
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             channelFuture = serverBootstrap
                     .channel(NioServerSocketChannel.class).group(bossGroup).clone()

@@ -25,6 +25,7 @@ public class RadSecServerProviderFactoryTest extends AbstractRadiusTest {
         when(configuration.getRadiusSettings()).thenReturn(settings);
         RadSecSettings radSecSettings = new RadSecSettings();
         radSecSettings.setUseRadSec(false);
+        radSecSettings.setnThreads(1);
         settings.setRadSecSettings(radSecSettings);
         radSecServerProviderFactory.createInstance(session);
     }

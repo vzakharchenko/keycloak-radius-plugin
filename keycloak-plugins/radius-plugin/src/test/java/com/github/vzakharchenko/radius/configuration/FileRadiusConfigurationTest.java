@@ -1,15 +1,15 @@
 package com.github.vzakharchenko.radius.configuration;
 
+import com.github.vzakharchenko.radius.models.RadSecSettingsModel;
+import com.github.vzakharchenko.radius.models.RadiusAccessModel;
+import com.github.vzakharchenko.radius.models.RadiusConfigModel;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.io.FileUtils;
 import org.keycloak.util.JsonSerialization;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.github.vzakharchenko.radius.models.RadSecSettingsModel;
-import com.github.vzakharchenko.radius.models.RadiusAccessModel;
-import com.github.vzakharchenko.radius.models.RadiusConfigModel;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +28,8 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusConfigModel = new RadiusConfigModel();
         radiusConfigModel.setAuthPort(1813);
         radiusConfigModel.setSharedSecret("GlobalShared");
+        radiusConfigModel.setNumberThreads(19);
+        radiusConfigModel.setUseUdpRadius(true);
         RadiusAccessModel radiusAccessModel = new RadiusAccessModel();
         radiusAccessModel.setIp("ip");
         radiusAccessModel.setSharedSecret("ip");

@@ -8,6 +8,7 @@ public class RadiusConfigModel {
     private RadSecSettingsModel radsec;
     private int authPort = 1812;
     private int accountPort = 1813;
+    private int numberThreads = 8;
     private List<RadiusAccessModel> radiusIpAccess;
     private boolean useUdpRadius;
 
@@ -57,5 +58,13 @@ public class RadiusConfigModel {
 
     public void setRadsec(RadSecSettingsModel radsec) {
         this.radsec = radsec;
+    }
+
+    public int getNumberThreads() {
+        return numberThreads;
+    }
+
+    public void setNumberThreads(int numberThreads) {
+        this.numberThreads = numberThreads;
     }
 }

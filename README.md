@@ -45,17 +45,19 @@ where
 ### Radius server config file
 -  create file ${KEYCLOAK_PATH}config/radius.config
 -  example <pre><code>{
-  {
-   "sharedSecret":"radsec",
-   "authPort":1812,
-   "accountPort":1813,
-   "useUdpRadius":false,
-   "radsec":{
-      "privateKey":"config/private.key",
-      "certificate":"config/public.crt",
-      "useRadSec":true
-   }
-}</code></pre>
+  "sharedSecret": "radsec",
+  "authPort": 1812,
+  "accountPort": 1813,
+  "numberThreads": 8,
+  "useUdpRadius": true,
+  "radsec": {
+    "privateKey": "config/private.key",
+    "certificate": "config/public.crt",
+    "numberThreads": 8,
+    "useRadSec": true
+  }
+}
+</code></pre>
 where
    -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
    -  **authPort** - Authentication and authorization port
@@ -65,6 +67,7 @@ where
    -  **privateKey** - private SSL key (https://netty.io/wiki/sslcontextbuilder-and-private-key.html)
    -  **certificate** - certificates chain
    -  **useRadSec** - if true, then listen  radsec port
+   -  **numberThreads** - number of connection threads
 ## Run Keycloak Locally
 <pre><code>
 #!/usr/bin/env bash
