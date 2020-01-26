@@ -2,8 +2,8 @@ package com.github.vzakharchenko.radius.models;
 
 public class RadSecSettings {
     private String privKey = "";
-    private String cert = "";
     private int nThreads = 8;
+    private String cert = "";
     private boolean useRadSec;
 
     public String getPrivKey() {
