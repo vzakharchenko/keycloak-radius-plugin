@@ -152,7 +152,7 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
                 .encodeHexString(mppeSendKeyEncoded));
         msVendor.addSubAttribute("MS-MPPE-Recv-Key", Hex
                 .encodeHexString(mppeRecvKeyEncoded));
-        responsePacket.addAttribute(msVendor);
+        responsePacket.getAttributes().add(msVendor);
     }
 
     private void addMSCHAPV2Response(RadiusPacket responsePacket,

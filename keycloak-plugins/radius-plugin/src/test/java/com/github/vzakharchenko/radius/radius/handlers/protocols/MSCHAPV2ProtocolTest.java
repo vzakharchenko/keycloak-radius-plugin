@@ -102,9 +102,6 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         assertEquals(attributes.size(), 1);
         VendorSpecificAttribute vendorSpecific = (VendorSpecificAttribute) attributes.get(0);
         List<RadiusAttribute> subAttributes = vendorSpecific.getSubAttributes();
-        assertEquals(subAttributes.size(), 1);
-        vendorSpecific = (VendorSpecificAttribute) subAttributes.get(0);
-        subAttributes = vendorSpecific.getSubAttributes();
         assertEquals(subAttributes.size(), 5);
         RadiusAttribute subAttribute = vendorSpecific.getSubAttribute("MS-CHAP2-Success");
         assertNotNull(subAttribute);

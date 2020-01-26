@@ -23,11 +23,6 @@ public final class MSCHAPHelper {
     private static final int AUTH_VECTOR_LENGTH = 16;
     private static final int MAX_STRING_LENGTH = 254;
 
-    /**
-     * Random number generator.
-     */
-    private static SecureRandom random = new SecureRandom();
-
     private MSCHAPHelper() {
     }
 
@@ -140,17 +135,21 @@ public final class MSCHAPHelper {
     }
 
     private static byte[] getPasswd(byte[] input, int inlen) {
-        int saltOffset = 0;
-        byte[] passwd = new byte[MAX_STRING_LENGTH + AUTH_VECTOR_LENGTH];
-        System.arraycopy(input, 0, passwd, 3, inlen);
-        for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
-            passwd[i] = 0;
+        try {
+            int saltOffset = 0;
+            byte[] passwd = new byte[MAX_STRING_LENGTH + AUTH_VECTOR_LENGTH];
+            System.arraycopy(input, 0, passwd, 3, inlen);
+            for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
+                passwd[i] = 0;
+            }
+            passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
+                    SecureRandom.getInstanceStrong().generateSeed(1)[0] & 0x07));
+            passwd[1] = SecureRandom.getInstanceStrong().generateSeed(1)[0];
+            passwd[2] = (byte) inlen; /* length of the password string */
+            return passwd;
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
         }
-        passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
-                random.generateSeed(1)[0] & 0x07));
-        passwd[1] = random.generateSeed(1)[0];
-        passwd[2] = (byte) inlen; /* length of the password string */
-        return passwd;
     }
 
     private static MessageDigest getOriginalMessageDigest(byte[] secret) {
