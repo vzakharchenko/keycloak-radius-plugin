@@ -46,8 +46,8 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
     private RadSecSettings transform(RadSecSettingsModel radSecSettingsModel) {
         RadSecSettings radSecSettings = new RadSecSettings();
         if (radSecSettingsModel != null) {
-            radSecSettings.setCertificate(radSecSettingsModel.getCertificate());
-            radSecSettings.setPrivateKey(radSecSettingsModel.getPrivateKey());
+            radSecSettings.setCert(radSecSettingsModel.getCertificate());
+            radSecSettings.setPrivKey(radSecSettingsModel.getPrivateKey());
             radSecSettings.setUseRadSec(radSecSettingsModel.isUseRadSec());
             radSecSettings.setnThreads(radSecSettingsModel.getNumberThreads());
         }

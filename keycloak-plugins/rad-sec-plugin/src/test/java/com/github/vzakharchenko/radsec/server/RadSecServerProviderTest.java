@@ -25,8 +25,8 @@ public class RadSecServerProviderTest extends AbstractRadiusTest {
         RadSecSettings radSecSettings = new RadSecSettings();
         settings.setRadSecSettings(radSecSettings);
         radSecSettings.setUseRadSec(true);
-        radSecSettings.setCertificate("src/test/resources/cert.crt");
-        radSecSettings.setPrivateKey("src/test/resources/cert.key");
+        radSecSettings.setCert("src/test/resources/cert.crt");
+        radSecSettings.setPrivKey("src/test/resources/cert.key");
     }
 
     @Test
@@ -49,8 +49,8 @@ public class RadSecServerProviderTest extends AbstractRadiusTest {
         RadSecSettings radSecSettings = new RadSecSettings();
         settings.setRadSecSettings(radSecSettings);
         radSecSettings.setUseRadSec(true);
-        radSecSettings.setCertificate("src/test/resources/public1.crt");
-        radSecSettings.setPrivateKey("src/test/resources/cert.key");
+        radSecSettings.setCert("src/test/resources/public1.crt");
+        radSecSettings.setPrivKey("src/test/resources/cert.key");
         radSecServerProvider.createHandler(ch);
     }
 
@@ -61,8 +61,8 @@ public class RadSecServerProviderTest extends AbstractRadiusTest {
         RadSecSettings radSecSettings = new RadSecSettings();
         settings.setRadSecSettings(radSecSettings);
         radSecSettings.setUseRadSec(true);
-        radSecSettings.setCertificate("src/test/resources/cert.key");
-        radSecSettings.setPrivateKey("src/test/resources/cert.key");
+        radSecSettings.setCert("src/test/resources/cert.key");
+        radSecSettings.setPrivKey("src/test/resources/cert.key");
         radSecServerProvider.createHandler(ch);
     }
 
@@ -73,8 +73,8 @@ public class RadSecServerProviderTest extends AbstractRadiusTest {
         RadSecSettings radSecSettings = new RadSecSettings();
         settings.setRadSecSettings(radSecSettings);
         radSecSettings.setUseRadSec(true);
-        radSecSettings.setCertificate("src/test/resources/cert.crt");
-        radSecSettings.setPrivateKey("src/test/resources/private.key");
+        radSecSettings.setCert("src/test/resources/cert.crt");
+        radSecSettings.setPrivKey("src/test/resources/private.key");
         radSecServerProvider.createHandler(ch);
     }
 
@@ -85,8 +85,8 @@ public class RadSecServerProviderTest extends AbstractRadiusTest {
         RadSecSettings radSecSettings = new RadSecSettings();
         settings.setRadSecSettings(radSecSettings);
         radSecSettings.setUseRadSec(true);
-        radSecSettings.setCertificate("src/test/resources/cert.crt");
-        radSecSettings.setPrivateKey("");
+        radSecSettings.setCert("src/test/resources/cert.crt");
+        radSecSettings.setPrivKey("");
         radSecServerProvider.createHandler(ch);
     }
 
