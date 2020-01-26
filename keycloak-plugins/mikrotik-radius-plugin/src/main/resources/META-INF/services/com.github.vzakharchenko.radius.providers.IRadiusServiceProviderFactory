@@ -1,2 +1,3 @@
 com.github.vzakharchenko.mikrotik.services.LoginServiceProviderFactory
 com.github.vzakharchenko.mikrotik.services.HotSpotServiceProviderFactory
+com.github.vzakharchenko.mikrotik.services.PPPServiceProviderFactory

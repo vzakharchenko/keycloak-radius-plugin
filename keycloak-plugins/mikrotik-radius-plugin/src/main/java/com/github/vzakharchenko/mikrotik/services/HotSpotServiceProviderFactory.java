@@ -43,7 +43,7 @@ public class HotSpotServiceProviderFactory
     }
 
     @Override
-    public String attrbuteName() {
+    public String attributeName() {
         return MikrotikConstantUtils.MIKROTIK_SERVICE_ATTRIBUTE;
     }
 

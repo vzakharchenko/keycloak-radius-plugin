@@ -23,7 +23,7 @@ public class HotSpotServiceProviderFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        Assert.assertEquals(hotSpotServiceProviderFactory.attrbuteName(), MikrotikConstantUtils.MIKROTIK_SERVICE_ATTRIBUTE);
+        Assert.assertEquals(hotSpotServiceProviderFactory.attributeName(), MikrotikConstantUtils.MIKROTIK_SERVICE_ATTRIBUTE);
         Assert.assertEquals(hotSpotServiceProviderFactory.getId(), HotSpotServiceProviderFactory.MIKROTIK_HOTSPOT_SERVICE);
         assertEquals(hotSpotServiceProviderFactory.serviceName(), "hotspot");
         hotSpotServiceProviderFactory.close();

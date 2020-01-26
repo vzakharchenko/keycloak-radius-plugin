@@ -23,8 +23,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @BeforeMethod
     public void beforeMethods() {
         reset(radiusServiceProvider1, radiusServiceProvider2);
-        when(radiusServiceProvider1.attrbuteName()).thenReturn("n1");
-        when(radiusServiceProvider2.attrbuteName()).thenReturn("n1");
+        when(radiusServiceProvider1.attributeName()).thenReturn("n1");
+        when(radiusServiceProvider2.attributeName()).thenReturn("n1");
     }
 
     @Test
