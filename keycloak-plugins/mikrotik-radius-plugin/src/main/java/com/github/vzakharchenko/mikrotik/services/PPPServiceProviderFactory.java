@@ -9,8 +9,6 @@ import org.keycloak.models.KeycloakSessionFactory;
 import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.packet.AccessRequest;
 
-import static org.tinyradius.packet.AccessRequest.AUTH_MS_CHAP_V2;
-
 public class PPPServiceProviderFactory
         implements IRadiusServiceProviderFactory, IRadiusServiceProvider {
 
