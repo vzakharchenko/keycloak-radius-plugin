@@ -7,6 +7,7 @@ public class RadiusServerSettings {
     private int authPort;
     private boolean useUdpRadius;
     private int accountPort;
+    private int numberThreads;
     private RadSecSettings radSecSettings;
     private Map<String, String> accessMap;
 
@@ -56,5 +57,13 @@ public class RadiusServerSettings {
 
     public void setRadSecSettings(RadSecSettings radSecSettings) {
         this.radSecSettings = radSecSettings;
+    }
+
+    public int getNumberThreads() {
+        return numberThreads;
+    }
+
+    public void setNumberThreads(int numberThreads) {
+        this.numberThreads = numberThreads;
     }
 }

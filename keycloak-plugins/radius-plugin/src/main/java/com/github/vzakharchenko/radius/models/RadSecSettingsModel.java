@@ -3,6 +3,7 @@ package com.github.vzakharchenko.radius.models;
 public class RadSecSettingsModel {
     private String privateKey = "";
     private String certificate = "";
+    private int numberThreads = 8;
     private boolean useRadSec;
 
     public String getPrivateKey() {
@@ -27,5 +28,13 @@ public class RadSecSettingsModel {
 
     public void setUseRadSec(boolean useRadSec) {
         this.useRadSec = useRadSec;
+    }
+
+    public int getNumberThreads() {
+        return numberThreads;
+    }
+
+    public void setNumberThreads(int numberThreads) {
+        this.numberThreads = numberThreads;
     }
 }

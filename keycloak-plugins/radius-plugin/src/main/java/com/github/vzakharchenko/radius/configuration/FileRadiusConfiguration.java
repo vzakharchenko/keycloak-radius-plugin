@@ -49,6 +49,7 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
             radSecSettings.setCertificate(radSecSettingsModel.getCertificate());
             radSecSettings.setPrivateKey(radSecSettingsModel.getPrivateKey());
             radSecSettings.setUseRadSec(radSecSettingsModel.isUseRadSec());
+            radSecSettings.setnThreads(radSecSettingsModel.getNumberThreads());
         }
         return radSecSettings;
     }
@@ -58,10 +59,10 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         radiusServerSettings.setAccountPort(configModel.getAccountPort());
         radiusServerSettings.setAuthPort(configModel.getAuthPort());
         radiusServerSettings.setSecret(configModel.getSharedSecret());
+        radiusServerSettings.setNumberThreads(configModel.getNumberThreads());
         radiusServerSettings.setRadSecSettings(transform(configModel.getRadsec()));
         radiusServerSettings.setUseUdpRadius(configModel.isUseUdpRadius());
         if (configModel.getRadiusIpAccess() != null) {
-
             radiusServerSettings
                     .setAccessMap(configModel.getRadiusIpAccess().stream().collect(
                             Collectors.toMap(RadiusAccessModel::getIp,

@@ -41,7 +41,7 @@ public class KeycloakRadiusServer
         RadiusServerSettings radiusSettings = RadiusConfigHelper
                 .getConfig().getRadiusSettings();
         if (radiusSettings.isUseUdpRadius()) {
-            final EventLoopGroup eventLoopGroup = createEventLoopGroup();
+            final EventLoopGroup eventLoopGroup = createEventLoopGroup(radiusSettings);
             final Bootstrap bootstrap = new Bootstrap()
                     .channel(NioDatagramChannel.class).group(eventLoopGroup);
             server = createRadiusServer(session, bootstrap, radiusSettings);
@@ -57,8 +57,8 @@ public class KeycloakRadiusServer
         }
     }
 
-    private EventLoopGroup createEventLoopGroup() {
-        return new NioEventLoopGroup(3);
+    private EventLoopGroup createEventLoopGroup(RadiusServerSettings radiusSettings) {
+        return new NioEventLoopGroup(radiusSettings.getNumberThreads());
     }
 
     private ChannelHandler accountChannel(KeycloakSession session) {

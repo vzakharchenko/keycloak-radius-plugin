@@ -93,7 +93,7 @@ public final class RadiusLibraryUtils {
     public static String getUserName(RadiusPacket radiusPacket) {
         final RadiusAttribute attribute = radiusPacket.getAttribute(1);
         return attribute == null ?
-                null : attribute.getValueString();
+                "" : attribute.getValueString();
     }
 
     public static ClientModel getClient(ClientConnection clientConnection,
