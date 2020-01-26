@@ -4,4 +4,5 @@ com.github.vzakharchenko.radius.providers.RadiusDictionarySpi
 com.github.vzakharchenko.radius.providers.AccountingRadiusHandlerSPI
 com.github.vzakharchenko.radius.providers.AuthRadiusHandlerSPI
 com.github.vzakharchenko.radius.providers.RadiusServiceSpi
+com.github.vzakharchenko.radius.providers.RadiusCOASpi
 

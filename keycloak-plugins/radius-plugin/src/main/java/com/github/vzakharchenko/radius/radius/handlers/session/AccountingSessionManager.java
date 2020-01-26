@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
+import com.github.vzakharchenko.radius.providers.IRadiusCOAProvider;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.handlers.clientconnection.RadiusClientConnection;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
@@ -89,6 +90,14 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         ).findFirst().orElse(null);
     }
 
+    private void initSession(String sessionId) {
+        IRadiusCOAProvider provider = session.getProvider(IRadiusCOAProvider.class);
+        if (provider != null) {
+            provider.initSession(accountingRequest, authClientSession);
+        }
+        authClientSession.setNote(RADIUS_SESSION_ID, sessionId);
+    }
+
     private UserSessionModel startSession(String sessionId) {
         IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
         UserSessionProvider sessions = session.sessions();
@@ -99,7 +108,7 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         authClientSession = sessions
                 .createClientSession(radiusUserInfo.getRealmModel(),
                         radiusUserInfo.getClientModel(), sessionModel);
-        authClientSession.setNote(RADIUS_SESSION_ID, sessionId);
+        initSession(sessionId);
         return sessionModel;
     }
 
@@ -113,7 +122,7 @@ public class AccountingSessionManager implements IAccountingSessionManager {
                 .getByRadiusState(accountStatusType);
         sessionModel = getSession(sessionId);
         if (sessionModel == null) {
-            sessionModel = startSession(sessionId);
+            sessionModel = startSession(sessionId); //todo
         }
         updateSession();
         if (radiusAccountState == STOP) {
