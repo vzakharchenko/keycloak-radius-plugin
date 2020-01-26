@@ -1,25 +1,25 @@
 package com.github.vzakharchenko.radius.models;
 
 public class RadSecSettings {
-    private String privateKey = "";
-    private String certificate = "";
+    private String privKey = "";
+    private String cert = "";
     private int nThreads = 8;
     private boolean useRadSec;
 
-    public String getPrivateKey() {
-        return privateKey;
+    public String getPrivKey() {
+        return privKey;
     }
 
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
+    public void setPrivKey(String privKey) {
+        this.privKey = privKey;
     }
 
-    public String getCertificate() {
-        return certificate;
+    public String getCert() {
+        return cert;
     }
 
-    public void setCertificate(String certificate) {
-        this.certificate = certificate;
+    public void setCert(String cert) {
+        this.cert = cert;
     }
 
     public boolean isUseRadSec() {

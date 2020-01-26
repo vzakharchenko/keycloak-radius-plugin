@@ -46,8 +46,8 @@ public class RadSecServerProvider
         RadSecSettings radSecSettings = RadiusConfigHelper.getConfig()
                 .getRadiusSettings()
                 .getRadSecSettings();
-        File privateKey = new File(radSecSettings.getPrivateKey());
-        File certificate = new File(radSecSettings.getCertificate());
+        File privateKey = new File(radSecSettings.getPrivKey());
+        File certificate = new File(radSecSettings.getCert());
         if (!privateKey.exists() || !certificate.exists()) {
             throw new IllegalStateException("wrong RadSec configuration. " +
                     "Private ( " + privateKey
