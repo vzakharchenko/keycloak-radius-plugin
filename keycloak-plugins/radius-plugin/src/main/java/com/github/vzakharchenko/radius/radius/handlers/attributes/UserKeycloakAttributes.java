@@ -1,10 +1,10 @@
 package com.github.vzakharchenko.radius.radius.handlers.attributes;
 
-import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserModel;
 import org.tinyradius.packet.AccessRequest;
 
 import java.util.HashSet;
+import org.keycloak.models.KeycloakSession;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;

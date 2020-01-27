@@ -1,4 +1,4 @@
-package com.github.vzakharchenko.radius.models;
+package com.github.vzakharchenko.radius.models.file;
 
 public class RadSecSettingsModel {
     private String privateKey = "";
