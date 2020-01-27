@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1">
+
+        <createTable tableName="RADIUS_DM_SESSION">
+            <column name="SESSION_ID" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CLIENT_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REALM_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KEYCLOAK_SESSION_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REMOTE_ADDRESS" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_NAME" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAS_PORT" type="VARCHAR(36)"/>
+            <column name="NAS_PORT_TYPE" type="VARCHAR(36)"/>
+            <column name="NAS_IP_ADDRESS" type="VARCHAR(64)"/>
+            <column name="FRAMED_IP_ADDRESS" type="VARCHAR(36)"/>
+            <column name="CALLING_STATION_ID" type="VARCHAR(36)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey
+                constraintName="PK_RADIUS_DM_SESSION"
+                tableName="RADIUS_DM_SESSION"
+                columnNames="SESSION_ID"
+        />
+
+
+        <addForeignKeyConstraint baseTableName="RADIUS_DM_SESSION" baseColumnNames="REALM_ID"
+                                 constraintName="fk_dm_session_realm" referencedTableName="REALM"
+                                 referencedColumnNames="ID" onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="RADIUS_DM_SESSION" baseColumnNames="USER_ID"
+                                 constraintName="fk_dm_session_user" referencedTableName="USER_ENTITY"
+                                 referencedColumnNames="ID" onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="RADIUS_DM_SESSION" baseColumnNames="CLIENT_ID"
+                                 constraintName="fk_dm_client_user" referencedTableName="CLIENT"
+                                 referencedColumnNames="ID" onDelete="CASCADE"/>
+
+    </changeSet>
+
+
+</databaseChangeLog>

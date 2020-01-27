@@ -9,4 +9,6 @@ public interface IAccountingSessionManager {
     IAccountingSessionManager manageSession();
 
     boolean isValidSession();
+
+    void logout();
 }

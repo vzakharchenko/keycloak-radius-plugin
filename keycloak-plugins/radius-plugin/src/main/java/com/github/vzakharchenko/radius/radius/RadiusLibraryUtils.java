@@ -96,6 +96,10 @@ public final class RadiusLibraryUtils {
                 "" : attribute.getValueString();
     }
 
+    public static void setUserName(RadiusPacket radiusPacket, String userName) {
+        radiusPacket.addAttribute("User-Name", userName);
+    }
+
     public static ClientModel getClient(ClientConnection clientConnection,
                                         KeycloakSession session,
                                         RealmModel realmModel) {
