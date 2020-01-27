@@ -1,7 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers.attributes;
 
-import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.GroupModel;
 import org.tinyradius.packet.AccessRequest;
 
 import java.util.HashMap;

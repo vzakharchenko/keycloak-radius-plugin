@@ -1,8 +1,8 @@
 package com.github.vzakharchenko.radius.radius.handlers.attributes;
 
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.RoleModel;
 import org.tinyradius.packet.AccessRequest;
+import org.keycloak.models.RoleModel;
 
 import java.util.HashMap;
 import java.util.Map;

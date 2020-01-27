@@ -1,6 +1,10 @@
 package com.github.vzakharchenko.radius.configuration;
 
 import com.github.vzakharchenko.radius.models.*;
+import com.github.vzakharchenko.radius.models.file.CoASettingsModel;
+import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
+import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
+import com.github.vzakharchenko.radius.models.file.RadiusConfigModel;
 import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.util.JsonSerialization;
 

@@ -1,8 +1,8 @@
 package com.github.vzakharchenko.radius.configuration;
 
-import com.github.vzakharchenko.radius.models.RadSecSettingsModel;
-import com.github.vzakharchenko.radius.models.RadiusAccessModel;
-import com.github.vzakharchenko.radius.models.RadiusConfigModel;
+import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
+import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
+import com.github.vzakharchenko.radius.models.file.RadiusConfigModel;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.io.FileUtils;
