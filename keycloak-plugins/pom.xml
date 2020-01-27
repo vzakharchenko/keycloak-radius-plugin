@@ -497,8 +497,8 @@
                 <version>0.8.5</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/models/*</exclude>
-                        <exclude>**/client/*</exclude>
+                        <exclude>**/models/**</exclude>
+                        <exclude>**/client/**</exclude>
                         <exclude>**/Abstract**</exclude>
                         <exclude>**/MSCHAPHelper**</exclude>
                         <exclude>**/Constant**</exclude>
