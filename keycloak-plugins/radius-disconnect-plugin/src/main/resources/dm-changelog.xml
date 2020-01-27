@@ -60,5 +60,8 @@
 
     </changeSet>
 
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_2">
+        <dropNotNullConstraint tableName="RADIUS_DM_SESSION" columnName="END_DATE"/>
+    </changeSet>
 
 </databaseChangeLog>

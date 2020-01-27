@@ -28,6 +28,10 @@ public final class KeycloakSessionUtils {
         return getSessionAttribute(session, RADIUS_INFO_ATTRIBUTE, IRadiusUserInfoGetter.class);
     }
 
+    public static IRadiusUserInfo getRadiusSessionInfo(KeycloakSession session) {
+        return getRadiusUserInfo(session).getRadiusUserInfo();
+    }
+
     public static void addAttribute(KeycloakSession session, String name, Object value) {
         session.setAttribute(name, value);
     }

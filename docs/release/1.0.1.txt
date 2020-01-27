@@ -1,3 +1,4 @@
 - fixed mschapv2
 - added support Mikrotik PPP
 - added a new parameter "numberThread"
+- Send Disconnect message if keycloak session has expired

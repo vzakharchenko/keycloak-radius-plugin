@@ -6,6 +6,7 @@ import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 
 /* default */ class RadiusUserInfo implements IRadiusUserInfo {
@@ -17,6 +18,7 @@ import java.util.List;
     private AuthProtocol protocol;
     private ClientModel clientModel;
     private ClientConnection clientConnection;
+    private InetSocketAddress address;
 
     @Override
     public List<String> getPasswords() {
@@ -88,5 +90,14 @@ import java.util.List;
 
     public void setClientModel(ClientModel clientModel) {
         this.clientModel = clientModel;
+    }
+
+    @Override
+    public InetSocketAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(InetSocketAddress address) {
+        this.address = address;
     }
 }

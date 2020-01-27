@@ -1,11 +1,13 @@
 package com.github.vzakharchenko.radius.radius.holder;
 
-import org.testng.annotations.Test;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import org.testng.annotations.Test;
 
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class RadiusUserInfoTest extends AbstractRadiusTest {
 
@@ -16,6 +18,7 @@ public class RadiusUserInfoTest extends AbstractRadiusTest {
     public void testMethods() {
         IRadiusUserInfoGetter radiusUserInfoGetter = radiusUserInfoBuilder.addPasswords(Arrays.asList("test"))
                 .clientConnection(clientConnection).clientModel(clientModel)
+                .address(new InetSocketAddress(0))
                 .userModel(userModel).realmModel(realmModel).activePassword("test")
                 .protocol(authProtocol).radiusSecret("testSecret").getRadiusUserInfoGetter();
         IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
@@ -28,6 +31,7 @@ public class RadiusUserInfoTest extends AbstractRadiusTest {
         assertEquals(radiusUserInfo.getActivePassword(), "test");
         assertEquals(radiusUserInfo.getProtocol(), authProtocol);
         assertEquals(radiusUserInfo.getRadiusSecret(), "testSecret");
+        assertNotNull(radiusUserInfo.getAddress());
 
 
     }

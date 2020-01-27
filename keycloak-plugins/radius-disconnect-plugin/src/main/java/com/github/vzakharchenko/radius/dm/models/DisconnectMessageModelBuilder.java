@@ -1,16 +1,17 @@
 package com.github.vzakharchenko.radius.dm.models;
 
 public final class DisconnectMessageModelBuilder {
-    private DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
+    private final DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
 
     private DisconnectMessageModelBuilder() {
     }
+
 
     public static DisconnectMessageModelBuilder create() {
         return new DisconnectMessageModelBuilder();
     }
 
-    public DisconnectMessageModelBuilder id(String id) {
+    public DisconnectMessageModelBuilder radiusSessionId(String id) {
         disconnectMessageModel.setId(id);
         return this;
     }
@@ -62,6 +63,11 @@ public final class DisconnectMessageModelBuilder {
 
     public DisconnectMessageModelBuilder callingStationId(String callingStationId) {
         disconnectMessageModel.setCallingStationId(callingStationId);
+        return this;
+    }
+
+    public DisconnectMessageModelBuilder keycloakSessionId(String keycloakSessionId) {
+        disconnectMessageModel.setKeycloakSessionId(keycloakSessionId);
         return this;
     }
 

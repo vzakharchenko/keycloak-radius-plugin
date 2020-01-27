@@ -9,5 +9,6 @@ public class KeycloakSessionUtilsTest extends AbstractRadiusTest {
     @Test
     public void getRadiusInfo(){
         assertNotNull(KeycloakSessionUtils.getRadiusUserInfo(session));
+        assertNotNull(KeycloakSessionUtils.getRadiusSessionInfo(session));
     }
 }

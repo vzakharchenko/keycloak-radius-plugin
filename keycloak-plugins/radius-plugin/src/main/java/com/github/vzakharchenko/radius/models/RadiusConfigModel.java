@@ -6,6 +6,7 @@ import java.util.List;
 public class RadiusConfigModel {
     private String sharedSecret;
     private RadSecSettingsModel radsec;
+    private CoASettingsModel coa;
     private int authPort = 1812;
     private int accountPort = 1813;
     private int numberThreads = 8;
@@ -66,5 +67,13 @@ public class RadiusConfigModel {
 
     public void setNumberThreads(int numberThreads) {
         this.numberThreads = numberThreads;
+    }
+
+    public CoASettingsModel getCoa() {
+        return coa;
+    }
+
+    public void setCoa(CoASettingsModel coa) {
+        this.coa = coa;
     }
 }
