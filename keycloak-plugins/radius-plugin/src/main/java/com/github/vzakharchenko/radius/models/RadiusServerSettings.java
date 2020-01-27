@@ -9,6 +9,7 @@ public class RadiusServerSettings {
     private int accountPort;
     private int numberThreads;
     private RadSecSettings radSecSettings;
+    private CoASettings coASettings;
     private Map<String, String> accessMap;
 
     public String getSecret() {
@@ -65,5 +66,13 @@ public class RadiusServerSettings {
 
     public void setNumberThreads(int numberThreads) {
         this.numberThreads = numberThreads;
+    }
+
+    public CoASettings getCoASettings() {
+        return coASettings;
+    }
+
+    public void setCoASettings(CoASettings coASettings) {
+        this.coASettings = coASettings;
     }
 }

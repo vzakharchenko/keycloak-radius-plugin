@@ -6,6 +6,7 @@ import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 
 public interface IRadiusUserInfoBuilder {
@@ -22,6 +23,8 @@ public interface IRadiusUserInfoBuilder {
     IRadiusUserInfoBuilder protocol(AuthProtocol protocol);
 
     IRadiusUserInfoBuilder clientConnection(ClientConnection clientConnection);
+
+    IRadiusUserInfoBuilder address(InetSocketAddress address);
 
     IRadiusUserInfoBuilder clientModel(ClientModel clientModel);
 

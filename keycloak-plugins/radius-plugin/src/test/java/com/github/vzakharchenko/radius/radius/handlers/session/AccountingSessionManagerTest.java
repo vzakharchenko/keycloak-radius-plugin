@@ -1,17 +1,19 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.util.RadiusEndpoint;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 
 import java.net.InetSocketAddress;
 
-import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertNotNull;
 import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_SESSION_ID;
 import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_STATUS_TYPE;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 
 public class AccountingSessionManagerTest extends AbstractRadiusTest {
     private AccountingSessionManager accountingSessionManager;
@@ -25,6 +27,7 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
         request.addAttribute("User-Name", userModel.getUsername());
         radiusEndpoint = new RadiusEndpoint(new InetSocketAddress(0), "test");
         accountingSessionManager = new AccountingSessionManager(request, session, radiusEndpoint);
+
     }
 
     @Test
@@ -54,18 +57,23 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testManageSessionReCreate() {
+    public void testManageSessionNotExists() {
         request.addAttribute(ACCT_SESSION_ID, "new Session");
         request.addAttribute(ACCT_STATUS_TYPE, "Alive");
-        this.accountingSessionManager.init().updateContext().manageSession();
-        verify(userSessionProvider).createUserSession(realmModel,
-                userModel,
-                "USER",
-                "",
-                "radius",
-                false,
-                null,
-                null);
+        assertFalse(this.accountingSessionManager.init().updateContext().manageSession().isValidSession());
+    }
+
+    @Test
+    public void testManageSessionLogout() {
+        request.addAttribute(ACCT_SESSION_ID, "new Session");
+        request.addAttribute(ACCT_STATUS_TYPE, "Alive");
+        this.accountingSessionManager.init().updateContext().manageSession().logout();
+    }
+
+    @Test
+    public void testManageSessionUnsupported() {
+        request.addAttribute(ACCT_STATUS_TYPE, "Accounting-On");
+        this.accountingSessionManager.init().updateContext().manageSession().logout();
     }
 
     @Test
@@ -89,7 +97,7 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
         request.addAttribute(ACCT_SESSION_ID, "new Session");
         request.addAttribute(ACCT_STATUS_TYPE, "Stop");
         this.accountingSessionManager.init().updateContext().manageSession();
-        verify(userSessionProvider).removeUserSession(realmModel,
+        verify(userSessionProvider, never()).removeUserSession(realmModel,
                 userSessionModel);
     }
 

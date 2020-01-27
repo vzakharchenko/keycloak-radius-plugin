@@ -143,6 +143,13 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
         authRequestInitialization
                 .afterAuth(2, session);
     }
+    @Test
+    public void testgetafterAuthReject() {
+        when(userSessionProvider.getUserSessions(realmModel, userModel))
+                .thenReturn(Collections.emptyList());
+        authRequestInitialization
+                .afterAuth(3, session);
+    }
 
     @Test
     public void testgetafterAuthEROOR() {

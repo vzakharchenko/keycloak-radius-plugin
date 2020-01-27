@@ -85,14 +85,14 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
                     threadSession, user, realm, client
             ).radiusSecret(secretProvider.getSharedSecret(clientConnection.getInetSocketAddress()))
                     .clientConnection(clientConnection)
+                    .address(clientConnection.getInetSocketAddress())
                     .protocol(protocol).getRadiusUserInfoGetter();
             KeycloakSessionUtils.addRadiusUserInfo(threadSession, radiusUserInfoGetter);
             return true;
         } else {
             event.event(EventType.LOGIN_ERROR).detail(
                     EventLoggerUtils.RADIUS_MESSAGE, "USER DOES NOT EXIST")
-                    .error("Login to RADIUS" + " fail for user " + username
-                            + ", user disabled or does not exists");
+                    .error("Login to RADIUS " + username + ", user disabled or does not exists");
         }
         return false;
     }

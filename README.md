@@ -55,11 +55,16 @@ where
     "certificate": "config/public.crt",
     "numberThreads": 8,
     "useRadSec": true
-  }
+  },
+   "coa":{
+      "port":3799,
+      "useCoA":true
+   }
 }
 </code></pre>
 where
-   -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
+
+ -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
    -  **authPort** - Authentication and authorization port
    -  **accountPort** - Accounting port
    -  **useUdpRadius** - if true, then listen to authPort and accountPort
@@ -68,7 +73,11 @@ where
    -  **certificate** - certificates chain
    -  **useRadSec** - if true, then listen  radsec port
    -  **numberThreads** - number of connection threads
-## Run Keycloak Locally
+   -  **coa** - CoA request configuration
+   -  **port** - CoA port (Mikrotik:3799, Cisco:1700)
+   -  **useCoA** - use CoA request
+##
+ Run Keycloak Locally
 <pre><code>
 #!/usr/bin/env bash
 set -e
@@ -129,3 +138,6 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 ###  Hotspot Example (with Facebook login)
 
 [Hotspot Example (with Facebook login)](hotspot/OAuthRadius.md)
+
+### Example CoA Configuration
+[Radius Disconnect Message](keycloak-plugins/radius-disconnect-plugin/README.md)

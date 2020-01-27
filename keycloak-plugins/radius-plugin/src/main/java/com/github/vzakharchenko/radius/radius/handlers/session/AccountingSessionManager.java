@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
+import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
+import com.github.vzakharchenko.radius.models.CoASettings;
 import com.github.vzakharchenko.radius.providers.IRadiusCOAProvider;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.handlers.clientconnection.RadiusClientConnection;
@@ -15,6 +17,8 @@ import org.tinyradius.util.RadiusEndpoint;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.github.vzakharchenko.radius.radius.handlers.session.RadiusAccountState.UNSUPPORTED;
 
 public class AccountingSessionManager implements IAccountingSessionManager {
 
@@ -49,10 +53,11 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         radiusUserInfoBuilder.userModel(user);
         ClientConnection clientConnection = new RadiusClientConnection(endpoint.getAddress(),
                 accountingRequest);
-        radiusUserInfoBuilder.clientConnection(clientConnection)
+        radiusUserInfoBuilder.clientConnection(clientConnection).address(endpoint.getAddress())
                 .clientModel(RadiusLibraryUtils.getClient(clientConnection,
-                        session, realm));
+                        session, realm)).radiusSecret(endpoint.getSecret());
         this.radiusUserInfoGetter = radiusUserInfoBuilder.getRadiusUserInfoGetter();
+        KeycloakSessionUtils.addRadiusUserInfo(session, radiusUserInfoGetter);
         return this;
     }
 
@@ -88,36 +93,44 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         ).findFirst().orElse(null);
     }
 
-    private void initSession(String sessionId, ClientModel client) {
+    private void initSession(String sessionId) {
+        CoASettings coA = RadiusConfigHelper.getConfig().getRadiusSettings().getCoASettings();
         IRadiusCOAProvider provider = session.getProvider(IRadiusCOAProvider.class);
-        if (provider != null) {
-            provider.initSession(accountingRequest, session, client);
+        if (provider != null && coA.isUseCoAPackage()) {
+            provider.initSession(accountingRequest, session, authClientSession
+                    .getUserSession().getId());
         }
         authClientSession.setNote(RADIUS_SESSION_ID, sessionId);
     }
 
     private UserSessionModel startSession(String sessionId) {
-        IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
-        UserSessionProvider sessions = session.sessions();
-        sessionModel = sessions.createUserSession(
-                radiusUserInfo.getRealmModel(), radiusUserInfo.getUserModel(), userName,
-                radiusUserInfo.getClientConnection().getLocalAddr(),
-                "radius", false, null, null);
-        authClientSession = sessions
-                .createClientSession(radiusUserInfo.getRealmModel(),
-                        radiusUserInfo.getClientModel(), sessionModel);
-        initSession(sessionId, radiusUserInfo.getClientModel());
+        if (sessionModel == null) {
+            IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
+            UserSessionProvider sessions = session.sessions();
+            sessionModel = sessions.createUserSession(
+                    radiusUserInfo.getRealmModel(), radiusUserInfo.getUserModel(), userName,
+                    radiusUserInfo.getClientConnection().getLocalAddr(),
+                    "radius", false, null, null);
+            authClientSession = sessions
+                    .createClientSession(radiusUserInfo.getRealmModel(),
+                            radiusUserInfo.getClientModel(), sessionModel);
+            initSession(sessionId);
+        }
         return sessionModel;
+    }
+
+    private RadiusAccountState getRadiusAccountState() {
+        String accountStatusType = RadiusLibraryUtils.getAttributeValue(accountingRequest,
+                ACCT_STATUS_TYPE);
+        return RadiusAccountState
+                .getByRadiusState(accountStatusType);
     }
 
     @Override
     public IAccountingSessionManager manageSession() {
-        String accountStatusType = RadiusLibraryUtils.getAttributeValue(accountingRequest,
-                ACCT_STATUS_TYPE);
         String sessionId = RadiusLibraryUtils.getAttributeValue(accountingRequest,
                 ACCT_SESSION_ID);
-        RadiusAccountState radiusAccountState = RadiusAccountState
-                .getByRadiusState(accountStatusType);
+        RadiusAccountState radiusAccountState = getRadiusAccountState();
         sessionModel = getSession(sessionId);
         switch (radiusAccountState) {
             case START:
@@ -126,8 +139,11 @@ public class AccountingSessionManager implements IAccountingSessionManager {
             case STOP:
                 removeSession();
                 break;
+            case UNSUPPORTED:
+                break;
             default:
                 updateSession();
+                break;
         }
         return this;
     }
@@ -144,11 +160,16 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         return sessionModel != null;
     }
 
+
     @Override
     public void logout() {
-        IRadiusCOAProvider provider = session.getProvider(IRadiusCOAProvider.class);
-        if (provider != null) {
-            provider.logout(accountingRequest, session);
+        RadiusAccountState radiusAccountState = getRadiusAccountState();
+        CoASettings coA = RadiusConfigHelper.getConfig().getRadiusSettings().getCoASettings();
+        if (radiusAccountState != UNSUPPORTED && coA.isUseCoAPackage()) {
+            IRadiusCOAProvider provider = session.getProvider(IRadiusCOAProvider.class);
+            if (provider != null) {
+                provider.logout(accountingRequest, session);
+            }
         }
     }
 

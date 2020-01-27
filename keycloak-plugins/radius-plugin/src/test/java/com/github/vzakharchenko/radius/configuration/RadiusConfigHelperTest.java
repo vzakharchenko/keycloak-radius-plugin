@@ -9,5 +9,6 @@ public class RadiusConfigHelperTest extends AbstractRadiusTest {
     @Test
     public void testConfig(){
         assertNotNull(RadiusConfigHelper.getConfig());
+        assertNotNull(RadiusConfigHelper.getCoASettings());
     }
 }

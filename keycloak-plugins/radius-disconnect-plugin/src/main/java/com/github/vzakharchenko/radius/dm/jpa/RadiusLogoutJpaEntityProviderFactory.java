@@ -13,7 +13,8 @@ import java.util.List;
 public class RadiusLogoutJpaEntityProviderFactory implements JpaEntityProviderFactory,
         JpaEntityProvider {
 
-    public static final String RADIUS_DISCONNECT_MESSAGE_FACTORY = "radius-disconnect-message-factory";
+    public static final String RADIUS_DISCONNECT_MESSAGE_FACTORY =
+            "radius-disconnect-message-factory";
     public static final String RADIUS_DM = "radius-dm";
 
     @Override
@@ -23,7 +24,7 @@ public class RadiusLogoutJpaEntityProviderFactory implements JpaEntityProviderFa
 
     @Override
     public String getChangelogLocation() {
-        return "META-INF/dm-changelog.xml";
+        return "dm-changelog.xml";
     }
 
     @Override

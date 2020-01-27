@@ -54,6 +54,15 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         return radSecSettings;
     }
 
+    private CoASettings transform(CoASettingsModel coASettingsModel) {
+        CoASettings coASettings = new CoASettings();
+        if (coASettingsModel != null) {
+            coASettings.setCoaPort(coASettingsModel.getPort());
+            coASettings.setUseCoAPackage(coASettingsModel.isUseCoA());
+        }
+        return coASettings;
+    }
+
     private RadiusServerSettings transform(RadiusConfigModel configModel) {
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setAccountPort(configModel.getAccountPort());
@@ -61,6 +70,7 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         radiusServerSettings.setSecret(configModel.getSharedSecret());
         radiusServerSettings.setNumberThreads(configModel.getNumberThreads());
         radiusServerSettings.setRadSecSettings(transform(configModel.getRadsec()));
+        radiusServerSettings.setCoASettings(transform(configModel.getCoa()));
         radiusServerSettings.setUseUdpRadius(configModel.isUseUdpRadius());
         if (configModel.getRadiusIpAccess() != null) {
             radiusServerSettings

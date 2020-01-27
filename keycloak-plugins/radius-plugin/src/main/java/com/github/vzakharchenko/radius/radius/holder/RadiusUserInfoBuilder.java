@@ -6,6 +6,7 @@ import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,12 @@ public final class RadiusUserInfoBuilder implements IRadiusUserInfoBuilder,
     @Override
     public IRadiusUserInfoBuilder clientConnection(ClientConnection clientConnection) {
         radiusUserInfo.setClientConnection(clientConnection);
+        return this;
+    }
+
+    @Override
+    public IRadiusUserInfoBuilder address(InetSocketAddress address) {
+        radiusUserInfo.setAddress(address);
         return this;
     }
 

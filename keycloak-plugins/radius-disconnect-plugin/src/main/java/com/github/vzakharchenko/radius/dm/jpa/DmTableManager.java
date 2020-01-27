@@ -6,4 +6,6 @@ public interface DmTableManager {
     void saveRadiusSession(DisconnectMessageModel disconnectMessageModel);
 
     DisconnectMessageModel getDisconnectMessage(String userName, String radiusSessionId);
+
+    void endSession(DisconnectMessageModel dmm);
 }

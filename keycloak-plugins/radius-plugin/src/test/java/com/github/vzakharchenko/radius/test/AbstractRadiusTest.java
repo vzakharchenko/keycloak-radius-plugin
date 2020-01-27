@@ -2,13 +2,17 @@ package com.github.vzakharchenko.radius.test;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.client.RadiusLoginProtocolFactory;
+import com.github.vzakharchenko.radius.coa.IRadiusCoAClient;
+import com.github.vzakharchenko.radius.coa.RadiusCoAClientHelper;
 import com.github.vzakharchenko.radius.configuration.IRadiusConfiguration;
 import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
+import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocolFactory;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
+import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
@@ -33,13 +37,12 @@ import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.dictionary.DictionaryParser;
 import org.tinyradius.dictionary.WritableDictionary;
 import org.tinyradius.packet.AccessRequest;
-import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
-import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.security.Security;
 import java.util.*;
 
@@ -129,6 +132,9 @@ public abstract class AbstractRadiusTest {
     @Mock
     protected IRadiusUserInfo radiusUserInfo;
 
+    @Mock
+    protected IRadiusCoAClient radiusCoAClient;
+
     protected EventBuilder eventBuilder;
     protected AccessToken accessToken;
 
@@ -153,6 +159,7 @@ public abstract class AbstractRadiusTest {
             RadiusHelper.getServiceMap0().put("sName", new ArrayList<>(Collections
                     .singletonList(radiusServiceProvider)));
             KeycloakSessionUtils.context(session, radiusUserInfoGetter);
+            RadiusCoAClientHelper.setRadiusCoAClient(radiusCoAClient);
 
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -184,6 +191,7 @@ public abstract class AbstractRadiusTest {
         reset(query);
         reset(radiusUserInfo);
         reset(radiusUserInfoBuilder);
+        reset(radiusCoAClient);
         reset(radiusUserInfoGetter);
         providerByClass.clear();
         accessToken = new AccessToken();
@@ -228,6 +236,7 @@ public abstract class AbstractRadiusTest {
         when(radiusUserInfo.getRadiusSecret()).thenReturn("secret");
         when(radiusUserInfo.getClientModel()).thenReturn(clientModel);
         when(radiusUserInfo.getPasswords()).thenReturn(Collections.singletonList("secret"));
+        when(radiusUserInfo.getAddress()).thenReturn(new InetSocketAddress(0));
         when(radiusUserInfoGetter.getBuilder()).thenReturn(radiusUserInfoBuilder);
         when(radiusUserInfoGetter.getRadiusUserInfo()).thenReturn(radiusUserInfo);
         when(radiusUserInfoBuilder.getRadiusUserInfoGetter()).thenReturn(radiusUserInfoGetter);
@@ -291,6 +300,7 @@ public abstract class AbstractRadiusTest {
         HashMap<String, AuthenticatedClientSessionModel> sessionModelHashMap = new HashMap<>();
         sessionModelHashMap.put("id", authenticatedClientSessionModel);
         when(authenticatedClientSessionModel.getNote(AccountingSessionManager.RADIUS_SESSION_ID)).thenReturn(RADIUS_SESSION_ID);
+        when(authenticatedClientSessionModel.getUserSession()).thenReturn(userSessionModel);
         when(userSessionModel.getAuthenticatedClientSessions()).thenReturn(
                 sessionModelHashMap);
         when(clientConnection.getRemoteAddr()).thenReturn("111.111.111.112");
