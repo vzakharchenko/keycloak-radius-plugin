@@ -49,6 +49,12 @@
                                     <version>${keycloak-plugin}</version>
                                     <outputDirectory>target/artifacts/mikrotik-radius-plugin</outputDirectory>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>radius-disconnect-plugin</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/radius-disconnect-plugin</outputDirectory>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

@@ -23,6 +23,7 @@
     <property name="KEYCLOAK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/radius-plugin"/>
     <property name="KEYCLOAK__MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
     <property name="KEYCLOAK_RAD_SEC_PLUGIN" value="${BUILD_DIR}/artifacts/rad-sec-plugin"/>
+    <property name="KEYCLOAK_DISCONNECT_PLUGIN" value="${BUILD_DIR}/artifacts/radius-disconnect-plugin"/>
 
     <first id="keycloakRadiusZip">
         <fileset dir="${KEYCLOAK_RADIUS_PLUGIN}" includes="**"/>
@@ -32,6 +33,9 @@
     </first>
     <first id="keycloakRadSecZip">
         <fileset dir="${KEYCLOAK_RAD_SEC_PLUGIN}" includes="**"/>
+    </first>
+    <first id="keycloakdisconnectZip">
+        <fileset dir="${KEYCLOAK_DISCONNECT_PLUGIN}" includes="**"/>
     </first>
 
 
@@ -74,6 +78,12 @@
         <exec executable="sh">
             <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
             <arg value="--command=module add --name=keycloak.plugins.radius.mikrotik --resources=${toString:keycloakMikrotikRadiusZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"/>
+        </exec>
+
+        <!-- Install Radius Disconnect Plugin-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=keycloak.plugins.radius.dm --resources=${toString:keycloakdisconnectZip} --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"/>
         </exec>
 
         <!-- Install modules-->

@@ -16,8 +16,6 @@ import org.tinyradius.util.RadiusEndpoint;
 import java.util.List;
 import java.util.Objects;
 
-import static com.github.vzakharchenko.radius.radius.handlers.session.RadiusAccountState.STOP;
-
 public class AccountingSessionManager implements IAccountingSessionManager {
 
     public static final String RADIUS_SESSION_ID = "RADIUS_SESSION_ID";
@@ -90,10 +88,10 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         ).findFirst().orElse(null);
     }
 
-    private void initSession(String sessionId) {
+    private void initSession(String sessionId, ClientModel client) {
         IRadiusCOAProvider provider = session.getProvider(IRadiusCOAProvider.class);
         if (provider != null) {
-            provider.initSession(accountingRequest, authClientSession);
+            provider.initSession(accountingRequest, session, client);
         }
         authClientSession.setNote(RADIUS_SESSION_ID, sessionId);
     }
@@ -108,7 +106,7 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         authClientSession = sessions
                 .createClientSession(radiusUserInfo.getRealmModel(),
                         radiusUserInfo.getClientModel(), sessionModel);
-        initSession(sessionId);
+        initSession(sessionId, radiusUserInfo.getClientModel());
         return sessionModel;
     }
 
@@ -121,12 +119,15 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         RadiusAccountState radiusAccountState = RadiusAccountState
                 .getByRadiusState(accountStatusType);
         sessionModel = getSession(sessionId);
-        if (sessionModel == null) {
-            sessionModel = startSession(sessionId); //todo
-        }
-        updateSession();
-        if (radiusAccountState == STOP) {
-            removeSession();
+        switch (radiusAccountState) {
+            case START:
+                sessionModel = startSession(sessionId);
+                break;
+            case STOP:
+                removeSession();
+                break;
+            default:
+                updateSession();
         }
         return this;
     }
@@ -141,6 +142,14 @@ public class AccountingSessionManager implements IAccountingSessionManager {
     @Override
     public boolean isValidSession() {
         return sessionModel != null;
+    }
+
+    @Override
+    public void logout() {
+        IRadiusCOAProvider provider = session.getProvider(IRadiusCOAProvider.class);
+        if (provider != null) {
+            provider.logout(accountingRequest, session);
+        }
     }
 
     private void updateSession() {

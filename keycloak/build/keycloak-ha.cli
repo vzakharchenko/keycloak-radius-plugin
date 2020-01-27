@@ -2,6 +2,7 @@ embed-server --server-config=standalone-ha.xml
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.mikrotik)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.rad.sec)
+/subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.dm)
 /subsystem=keycloak-server/spi=dblock/:add(default-provider=jpa)
 /subsystem=keycloak-server/spi=dblock/:undefine-attribute(name=default-provider)
 /subsystem=keycloak-server/spi=dblock/provider=jpa/:add(enabled=true,properties={"lockWaitTimeout" => "900"} )

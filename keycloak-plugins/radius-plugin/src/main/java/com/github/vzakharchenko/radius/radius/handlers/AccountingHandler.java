@@ -50,11 +50,6 @@ public class AccountingHandler
         ctx.writeAndFlush(msg.withResponse(answer));
     }
 
-    private void failResponse(ChannelHandlerContext ctx,
-                              RequestCtx msg) {
-        ctx.writeAndFlush(msg.withResponse(null));
-    }
-
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestCtx msg) {
         final RadiusPacket request = msg.getRequest();
@@ -66,11 +61,10 @@ public class AccountingHandler
                         session,
                         msg.getEndpoint()
                 ).init().updateContext().manageSession();
-                if (manageSession.isValidSession()) {
-                    successResponse(ctx, msg, request);
-                } else {
-                    failResponse(ctx, msg);
+                if (!manageSession.isValidSession()) {
+                    manageSession.logout();
                 }
+                successResponse(ctx, msg, request);
             });
         } else {
             successResponse(ctx, msg, request);
