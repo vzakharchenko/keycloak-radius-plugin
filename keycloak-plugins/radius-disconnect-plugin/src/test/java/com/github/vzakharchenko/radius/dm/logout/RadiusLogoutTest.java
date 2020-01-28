@@ -144,6 +144,7 @@ public class RadiusLogoutTest extends AbstractJPATest {
         disconnectMessageModel.setNasPortType("00");
         disconnectMessageModel.setUserName(USER);
         disconnectMessageModel.setSecret("set");
+        disconnectMessageModel.setRadiusSessionId("sessionId");
         return disconnectMessageModel;
     }
 
