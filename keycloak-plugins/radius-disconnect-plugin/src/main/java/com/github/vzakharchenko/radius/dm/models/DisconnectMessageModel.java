@@ -11,6 +11,9 @@ public class DisconnectMessageModel {
     @Access(AccessType.PROPERTY)
     private String id;
 
+    @Column(name = "RADIUS_SESSION_ID")
+    private String radiusSessionId;
+
     @Column(name = "CLIENT_ID")
     private String clientId;
 
@@ -22,6 +25,9 @@ public class DisconnectMessageModel {
 
     @Column(name = "REMOTE_ADDRESS")
     private String address;
+
+    @Column(name = "SECRET")
+    private String secret;
 
     @Column(name = "USER_NAME")
     private String userName;
@@ -49,6 +55,19 @@ public class DisconnectMessageModel {
 
     @Column(name = "END_DATE")
     private Date endDate;
+
+    @Column(name = "MODIFY_DATE")
+    @Version
+    private Date modifyDate;
+
+    @Column(name = "END_STATUS")
+    private String endStatus;
+
+    @Column(name = "END_MESSAGE")
+    private String endMessage;
+
+    @Column(name = "END_ATTEMPTS")
+    private Integer attempts;
 
     public String getId() {
         return id;
@@ -154,11 +173,59 @@ public class DisconnectMessageModel {
         this.endDate = endDate == null ? null : (Date) endDate.clone();
     }
 
-  public String getKeycloakSessionId() {
-    return keycloakSessionId;
-  }
+    public String getKeycloakSessionId() {
+        return keycloakSessionId;
+    }
 
-  public void setKeycloakSessionId(String keycloakSessionId) {
-    this.keycloakSessionId = keycloakSessionId;
-  }
+    public void setKeycloakSessionId(String keycloakSessionId) {
+        this.keycloakSessionId = keycloakSessionId;
+    }
+
+    public String getEndStatus() {
+        return endStatus;
+    }
+
+    public void setEndStatus(String endStatus) {
+        this.endStatus = endStatus;
+    }
+
+    public String getEndMessage() {
+        return endMessage;
+    }
+
+    public void setEndMessage(String endMessage) {
+        this.endMessage = endMessage;
+    }
+
+    public Integer getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(Integer attempts) {
+        this.attempts = attempts;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getRadiusSessionId() {
+        return radiusSessionId;
+    }
+
+    public void setRadiusSessionId(String radiusSessionId) {
+        this.radiusSessionId = radiusSessionId;
+    }
+
+    public Date getModifyDate() {
+        return modifyDate == null ? null : (Date) modifyDate.clone();
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate == null ? null : (Date) modifyDate.clone();
+    }
 }

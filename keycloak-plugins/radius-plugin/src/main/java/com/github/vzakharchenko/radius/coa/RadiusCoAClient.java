@@ -24,7 +24,7 @@ public class RadiusCoAClient implements IRadiusCoAClient {
                 .channel(NioDatagramChannel.class);
         try (RadiusClient rc = new RadiusClient(
                 bootstrap, new InetSocketAddress(0),
-                new BasicTimeoutHandler(timer),
+                new BasicTimeoutHandler(timer, 3, 3000),
                 new CoAChannelInitializer(new ClientPacketCodec(packetEncoder)))) {
             coaRequestHandler.call(rc);
         }

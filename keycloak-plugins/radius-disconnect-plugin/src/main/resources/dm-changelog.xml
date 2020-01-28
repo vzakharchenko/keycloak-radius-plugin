@@ -64,4 +64,22 @@
         <dropNotNullConstraint tableName="RADIUS_DM_SESSION" columnName="END_DATE"/>
     </changeSet>
 
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_3">
+        <addColumn tableName="RADIUS_DM_SESSION">
+            <column name="END_STATUS" type="VARCHAR(36)"/>
+            <column name="SECRET" type="VARCHAR(36)"/>
+            <column name="END_MESSAGE" type="VARCHAR(256)"/>
+            <column name="END_ATTEMPTS" type="INTEGER" defaultValue="0"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_4">
+        <addColumn tableName="RADIUS_DM_SESSION">
+            <column name="RADIUS_SESSION_ID" type="VARCHAR(36)"/>
+            <column name="MODIFY_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -280,6 +280,8 @@ public abstract class AbstractRadiusTest {
                         .singletonList(ModelBuilder.createCredentialModel()));
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Arrays.asList(userSessionModel));
+        when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
+                .thenReturn(userSessionModel);
         when(userSessionProvider
                 .createUserSession(any(), any(), anyString(), anyString(), anyString(), eq(false), anyString(), anyString()))
                 .thenReturn(userSessionModel);
