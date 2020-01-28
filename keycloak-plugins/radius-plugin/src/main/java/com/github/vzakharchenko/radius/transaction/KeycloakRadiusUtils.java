@@ -1,10 +1,12 @@
 package com.github.vzakharchenko.radius.transaction;
 
+import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.KeycloakTransaction;
 
 public final class KeycloakRadiusUtils {
+    private static final Logger LOGGER = Logger.getLogger(KeycloakRadiusUtils.class);
 
     private static KeycloakHelper keycloakHelper = new KeycloakStaticHelper();
 
@@ -31,6 +33,7 @@ public final class KeycloakRadiusUtils {
             if (tx.isActive()) {
                 tx.rollback();
             }
+            LOGGER.error("Keycloak session error", re);
             throw re;
         } finally {
             session.close();

@@ -1,4 +1,6 @@
 - fixed mschapv2
 - added support Mikrotik PPP
 - added a new parameter "numberThread"
+- support CoA request
 - Send Disconnect message if keycloak session has expired
+- BackChannel logout

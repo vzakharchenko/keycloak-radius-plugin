@@ -7,6 +7,8 @@ import org.keycloak.common.ClientConnection;
 import org.keycloak.common.util.Resteasy;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakTransaction;
+import org.keycloak.models.RealmModel;
+import org.keycloak.models.UserSessionModel;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -29,7 +31,8 @@ public final class KeycloakSessionUtils {
     }
 
     public static IRadiusUserInfo getRadiusSessionInfo(KeycloakSession session) {
-        return getRadiusUserInfo(session).getRadiusUserInfo();
+        IRadiusUserInfoGetter radiusUserInfoGetter = getRadiusUserInfo(session);
+        return radiusUserInfoGetter == null ? null : radiusUserInfoGetter.getRadiusUserInfo();
     }
 
     public static void addAttribute(KeycloakSession session, String name, Object value) {
@@ -39,6 +42,14 @@ public final class KeycloakSessionUtils {
     public static void addRadiusUserInfo(KeycloakSession session,
                                          IRadiusUserInfoGetter radiusUserInfoGetter) {
         addAttribute(session, RADIUS_INFO_ATTRIBUTE, radiusUserInfoGetter);
+    }
+
+    public static boolean isActiveSession(KeycloakSession session,
+                                          String sessionId,
+                                          String realmId) {
+        RealmModel realm = session.realms().getRealm(realmId);
+        UserSessionModel userSession = session.sessions().getUserSession(realm, sessionId);
+        return userSession != null;
     }
 
     public static void context(KeycloakSession session,

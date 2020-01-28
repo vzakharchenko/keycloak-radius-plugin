@@ -2,6 +2,7 @@ package com.github.vzakharchenko.radius.dm.logout;
 
 import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import com.github.vzakharchenko.radius.dm.test.AbstractJPATest;
+import org.keycloak.models.KeycloakSession;
 import org.testng.annotations.Test;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.RadiusPacket;
@@ -26,7 +27,7 @@ public class RadiusLogoutTest extends AbstractJPATest {
     public void methodsTests() {
         radiusLogout.close();
         radiusLogout.init(null);
-        radiusLogout.postInit(null);
+        radiusLogout.postInit(keycloakSessionFactory);
         assertEquals(radiusLogout.getId(), RADIUS_LOGOUT_FACTORY);
         assertEquals(radiusLogout.create(session), radiusLogout);
 
@@ -57,39 +58,74 @@ public class RadiusLogoutTest extends AbstractJPATest {
     }
 
     @Test
-    public void prepareDisconnectMessagePacketTest() {
-        RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);
-        radiusLogout.prepareDisconnectMessagePacket(radiusPacket, createDisconnectMessageModel());
-        assertEquals(radiusPacket.getAttributes().size(),7);
+    public void checkActiveSessionsTest() {
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        radiusLogout.checkSessions(session);
+        verify(radiusCoAClient,never()).requestCoA(any(), any());
     }
 
     @Test
-    public void testGetRadiusEndpoint(){
+    public void checkInActiveSessionsTest() {
+        when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
+                .thenReturn(null);
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        radiusLogout.checkSessions(session);
+        verify(radiusCoAClient).requestCoA(any(), any());
+    }
+
+    @Test
+    public void checkSessionsTestError() {
+        when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
+                .thenReturn(null);
+        doThrow(new IllegalStateException("test")).when(radiusCoAClient).requestCoA(any(), any());
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        radiusLogout.checkSessions(session);
+        verify(entityManager).persist(any());
+    }
+
+
+    @Test
+    public void prepareDisconnectMessagePacketTest() {
+        RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);
+        radiusLogout.prepareDisconnectMessagePacket(radiusPacket, createDisconnectMessageModel());
+        assertEquals(radiusPacket.getAttributes().size(), 7);
+    }
+
+    @Test
+    public void testGetRadiusEndpoint() {
         RadiusEndpoint radiusEndpoint = radiusLogout.getRadiusEndpoint(radiusUserInfo);
         assertNotNull(radiusEndpoint);
     }
+
     @Test
-    public void testSendErrorEvent(){
+    public void testSendErrorEvent() {
         RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);
         radiusLogout.sendErrorEvent(session,radiusPacket);
     }
     @Test
-    public void testEndSession(){
-        radiusLogout.endSession(session,createDisconnectMessageModel());
+    public void testSendErrorEventNull() {
+        RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);
+        radiusLogout.sendErrorEvent(mock(KeycloakSession.class), radiusPacket);
+    }
+
+    @Test
+    public void testEndSession() {
+        radiusLogout.endSession(session, createDisconnectMessageModel());
         verify(entityManager).persist(any());
     }
 
     @Test
-    public void testAnswerHandler1(){
+    public void testAnswerHandler1() {
         RadiusPacket radiusPacket = new RadiusPacket(realDictionary, DISCONNECT_ACK, 1);
-        radiusLogout.answerHandler(radiusPacket, session,createDisconnectMessageModel());
+        radiusLogout.answerHandler(radiusPacket, session, createDisconnectMessageModel());
         verify(entityManager).persist(any());
     }
+
     @Test
-    public void testAnswerHandler2(){
+    public void testAnswerHandler2() {
         RadiusPacket radiusPacket = new RadiusPacket(realDictionary, DISCONNECT_NAK, 1);
-        radiusLogout.answerHandler(radiusPacket, session,createDisconnectMessageModel());
-        verify(entityManager,never()).persist(any());
+        radiusLogout.answerHandler(radiusPacket, session, createDisconnectMessageModel());
+        verify(entityManager).persist(any());
     }
 
     private DisconnectMessageModel createDisconnectMessageModel() {
@@ -107,6 +143,7 @@ public class RadiusLogoutTest extends AbstractJPATest {
         disconnectMessageModel.setNasPort("01");
         disconnectMessageModel.setNasPortType("00");
         disconnectMessageModel.setUserName(USER);
+        disconnectMessageModel.setSecret("set");
         return disconnectMessageModel;
     }
 

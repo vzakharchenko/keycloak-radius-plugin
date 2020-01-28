@@ -11,8 +11,8 @@ public final class DisconnectMessageModelBuilder {
         return new DisconnectMessageModelBuilder();
     }
 
-    public DisconnectMessageModelBuilder radiusSessionId(String id) {
-        disconnectMessageModel.setId(id);
+    public DisconnectMessageModelBuilder radiusSessionId(String sessionId) {
+        disconnectMessageModel.setRadiusSessionId(sessionId);
         return this;
     }
 
@@ -33,6 +33,11 @@ public final class DisconnectMessageModelBuilder {
 
     public DisconnectMessageModelBuilder address(String address) {
         disconnectMessageModel.setAddress(address);
+        return this;
+    }
+
+    public DisconnectMessageModelBuilder secret(String secret) {
+        disconnectMessageModel.setSecret(secret);
         return this;
     }
 
