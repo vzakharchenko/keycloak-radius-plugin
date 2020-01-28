@@ -5,7 +5,6 @@ import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
 import org.keycloak.events.EventBuilder;
-import org.keycloak.services.messages.Messages;
 
 
 public class ConsoleUpdateRadiusPassword extends UpdateRadiusPassword {
@@ -36,16 +35,12 @@ public class ConsoleUpdateRadiusPassword extends UpdateRadiusPassword {
     }
 
     @Override
-    protected void blankResponse(RequiredActionContext context, EventBuilder errorEvent) {
-        context.challenge(challenge(context).message(Messages.MISSING_PASSWORD));
-        errorEvent.error(Errors.PASSWORD_MISSING);
-    }
-
-    @Override
-    protected void notEqualsResponse(RequiredActionContext context,
-                                     EventBuilder errorEvent) {
-        context.challenge(challenge(context).message(Messages.NOTMATCH_PASSWORD));
-        errorEvent.error(Errors.PASSWORD_CONFIRM_ERROR);
+    protected void commonResponse(RequiredActionContext context,
+                                  EventBuilder errorEvent,
+                                  String message,
+                                  String eventMessage) {
+        context.challenge(challenge(context).message(message));
+        errorEvent.error(eventMessage);
     }
 
     @Override

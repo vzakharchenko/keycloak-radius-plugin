@@ -12,13 +12,17 @@ import org.keycloak.events.Errors;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.*;
-import org.keycloak.services.messages.Messages;
 import org.keycloak.services.validation.Validation;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static org.keycloak.events.Errors.PASSWORD_CONFIRM_ERROR;
+import static org.keycloak.events.Errors.PASSWORD_MISSING;
+import static org.keycloak.services.messages.Messages.MISSING_PASSWORD;
+import static org.keycloak.services.messages.Messages.NOTMATCH_PASSWORD;
 
 
 public class UpdateRadiusPassword implements RequiredActionProvider,
@@ -86,25 +90,17 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
                         "Update Radius Server password error");
     }
 
-    protected void commonResponse(RequiredActionContext context, String message) {
+    protected void commonResponse(RequiredActionContext context,
+                                  EventBuilder errorEvent,
+                                  String message,
+                                  String eventMessage) {
         Response challenge = context.form()
                 .setAttribute(USERNAME, context.getAuthenticationSession()
                         .getAuthenticatedUser().getUsername())
                 .setError(message)
                 .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
         context.challenge(challenge);
-    }
-
-    protected void blankResponse(RequiredActionContext context,
-                                 EventBuilder errorEvent) {
-        commonResponse(context, Messages.MISSING_PASSWORD);
-        errorEvent.error(Errors.PASSWORD_MISSING);
-    }
-
-    protected void notEqualsResponse(RequiredActionContext context,
-                                     EventBuilder errorEvent) {
-        commonResponse(context, Messages.NOTMATCH_PASSWORD);
-        errorEvent.error(Errors.PASSWORD_CONFIRM_ERROR);
+        errorEvent.error(eventMessage);
     }
 
     protected void success(RequiredActionContext context,
@@ -162,9 +158,9 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
         String passwordConfirm = formData.getFirst("password-confirm");
         EventBuilder errorEvent = createEvent(context, event);
         if (Validation.isBlank(passwordNew)) {
-            blankResponse(context, errorEvent);
+            commonResponse(context, errorEvent, MISSING_PASSWORD, PASSWORD_MISSING);
         } else if (!passwordNew.equals(passwordConfirm)) {
-            notEqualsResponse(context, errorEvent);
+            commonResponse(context, errorEvent, NOTMATCH_PASSWORD, PASSWORD_CONFIRM_ERROR);
         } else {
             try {
                 success(context, passwordNew);
