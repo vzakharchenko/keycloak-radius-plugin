@@ -86,25 +86,24 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
                         "Update Radius Server password error");
     }
 
-    protected void blankResponse(RequiredActionContext context,
-                                 EventBuilder errorEvent) {
+    protected void commonResponse(RequiredActionContext context, String message) {
         Response challenge = context.form()
                 .setAttribute(USERNAME, context.getAuthenticationSession()
                         .getAuthenticatedUser().getUsername())
-                .setError(Messages.MISSING_PASSWORD)
+                .setError(message)
                 .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
         context.challenge(challenge);
+    }
+
+    protected void blankResponse(RequiredActionContext context,
+                                 EventBuilder errorEvent) {
+        commonResponse(context, Messages.MISSING_PASSWORD);
         errorEvent.error(Errors.PASSWORD_MISSING);
     }
 
     protected void notEqualsResponse(RequiredActionContext context,
                                      EventBuilder errorEvent) {
-        Response challenge = context.form()
-                .setAttribute(USERNAME, context.getAuthenticationSession()
-                        .getAuthenticatedUser().getUsername())
-                .setError(Messages.NOTMATCH_PASSWORD)
-                .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
-        context.challenge(challenge);
+        commonResponse(context, Messages.NOTMATCH_PASSWORD);
         errorEvent.error(Errors.PASSWORD_CONFIRM_ERROR);
     }
 
