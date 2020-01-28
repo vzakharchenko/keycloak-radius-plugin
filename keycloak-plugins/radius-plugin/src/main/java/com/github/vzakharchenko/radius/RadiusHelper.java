@@ -67,16 +67,20 @@ public final class RadiusHelper {
         return currentPassword;
     }
 
+    private static void realmAttributesInit(KeycloakSession session) {
+        Set<IRadiusDictionaryProvider> providers = session
+                .getAllProviders(IRadiusDictionaryProvider.class);
+        for (IRadiusDictionaryProvider provider : providers) {
+            List<String> attributes = provider.getRealmAttributes();
+            if (attributes != null) {
+                realmAttributes.addAll(attributes);
+            }
+        }
+    }
+
     public static List<String> getRealmAttributes(KeycloakSession session) {
         if (realmAttributes.isEmpty()) {
-            Set<IRadiusDictionaryProvider> providers = session
-                    .getAllProviders(IRadiusDictionaryProvider.class);
-            for (IRadiusDictionaryProvider provider : providers) {
-                List<String> attributes = provider.getRealmAttributes();
-                if (attributes != null) {
-                    realmAttributes.addAll(attributes);
-                }
-            }
+            realmAttributesInit(session);
         }
 
         return realmAttributes;
