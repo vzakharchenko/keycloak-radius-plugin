@@ -12,10 +12,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class RadiusHelper {
 
@@ -27,14 +24,7 @@ public final class RadiusHelper {
     }
 
     public static String generatePassword() {
-        try {
-            return SecureRandom.getInstanceStrong()
-                    .ints(10, 33, 122)
-                    .mapToObj(i -> String.valueOf((char) i))
-                    .collect(Collectors.joining()).replaceAll("\"", "@");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
+        return UUID.randomUUID().toString();
     }
 
     public static String getCurrentPassword(
