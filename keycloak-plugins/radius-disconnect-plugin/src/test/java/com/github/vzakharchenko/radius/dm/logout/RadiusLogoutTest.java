@@ -11,7 +11,9 @@ import org.tinyradius.util.RadiusEndpoint;
 import java.util.Arrays;
 import java.util.Date;
 
+import static com.github.vzakharchenko.radius.dm.logout.RadiusLogout.ACCT_TERMINATE_CAUSE;
 import static com.github.vzakharchenko.radius.dm.logout.RadiusLogout.RADIUS_LOGOUT_FACTORY;
+import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_STATUS_TYPE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -58,10 +60,22 @@ public class RadiusLogoutTest extends AbstractJPATest {
     }
 
     @Test
+    public void logoutSkipRequest() {
+
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        AccountingRequest request = new AccountingRequest(realDictionary, 1, new byte[16]);
+        request.addAttribute(ACCT_STATUS_TYPE, "02");
+        request.addAttribute(ACCT_TERMINATE_CAUSE, "02");
+        request.setUserName(USER);
+        radiusLogout.logout(request, session);
+        verify(entityManager).persist(any());
+    }
+
+    @Test
     public void checkActiveSessionsTest() {
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
         radiusLogout.checkSessions(session);
-        verify(radiusCoAClient,never()).requestCoA(any(), any());
+        verify(radiusCoAClient, never()).requestCoA(any(), any());
     }
 
     @Test
@@ -100,8 +114,9 @@ public class RadiusLogoutTest extends AbstractJPATest {
     @Test
     public void testSendErrorEvent() {
         RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);
-        radiusLogout.sendErrorEvent(session,radiusPacket);
+        radiusLogout.sendErrorEvent(session, radiusPacket);
     }
+
     @Test
     public void testSendErrorEventNull() {
         RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);

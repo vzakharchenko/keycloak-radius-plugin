@@ -34,6 +34,16 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         verify(entityManager).persist(disconnectMessageModel);
         assertEquals(disconnectMessageModel.getEndMessage(),"Disconnected");
     }
+
+    @Test
+    public void endSessionTestWithCause() {
+        DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
+        disconnectMessageManager.sucessEndSessionWithCause(disconnectMessageModel, "test");
+        verify(entityManager).persist(disconnectMessageModel);
+        assertEquals(disconnectMessageModel.getEndMessage(),"Disconnected");
+        assertEquals(disconnectMessageModel.getEndCause(),"test");
+    }
+
     @Test
     public void failedEndSessionTest() {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();

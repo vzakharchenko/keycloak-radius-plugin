@@ -87,9 +87,10 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
     public void testManageSessionRemoveSession() {
         request.addAttribute(ACCT_SESSION_ID, RADIUS_SESSION_ID);
         request.addAttribute(ACCT_STATUS_TYPE, "Stop");
-        this.accountingSessionManager.init().updateContext().manageSession();
+        IAccountingSessionManager manager = this.accountingSessionManager.init().updateContext().manageSession();
         verify(userSessionProvider).removeUserSession(realmModel,
                 userSessionModel);
+        assertFalse(manager.isValidSession());
     }
 
     @Test

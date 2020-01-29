@@ -31,6 +31,7 @@ public class AccountingSessionManager implements IAccountingSessionManager {
     private IRadiusUserInfoGetter radiusUserInfoGetter;
     private String userName;
     private UserSessionModel sessionModel;
+    private boolean isLogout;
     private AuthenticatedClientSessionModel authClientSession;
 
     public AccountingSessionManager(AccountingRequest accountingRequest,
@@ -152,12 +153,13 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         if (sessionModel != null) {
             session.sessions().removeUserSession(radiusUserInfoGetter
                     .getRadiusUserInfo().getRealmModel(), sessionModel);
+            isLogout = true;
         }
     }
 
     @Override
     public boolean isValidSession() {
-        return sessionModel != null;
+        return sessionModel != null && !isLogout;
     }
 
 

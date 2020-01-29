@@ -81,5 +81,11 @@
             </column>
         </addColumn>
     </changeSet>
+    
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_5">
+        <addColumn tableName="RADIUS_DM_SESSION">
+            <column name="END_CAUSE" type="VARCHAR(256)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
