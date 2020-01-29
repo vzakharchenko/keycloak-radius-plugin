@@ -13,6 +13,8 @@ public interface DmTableManager {
 
     void sucessEndSession(DisconnectMessageModel dmm);
 
+    void sucessEndSessionWithCause(DisconnectMessageModel dmm, String cause);
+
     void failEndSession(DisconnectMessageModel dmm, String message);
 
     void increaseEndAttempts(DisconnectMessageModel dmm, String message);

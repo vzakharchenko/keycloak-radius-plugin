@@ -61,6 +61,12 @@ public class DisconnectMessageManager implements DmTableManager {
     }
 
     @Override
+    public void sucessEndSessionWithCause(DisconnectMessageModel dmm, String cause) {
+        dmm.setEndCause(cause);
+        sucessEndSession(dmm);
+    }
+
+    @Override
     public void failEndSession(DisconnectMessageModel dmm, String message) {
         dmm.setEndDate(new Date());
         dmm.setModifyDate(new Date());

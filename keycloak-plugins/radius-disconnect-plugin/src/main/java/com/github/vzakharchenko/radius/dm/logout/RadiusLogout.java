@@ -4,6 +4,7 @@ import com.github.vzakharchenko.radius.coa.ICoAExceptionHandler;
 import com.github.vzakharchenko.radius.coa.RadiusCoAClientHelper;
 import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.dm.jpa.DisconnectMessageManager;
+import com.github.vzakharchenko.radius.dm.jpa.DmTableManager;
 import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModelBuilder;
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
@@ -12,6 +13,7 @@ import com.github.vzakharchenko.radius.providers.IRadiusCOAProviderFactory;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
+import com.github.vzakharchenko.radius.radius.handlers.session.RadiusAccountState;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
@@ -27,9 +29,9 @@ import org.tinyradius.util.RadiusEndpoint;
 import java.net.InetSocketAddress;
 import java.util.List;
 
+import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_STATUS_TYPE;
 import static org.keycloak.events.EventType.LOGOUT_ERROR;
-import static org.tinyradius.packet.PacketType.DISCONNECT_ACK;
-import static org.tinyradius.packet.PacketType.DISCONNECT_REQUEST;
+import static org.tinyradius.packet.PacketType.*;
 import static org.tinyradius.packet.RadiusPackets.nextPacketId;
 
 public class RadiusLogout implements IRadiusCOAProvider,
@@ -37,6 +39,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
 
     public static final String RADIUS_LOGOUT_FACTORY = "radius-logout-factory";
     public static final String ERROR_CAUSE = "Error-Cause";
+    public static final String ACCT_TERMINATE_CAUSE = "Acct-Terminate-Cause";
 
     @Override
     public IRadiusCOAProvider create(KeycloakSession session) {
@@ -50,7 +53,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
 
 
     protected void checkSessions(KeycloakSession session) {
-        DisconnectMessageManager disconnectMessageManager = new DisconnectMessageManager(session);
+        DmTableManager disconnectMessageManager = new DisconnectMessageManager(session);
         List<DisconnectMessageModel> sessions = disconnectMessageManager
                 .getAllActivedSessions();
         for (DisconnectMessageModel dmm : sessions) {
@@ -163,24 +166,15 @@ public class RadiusLogout implements IRadiusCOAProvider,
         }
     }
 
-    private DisconnectMessageModel getDisconnectMessageModel(AccountingRequest request,
-                                                             KeycloakSession session) {
-        DisconnectMessageManager disconnectMessageManager =
-                new DisconnectMessageManager(session);
-        return disconnectMessageManager.
-                getDisconnectMessage(request.getUserName(),
-                        getAttr("Acct-Session-Id", request));
-    }
-
     protected void endSession(KeycloakSession session, DisconnectMessageModel dm) {
-        DisconnectMessageManager disconnectMessageManager =
+        DmTableManager disconnectMessageManager =
                 new DisconnectMessageManager(session);
         disconnectMessageManager.sucessEndSession(dm);
     }
 
     protected void errorSession(KeycloakSession session,
                                 DisconnectMessageModel dm, RadiusPacket answer) {
-        DisconnectMessageManager disconnectMessageManager =
+        DmTableManager disconnectMessageManager =
                 new DisconnectMessageManager(session);
         disconnectMessageManager.failEndSession(dm, answer.getAttributeValue(ERROR_CAUSE));
     }
@@ -211,12 +205,30 @@ public class RadiusLogout implements IRadiusCOAProvider,
         }, exceptionHandler);
     }
 
+    protected boolean isDeviceRequest(DmTableManager disconnectMessageManager,
+                                      AccountingRequest request,
+                                      DisconnectMessageModel dm) {
+        RadiusAccountState radiusState = RadiusAccountState
+                .getByRadiusState(request.getAttributeValue(ACCT_STATUS_TYPE));
+        if (radiusState == RadiusAccountState.STOP) {
+            disconnectMessageManager.sucessEndSessionWithCause(
+                    dm, request.getAttributeValue(ACCT_TERMINATE_CAUSE)
+            );
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void logout(AccountingRequest request, KeycloakSession session) {
         IRadiusUserInfo radiusUserInfo = KeycloakSessionUtils
                 .getRadiusSessionInfo(session);
-        DisconnectMessageModel dm = getDisconnectMessageModel(request, session);
-        if (dm != null) {
+        DmTableManager disconnectMessageManager =
+                new DisconnectMessageManager(session);
+        DisconnectMessageModel dm = disconnectMessageManager.
+                getDisconnectMessage(request.getUserName(),
+                        getAttr("Acct-Session-Id", request));
+        if (dm != null && !isDeviceRequest(disconnectMessageManager, request, dm)) {
             requestCoA(session, dm, getRadiusEndpoint(radiusUserInfo), null);
         }
     }

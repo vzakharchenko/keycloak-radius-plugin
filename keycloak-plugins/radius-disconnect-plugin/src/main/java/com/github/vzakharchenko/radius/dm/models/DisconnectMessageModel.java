@@ -66,6 +66,9 @@ public class DisconnectMessageModel {
     @Column(name = "END_MESSAGE")
     private String endMessage;
 
+    @Column(name = "END_CAUSE")
+    private String endCause;
+
     @Column(name = "END_ATTEMPTS")
     private Integer attempts;
 
@@ -227,5 +230,13 @@ public class DisconnectMessageModel {
 
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate == null ? null : (Date) modifyDate.clone();
+    }
+
+    public String getEndCause() {
+        return endCause;
+    }
+
+    public void setEndCause(String endCause) {
+        this.endCause = endCause;
     }
 }
