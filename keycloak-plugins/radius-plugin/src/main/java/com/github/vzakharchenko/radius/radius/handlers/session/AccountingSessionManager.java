@@ -153,8 +153,8 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         if (sessionModel != null) {
             session.sessions().removeUserSession(radiusUserInfoGetter
                     .getRadiusUserInfo().getRealmModel(), sessionModel);
-            isLogout = true;
         }
+        isLogout = true;
     }
 
     @Override

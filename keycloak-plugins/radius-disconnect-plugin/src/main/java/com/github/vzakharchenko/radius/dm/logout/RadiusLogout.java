@@ -169,7 +169,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
     protected void endSession(KeycloakSession session, DisconnectMessageModel dm) {
         DmTableManager disconnectMessageManager =
                 new DisconnectMessageManager(session);
-        disconnectMessageManager.sucessEndSession(dm);
+        disconnectMessageManager.successEndSession(dm);
     }
 
     protected void errorSession(KeycloakSession session,
@@ -211,7 +211,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
         RadiusAccountState radiusState = RadiusAccountState
                 .getByRadiusState(request.getAttributeValue(ACCT_STATUS_TYPE));
         if (radiusState == RadiusAccountState.STOP) {
-            disconnectMessageManager.sucessEndSessionWithCause(
+            disconnectMessageManager.successEndSessionWithCause(
                     dm, request.getAttributeValue(ACCT_TERMINATE_CAUSE)
             );
             return true;

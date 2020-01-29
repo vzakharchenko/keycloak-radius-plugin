@@ -6,6 +6,7 @@ import java.util.Date;
 @Entity
 @Table(name = "RADIUS_DM_SESSION")
 public class DisconnectMessageModel {
+
     @Id
     @Column(name = "SESSION_ID", length = 128)
     @Access(AccessType.PROPERTY)
@@ -53,31 +54,16 @@ public class DisconnectMessageModel {
     @Column(name = "CREATED_DATE")
     private Date createdDate;
 
-    @Column(name = "END_DATE")
-    private Date endDate;
-
     @Column(name = "MODIFY_DATE")
     @Version
     private Date modifyDate;
 
-    @Column(name = "END_STATUS")
-    private String endStatus;
-
-    @Column(name = "END_MESSAGE")
-    private String endMessage;
-
-    @Column(name = "END_CAUSE")
-    private String endCause;
-
-    @Column(name = "END_ATTEMPTS")
-    private Integer attempts;
-
-    public String getId() {
-        return id;
+    public Date getModifyDate() {
+        return modifyDate == null ? null : (Date) modifyDate.clone();
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate == null ? null : (Date) modifyDate.clone();
     }
 
     public String getClientId() {
@@ -168,13 +154,6 @@ public class DisconnectMessageModel {
         this.createdDate = createdDate == null ? null : (Date) createdDate.clone();
     }
 
-    public Date getEndDate() {
-        return endDate == null ? null : (Date) endDate.clone();
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate == null ? null : (Date) endDate.clone();
-    }
 
     public String getKeycloakSessionId() {
         return keycloakSessionId;
@@ -182,30 +161,6 @@ public class DisconnectMessageModel {
 
     public void setKeycloakSessionId(String keycloakSessionId) {
         this.keycloakSessionId = keycloakSessionId;
-    }
-
-    public String getEndStatus() {
-        return endStatus;
-    }
-
-    public void setEndStatus(String endStatus) {
-        this.endStatus = endStatus;
-    }
-
-    public String getEndMessage() {
-        return endMessage;
-    }
-
-    public void setEndMessage(String endMessage) {
-        this.endMessage = endMessage;
-    }
-
-    public Integer getAttempts() {
-        return attempts;
-    }
-
-    public void setAttempts(Integer attempts) {
-        this.attempts = attempts;
     }
 
     public String getSecret() {
@@ -224,19 +179,11 @@ public class DisconnectMessageModel {
         this.radiusSessionId = radiusSessionId;
     }
 
-    public Date getModifyDate() {
-        return modifyDate == null ? null : (Date) modifyDate.clone();
+    public String getId() {
+        return id;
     }
 
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate == null ? null : (Date) modifyDate.clone();
-    }
-
-    public String getEndCause() {
-        return endCause;
-    }
-
-    public void setEndCause(String endCause) {
-        this.endCause = endCause;
+    public void setId(String id) {
+        this.id = id;
     }
 }

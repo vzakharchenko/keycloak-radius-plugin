@@ -354,6 +354,9 @@
                     <rulesets>
                         <ruleset>${pmdLocation}ruleset.xml</ruleset>
                     </rulesets>
+                    <excludes>
+                        <exclude>**/models/**</exclude>
+                    </excludes>
                     <excludeFromFailureFile>${pmdLocation}/exclude-pmd.properties</excludeFromFailureFile>
                 </configuration>
                 <executions>
