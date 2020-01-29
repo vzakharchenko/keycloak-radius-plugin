@@ -11,9 +11,9 @@ public interface DmTableManager {
 
     List<DisconnectMessageModel> getAllActivedSessions();
 
-    void sucessEndSession(DisconnectMessageModel dmm);
+    void successEndSession(DisconnectMessageModel dmm);
 
-    void sucessEndSessionWithCause(DisconnectMessageModel dmm, String cause);
+    void successEndSessionWithCause(DisconnectMessageModel dmm, String cause);
 
     void failEndSession(DisconnectMessageModel dmm, String message);
 

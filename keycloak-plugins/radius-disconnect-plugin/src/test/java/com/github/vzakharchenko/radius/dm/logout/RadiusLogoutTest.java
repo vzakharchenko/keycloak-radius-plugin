@@ -9,6 +9,7 @@ import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.util.RadiusEndpoint;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import static com.github.vzakharchenko.radius.dm.logout.RadiusLogout.ACCT_TERMINATE_CAUSE;
@@ -61,8 +62,10 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     @Test
     public void logoutSkipRequest() {
-
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        reset(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(
+                createDisconnectMessageModel())).thenReturn(
+                Collections.emptyList());
         AccountingRequest request = new AccountingRequest(realDictionary, 1, new byte[16]);
         request.addAttribute(ACCT_STATUS_TYPE, "02");
         request.addAttribute(ACCT_TERMINATE_CAUSE, "02");
@@ -92,7 +95,7 @@ public class RadiusLogoutTest extends AbstractJPATest {
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(null);
         doThrow(new IllegalStateException("test")).when(radiusCoAClient).requestCoA(any(), any());
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()), Collections.emptyList());
         radiusLogout.checkSessions(session);
         verify(entityManager).persist(any());
     }

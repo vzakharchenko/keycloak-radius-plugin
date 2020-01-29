@@ -11,7 +11,7 @@ public class RadiusLogoutJpaEntityProviderFactoryTest extends AbstractRadiusTest
 
     @Test
     public void testMethods() {
-        assertEquals(radiusLogoutJpaEntityProviderFactory.getEntities().size(), 1);
+        assertEquals(radiusLogoutJpaEntityProviderFactory.getEntities().size(), 3);
         assertEquals(radiusLogoutJpaEntityProviderFactory.getChangelogLocation(), "dm-changelog.xml");
         assertEquals(radiusLogoutJpaEntityProviderFactory.getFactoryId(), "radius-dm");
         assertEquals(radiusLogoutJpaEntityProviderFactory.create(session), radiusLogoutJpaEntityProviderFactory);

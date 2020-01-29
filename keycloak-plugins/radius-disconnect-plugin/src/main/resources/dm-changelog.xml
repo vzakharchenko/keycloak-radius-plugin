@@ -81,11 +81,73 @@
             </column>
         </addColumn>
     </changeSet>
-    
+
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_5">
         <addColumn tableName="RADIUS_DM_SESSION">
             <column name="END_CAUSE" type="VARCHAR(256)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_6">
+
+        <dropColumn columnName="END_CAUSE" tableName="RADIUS_DM_SESSION"/>
+        <dropColumn columnName="END_STATUS" tableName="RADIUS_DM_SESSION"/>
+        <dropColumn columnName="END_MESSAGE" tableName="RADIUS_DM_SESSION"/>
+        <dropColumn columnName="END_ATTEMPTS" tableName="RADIUS_DM_SESSION"/>
+        <dropColumn columnName="END_DATE" tableName="RADIUS_DM_SESSION"/>
+
+        <createTable tableName="RADIUS_DM_CLIENT_END_SESSION">
+            <column name="SESSION_ID" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_CAUSE" type="VARCHAR(256)"/>
+
+            <column name="END_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="MODIFY_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addPrimaryKey
+                constraintName="PK_RADIUS_C_DM_END_SESSION"
+                tableName="RADIUS_DM_CLIENT_END_SESSION"
+                columnNames="SESSION_ID"
+        />
+        <addForeignKeyConstraint baseTableName="RADIUS_DM_CLIENT_END_SESSION" baseColumnNames="SESSION_ID"
+                                 constraintName="fk_dm_e_session_id" referencedTableName="RADIUS_DM_SESSION"
+                                 referencedColumnNames="SESSION_ID" onDelete="CASCADE"/>
+
+        <createTable tableName="RADIUS_DM_KEYCLOAK_END_SESSION">
+            <column name="SESSION_ID" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="END_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="MODIFY_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="END_STATUS" type="VARCHAR(36)"/>
+            <column name="END_MESSAGE" type="VARCHAR(256)"/>
+            <column name="END_ATTEMPTS" type="INTEGER" defaultValue="0"/>
+        </createTable>
+
+        <addPrimaryKey
+                constraintName="PK_RADIUS_DM_END_SESSION"
+                tableName="RADIUS_DM_KEYCLOAK_END_SESSION"
+                columnNames="SESSION_ID"
+        />
+        <addForeignKeyConstraint baseTableName="RADIUS_DM_KEYCLOAK_END_SESSION" baseColumnNames="SESSION_ID"
+                                 constraintName="fk_dm_k_session_id" referencedTableName="RADIUS_DM_SESSION"
+                                 referencedColumnNames="SESSION_ID" onDelete="CASCADE"/>
+    </changeSet>
+
 
 </databaseChangeLog>

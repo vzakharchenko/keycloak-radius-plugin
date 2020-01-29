@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.dm.jpa;
 
+import com.github.vzakharchenko.radius.dm.models.DMClientEndModel;
+import com.github.vzakharchenko.radius.dm.models.DMKeycloakEndModel;
 import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.keycloak.models.KeycloakSession;
@@ -33,8 +35,7 @@ public class DisconnectMessageManager implements DmTableManager {
         TypedQuery<DisconnectMessageModel> query = em.
                 createQuery("SELECT dmm FROM DisconnectMessageModel dmm " +
                                 "WHERE dmm.userName = :userName " +
-                                "and dmm.radiusSessionId = :radiusSessionId " +
-                                "and dmm.endDate is null",
+                                "and dmm.radiusSessionId = :radiusSessionId ",
                         DisconnectMessageModel.class);
         query.setParameter("userName", userName);
         query.setParameter("radiusSessionId", radiusSessionId);
@@ -46,47 +47,83 @@ public class DisconnectMessageManager implements DmTableManager {
     public List<DisconnectMessageModel> getAllActivedSessions() {
         TypedQuery<DisconnectMessageModel> query = em.
                 createQuery("SELECT dmm FROM DisconnectMessageModel dmm " +
-                                "where dmm.endDate is null",
+                                " left join DMKeycloakEndModel kem on (dmm.id=kem.id)" +
+                                " left join DMClientEndModel cem on (dmm.id=cem.id) " +
+                                "WHERE kem.endDate is null and cem.endDate is null",
                         DisconnectMessageModel.class);
         return query.getResultList();
     }
 
     @Override
-    public void sucessEndSession(DisconnectMessageModel dmm) {
-        dmm.setEndDate(new Date());
-        dmm.setModifyDate(new Date());
-        dmm.setEndStatus("ACK");
-        dmm.setEndMessage("Disconnected");
-        em.persist(dmm);
+    public void successEndSession(DisconnectMessageModel dmm) {
+        DMKeycloakEndModel kem = new DMKeycloakEndModel();
+        kem.setEndDate(new Date());
+        kem.setId(dmm.getId());
+        kem.setModifyDate(new Date());
+        kem.setEndStatus("ACK");
+        kem.setEndMessage("Disconnected");
+        em.persist(kem);
     }
 
     @Override
-    public void sucessEndSessionWithCause(DisconnectMessageModel dmm, String cause) {
-        dmm.setEndCause(cause);
-        sucessEndSession(dmm);
+    public void successEndSessionWithCause(DisconnectMessageModel dmm, String cause) {
+        DMClientEndModel cem = getDMClientEndModel(dmm, DMClientEndModel.class);
+        if (cem == null) {
+            cem = new DMClientEndModel();
+        }
+        cem.setEndDate(new Date());
+        cem.setId(dmm.getId());
+        cem.setModifyDate(new Date());
+        cem.setEndCause(cause);
+        em.persist(cem);
     }
 
     @Override
     public void failEndSession(DisconnectMessageModel dmm, String message) {
-        dmm.setEndDate(new Date());
-        dmm.setModifyDate(new Date());
-        dmm.setEndStatus("NAK");
-        dmm.setEndMessage(message);
-        em.persist(dmm);
+        DMKeycloakEndModel kem = getDMClientEndModel(dmm, DMKeycloakEndModel.class);
+        if (kem == null) {
+            kem = new DMKeycloakEndModel();
+        }
+        kem.setEndDate(new Date());
+        kem.setId(dmm.getId());
+        kem.setModifyDate(new Date());
+        kem.setEndStatus("NAK");
+        kem.setEndMessage(message);
+        em.persist(kem);
+    }
+
+    protected <T> T getDMClientEndModel(DisconnectMessageModel dmm, Class<T> m) {
+        TypedQuery<T> query = em.
+                createQuery("SELECT m FROM " + m.getCanonicalName() + " m " +
+                                "WHERE m.id = :id ",
+                        m);
+        query.setParameter("id", dmm.getId());
+        List<T> list = query.getResultList();
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    private void increaseEndAttempts(DMKeycloakEndModel kem, String message) {
+        Integer attempts = kem.getAttempts();
+        if (attempts > MAX_ATTEMPTS) {
+            kem.setEndDate(new Date());
+            kem.setModifyDate(new Date());
+            kem.setEndStatus("MAX_ATTEMPTS");
+            kem.setEndMessage(message);
+        } else {
+            kem.setAttempts(attempts + 1);
+        }
     }
 
     @Override
     public void increaseEndAttempts(DisconnectMessageModel dmm, String message) {
-        int attempts = dmm.getAttempts() == null ? 0 : dmm.getAttempts();
-        if (attempts > MAX_ATTEMPTS) {
-            dmm.setEndDate(new Date());
-            dmm.setModifyDate(new Date());
-            dmm.setEndStatus("MAX_ATTEMPTS");
-            dmm.setEndMessage(message);
-        } else {
-            dmm.setAttempts(attempts + 1);
+        DMKeycloakEndModel kem = getDMClientEndModel(dmm, DMKeycloakEndModel.class);
+        if (kem == null) {
+            kem = new DMKeycloakEndModel();
+            kem.setId(dmm.getId());
+            kem.setAttempts(0);
         }
-        em.persist(dmm);
+        increaseEndAttempts(kem, message);
+        em.persist(kem);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.dm.jpa;
 
+import com.github.vzakharchenko.radius.dm.models.DMClientEndModel;
+import com.github.vzakharchenko.radius.dm.models.DMKeycloakEndModel;
 import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import org.keycloak.Config;
 import org.keycloak.connections.jpa.entityprovider.JpaEntityProvider;
@@ -7,7 +9,7 @@ import org.keycloak.connections.jpa.entityprovider.JpaEntityProviderFactory;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class RadiusLogoutJpaEntityProviderFactory implements JpaEntityProviderFactory,
@@ -19,7 +21,10 @@ public class RadiusLogoutJpaEntityProviderFactory implements JpaEntityProviderFa
 
     @Override
     public List<Class<?>> getEntities() {
-        return Collections.singletonList(DisconnectMessageModel.class);
+        return Arrays.asList(
+                DMKeycloakEndModel.class,
+                DMClientEndModel.class,
+                DisconnectMessageModel.class);
     }
 
     @Override
