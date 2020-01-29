@@ -7,6 +7,7 @@ import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSession
 import com.github.vzakharchenko.radius.radius.handlers.session.IAccountingSessionManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import org.jboss.logging.Logger;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -15,16 +16,17 @@ import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 import org.tinyradius.server.RequestCtx;
-import org.tinyradius.server.handler.RequestHandler;
 
 import static org.tinyradius.packet.PacketType.ACCOUNTING_RESPONSE;
 
 public class AccountingHandler
-        extends RequestHandler
+        extends AbstractHandler
         implements IRadiusAccountHandlerProviderFactory, IRadiusAccountHandlerProvider {
 
+    private static final Logger LOGGER = Logger.getLogger(AccountingHandler.class);
 
     public static final String DEFAULT_ACCOUNT_RADIUS_PROVIDER = "default-account-radius-provider";
+    public static final String ACCT_AUTHENTIC = "Acct-Authentic";
 
     private KeycloakSessionFactory sessionFactory;
 
@@ -36,22 +38,22 @@ public class AccountingHandler
     private boolean isRequestFromRadius(RadiusPacket request) {
         String acctType = RadiusLibraryUtils
                 .getAttributeValue(request,
-                        "Acct-Authentic");
+                        ACCT_AUTHENTIC);
         return (acctType.isEmpty() || !"Local"
                 .equalsIgnoreCase(acctType));
     }
 
-    private void successResponse(ChannelHandlerContext ctx,
-                                 RequestCtx msg,
-                                 RadiusPacket request) {
+    private void successResponse(
+            KeycloakSession session,
+            ChannelHandlerContext ctx,
+            RequestCtx msg) {
+        RadiusPacket request = msg.getRequest();
         RadiusPacket answer = RadiusPackets.create(request.getDictionary(),
                 ACCOUNTING_RESPONSE, request.getIdentifier());
-        request.getAttributes(33).forEach(answer::addAttribute);
-        ctx.writeAndFlush(msg.withResponse(answer));
+        radiusResponse(session, ctx, msg, answer);
     }
 
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RequestCtx msg) {
+    protected void channelRead(ChannelHandlerContext ctx, RequestCtx msg) {
         final RadiusPacket request = msg.getRequest();
 
         if (isRequestFromRadius(request)) {
@@ -64,10 +66,20 @@ public class AccountingHandler
                 if (!manageSession.isValidSession()) {
                     manageSession.logout();
                 }
-                successResponse(ctx, msg, request);
+                successResponse(session, ctx, msg);
             });
         } else {
-            successResponse(ctx, msg, request);
+            successResponse(null, ctx, msg);
+        }
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, RequestCtx msg) {
+        try {
+            channelRead(ctx, msg);
+        } catch (RuntimeException e) {
+            LOGGER.error("Request Fail " + e.getMessage(), e);
+            successResponse(null, ctx, msg);
         }
     }
 

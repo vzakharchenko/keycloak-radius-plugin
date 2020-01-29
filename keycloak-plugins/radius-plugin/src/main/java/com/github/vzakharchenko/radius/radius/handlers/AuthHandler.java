@@ -20,7 +20,6 @@ import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 import org.tinyradius.server.RequestCtx;
-import org.tinyradius.server.handler.RequestHandler;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
 import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
 import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 
-public class AuthHandler extends RequestHandler
+public class AuthHandler extends AbstractHandler
         implements IRadiusAuthHandlerProviderFactory, IRadiusAuthHandlerProvider {
 
     public static final String DEFAULT_AUTH_RADIUS_PROVIDER = "default-auth-radius-provider";
@@ -105,8 +104,7 @@ public class AuthHandler extends RequestHandler
             answer = RadiusPackets.create(request.getDictionary(),
                     ACCESS_REJECT, request.getIdentifier());
         }
-        request.getAttributes(33).forEach(answer::addAttribute);
-        ctx.writeAndFlush(msg.withResponse(answer));
+        radiusResponse(threadSession, ctx, msg, answer);
     }
 
     @Override
@@ -118,7 +116,8 @@ public class AuthHandler extends RequestHandler
                     });
         } catch (RuntimeException e) {
             LOGGER.error("failed request", e);
-            throw e;
+            radiusResponse(ctx, msg, RadiusPackets.create(msg.getRequest().getDictionary(),
+                    ACCESS_REJECT, msg.getRequest().getIdentifier()));
         }
     }
 
