@@ -93,7 +93,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test()
     public void testChannelRead0_exception2() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);

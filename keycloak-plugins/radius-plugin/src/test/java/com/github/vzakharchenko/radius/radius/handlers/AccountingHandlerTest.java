@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
+import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import io.netty.channel.ChannelHandlerContext;
 import org.mockito.Mock;
 import org.testng.Assert;
@@ -8,14 +10,13 @@ import org.testng.annotations.Test;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.server.RequestCtx;
 import org.tinyradius.util.RadiusEndpoint;
-import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 
 import java.net.InetSocketAddress;
 
+import static com.github.vzakharchenko.radius.radius.handlers.AccountingHandler.ACCT_AUTHENTIC;
+import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_STATUS_TYPE;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -26,9 +27,11 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
     @Mock
     private ChannelHandlerContext channelHandlerContext;
 
+    private AccountingRequest accountingRequest;
+
     @BeforeMethod
     public void beforeMethods() {
-        AccountingRequest accountingRequest = new AccountingRequest(realDictionary,
+        accountingRequest = new AccountingRequest(realDictionary,
                 0, new byte[16], "test", 1);
         accountingRequest.addAttribute("realm-radius", realmModel.getName());
         accountingHandler.postInit(keycloakSessionFactory);
@@ -52,6 +55,31 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
 
     @Test
     public void testChannelRead0() {
+        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+
+    @Test
+    public void testChannelRead0NotValid() {
+        accountingRequest = new AccountingRequest(realDictionary,
+                0, new byte[16], "test", 2);
+        accountingRequest.addAttribute("realm-radius", realmModel.getName());
+        requestCtx = new RequestCtx(accountingRequest, radiusEndpoint);
+        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+    @Test
+    public void testChannelRead0Local() {
+        accountingRequest.addAttribute(ACCT_AUTHENTIC,"02");
+        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+
+    @Test()
+    public void testChannelRead0_exception2() {
+        accountingHandler.getChannelHandler(session);
+        when(session.getTransactionManager()).thenThrow(new RuntimeException("1"));
+
         accountingHandler.channelRead0(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
