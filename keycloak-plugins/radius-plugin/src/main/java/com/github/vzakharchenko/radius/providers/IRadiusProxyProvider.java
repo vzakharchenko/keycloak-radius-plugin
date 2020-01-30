@@ -6,5 +6,5 @@ import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.server.RequestCtx;
 
 public interface IRadiusProxyProvider extends Provider {
-    void proxy(KeycloakSession session, RequestCtx msg, RadiusPacket answer);
+    RadiusPacket proxy(KeycloakSession session, RequestCtx msg, RadiusPacket answer);
 }

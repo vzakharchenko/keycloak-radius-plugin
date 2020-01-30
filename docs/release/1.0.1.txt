@@ -4,3 +4,4 @@
 - support CoA request
 - Send Disconnect message if keycloak session has expired
 - BackChannel logout
+- added support Radius Proxy

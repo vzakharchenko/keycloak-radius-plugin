@@ -40,6 +40,7 @@
         <module>mikrotik-radius-plugin</module>
         <module>rad-sec-plugin</module>
         <module>radius-disconnect-plugin</module>
+        <module>proxy-radius-plugin</module>
     </modules>
 
     <properties>

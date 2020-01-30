@@ -18,6 +18,7 @@ public class DictionaryLoaderTest extends AbstractRadiusTest {
 
     @BeforeMethod
     public void beforeMethods() {
+        DictionaryLoader.getInstance().setWritableDictionary(null);
         HashSet<IRadiusDictionaryProvider> iRadiusDictionaryProviders = new HashSet<>();
         when(session
                 .getAllProviders(IRadiusDictionaryProvider.class))

@@ -7,10 +7,11 @@
 Run radius server inside keycloak.  
 features:
 - radius server inside keycloak
+- can work as radius proxy
 - support [radsec](#mikrotik-rad-sec-example) (Radius over TLS)
 - Map Keycloak [Role](#assign-radius-attributes-to-role) [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
 - start/stop Keycloak Session ![sessionManagment](docs/sessionManagment.png)
-- BackChannel logout
+- BackChannel logout(Disconnect-message request)
 - [Hotspot](hotspot/OAuthRadius.md) :
   - pap,chap,mschapv2 authorization
   - [openID connect](hotspot/OAuthRadius.md#how-keycloak-radius-hotspot-works)
@@ -140,3 +141,7 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 
 ### Example CoA Configuration
 [Radius Disconnect Message](keycloak-plugins/radius-disconnect-plugin/README.md)
+
+### Radius Proxy
+
+[Radius Proxy Module](keycloak-plugins/proxy-radius-plugin/README.md)

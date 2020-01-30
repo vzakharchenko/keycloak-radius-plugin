@@ -9,6 +9,7 @@ import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
+import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocolFactory;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
@@ -160,6 +161,7 @@ public abstract class AbstractRadiusTest {
                     .singletonList(radiusServiceProvider)));
             KeycloakSessionUtils.context(session, radiusUserInfoGetter);
             RadiusCoAClientHelper.setRadiusCoAClient(radiusCoAClient);
+            DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
 
         } catch (Exception e) {
             throw new IllegalStateException(e);

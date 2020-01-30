@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.radius.dictionary;
 
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
+import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.dictionary.MemoryDictionary;
@@ -31,5 +32,10 @@ public final class DictionaryLoader {
             }
         }
         return writableDictionary;
+    }
+
+    @VisibleForTesting
+    public void setWritableDictionary(WritableDictionary writableDictionary) {
+        this.writableDictionary = writableDictionary;
     }
 }
