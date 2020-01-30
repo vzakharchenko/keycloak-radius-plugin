@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.proxy.endpoints;
 
+import com.github.vzakharchenko.radius.proxy.models.ProxyModel;
 import com.github.vzakharchenko.radius.proxy.providers.IRadiusProxyEndpointProvider;
 import com.github.vzakharchenko.radius.proxy.providers.IRadiusProxyEndpointProviderFactory;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
@@ -32,23 +33,37 @@ public abstract class AbstractProxyEndpointProvider<T>
 
     protected abstract Collection<T> getTypes(UserModel userModel);
 
+    protected ProxyModel getProxyModel(T t,
+                                       Class<? extends RadiusPacket> packetType) {
+        String address = getAddress(t, packetType);
+        int port = getPort(t, packetType);
+        String secret = getSecret(t, packetType);
+        return new ProxyModel(address, port, secret);
+    }
+
+    protected ProxyModel getProxyModel(Collection<T> types,
+                                       Class<? extends RadiusPacket> packetType) {
+        for (T t : types) {
+            ProxyModel proxyModel = getProxyModel(t, packetType);
+            if (proxyModel.isValid()) {
+                return proxyModel;
+            }
+        }
+        return null;
+    }
+
     @Override
     public RadiusEndpoint getRadiusEndpoint(KeycloakSession session,
                                             Class<? extends RadiusPacket> packetType) {
         IRadiusUserInfo radiusSessionInfo = KeycloakSessionUtils.getRadiusSessionInfo(session);
-        String address = null;
-        int port = 0;
-        String secret = null;
+        ProxyModel proxyModel = null;
         if (radiusSessionInfo != null) {
             Collection<T> types = getTypes(radiusSessionInfo.getUserModel());
-            for (T t : types) {
-                address = getAddress(t, packetType);
-                port = getPort(t, packetType);
-                secret = getSecret(t, packetType);
-            }
+            proxyModel = getProxyModel(types, packetType);
         }
-        if (address != null && port > 0 && secret != null) {
-            return new RadiusEndpoint(new InetSocketAddress(address, port), secret);
+        if (proxyModel != null) {
+            return new RadiusEndpoint(new InetSocketAddress(proxyModel.getAddress(),
+                    proxyModel.getPort()), proxyModel.getSecret());
         } else {
             return null;
         }
