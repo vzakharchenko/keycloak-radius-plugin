@@ -50,5 +50,6 @@ public class ChapProtocolTest extends AbstractRadiusTest {
         assertFalse(chapProtocol.verifyPassword("2"));
         assertFalse(chapProtocol.verifyPassword(null));
         assertFalse(chapProtocol.verifyPassword(""));
+        assertFalse(chapProtocol.verifyPassword());
     }
 }

@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 
 public interface AuthProtocol {
     boolean verifyPassword(String password);
+    boolean verifyPassword();
 
     RealmModel getRealm();
 

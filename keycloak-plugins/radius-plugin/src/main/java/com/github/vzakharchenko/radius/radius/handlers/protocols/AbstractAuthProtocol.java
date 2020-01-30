@@ -85,4 +85,9 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     public AccessRequest getAccessRequest() {
         return accessRequest.copy();
     }
+
+    @Override
+    public boolean verifyPassword() {
+        return false;
+    }
 }

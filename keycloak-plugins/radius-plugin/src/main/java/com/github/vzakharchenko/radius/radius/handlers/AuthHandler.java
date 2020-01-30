@@ -51,7 +51,7 @@ public class AuthHandler extends AbstractHandler
                 }
             }
         }
-        return false;
+        return authProtocol.verifyPassword();
     }
 
     private RadiusPacket handleAnswer(AccessRequest request,

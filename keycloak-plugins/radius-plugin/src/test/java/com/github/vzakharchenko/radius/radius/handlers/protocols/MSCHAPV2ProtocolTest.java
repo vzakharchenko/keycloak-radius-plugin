@@ -138,6 +138,6 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         chapProtocol.answer(answer, radiusUserInfoGetter);
         List<RadiusAttribute> attributes = answer.getAttributes();
         assertEquals(attributes.size(), 0);
-
+        assertFalse(chapProtocol.verifyPassword());
     }
 }
