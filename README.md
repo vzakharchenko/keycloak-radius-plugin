@@ -7,7 +7,7 @@
 Run radius server inside keycloak.  
 features:
 - radius server inside keycloak
-- can work as radius proxy
+- can work as [radius proxy](#radius-proxy)
 - support [radsec](#mikrotik-rad-sec-example) (Radius over TLS)
 - Map Keycloak [Role](#assign-radius-attributes-to-role) [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
 - start/stop Keycloak Session ![sessionManagment](docs/sessionManagment.png)
