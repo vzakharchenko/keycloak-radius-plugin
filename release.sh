@@ -90,7 +90,8 @@ installation steps:
 1. download and unzip keycloak-radius.zip <pre>unzip keycloak-radius.zip -d keycloak-radius</pre>
 2. <pre>cd keycloak-radius</pre>
 3. <pre>sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</pre>
-4. open http://localhost:8090" $tagName
+4. open http://localhost:8090\
+5. default radius shared Secret: <pre>secret</pre>" $tagName
 
 # update version of keycloak-radius
 mvn versions:set -DnewVersion=$tagDevVersion

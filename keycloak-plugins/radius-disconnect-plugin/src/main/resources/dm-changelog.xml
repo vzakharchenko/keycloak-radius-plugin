@@ -61,7 +61,7 @@
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_2">
-        <dropNotNullConstraint tableName="RADIUS_DM_SESSION" columnName="END_DATE"/>
+        <dropNotNullConstraint tableName="RADIUS_DM_SESSION" columnName="END_DATE" columnDataType="TIMESTAMP"/>
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_3">
@@ -150,7 +150,7 @@
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_7">
-        <dropNotNullConstraint tableName="RADIUS_DM_KEYCLOAK_END_SESSION" columnName="END_DATE"/>
+        <dropNotNullConstraint tableName="RADIUS_DM_KEYCLOAK_END_SESSION" columnName="END_DATE" columnDataType="TIMESTAMP"/>
     </changeSet>
 
 </databaseChangeLog>
