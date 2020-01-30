@@ -1,16 +1,20 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 
-import static org.mockito.Mockito.mock;
 import static org.testng.Assert.*;
 
 public class PAPProtocolTest extends AbstractRadiusTest {
-    private Dictionary dictionary = mock(Dictionary.class);
-    private AccessRequest request = new AccessRequest(dictionary, 0, new byte[16]);
+    private AccessRequest request;
+
+    @BeforeMethod
+    public void beforeMethods() {
+        request = new AccessRequest(realDictionary, 0, new byte[16]);
+        request.addAttribute(REALM_RADIUS, REALM_RADIUS_NAME);
+    }
 
     @Test
     public void testPapSuccess() {
@@ -22,5 +26,7 @@ public class PAPProtocolTest extends AbstractRadiusTest {
         assertFalse(papProtocol.verifyPassword(null));
         assertFalse(papProtocol.verifyPassword(""));
         assertFalse(papProtocol.verifyPassword("asdf"));
+        assertFalse(papProtocol.verifyPassword());
+
     }
 }

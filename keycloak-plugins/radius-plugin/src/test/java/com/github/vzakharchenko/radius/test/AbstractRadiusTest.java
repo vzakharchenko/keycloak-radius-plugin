@@ -54,6 +54,7 @@ import static org.testng.Assert.assertNotNull;
 public abstract class AbstractRadiusTest {
 
     public static final String RADIUS_SESSION_ID = "testSessionId";
+    public static final String REALM_RADIUS = "realm-radius";
 
     {
         Security.addProvider(new BouncyCastleProvider());
@@ -155,7 +156,7 @@ public abstract class AbstractRadiusTest {
             when(keycloakHelper.getAuthResult(session))
                     .thenReturn(new AuthenticationManager.AuthResult(userModel,
                             userSessionModel, accessToken));
-            RadiusHelper.setRealmAttributes(Collections.singletonList("realm-radius"));
+            RadiusHelper.setRealmAttributes(Collections.singletonList(REALM_RADIUS));
             RadiusHelper.getServiceMap0().clear();
             RadiusHelper.getServiceMap0().put("sName", new ArrayList<>(Collections
                     .singletonList(radiusServiceProvider)));
@@ -346,7 +347,7 @@ public abstract class AbstractRadiusTest {
             dictionaryParser
                     .parseDictionary(realDictionary,
                             KeycloakRadiusServer.MS);
-            realDictionary.addAttributeType(new AttributeType(253, "realm-radius", "string"));
+            realDictionary.addAttributeType(new AttributeType(253, REALM_RADIUS, "string"));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
