@@ -149,5 +149,8 @@
                                  referencedColumnNames="SESSION_ID" onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_7">
+        <dropNotNullConstraint tableName="RADIUS_DM_KEYCLOAK_END_SESSION" columnName="END_DATE"/>
+    </changeSet>
 
 </databaseChangeLog>

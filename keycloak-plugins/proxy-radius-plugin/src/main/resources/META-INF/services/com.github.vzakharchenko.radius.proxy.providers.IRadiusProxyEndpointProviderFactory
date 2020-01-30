@@ -1,0 +1,2 @@
+com.github.vzakharchenko.radius.proxy.endpoints.RoleEndpointProvider
+com.github.vzakharchenko.radius.proxy.endpoints.GroupProxyEndpointProvider

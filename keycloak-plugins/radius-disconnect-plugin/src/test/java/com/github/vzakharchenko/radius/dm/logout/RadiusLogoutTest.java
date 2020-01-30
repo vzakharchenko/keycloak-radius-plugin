@@ -1,13 +1,29 @@
 package com.github.vzakharchenko.radius.dm.logout;
 
+import com.github.vzakharchenko.radius.coa.ICoaRequestHandler;
 import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import com.github.vzakharchenko.radius.dm.test.AbstractJPATest;
+import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.EventLoop;
+import io.netty.channel.socket.nio.NioDatagramChannel;
+import io.netty.util.concurrent.Promise;
 import org.keycloak.models.KeycloakSession;
+import org.mockito.Mock;
+import org.mockito.stubbing.Answer;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.tinyradius.client.RadiusClient;
+import org.tinyradius.client.timeout.TimeoutHandler;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.RadiusPacket;
+import org.tinyradius.packet.RadiusPackets;
 import org.tinyradius.util.RadiusEndpoint;
 
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +42,50 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     private RadiusLogout radiusLogout = new RadiusLogout();
 
+    private RadiusClient radiusClient;
+
+
+    private Bootstrap bootstrap;
+    @Mock
+    private TimeoutHandler timeoutHandler;
+    @Mock
+    private EventLoop eventLoop;
+
+    @Mock
+    private Promise promise;
+
+    @Mock
+    private ChannelHandler channelHandler;
+
+    @Mock
+    private ChannelFuture channelFuture;
+    @Mock
+    private Channel channel;
+
+
+    private void initRadiusClient() {
+        reset(timeoutHandler);
+        reset(eventLoop);
+        reset(promise);
+        reset(channelHandler);
+        reset(channelFuture);
+        reset(channel);
+        bootstrap = new Bootstrap();
+        bootstrap.group(eventLoop).channel(NioDatagramChannel.class);
+        when(eventLoop.register(any(Channel.class))).thenReturn(channelFuture);
+        when(eventLoop.newPromise()).thenReturn(promise);
+        when(eventLoop.next()).thenReturn(eventLoop);
+        when(promise.addListener(any())).thenReturn(promise);
+        when(promise.syncUninterruptibly()).thenReturn(promise);
+        when(channelFuture.channel()).thenReturn(channel);
+        radiusClient = new RadiusClient(bootstrap, new InetSocketAddress(0), timeoutHandler, channelHandler);
+    }
+
+    @BeforeMethod
+    public void beforeMethods() {
+        initRadiusClient();
+    }
+
     @Test
     public void methodsTests() {
         radiusLogout.close();
@@ -33,6 +93,7 @@ public class RadiusLogoutTest extends AbstractJPATest {
         radiusLogout.postInit(keycloakSessionFactory);
         assertEquals(radiusLogout.getId(), RADIUS_LOGOUT_FACTORY);
         assertEquals(radiusLogout.create(session), radiusLogout);
+
 
     }
 
@@ -146,6 +207,21 @@ public class RadiusLogoutTest extends AbstractJPATest {
         verify(entityManager).persist(any());
     }
 
+    @Test
+    public void requestCoATest() {
+        DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
+        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, DISCONNECT_ACK, 1, new byte[16]);
+        when(promise.getNow()).thenReturn(radiusPacket);
+        doAnswer((Answer<Void>) invocationOnMock -> {
+            ICoaRequestHandler coaRequestHandler = invocationOnMock.getArgument(1);
+            coaRequestHandler.call(radiusClient);
+            return null;
+        }).when(radiusCoAClient).requestCoA(any(), any());
+        radiusLogout.requestCoA(
+                session, createDisconnectMessageModel(), new RadiusEndpoint(new InetSocketAddress(0), "test"), null);
+
+    }
+
     private DisconnectMessageModel createDisconnectMessageModel() {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
         disconnectMessageModel.setKeycloakSessionId("testSession");
@@ -165,5 +241,6 @@ public class RadiusLogoutTest extends AbstractJPATest {
         disconnectMessageModel.setRadiusSessionId("sessionId");
         return disconnectMessageModel;
     }
+
 
 }
