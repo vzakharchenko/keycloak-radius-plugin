@@ -84,4 +84,8 @@
         <Bug pattern="CE_CLASS_ENVY"/>
         <Class name="com.github.vzakharchenko.radius.dm.logout.RadiusLogout"/>
     </Match>
+    <Match>
+        <Bug pattern="HES_EXECUTOR_NEVER_SHUTDOWN"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.AbstractThreadRequestHandler"/>
+    </Match>
 </FindBugsFilter>

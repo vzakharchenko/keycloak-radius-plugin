@@ -48,7 +48,7 @@ public class RadSecHandlerTest extends AbstractRadiusTest {
         RequestCtx requestCtx = new RequestCtx(new AccessRequest(realDictionary, 1, new byte[16]),
                 new RadiusEndpoint(new InetSocketAddress(0), "test"));
         radSecHandler.create(session);
-        radSecHandler.channelRead0(ctx, requestCtx);
+        radSecHandler.channelReadRadius(ctx, requestCtx);
         IRadiusAuthHandlerProvider provider = session
                 .getProvider(IRadiusAuthHandlerProvider.class);
         verify(provider).directRead(ctx, requestCtx);
@@ -59,7 +59,7 @@ public class RadSecHandlerTest extends AbstractRadiusTest {
         RequestCtx requestCtx = new RequestCtx(new AccountingRequest(realDictionary, 1, new byte[16]),
                 new RadiusEndpoint(new InetSocketAddress(0), "test"));
         radSecHandler.create(session);
-        radSecHandler.channelRead0(ctx, requestCtx);
+        radSecHandler.channelReadRadius(ctx, requestCtx);
         IRadiusAccountHandlerProvider provider = session
                 .getProvider(IRadiusAccountHandlerProvider.class);
         verify(provider).directRead(ctx, requestCtx);
@@ -71,6 +71,6 @@ public class RadSecHandlerTest extends AbstractRadiusTest {
         RequestCtx requestCtx = new RequestCtx(new RadiusPacket(realDictionary, 1, 1, new byte[16]),
                 new RadiusEndpoint(new InetSocketAddress(0), "test"));
         radSecHandler.create(session);
-        radSecHandler.channelRead0(ctx, requestCtx);
+        radSecHandler.channelReadRadius(ctx, requestCtx);
     }
 }

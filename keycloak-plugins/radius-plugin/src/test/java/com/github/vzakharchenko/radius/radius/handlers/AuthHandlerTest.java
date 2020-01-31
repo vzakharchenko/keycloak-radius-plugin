@@ -14,6 +14,7 @@ import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -58,10 +59,19 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0() {
+    public void testChannelReadRadius() {
+        authHandler.getChannelHandler(session);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+
+    @Test
+    public void testChannelRead0() throws InterruptedException {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         authHandler.channelRead0(channelHandlerContext, requestCtx);
+        TimeUnit.SECONDS.sleep(3);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -79,7 +89,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authProtocol.isValid(any())).thenReturn(false);
 
-        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -89,7 +99,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authProtocol.isValid(any())).thenThrow(new RuntimeException("1"));
 
-        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -99,7 +109,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(session.getTransactionManager()).thenThrow(new RuntimeException("1"));
 
-        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -111,7 +121,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
                 IRadiusUserInfoGetter.class))
                 .thenReturn(null);
 
-        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -120,7 +130,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(radiusUserInfo.getPasswords()).thenReturn(new ArrayList<>());
-        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -130,7 +140,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authRequestInitialization.init(any(), any(), any(), any())).thenReturn(false);
 
-        authHandler.channelRead0(channelHandlerContext, requestCtx);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 }

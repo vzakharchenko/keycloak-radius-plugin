@@ -1,16 +1,11 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
-import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProviderFactory;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager;
 import com.github.vzakharchenko.radius.radius.handlers.session.IAccountingSessionManager;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.jboss.logging.Logger;
-import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.RadiusPacket;
@@ -20,15 +15,12 @@ import org.tinyradius.server.RequestCtx;
 import static org.tinyradius.packet.PacketType.ACCOUNTING_RESPONSE;
 
 public class AccountingHandler
-        extends AbstractHandler
-        implements IRadiusAccountHandlerProviderFactory, IRadiusAccountHandlerProvider {
+        extends AbstractHandler {
 
     private static final Logger LOGGER = Logger.getLogger(AccountingHandler.class);
 
     public static final String DEFAULT_ACCOUNT_RADIUS_PROVIDER = "default-account-radius-provider";
     public static final String ACCT_AUTHENTIC = "Acct-Authentic";
-
-    private KeycloakSessionFactory sessionFactory;
 
     @Override
     protected Class<AccountingRequest> acceptedPacketType() {
@@ -74,7 +66,7 @@ public class AccountingHandler
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RequestCtx msg) {
+    protected void channelReadRadius(ChannelHandlerContext ctx, RequestCtx msg) {
         try {
             channelRead(ctx, msg);
         } catch (RuntimeException e) {
@@ -83,38 +75,9 @@ public class AccountingHandler
         }
     }
 
-    @Override
-    public IRadiusAccountHandlerProvider create(KeycloakSession session) {
-        return this;
-    }
-
-    @Override
-    public void init(Config.Scope config) {
-
-    }
-
-    @Override
-    public void postInit(KeycloakSessionFactory factory) {
-        this.sessionFactory = factory;
-    }
-
-    @Override
-    public void close() {
-
-    }
 
     @Override
     public String getId() {
         return DEFAULT_ACCOUNT_RADIUS_PROVIDER;
-    }
-
-    @Override
-    public ChannelHandler getChannelHandler(KeycloakSession session) {
-        return (ChannelHandler) create(session);
-    }
-
-    @Override
-    public void directRead(ChannelHandlerContext ctx, RequestCtx msg) {
-        channelRead0(ctx, msg);
     }
 }
