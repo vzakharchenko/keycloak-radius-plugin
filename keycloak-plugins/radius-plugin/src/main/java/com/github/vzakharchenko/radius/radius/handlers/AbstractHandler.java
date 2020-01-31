@@ -1,20 +1,18 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
-import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProviderFactory;
 import com.github.vzakharchenko.radius.providers.IRadiusProxyProvider;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
+import org.keycloak.provider.Provider;
+import org.keycloak.provider.ProviderFactory;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.server.RequestCtx;
 
-public abstract class AbstractHandler
+public abstract class AbstractHandler<T extends Provider>
         extends AbstractThreadRequestHandler
-        implements IRadiusAuthHandlerProviderFactory,
-        IRadiusAuthHandlerProvider {
+        implements ProviderFactory<T> {
 
     protected KeycloakSessionFactory sessionFactory;
 
@@ -51,11 +49,6 @@ public abstract class AbstractHandler
     }
 
     @Override
-    public IRadiusAuthHandlerProvider create(KeycloakSession session) {
-        return this;
-    }
-
-    @Override
     public void init(Config.Scope config) {
 
     }
@@ -68,15 +61,5 @@ public abstract class AbstractHandler
     @Override
     public void close() {
 
-    }
-
-    @Override
-    public ChannelHandler getChannelHandler(KeycloakSession session) {
-        return (ChannelHandler) create(session);
-    }
-
-    @Override
-    public void directRead(ChannelHandlerContext ctx, RequestCtx msg) {
-        channelReadRadius(ctx, msg);
     }
 }
