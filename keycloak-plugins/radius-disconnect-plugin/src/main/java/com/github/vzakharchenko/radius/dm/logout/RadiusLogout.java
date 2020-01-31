@@ -15,6 +15,7 @@ import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.handlers.session.RadiusAccountState;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
+import org.jboss.logging.Logger;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -40,6 +41,8 @@ public class RadiusLogout implements IRadiusCOAProvider,
     public static final String RADIUS_LOGOUT_FACTORY = "radius-logout-factory";
     public static final String ERROR_CAUSE = "Error-Cause";
     public static final String ACCT_TERMINATE_CAUSE = "Acct-Terminate-Cause";
+
+    private static final Logger LOGGER = Logger.getLogger(RadiusLogout.class);
 
     @Override
     public IRadiusCOAProvider create(KeycloakSession session) {
@@ -199,6 +202,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
             RadiusPacket radiusPacket = new RadiusPacket(dictionary,
                     DISCONNECT_REQUEST, nextPacketId());
             prepareDisconnectMessagePacket(radiusPacket, dmm);
+            LOGGER.info("Send CoA request to "+radiusEndpoint.getAddress());
             RadiusPacket answer = radiusClient.communicate(radiusPacket,
                     radiusEndpoint).syncUninterruptibly().getNow();
             answerHandler(answer, session, dmm);
