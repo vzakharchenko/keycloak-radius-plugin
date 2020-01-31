@@ -36,18 +36,16 @@ public class RadSecCodec extends MessageToMessageCodec<ByteBuf, ResponseCtx> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ResponseCtx msg, List<Object> out) {
-
-        RadiusPacket response = msg.getResponse();
-        final RadiusPacket packet = response
-                .encodeResponse(msg.getEndpoint().getSecret(),
-                        msg.getRequest().getAuthenticator());
-        ByteBuf byteBuf = null;
         try {
-            byteBuf = packetEncoder.toByteBuf(packet);
+            RadiusPacket response = msg.getResponse();
+            final RadiusPacket packet = response
+                    .encodeResponse(msg.getEndpoint().getSecret(),
+                            msg.getRequest().getAuthenticator());
+            ByteBuf byteBuf= packetEncoder.toByteBuf(packet);
+            out.add(byteBuf);
         } catch (RadiusPacketException e) {
             LOGGER.error("radius encode Error: " + e.getMessage(), e);
         }
-        out.add(byteBuf);
     }
 
     @Override

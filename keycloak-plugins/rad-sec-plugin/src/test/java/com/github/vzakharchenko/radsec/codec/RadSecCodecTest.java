@@ -1,11 +1,13 @@
 package com.github.vzakharchenko.radsec.codec;
 
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.codec.binary.Hex;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.packet.PacketEncoder;
@@ -13,15 +15,14 @@ import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.server.RequestCtx;
 import org.tinyradius.server.ResponseCtx;
 import org.tinyradius.server.SecretProvider;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import org.tinyradius.util.RadiusPacketException;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 public class RadSecCodecTest extends AbstractRadiusTest {
@@ -53,7 +54,7 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         when(context.channel()).thenReturn(channel);
         when(channel.remoteAddress()).thenReturn(new InetSocketAddress(0));
         when(secretProvider.getSharedSecret(any())).thenReturn("test");
-        packetEncoder = new PacketEncoder(realDictionary);
+        packetEncoder = spy(new PacketEncoder(realDictionary));
         radSecCodec = new RadSecCodec(
                 packetEncoder,
                 secretProvider);
@@ -68,6 +69,16 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         RequestCtx requestCtx = (RequestCtx) objects.get(0);
         assertEquals(Hex.encodeHexString(requestCtx
                 .getRequest().getAuthenticator()), "cb454b6f149bac108cf538a750a4d778");
+
+    }
+
+    @Test
+    public void testDecodeFail() throws Exception {
+        List<Object> objects = new ArrayList<>();
+        radSecCodec.decode(context, Unpooled.copiedBuffer(Hex
+                .decodeHex((RADIUS_PACKAGE + RADIUS_PACKAGE).toCharArray())), objects);
+        assertEquals(objects.size(), 0);
+
 
     }
 
@@ -92,5 +103,22 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         RadiusPacket radiusPacket = packetEncoder.fromByteBuf(byteBuf);
         assertEquals(Hex.encodeHexString(radiusPacket.getAuthenticator()),
                 "4241f8975514d1a0ebcee4d3cdf95e88");
+    }
+
+    @Test
+    public void testEncodeFail() throws Exception {
+        List<Object> objects = new ArrayList<>();
+        radSecCodec.decode(context, Unpooled.copiedBuffer(Hex
+                .decodeHex(RADIUS_PACKAGE.toCharArray())), objects);
+        assertEquals(objects.size(), 1);
+        RequestCtx requestCtx = (RequestCtx) objects.get(0);
+        ResponseCtx responseCtx = new ResponseCtx(
+                requestCtx.getRequest(),
+                requestCtx.getEndpoint(),
+                new RadiusPacket(realDictionary, 1, requestCtx.getRequest().getIdentifier()));
+        List<Object> responses = new ArrayList<>();
+        Mockito.doThrow(new RadiusPacketException("test")).when(packetEncoder).toByteBuf(any());
+        radSecCodec.encode(context, responseCtx, responses);
+        assertEquals(responses.size(), 0);
     }
 }
