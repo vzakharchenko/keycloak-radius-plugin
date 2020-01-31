@@ -1,8 +1,11 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
+import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
+import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProviderFactory;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager;
 import com.github.vzakharchenko.radius.radius.handlers.session.IAccountingSessionManager;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
@@ -15,7 +18,9 @@ import org.tinyradius.server.RequestCtx;
 import static org.tinyradius.packet.PacketType.ACCOUNTING_RESPONSE;
 
 public class AccountingHandler
-        extends AbstractHandler {
+        extends AbstractHandler<IRadiusAccountHandlerProvider>
+        implements IRadiusAccountHandlerProviderFactory,
+        IRadiusAccountHandlerProvider {
 
     private static final Logger LOGGER = Logger.getLogger(AccountingHandler.class);
 
@@ -77,7 +82,22 @@ public class AccountingHandler
 
 
     @Override
+    public IRadiusAccountHandlerProvider create(KeycloakSession session) {
+        return this;
+    }
+
+    @Override
     public String getId() {
         return DEFAULT_ACCOUNT_RADIUS_PROVIDER;
+    }
+
+    @Override
+    public ChannelHandler getChannelHandler(KeycloakSession session) {
+        return (ChannelHandler) create(session);
+    }
+
+    @Override
+    public void directRead(ChannelHandlerContext ctx, RequestCtx msg) {
+        channelReadRadius(ctx, msg);
     }
 }

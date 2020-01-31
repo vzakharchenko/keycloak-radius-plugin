@@ -45,7 +45,7 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
     @Test
     public void testMethods() {
         Assert.assertEquals(accountingHandler.getId(), AccountingHandler.DEFAULT_ACCOUNT_RADIUS_PROVIDER);
-        IRadiusAuthHandlerProvider accountHandlerProvider = accountingHandler.create(session);
+        IRadiusAccountHandlerProvider accountHandlerProvider = accountingHandler.create(session);
         assertNotNull(accountHandlerProvider);
         accountingHandler.close();
         accountingHandler.init(null);

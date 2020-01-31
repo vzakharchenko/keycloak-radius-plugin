@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
+import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
+import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProviderFactory;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
 import com.github.vzakharchenko.radius.radius.handlers.session.AuthRequestInitialization;
@@ -7,6 +9,7 @@ import com.github.vzakharchenko.radius.radius.handlers.session.IAuthRequestIniti
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.google.common.annotations.VisibleForTesting;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
@@ -23,7 +26,8 @@ import java.util.List;
 import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
 import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 
-public class AuthHandler extends AbstractHandler {
+public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
+        implements IRadiusAuthHandlerProvider, IRadiusAuthHandlerProviderFactory {
 
     public static final String DEFAULT_AUTH_RADIUS_PROVIDER = "default-auth-radius-provider";
 
@@ -117,6 +121,11 @@ public class AuthHandler extends AbstractHandler {
     }
 
     @Override
+    public IRadiusAuthHandlerProvider create(KeycloakSession session) {
+        return this;
+    }
+
+    @Override
     public void postInit(KeycloakSessionFactory factory) {
         this.sessionFactory = factory;
         this.authRequestInitialization = new AuthRequestInitialization(
@@ -126,6 +135,16 @@ public class AuthHandler extends AbstractHandler {
     @Override
     public String getId() {
         return DEFAULT_AUTH_RADIUS_PROVIDER;
+    }
+
+    @Override
+    public ChannelHandler getChannelHandler(KeycloakSession session) {
+        return (ChannelHandler) create(session);
+    }
+
+    @Override
+    public void directRead(ChannelHandlerContext ctx, RequestCtx msg) {
+        channelReadRadius(ctx, msg);
     }
 
     @VisibleForTesting
