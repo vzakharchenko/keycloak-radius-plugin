@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
 import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
+import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import io.netty.channel.ChannelHandlerContext;
 import org.mockito.Mock;
@@ -44,7 +45,7 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
     @Test
     public void testMethods() {
         Assert.assertEquals(accountingHandler.getId(), AccountingHandler.DEFAULT_ACCOUNT_RADIUS_PROVIDER);
-        IRadiusAccountHandlerProvider accountHandlerProvider = accountingHandler.create(session);
+        IRadiusAuthHandlerProvider accountHandlerProvider = accountingHandler.create(session);
         assertNotNull(accountHandlerProvider);
         accountingHandler.close();
         accountingHandler.init(null);
@@ -54,8 +55,8 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0() {
-        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+    public void testChannelReadRadius() {
+        accountingHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -65,13 +66,13 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
                 0, new byte[16], "test", 2);
         accountingRequest.addAttribute("realm-radius", realmModel.getName());
         requestCtx = new RequestCtx(accountingRequest, radiusEndpoint);
-        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+        accountingHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
     @Test
     public void testChannelRead0Local() {
         accountingRequest.addAttribute(ACCT_AUTHENTIC,"02");
-        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+        accountingHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 
@@ -80,7 +81,7 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
         accountingHandler.getChannelHandler(session);
         when(session.getTransactionManager()).thenThrow(new RuntimeException("1"));
 
-        accountingHandler.channelRead0(channelHandlerContext, requestCtx);
+        accountingHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
 

@@ -1,5 +1,8 @@
 package com.github.vzakharchenko.radsec.handlers;
 
+import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
+import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
+import com.github.vzakharchenko.radius.radius.handlers.AbstractThreadRequestHandler;
 import com.github.vzakharchenko.radsec.providers.IRadiusRadSecHandlerProvider;
 import com.github.vzakharchenko.radsec.providers.IRadiusRadSecHandlerProviderFactory;
 import io.netty.channel.ChannelHandler;
@@ -12,13 +15,10 @@ import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.server.RequestCtx;
-import org.tinyradius.server.handler.RequestHandler;
-import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
 
 @ChannelHandler.Sharable
 public class RadSecHandler
-        extends RequestHandler
+        extends AbstractThreadRequestHandler
         implements IRadiusRadSecHandlerProviderFactory,
         IRadiusRadSecHandlerProvider {
 
@@ -31,9 +31,8 @@ public class RadSecHandler
         return RadiusPacket.class;
     }
 
-
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RequestCtx msg) {
+    protected void channelReadRadius(ChannelHandlerContext ctx, RequestCtx msg) {
         KeycloakModelUtils.runJobInTransaction(sessionFactory, session -> {
             RadiusPacket request = msg.getRequest();
             if (request.getClass().equals(AccessRequest.class)) {
