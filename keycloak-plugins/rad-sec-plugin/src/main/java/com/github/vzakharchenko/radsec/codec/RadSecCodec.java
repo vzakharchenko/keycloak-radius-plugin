@@ -19,8 +19,7 @@ import java.util.List;
 @ChannelHandler.Sharable
 public class RadSecCodec extends MessageToMessageCodec<ByteBuf, ResponseCtx> {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(RadSecCodec.class);
+    private static final Logger LOGGER = Logger.getLogger(RadSecCodec.class);
 
     private final PacketEncoder packetEncoder;
     private final SecretProvider secretProvider;
@@ -41,7 +40,7 @@ public class RadSecCodec extends MessageToMessageCodec<ByteBuf, ResponseCtx> {
             final RadiusPacket packet = response
                     .encodeResponse(msg.getEndpoint().getSecret(),
                             msg.getRequest().getAuthenticator());
-            ByteBuf byteBuf= packetEncoder.toByteBuf(packet);
+            ByteBuf byteBuf = packetEncoder.toByteBuf(packet);
             out.add(byteBuf);
         } catch (RadiusPacketException e) {
             LOGGER.error("radius encode Error: " + e.getMessage(), e);
