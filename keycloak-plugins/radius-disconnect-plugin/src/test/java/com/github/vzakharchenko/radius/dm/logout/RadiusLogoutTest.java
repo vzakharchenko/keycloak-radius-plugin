@@ -171,7 +171,15 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     @Test
     public void testGetRadiusEndpoint() {
-        RadiusEndpoint radiusEndpoint = radiusLogout.getRadiusEndpoint(radiusUserInfo);
+        RadiusEndpoint radiusEndpoint = radiusLogout
+                .getRadiusEndpoint(createDisconnectMessageModel(), radiusUserInfo);
+        assertNotNull(radiusEndpoint);
+    }
+
+    @Test
+    public void testGetRadiusEndpoint2() {
+        RadiusEndpoint radiusEndpoint = radiusLogout
+                .getRadiusEndpoint(createDisconnectMessageModel(), radiusUserInfo);
         assertNotNull(radiusEndpoint);
     }
 
@@ -203,7 +211,9 @@ public class RadiusLogoutTest extends AbstractJPATest {
     @Test
     public void testAnswerHandler2() {
         RadiusPacket radiusPacket = new RadiusPacket(realDictionary, DISCONNECT_NAK, 1);
-        radiusLogout.answerHandler(radiusPacket, session, createDisconnectMessageModel());
+        DisconnectMessageModel disconnectMessageModel = createDisconnectMessageModel();
+        disconnectMessageModel.setNasIp(null);
+        radiusLogout.answerHandler(radiusPacket, session, disconnectMessageModel);
         verify(entityManager).persist(any());
     }
 

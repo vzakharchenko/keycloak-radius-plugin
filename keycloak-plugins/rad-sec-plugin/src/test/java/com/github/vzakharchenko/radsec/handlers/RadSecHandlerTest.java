@@ -1,5 +1,8 @@
 package com.github.vzakharchenko.radsec.handlers;
 
+import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
+import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import io.netty.channel.ChannelHandlerContext;
 import org.mockito.Mock;
 import org.testng.Assert;
@@ -10,9 +13,6 @@ import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.server.RequestCtx;
 import org.tinyradius.util.RadiusEndpoint;
-import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 
 import java.net.InetSocketAddress;
 
