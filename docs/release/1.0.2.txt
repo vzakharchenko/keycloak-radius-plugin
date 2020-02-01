@@ -1,0 +1,3 @@
+netty improvements (thread pool)
+ignore duplicates (radsec)
+use attribute "NAS-Ip-Address" instead of remote Ip (disconnect plugin)

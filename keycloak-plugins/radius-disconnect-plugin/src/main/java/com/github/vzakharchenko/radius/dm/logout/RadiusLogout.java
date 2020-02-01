@@ -63,7 +63,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
             if (!KeycloakSessionUtils.isActiveSession(session,
                     dmm.getKeycloakSessionId(), dmm.getRealmId())) {
                 requestCoA(session, dmm, new RadiusEndpoint(
-                                new InetSocketAddress(dmm.getAddress(),
+                                new InetSocketAddress(dmm.getNasIp(),
                                         RadiusConfigHelper.getCoASettings().getCoaPort()),
                                 dmm.getSecret()),
                         ex -> disconnectMessageManager.increaseEndAttempts(dmm, ex.getMessage()));
@@ -144,9 +144,9 @@ public class RadiusLogout implements IRadiusCOAProvider,
     }
 
 
-    protected RadiusEndpoint getRadiusEndpoint(IRadiusUserInfo radiusUserInfo) {
-        return new RadiusEndpoint(new InetSocketAddress(radiusUserInfo
-                .getAddress().getAddress().getHostAddress(), RadiusConfigHelper
+    protected RadiusEndpoint getRadiusEndpoint(DisconnectMessageModel dm,
+                                               IRadiusUserInfo radiusUserInfo) {
+        return new RadiusEndpoint(new InetSocketAddress(dm.getNasIp(), RadiusConfigHelper
                 .getCoASettings().getCoaPort()),
                 radiusUserInfo.getRadiusSecret());
     }
@@ -202,7 +202,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
             RadiusPacket radiusPacket = new RadiusPacket(dictionary,
                     DISCONNECT_REQUEST, nextPacketId());
             prepareDisconnectMessagePacket(radiusPacket, dmm);
-            LOGGER.info("Send CoA request to "+radiusEndpoint.getAddress());
+            LOGGER.info("Send CoA request to " + radiusEndpoint.getAddress());
             RadiusPacket answer = radiusClient.communicate(radiusPacket,
                     radiusEndpoint).syncUninterruptibly().getNow();
             answerHandler(answer, session, dmm);
@@ -233,7 +233,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
                 getDisconnectMessage(request.getUserName(),
                         getAttr("Acct-Session-Id", request));
         if (dm != null && !isDeviceRequest(disconnectMessageManager, request, dm)) {
-            requestCoA(session, dm, getRadiusEndpoint(radiusUserInfo), null);
+            requestCoA(session, dm, getRadiusEndpoint(dm, radiusUserInfo), null);
         }
     }
 }

@@ -10,11 +10,8 @@ import java.util.concurrent.Executors;
 public abstract class AbstractThreadRequestHandler
         extends RequestHandler {
 
-
-
     private static final ExecutorService EXECUTOR_SERVICE = Executors
             .newCachedThreadPool();
-
 
     @Override
     protected final void channelRead0(ChannelHandlerContext ctx, RequestCtx msg) {
