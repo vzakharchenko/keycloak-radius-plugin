@@ -142,9 +142,10 @@ public final class MSCHAPHelper {
             for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
                 passwd[i] = 0;
             }
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
             passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
-                    SecureRandom.getInstanceStrong().generateSeed(1)[0] & 0x07));
-            passwd[1] = SecureRandom.getInstanceStrong().generateSeed(1)[0];
+                    secureRandom.generateSeed(1)[0] & 0x07));
+            passwd[1] = secureRandom.generateSeed(1)[0];
             passwd[2] = (byte) inlen; /* length of the password string */
             return passwd;
         } catch (NoSuchAlgorithmException e) {
