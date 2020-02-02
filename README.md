@@ -8,7 +8,7 @@ Run radius server inside keycloak.
 features:
 - radius server inside keycloak
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential
-- [radius onetime password](Examples/OneTimePasswordJSExample/ONETIMEPASSWORD.md)
+- [radius onetime password](Examples/OneTimePasswordJSExample/README.md)
 - can work as [radius proxy](#radius-proxy)
 - support [radsec](#mikrotik-rad-sec-example) (Radius over TLS)
 - Map Keycloak [Role](#assign-radius-attributes-to-role) [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
