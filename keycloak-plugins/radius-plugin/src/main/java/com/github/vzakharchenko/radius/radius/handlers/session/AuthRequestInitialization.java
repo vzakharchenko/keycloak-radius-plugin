@@ -2,7 +2,7 @@ package com.github.vzakharchenko.radius.radius.handlers.session;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
-import com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper;
+import com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.handlers.clientconnection.RadiusClientConnection;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
@@ -17,7 +17,6 @@ import org.tinyradius.server.SecretProvider;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
@@ -40,10 +39,10 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
             List<UserSessionModel> userSessions = keycloakSession.sessions()
                     .getUserSessions(realmModel, userModel);
             for (UserSessionModel userSession : userSessions) {
-                String sessionNote = userSession
-                        .getNote(RadiusPasswordMapper.RADIUS_SESSION_PASSWORD);
-                if (sessionNote != null) {
-                    passwords.addAll(Arrays.asList(sessionNote.split(",")));
+                String sessionPassword = RadiusSessionPasswordManager
+                        .getInstance().getCurrentPassword(userSession);
+                if (sessionPassword != null) {
+                    passwords.add(sessionPassword);
                 }
             }
         }

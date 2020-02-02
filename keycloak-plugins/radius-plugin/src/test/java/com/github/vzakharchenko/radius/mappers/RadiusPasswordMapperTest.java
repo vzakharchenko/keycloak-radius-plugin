@@ -9,6 +9,7 @@ import org.keycloak.representations.IDToken;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
 import static org.keycloak.protocol.oidc.mappers.AbstractOIDCProtocolMapper.TOKEN_MAPPER_CATEGORY;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
@@ -49,7 +50,7 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
     @Test
     public void testSetClaimEmpty() {
 
-        when(userSessionModel.getNote(RadiusPasswordMapper.RADIUS_SESSION_PASSWORD))
+        when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD))
                 .thenReturn(null);
         IDToken token = create();
         passwordMapper.setClaim(token, null, userSessionModel, session, null);

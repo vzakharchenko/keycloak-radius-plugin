@@ -12,9 +12,23 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.*;
 
 public final class RadiusHelper {
+
+    public static final int MAX_PASSWORD_SIZE = 10;
+    private static final char[] PSEUDO = {
+            '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e',
+            'f', 'g', 'h', 'i', 'j', 'k', 'm',
+            'n', 'o', 'p', 'q', 'r', 'u', 's',
+            't', 'v', 'w', 'x', 'y', 'z', 'A',
+            'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+            'X', 'Y', 'Z'};
 
     private static List<String> realmAttributes = new ArrayList<>();
 
@@ -24,7 +38,23 @@ public final class RadiusHelper {
     }
 
     public static String generatePassword() {
-        return UUID.randomUUID().toString();
+
+        StringBuilder out = new StringBuilder(MAX_PASSWORD_SIZE);
+        byte[] in = getSecureRandom().generateSeed(MAX_PASSWORD_SIZE);
+        for (int i = 0; i < MAX_PASSWORD_SIZE; i++) {
+            out.append(PSEUDO[((char) in[i]) % PSEUDO.length]);
+        }
+        return out.toString();
+
+    }
+
+
+    public static SecureRandom getSecureRandom() {
+        try {
+            return SecureRandom.getInstance("NativePRNGNonBlocking");
+        } catch (NoSuchAlgorithmException e) {
+            return new SecureRandom();
+        }
     }
 
     public static String getCurrentPassword(

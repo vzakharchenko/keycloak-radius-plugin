@@ -84,5 +84,5 @@ Thumbs.db
 *.idea
 .env
 keycloak.properties
-keycloak.json
+#keycloak.json
 

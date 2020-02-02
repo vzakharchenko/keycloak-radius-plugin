@@ -3,7 +3,7 @@ package com.github.vzakharchenko.radius.radius.handlers.session;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.annotations.Test;
 
-import static com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper.RADIUS_SESSION_PASSWORD;
+import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;

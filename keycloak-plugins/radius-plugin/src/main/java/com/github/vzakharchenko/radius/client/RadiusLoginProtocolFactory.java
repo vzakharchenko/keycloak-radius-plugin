@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper.OIDC_RADIUS_PASSWORD_ID;
+import static org.keycloak.protocol.oidc.mappers.OIDCAttributeMapperHelper.*;
 
 public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
 
@@ -54,7 +55,10 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
         mapper.setName(ONE_TIME_RADIUS_PASSWORD);
         mapper.setProtocolMapper(OIDC_RADIUS_PASSWORD_ID);
         mapper.setProtocol(OIDCLoginProtocol.LOGIN_PROTOCOL);
-        Map<String, String> config = new HashMap<String, String>();
+        Map<String, String> config = new HashMap<>();
+        config.put(INCLUDE_IN_ACCESS_TOKEN, "true");
+        config.put(INCLUDE_IN_ID_TOKEN, "true");
+        config.put(INCLUDE_IN_USERINFO, "true");
         mapper.setConfig(config);
         return mapper;
     }
