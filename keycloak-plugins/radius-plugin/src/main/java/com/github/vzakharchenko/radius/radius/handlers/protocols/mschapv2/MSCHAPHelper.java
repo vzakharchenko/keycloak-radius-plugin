@@ -134,23 +134,27 @@ public final class MSCHAPHelper {
         return inlen;
     }
 
-    private static byte[] getPasswd(byte[] input, int inlen) {
+    private static SecureRandom getSecureRandom() {
         try {
-            int saltOffset = 0;
-            byte[] passwd = new byte[MAX_STRING_LENGTH + AUTH_VECTOR_LENGTH];
-            System.arraycopy(input, 0, passwd, 3, inlen);
-            for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
-                passwd[i] = 0;
-            }
-            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-            passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
-                    secureRandom.generateSeed(1)[0] & 0x07));
-            passwd[1] = secureRandom.generateSeed(1)[0];
-            passwd[2] = (byte) inlen; /* length of the password string */
-            return passwd;
+            return SecureRandom.getInstance("NativePRNGNonBlocking");
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
+            return new SecureRandom();
         }
+    }
+
+    private static byte[] getPasswd(byte[] input, int inlen) {
+        int saltOffset = 0;
+        byte[] passwd = new byte[MAX_STRING_LENGTH + AUTH_VECTOR_LENGTH];
+        System.arraycopy(input, 0, passwd, 3, inlen);
+        for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
+            passwd[i] = 0;
+        }
+        SecureRandom secureRandom = getSecureRandom();
+        passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
+                secureRandom.generateSeed(1)[0] & 0x07));
+        passwd[1] = secureRandom.generateSeed(1)[0];
+        passwd[2] = (byte) inlen; /* length of the password string */
+        return passwd;
     }
 
     private static MessageDigest getOriginalMessageDigest(byte[] secret) {
