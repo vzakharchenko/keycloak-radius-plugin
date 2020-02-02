@@ -1,0 +1,10 @@
+{
+  "realm": "oneTimePassword",
+  "auth-server-url": "http://localhost:8090/auth",
+  "ssl-required": "external",
+  "resource": "oneTimePasswordClient",
+  "credentials": {
+    "secret": "secret"
+  },
+  "confidential-port": 0
+}
