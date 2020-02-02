@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
+import static com.github.vzakharchenko.radius.RadiusHelper.getSecureRandom;
 import static com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.ProtocolMagicUtils.*;
 
 public final class MSCHAPHelper {
@@ -132,14 +133,6 @@ public final class MSCHAPHelper {
             inlen = room;
         }
         return inlen;
-    }
-
-    private static SecureRandom getSecureRandom() {
-        try {
-            return SecureRandom.getInstance("NativePRNGNonBlocking");
-        } catch (NoSuchAlgorithmException e) {
-            return new SecureRandom();
-        }
     }
 
     private static byte[] getPasswd(byte[] input, int inlen) {

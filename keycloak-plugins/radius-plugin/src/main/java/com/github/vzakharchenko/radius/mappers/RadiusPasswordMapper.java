@@ -17,7 +17,6 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
         OIDCIDTokenMapper,
         UserInfoTokenMapper {
     public static final String OIDC_RADIUS_PASSWORD_ID = "oidc-radius-password";
-    public static final String RADIUS_SESSION_PASSWORD = "RADIUS_SESSION_PASSWORD";
     public static final String PREFERRED_USERNAME = "preferred_username";
     public static final String PASSWORD_FIELD = "s";
     private static final List<ProviderConfigProperty> PROVIDER_CONFIG_PROPERTIES =
@@ -63,7 +62,7 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
                             ClientSessionContext clientSessionCtx) {
         //CHECKSTYLE:ON
         if (RadiusHelper.isUseRadius()) {
-            token.getOtherClaims().put("s", getPassword(userSession));
+            token.getOtherClaims().put("s", getPassword(userSession, token));
             token.getOtherClaims().put("n", userNameFieldMapper());
             token.getOtherClaims().put("np", passwordFieldMapper());
         }
@@ -77,13 +76,11 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
         return PASSWORD_FIELD;
     }
 
-    protected String getPassword(UserSessionModel userSession) {
-        RadiusSessionPasswordManager radiusSessionPasswordManager =
+    protected String getPassword(UserSessionModel userSession, IDToken token) {
+        IRadiusSessionPasswordManager radiusSessionPasswordManager =
                 RadiusSessionPasswordManager.getInstance();
-        String sessionNote = radiusSessionPasswordManager
-                .password(userSession);
-        userSession.setNote(RADIUS_SESSION_PASSWORD, sessionNote);
-        return sessionNote;
+        return radiusSessionPasswordManager
+                .password(userSession, token);
     }
 
 }

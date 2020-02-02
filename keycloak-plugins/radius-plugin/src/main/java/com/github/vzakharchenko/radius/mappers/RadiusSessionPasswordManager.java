@@ -1,13 +1,18 @@
 package com.github.vzakharchenko.radius.mappers;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
+import org.keycloak.common.util.Time;
 import org.keycloak.models.UserSessionModel;
+import org.keycloak.representations.IDToken;
 
 import java.util.Objects;
 
-import static com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper.RADIUS_SESSION_PASSWORD;
 
 public final class RadiusSessionPasswordManager implements IRadiusSessionPasswordManager {
+
+
+    public static final String RADIUS_SESSION_PASSWORD = "RADIUS_SESSION_PASSWORD";
+    public static final String RADIUS_SESSION_EXPIRATION = "RADIUS_SESSION_EXPERATION";
 
     private static final RadiusSessionPasswordManager
             INSTANCE = new RadiusSessionPasswordManager();
@@ -15,29 +20,44 @@ public final class RadiusSessionPasswordManager implements IRadiusSessionPasswor
     private RadiusSessionPasswordManager() {
     }
 
-    public static RadiusSessionPasswordManager getInstance() {
+    public static IRadiusSessionPasswordManager getInstance() {
         return INSTANCE;
     }
 
-    private String getSessionNote(UserSessionModel sessionModel) {
-        return sessionModel.getNote(RADIUS_SESSION_PASSWORD);
+    @Override
+    public String getCurrentPassword(UserSessionModel sessionModel) {
+        String password = sessionModel.getNote(RADIUS_SESSION_PASSWORD);
+        String expiration = sessionModel.getNote(RADIUS_SESSION_EXPIRATION);
+        if (expiration != null &&
+                Long.parseLong(expiration) > Time.currentTime()) {
+            return password;
+        } else {
+            clear(sessionModel);
+            return null;
+        }
     }
 
     @Override
-    public String password(UserSessionModel sessionModel) {
-        String sessionNote = getSessionNote(sessionModel);
+    public String password(UserSessionModel sessionModel, IDToken token) {
+        String sessionNote = getCurrentPassword(sessionModel);
         if (sessionNote == null) {
             sessionNote = RadiusHelper.generatePassword();
             sessionModel.setNote(RADIUS_SESSION_PASSWORD, sessionNote);
+            sessionModel.setNote(RADIUS_SESSION_EXPIRATION, String.valueOf(token.getExpiration()));
         }
         return sessionNote;
     }
 
+    private void clear(UserSessionModel sessionModel) {
+        sessionModel.removeNote(RADIUS_SESSION_PASSWORD);
+        sessionModel.removeNote(RADIUS_SESSION_EXPIRATION);
+    }
+
     @Override
     public void clearIfExists(UserSessionModel sessionModel, String password) {
-        String sessionNote = getSessionNote(sessionModel);
-        if (sessionNote != null && Objects.equals(sessionNote, password)) {
-            sessionModel.removeNote(RADIUS_SESSION_PASSWORD);
+        String sessionNote = getCurrentPassword(sessionModel);
+        if (Objects.equals(sessionNote, password)) {
+            clear(sessionModel);
         }
     }
 }

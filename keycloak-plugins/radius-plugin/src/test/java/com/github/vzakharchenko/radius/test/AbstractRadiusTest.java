@@ -6,7 +6,6 @@ import com.github.vzakharchenko.radius.coa.IRadiusCoAClient;
 import com.github.vzakharchenko.radius.coa.RadiusCoAClientHelper;
 import com.github.vzakharchenko.radius.configuration.IRadiusConfiguration;
 import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
-import com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
@@ -47,6 +46,8 @@ import java.net.InetSocketAddress;
 import java.security.Security;
 import java.util.*;
 
+import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_EXPIRATION;
+import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;
@@ -298,8 +299,10 @@ public abstract class AbstractRadiusTest {
                 .createClientSession(realmModel, clientModel, userSessionModel))
                 .thenReturn(authenticatedClientSessionModel);
         when(userSessionProvider.getUserSessions(realmModel, clientModel)).thenReturn(Collections.singletonList(userSessionModel));
-        when(userSessionModel.getNote(RadiusPasswordMapper.RADIUS_SESSION_PASSWORD))
+        when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION)).thenReturn(String.valueOf(Integer.MAX_VALUE));
+        when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD))
                 .thenReturn("123");
+
         when(userSessionModel.getRealm()).thenReturn(realmModel);
         when(userSessionModel.getUser()).thenReturn(userModel);
         HashMap<String, AuthenticatedClientSessionModel> sessionModelHashMap = new HashMap<>();

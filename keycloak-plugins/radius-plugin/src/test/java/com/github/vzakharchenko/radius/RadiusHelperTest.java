@@ -2,11 +2,11 @@ package com.github.vzakharchenko.radius;
 
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
+import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 
 import java.util.*;
 
@@ -66,7 +66,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testGeneratePassword() {
-        assertNotNull(RadiusHelper.generatePassword());
+        String p1 = RadiusHelper.generatePassword();
+        assertNotNull(p1);
+        String p2 = RadiusHelper.generatePassword();
+        assertNotEquals(p1, p2);
     }
 
     @Test
@@ -107,6 +110,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
                 Arrays.asList(radiusServiceProvider1, radiusServiceProvider2)));
         assertEquals(RadiusHelper.getServiceMap(session).size(), 1);
         assertEquals(RadiusHelper.getServiceMap(session).get("n1").size(), 2);
+    }
+
+    @Test
+    public void test() {
     }
 
     @Override
