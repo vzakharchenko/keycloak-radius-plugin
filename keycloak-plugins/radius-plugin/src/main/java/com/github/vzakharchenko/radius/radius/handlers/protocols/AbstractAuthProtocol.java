@@ -60,6 +60,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
                 }
             }
             answer(answer, radiusUserInfoGetter);
+            KeycloakSessionUtils.clearOneTimePassword(session);
         }
     }
 

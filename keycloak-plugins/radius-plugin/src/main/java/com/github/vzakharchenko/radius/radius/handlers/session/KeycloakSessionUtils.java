@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
+import com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
@@ -13,6 +14,7 @@ import org.keycloak.models.UserSessionModel;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.List;
 
 
 public final class KeycloakSessionUtils {
@@ -69,5 +71,16 @@ public final class KeycloakSessionUtils {
         session.getContext().setRealm(radiusUserInfo.getRealmModel());
         session.getContext().setClient(radiusUserInfo.getClientModel());
 
+    }
+
+    public static void clearOneTimePassword(KeycloakSession session) {
+        IRadiusUserInfo sessionInfo = getRadiusSessionInfo(session);
+        List<UserSessionModel> userSessions = session.sessions()
+                .getUserSessions(sessionInfo.getRealmModel(), sessionInfo.getUserModel());
+
+        for (UserSessionModel userSession : userSessions) {
+            RadiusSessionPasswordManager.getInstance()
+                    .clearIfExists(userSession, sessionInfo.getActivePassword());
+        }
     }
 }
