@@ -10,6 +10,7 @@ features:
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](Examples/OTPPasswordJSExample)
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
+- use Kerberos credential(only if Radius client use PAP authorization)
 - can work as [radius proxy](#radius-proxy)
 - support [radsec](#mikrotik-rad-sec-example) (Radius over TLS)
 - Map Keycloak [Role](#assign-radius-attributes-to-role) [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
