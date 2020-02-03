@@ -27,20 +27,26 @@ public class PAPProtocol extends AbstractAuthProtocol {
     }
 
     @Override
-    public boolean verifyPassword(String password) {
+    public boolean verifyProtocolPassword(String password) {
         String userPassword = accessRequest.getUserPassword();
         return
                 userPassword.equals(password);
     }
 
     @Override
-    public boolean verifyPassword() {
+    public boolean verifyProtocolPassword() {
         UserModel userModel = KeycloakSessionUtils
                 .getRadiusSessionInfo(session).getUserModel();
-        return session
+        if (session
                 .userCredentialManager()
                 .isValid(getRealm(),
                         userModel,
-                        UserCredentialModel.password(accessRequest.getUserPassword()));
+                        UserCredentialModel.password(accessRequest.getUserPassword()))) {
+            markActivePassword(accessRequest.getUserPassword());
+            return true;
+        }
+        return false;
     }
+
+
 }

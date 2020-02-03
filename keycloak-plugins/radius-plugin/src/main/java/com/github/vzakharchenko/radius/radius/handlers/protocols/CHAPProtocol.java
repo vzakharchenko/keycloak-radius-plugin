@@ -81,7 +81,7 @@ public class CHAPProtocol extends AbstractAuthProtocol {
     }
 
     @Override
-    public boolean verifyPassword(String password) {
+    public boolean verifyProtocolPassword(String password) {
         return verifyChapPassword(password);
     }
 }
