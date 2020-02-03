@@ -1,9 +1,10 @@
 package com.github.vzakharchenko.radius.configuration;
 
+import com.github.vzakharchenko.radius.models.RadiusServerSettings;
+import com.github.vzakharchenko.radius.models.file.CoASettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
 import com.github.vzakharchenko.radius.models.file.RadiusConfigModel;
-import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.io.FileUtils;
 import org.keycloak.util.JsonSerialization;
@@ -35,6 +36,10 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusAccessModel.setSharedSecret("ip");
         radiusConfigModel.setRadiusIpAccess(Arrays.asList(radiusAccessModel));
         radiusConfiguration.setRadiusSettings(null);
+        CoASettingsModel coASettingsModel = new CoASettingsModel();
+        coASettingsModel.setPort(1000);
+        coASettingsModel.setUseCoA(true);
+        radiusConfigModel.setCoa(coASettingsModel);
 
         FileUtils.write(config,
                 JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
@@ -93,6 +98,17 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusSettings = radiusConfiguration.getRadiusSettings();
         assertNotNull(radiusSettings);
         assertFalse(radiusSettings.getRadSecSettings().isUseRadSec());
+    }
+
+    @Test
+    public void testCoaConfigurationNull() throws IOException {
+        radiusConfigModel.setCoa(null);
+        FileUtils.write(config,
+                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
+        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        radiusSettings = radiusConfiguration.getRadiusSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.getCoASettings().isUseCoAPackage());
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

@@ -12,6 +12,8 @@ import org.tinyradius.packet.AccessRequest;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
@@ -29,6 +31,7 @@ public class PAPTest extends AbstractRadiusTest {
         request.addAttribute(REALM_RADIUS, REALM_RADIUS_NAME);
         HashMap<String, OtpHolder> hashMap = new HashMap<>();
         hashMap.put("otp", new OtpHolder("otp", new CredentialModel(), Collections.singletonList("123456")));
+        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(), any())).thenReturn(false);
         when(passwordFactory.getOTPs(session)).thenReturn(hashMap);
     }
 
@@ -42,8 +45,23 @@ public class PAPTest extends AbstractRadiusTest {
         assertFalse(papProtocol.verifyPassword(null));
         assertFalse(papProtocol.verifyPassword(""));
         assertFalse(papProtocol.verifyPassword("asdf"));
-        assertFalse(papProtocol.verifyPassword());
 
+
+    }
+
+    @Test
+    public void testPapKerberosFalse() {
+        request.setUserPassword("test");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        assertFalse(papProtocol.verifyPassword());
+    }
+
+    @Test
+    public void testPapKerberosSuccess() {
+        request.setUserPassword("test");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(), any())).thenReturn(true);
+        assertTrue(papProtocol.verifyPassword());
     }
 
     @Test
@@ -53,6 +71,7 @@ public class PAPTest extends AbstractRadiusTest {
         papProtocol.setOtpPasswordGetter(passwordFactory);
         assertTrue(papProtocol.verifyPassword());
     }
+
     @Test
     public void testNoOtpPassword() {
         request.setUserPassword("1234567");
