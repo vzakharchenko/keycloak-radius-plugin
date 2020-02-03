@@ -41,7 +41,10 @@ public class PAPProtocol extends AbstractAuthProtocol {
                 .userCredentialManager()
                 .isValid(getRealm(),
                         userModel,
-                        UserCredentialModel.password(accessRequest.getUserPassword()))) {
+                        UserCredentialModel
+                                .password(accessRequest.getUserPassword()),
+                        UserCredentialModel
+                                .kerberos(accessRequest.getUserPassword()))) {
             markActivePassword(accessRequest.getUserPassword());
             return true;
         }
