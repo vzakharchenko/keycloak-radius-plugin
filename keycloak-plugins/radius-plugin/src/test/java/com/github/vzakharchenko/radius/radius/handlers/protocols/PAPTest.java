@@ -3,6 +3,7 @@ package com.github.vzakharchenko.radius.radius.handlers.protocols;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -31,7 +32,7 @@ public class PAPTest extends AbstractRadiusTest {
         request.addAttribute(REALM_RADIUS, REALM_RADIUS_NAME);
         HashMap<String, OtpHolder> hashMap = new HashMap<>();
         hashMap.put("otp", new OtpHolder("otp", new CredentialModel(), Collections.singletonList("123456")));
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(), any())).thenReturn(false);
+        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(CredentialInput.class))).thenReturn(false);
         when(passwordFactory.getOTPs(session)).thenReturn(hashMap);
     }
 
@@ -57,10 +58,20 @@ public class PAPTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testPapPasswordSuccess() {
+        request.setUserPassword("test");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
+                any(CredentialInput.class))).thenReturn(true);
+        assertTrue(papProtocol.verifyPassword());
+    }
+
+    @Test
     public void testPapKerberosSuccess() {
         request.setUserPassword("test");
         PAPProtocol papProtocol = new PAPProtocol(request, session);
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(), any())).thenReturn(true);
+        when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
+                any(CredentialInput.class))).thenReturn(false, true);
         assertTrue(papProtocol.verifyPassword());
     }
 
