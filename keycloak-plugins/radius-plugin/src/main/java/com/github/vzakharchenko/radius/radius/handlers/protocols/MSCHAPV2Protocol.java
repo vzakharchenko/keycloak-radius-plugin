@@ -93,7 +93,7 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
     }
 
     @Override
-    public boolean verifyPassword(String password) {
+    public boolean verifyProtocolPassword(String password) {
         return verifyMSChapV2Password(password);
     }
 

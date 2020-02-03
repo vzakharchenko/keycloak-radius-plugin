@@ -1,9 +1,15 @@
 # Radius OneTime Password Example (OIDC)
+ - authorize to radius using OIDC connection.
+ - Password sync with access token(if token expired then pasword also expired)
+ - during refresh token, password will be updated.
+ - password can be used only once
 
 Build and Start
 1. build and run keycloak
 <pre>
-cd [keycloak](../../keycloak)
+cd [keycloak-plugins](../../keycloak-plugins)keycloak
+mvn clean install -DskipTests -Dfast-build
+cd [../keycloak](../../keycloak)
 mvn clean install
 cd target/
 unzip keycloak-radius.zip -d keycloak-radius

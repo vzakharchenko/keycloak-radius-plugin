@@ -3,3 +3,4 @@ ignore duplicates (radsec)
 use attribute "NAS-Ip-Address" instead of remote Ip (disconnect plugin)
 fixed SecureRandom issue
 added support onetime password with expiration
+added support TOTP/HOTP via Google Authenticator or FreeOTP
