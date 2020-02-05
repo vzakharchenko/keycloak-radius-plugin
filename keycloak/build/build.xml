@@ -6,7 +6,7 @@
     <!-- directory settings -->
     <property name="BUILD_DIR" value="target"/>
     <property name="CACHE_DIR" value="cache"/>
-    <property name="KEYCLOAK_VERSION" value="8.0.1"/>
+    <property name="KEYCLOAK_VERSION" value="8.0.2"/>
     <property name="PRODUCTION" value="false"/>
     <property name="KEYCLOAK_URL"
               value="https://downloads.jboss.org/keycloak/${KEYCLOAK_VERSION}/keycloak-${KEYCLOAK_VERSION}.zip"/>
