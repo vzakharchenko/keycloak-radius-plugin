@@ -40,7 +40,8 @@ public final class RadiusHelper {
     public static String generatePassword() {
 
         StringBuilder out = new StringBuilder(MAX_PASSWORD_SIZE);
-        byte[] in = getSecureRandom().generateSeed(MAX_PASSWORD_SIZE);
+        byte[] in = new byte[MAX_PASSWORD_SIZE];
+        getSecureRandom().nextBytes(in);
         for (int i = 0; i < MAX_PASSWORD_SIZE; i++) {
             out.append(PSEUDO[((char) in[i]) % PSEUDO.length]);
         }
@@ -55,6 +56,13 @@ public final class RadiusHelper {
         } catch (NoSuchAlgorithmException e) {
             return new SecureRandom();
         }
+    }
+
+    public static byte getRandomByte() {
+        SecureRandom secureRandom = getSecureRandom();
+        byte[] bytes = new byte[1];
+        secureRandom.nextBytes(bytes);
+        return bytes[0];
     }
 
     public static String getCurrentPassword(

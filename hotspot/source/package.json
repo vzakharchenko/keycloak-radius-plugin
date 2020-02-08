@@ -37,7 +37,7 @@
   "dependencies": {
     "axios": "*",
     "jsonwebtoken": "*",
-    "keycloak-js": "^8.0.2"
+    "keycloak-js": "*"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
