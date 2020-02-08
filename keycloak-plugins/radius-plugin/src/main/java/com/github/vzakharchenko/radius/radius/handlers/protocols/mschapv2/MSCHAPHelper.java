@@ -9,11 +9,10 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
-import static com.github.vzakharchenko.radius.RadiusHelper.getSecureRandom;
+import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
 import static com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.ProtocolMagicUtils.*;
 
 public final class MSCHAPHelper {
@@ -142,10 +141,10 @@ public final class MSCHAPHelper {
         for (int i = 3 + inlen; i < passwd.length - 3 - inlen; i++) {
             passwd[i] = 0;
         }
-        SecureRandom secureRandom = getSecureRandom();
+
         passwd[0] = (byte) (0x80 | (((saltOffset++) & 0x0f) << 3) | (
-                secureRandom.generateSeed(1)[0] & 0x07));
-        passwd[1] = secureRandom.generateSeed(1)[0];
+                getRandomByte() & 0x07));
+        passwd[1] = getRandomByte();
         passwd[2] = (byte) inlen; /* length of the password string */
         return passwd;
     }

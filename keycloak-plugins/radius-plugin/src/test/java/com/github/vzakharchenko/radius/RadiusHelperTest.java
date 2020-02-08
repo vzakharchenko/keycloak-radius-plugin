@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
+import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
@@ -25,6 +26,14 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         reset(radiusServiceProvider1, radiusServiceProvider2);
         when(radiusServiceProvider1.attributeName()).thenReturn("n1");
         when(radiusServiceProvider2.attributeName()).thenReturn("n1");
+    }
+
+    @Test
+    public void testGetRandomByte(){
+        byte randomByte1 = getRandomByte();
+        assertNotEquals(randomByte1,0);
+        assertNotEquals(randomByte1,getRandomByte());
+        assertNotEquals(getRandomByte(),getRandomByte());
     }
 
     @Test
