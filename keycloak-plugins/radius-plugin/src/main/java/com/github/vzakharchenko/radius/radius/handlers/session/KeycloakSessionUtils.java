@@ -6,10 +6,7 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.common.util.Resteasy;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakTransaction;
-import org.keycloak.models.RealmModel;
-import org.keycloak.models.UserSessionModel;
+import org.keycloak.models.*;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -35,6 +32,15 @@ public final class KeycloakSessionUtils {
     public static IRadiusUserInfo getRadiusSessionInfo(KeycloakSession session) {
         IRadiusUserInfoGetter radiusUserInfoGetter = getRadiusUserInfo(session);
         return radiusUserInfoGetter == null ? null : radiusUserInfoGetter.getRadiusUserInfo();
+    }
+
+    public static UserModel getUser(KeycloakSession session) {
+        UserModel userModel = null;
+        IRadiusUserInfo radiusSessionInfo = getRadiusSessionInfo(session);
+        if (radiusSessionInfo != null) {
+            userModel = radiusSessionInfo.getUserModel();
+        }
+        return userModel;
     }
 
     public static void addAttribute(KeycloakSession session, String name, Object value) {
