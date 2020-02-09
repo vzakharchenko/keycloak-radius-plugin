@@ -22,6 +22,15 @@ public class KeycloakSessionUtilsTest extends AbstractRadiusTest {
         assertNotNull(KeycloakSessionUtils.getRadiusUserInfo(session));
         assertNotNull(KeycloakSessionUtils.getRadiusSessionInfo(session));
         assertTrue(KeycloakSessionUtils.isActiveSession(session, "test", REALM_RADIUS_NAME));
+        when(session.getAttribute(anyString(),any())).thenReturn(null);
+        assertNull(KeycloakSessionUtils.getRadiusSessionInfo(session));
+    }
+
+    @Test
+    public void getUser() {
+        assertEquals(KeycloakSessionUtils.getUser(session),userModel);
+        when(session.getAttribute(anyString(),any())).thenReturn(null);
+        assertNull(KeycloakSessionUtils.getUser(session));
     }
 
     @Test

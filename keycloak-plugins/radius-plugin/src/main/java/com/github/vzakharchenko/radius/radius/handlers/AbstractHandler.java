@@ -10,6 +10,8 @@ import org.keycloak.provider.ProviderFactory;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.server.RequestCtx;
 
+import static com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils.getUser;
+
 public abstract class AbstractHandler<T extends Provider>
         extends AbstractThreadRequestHandler
         implements ProviderFactory<T> {
@@ -33,7 +35,7 @@ public abstract class AbstractHandler<T extends Provider>
             RequestCtx msg,
             RadiusPacket answer
     ) {
-        if (session != null) {
+        if (session != null && getUser(session) != null) {
             callProxy(session, msg, answer);
         }
         msg.getRequest().getAttributes(33).forEach(answer::addAttribute);
