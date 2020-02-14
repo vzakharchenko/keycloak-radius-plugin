@@ -8,6 +8,7 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.attribute.AttributeType;
+import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
@@ -17,6 +18,9 @@ import java.util.*;
 public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements KeycloakAttributes {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractKeycloakAttributes.class);
+    public static final String REJECT_CONDITIONS = "REJECT_";
+    public static final String CONDITION = "COND_";
+    public static final String ACCEPT_CONDITION = "ACCEPT_";
     protected final KeycloakSession session;
     protected final IRadiusUserInfoGetter radiusUserInfoGetter;
     protected final AccessRequest accessRequest;
@@ -31,8 +35,8 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     }
 
 
-    private boolean clearAttributes(Set<String> serviceStrings,
-                                    Collection<IRadiusServiceProvider> providers) {
+    private boolean clearServiceAttributes(Set<String> serviceStrings,
+                                           Collection<IRadiusServiceProvider> providers) {
         if (serviceStrings != null) {
             for (String serviceString : serviceStrings) {
                 String[] services = serviceString.split(",");
@@ -52,6 +56,63 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     }
 
     protected Map<String, Set<String>> filter(Map<String, Set<String>> attributes) {
+        if (conditionalAttributes(attributes)) {
+            return filterServiceAttributes(attributes);
+        }
+        return new HashMap<>();
+    }
+
+    private boolean isValidConditional0(String radiusAttributeName, Collection<String> values) {
+        RadiusAttribute attribute = accessRequest.getAttribute(radiusAttributeName);
+        if (attribute == null) {
+            return false;
+        }
+        return values.stream().anyMatch(s -> Arrays
+                .stream(s.split(",")).anyMatch(s1 ->
+                        Objects.equals(s1, attribute.getValueString())));
+    }
+
+    private boolean isValidConditional(String radiusAttributeName, Collection<String> values) {
+        if (testAttribute(radiusAttributeName, accessRequest.getDictionary())) {
+            return isValidConditional0(radiusAttributeName, values);
+        }
+        return true;
+    }
+
+    protected boolean conditionalAttributes(
+            String prefix,
+            String attributeName,
+            Set<String> values, boolean defaultResult) {
+        if (attributeName.toUpperCase(Locale.US).startsWith(prefix)) {
+            String radiusAttributeName = attributeName
+                    .replaceFirst("(?i)" + prefix, "");
+            return isValidConditional(radiusAttributeName, values);
+        }
+        return defaultResult;
+    }
+
+    protected boolean conditionalAttributes(Map<String, Set<String>> attributes) {
+        for (Map.Entry<String, Set<String>> entry : attributes.entrySet()) {
+            String attributeName = entry.getKey();
+            Set<String> values = entry.getValue();
+            boolean r = !conditionalAttributes(REJECT_CONDITIONS,
+                    attributeName, values, false) &&
+                    conditionalAttributes(ACCEPT_CONDITION,
+                            attributeName, values, true);
+            if (!r) {
+                radiusUserInfoGetter.getBuilder().forceReject();
+                return false;
+            }
+            if (!conditionalAttributes(CONDITION, attributeName, values, true)) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    protected Map<String, Set<String>> filterServiceAttributes(Map<String,
+            Set<String>> attributes) {
         Map<String, List<IRadiusServiceProvider>> serviceMap = RadiusHelper
                 .getServiceMap(session);
         for (Map.Entry<String, List<IRadiusServiceProvider>> entry : serviceMap.entrySet()) {
@@ -59,7 +120,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
             List<IRadiusServiceProvider> providers = entry.getValue();
             Set<String> serviceStrings = attributes.get(attributeName);
 
-            if (clearAttributes(serviceStrings, providers)) {
+            if (clearServiceAttributes(serviceStrings, providers)) {
                 return new HashMap<>();
             }
         }

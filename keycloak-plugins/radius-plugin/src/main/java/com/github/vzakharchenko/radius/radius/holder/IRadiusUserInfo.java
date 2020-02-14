@@ -27,4 +27,6 @@ public interface IRadiusUserInfo {
     ClientModel getClientModel();
 
     InetSocketAddress getAddress();
+
+    boolean isForceReject();
 }

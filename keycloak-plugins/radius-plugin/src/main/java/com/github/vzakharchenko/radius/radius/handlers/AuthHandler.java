@@ -37,10 +37,8 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
 
     private IAuthRequestInitialization authRequestInitialization;
 
-    private boolean verifyPassword(AuthProtocol authProtocol,
-                                   KeycloakSession session) {
-        IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
-                .getRadiusUserInfo(session);
+    private boolean verifyPassword0(IRadiusUserInfoGetter radiusUserInfoGetter,
+                                    AuthProtocol authProtocol) {
         if (radiusUserInfoGetter != null) {
             List<String> passwords = radiusUserInfoGetter.getRadiusUserInfo().getPasswords();
             for (String password : passwords) {
@@ -51,6 +49,14 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
             }
         }
         return authProtocol.verifyPassword();
+    }
+
+    private boolean verifyPassword(AuthProtocol authProtocol,
+                                   KeycloakSession session) {
+        IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
+                .getRadiusUserInfo(session);
+        boolean b = verifyPassword0(radiusUserInfoGetter, authProtocol);
+        return b && !radiusUserInfoGetter.getRadiusUserInfo().isForceReject();
     }
 
     private RadiusPacket handleAnswer(AccessRequest request,

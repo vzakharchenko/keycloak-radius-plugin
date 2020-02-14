@@ -83,6 +83,12 @@ public final class RadiusUserInfoBuilder implements IRadiusUserInfoBuilder,
     }
 
     @Override
+    public IRadiusUserInfoBuilder forceReject() {
+        radiusUserInfo.setForceReject(true);
+        return this;
+    }
+
+    @Override
     public IRadiusUserInfo getRadiusUserInfo() {
         return radiusUserInfo;
     }

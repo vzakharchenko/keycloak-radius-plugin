@@ -19,6 +19,7 @@ import java.util.List;
     private ClientModel clientModel;
     private ClientConnection clientConnection;
     private InetSocketAddress address;
+    private boolean forceReject;
 
     @Override
     public List<String> getPasswords() {
@@ -99,5 +100,14 @@ import java.util.List;
 
     public void setAddress(InetSocketAddress address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean isForceReject() {
+        return forceReject;
+    }
+
+    public void setForceReject(boolean forceReject) {
+        this.forceReject = forceReject;
     }
 }

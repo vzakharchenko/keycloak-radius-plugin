@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupModel> {
+public class  GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupModel> {
 
     public GroupKeycloakAttributes(KeycloakSession session,
                                    AccessRequest accessRequest) {
