@@ -14,7 +14,8 @@ features:
 - can work as [radius proxy](#radius-proxy)
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
 - Map Keycloak [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
-- start/stop Keycloak Session ![sessionManagment](docs/sessionManagment.png)
+- conditional attributes for Role/Group/User
+- start/stop Keycloak Session ![sessionManagment.png](docs/sessionManagment.png)
 - BackChannel logout(Disconnect-message request)
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
 - [Social Hotspot Login](hotspot)
@@ -94,12 +95,127 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 > **_NOTE:_**  Composite roles supported
 
 ![RoleAttributes](docs/RoleAttributes.png)
+#### Role Conditional Attributes
+if conditional Attribute is present and has valid value then all other attributes will be applied.  
+(Example: apply role attributes only if NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>COND_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+<pre>COND_NAS-IP-Address = "192.168.88.1, 192.168.88.2"</pre>
+![ConditionalRole](docs/ConditionalRole.png)
+The role will only be applied if the NAS server address is 192.168.88.1 or 192.168.88.2.
+#### Role REJECT Attributes
+if reject Attribute is present and has valid value then access request will be rejected.  
+(Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>REJECT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+<pre>REJECT_NAS-IP-Address = "192.168.88.2"</pre>
+![reject_conditional](docs/reject_conditional.png)
+The role will only be applied if the NAS server address is not 192.168.88.2, otherwise request will be rejected
+
+#### Role ACCEPT Attributes
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+(Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>ACCEPT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+<pre>ACCEPT_NAS-IP-Address = "192.168.88.1"</pre>
+![acceptConditional](docs/acceptConditional.png)
+The role will only be applied if the NAS server address is not 192.168.88.2, otherwise request will be rejected
+
 ### Assign Radius Attributes to Group
 > **_NOTE:_**  SubGroups supported
 ![groupAttributes](docs/groupAttributes.png)
+#### Group Conditional Attributes
+if conditional Attribute is present and has valid value then all other attributes will be applied.  
+(Example: apply group attributes only if NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>COND_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role Conditional Attributes](#role-conditional-attributes)/README.md:1
+#### Group REJECT Attributes
+if reject Attribute is present and has valid value then access request will be rejected.  
+(Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>REJECT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role REJECT Attributes](#role-reject-attributes)
+#### Group ACCEPT Attributes
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+(Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>ACCEPT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role ACCEPT Attributes](#role-accept-attributes)
 ### Assign Radius Attributes to User
 ![userAttributes](docs/userAttributes.png)
+#### User Conditional Attributes
+if conditional Attribute is present and has valid value then all other attributes will be applied.  
+(Example: apply user attributes only if NAS-IP-Address= 192.168.88.1)
 
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>COND_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role Conditional Attributes](#role-conditional-attributes)/README.md:1
+#### User REJECT Attributes
+if reject Attribute is present and has valid value then access request will be rejected.  
+(Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>REJECT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role REJECT Attributes](#role-reject-attributes)
+#### User ACCEPT Attributes
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+(Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>ACCEPT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role ACCEPT Attributes](#role-accept-attributes)
 ###  Hotspot Example (with Facebook login)
 
 [Hotspot Example (with Facebook login)](hotspot)
