@@ -88,4 +88,8 @@
         <Bug pattern="HES_EXECUTOR_NEVER_SHUTDOWN"/>
         <Class name="com.github.vzakharchenko.radius.radius.handlers.AbstractThreadRequestHandler"/>
     </Match>
+    <Match>
+        <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager"/>
+    </Match>
 </FindBugsFilter>
