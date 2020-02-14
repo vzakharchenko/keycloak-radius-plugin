@@ -28,5 +28,7 @@ public interface IRadiusUserInfoBuilder {
 
     IRadiusUserInfoBuilder clientModel(ClientModel clientModel);
 
+    IRadiusUserInfoBuilder forceReject();
+
     IRadiusUserInfoGetter getRadiusUserInfoGetter();
 }

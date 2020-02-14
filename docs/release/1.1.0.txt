@@ -1,1 +1,4 @@
 fix file connection leak
+support conditional attributes
+support reject attributes
+support accept attributes

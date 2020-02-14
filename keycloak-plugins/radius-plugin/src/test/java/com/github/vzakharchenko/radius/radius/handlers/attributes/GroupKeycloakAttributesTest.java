@@ -6,14 +6,14 @@ import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.attribute.AttributeType;
+import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 
 import java.util.*;
 
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -49,6 +49,8 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
                 .thenReturn(attributeType);
         when(dictionary.getAttributeTypeByName("Service-Type"))
                 .thenReturn(attributeType);
+        RadiusAttribute radiusAttribute = attributeType.create(dictionary, "0");
+        accessRequest.addAttribute(radiusAttribute);
     }
 
     @Test
@@ -79,5 +81,102 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
         keycloakAttributes.fillAnswer(answer);
         assertNotNull(answer.getAttributes());
     }
+
+    @Test
+    public void testRejectAttributeTrue() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("REJECT_Service-Type", Arrays.asList("0"));
+        map.put("REJECT_Service-Type_FAKE", Arrays.asList("0"));
+        map.put("testAttribute3", null);
+
+        when(groupModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 0);
+        verify(radiusUserInfoBuilder).forceReject();
+    }
+
+    @Test
+    public void testConditionalRejectFalse() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("Reject_Service-Type", Arrays.asList("1"));
+        map.put("testAttribute3", null);
+
+        when(groupModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 4);
+        verify(radiusUserInfoBuilder,never()).forceReject();
+    }
+
+    @Test
+    public void testAcceptAttributeTrue() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("ACCEPT_Service-Type", Arrays.asList("0"));
+        map.put("ACCEPT_Service-Type_FAKE", Arrays.asList("0"));
+        map.put("testAttribute3", null);
+
+        when(groupModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 5);
+        verify(radiusUserInfoBuilder,never()).forceReject();
+    }
+
+    @Test
+    public void testConditionalAcceptFalse() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("ACCEPT_Service-Type", Arrays.asList("1"));
+        map.put("testAttribute3", null);
+
+        when(groupModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 0);
+        verify(radiusUserInfoBuilder).forceReject();
+    }
+
+
+    @Test
+    public void testConditionalAttributeTrue() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("COND_Service-Type", Arrays.asList("0"));
+        map.put("testAttribute3", null);
+
+        when(groupModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 4);
+    }
+    @Test
+    public void testConditionalAttributeFalse() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("COND_Service-Type", Arrays.asList("1"));
+        map.put("testAttribute3", null);
+
+        when(groupModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = groupKeycloakAttributes
+                .getAttributes(groupModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 0);
+    }
+
 
 }
