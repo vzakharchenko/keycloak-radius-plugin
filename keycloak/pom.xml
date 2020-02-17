@@ -15,6 +15,15 @@
         <keycloak-plugin>${project.version}</keycloak-plugin>
     </properties>
 
+    <dependencies>
+        <!-- For dependency bot-->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-core</artifactId>
+            <version>${keycloak.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <build>
         <finalName>keycloak</finalName>
         <plugins>
