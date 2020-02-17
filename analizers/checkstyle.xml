@@ -5,6 +5,13 @@
 <module name="Checker">
     <!--<property name="severity" value="warning"/>-->
 
+
+    <module name="LineLength">
+        <property name="fileExtensions" value="java"/>
+        <property name="max" value="100"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+    </module>
+
     <module name="SuppressWarningsFilter"/>
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter"/>
@@ -12,9 +19,6 @@
         <module name="SuppressWarningsHolder"/>
         <module name="JavadocMethod">
             <property name="severity" value="ignore"/>
-            <property name="allowMissingPropertyJavadoc" value="true"/>
-            <property name="suppressLoadErrors" value="false"/>
-            <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
         </module>
         <module name="JavadocType">
             <property name="severity" value="ignore"/>
@@ -43,10 +47,6 @@
         </module>
         <module name="ParameterNumber">
             <property name="max" value="4"/>
-        </module>
-        <module name="LineLength">
-            <property name="max" value="100"/>
-            <property name="tabWidth" value="4"/>
         </module>
         <module name="EmptyForIteratorPad"/>
         <module name="MethodParamPad"/>
