@@ -2,3 +2,4 @@ fix file connection leak
 support conditional attributes
 support reject attributes
 support accept attributes
+fixed StackOverflowError, if package size is 0

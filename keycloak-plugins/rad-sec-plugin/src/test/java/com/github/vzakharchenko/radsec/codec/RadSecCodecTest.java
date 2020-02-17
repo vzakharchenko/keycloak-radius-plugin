@@ -169,4 +169,13 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         assertEquals(objects.size(), 1);
     }
 
+    @Test
+    public void decode3() throws DecoderException {
+        List<Object> objects = new ArrayList<>();
+        String issue = "00a000000004576841001df4c386f3be5ffaccd3060600000001011b7661737a616b6861726368656e6b6f40676d61696c2e636f6d1f113139322e3130302e3230302e3230382806000000032c0a3834303030303135200d4d61696e20526f757465722906000000001a1100003a8c090b536d617274486f6d650406d992fb75";
+        radSecCodec.decode(context, Unpooled.copiedBuffer(Hex
+                .decodeHex(issue.toCharArray())), objects);
+        assertEquals(objects.size(), 0);
+    }
+
 }

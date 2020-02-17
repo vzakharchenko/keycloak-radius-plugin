@@ -123,7 +123,7 @@ public class RadSecCodec extends MessageToMessageCodec<ByteBuf, ResponseCtx> {
                                 int pos,
                                 List<ByteBuf> byteBufs) {
         int length = content.getShort(2);
-        if (length <= content.remaining()) {
+        if (length > 0 && length <= content.remaining()) {
             byte[] bytes = getBytes(content, length);
             byteBufs.add(Unpooled.copiedBuffer(bytes));
             int newPos = pos + length;
