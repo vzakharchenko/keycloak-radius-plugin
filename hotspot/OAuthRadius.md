@@ -35,7 +35,7 @@
 4. update Walled Garden. Add your keycloak host ![addWalledGarden](../docs/addWalledGarden.png) ![KeycloakHostName](../docs/KeycloakHostName.png)
 
 ## Facebook Login example
-1.  Download Keycloak 8.0.1
+1.  Download Keycloak 9.0.0
 2.  install [ngrok](https://ngrok.com/). Register ngrok  <pre><code>./ngrok authtoken \<YOUR TOKEN\></pre></code>
 3.  [Configure Keycloak](../README.md#configure-keycloak)
 4.  [Start Keycloak](../README.md#run-keycloak-locally)

@@ -41,7 +41,7 @@ features:
 - run script for standalone <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
 - run script for standalone-ha <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-8.0.1.zip
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-9.0.0.zip
 - **SOURCE** - Path where you checked out the code and built the project
 ## Configuration
 ### Radius server config file
@@ -83,7 +83,7 @@ where
 <pre><code>
 #!/usr/bin/env bash
 set -e
-cd keycloak-8.0.1
+cd keycloak-9.0.0
 public_ip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' -m 1`
 sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 -Djboss.bind.address.private=${public_ip} -Djboss.node.name=${public_ip} -Djgroups.bind.address=${public_ip} --debug 8190 -Djboss.http.port=8090
 </pre></code>
