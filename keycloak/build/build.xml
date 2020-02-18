@@ -14,8 +14,8 @@
     <property name="KEYCLOAK_SOURCE" value="${BUILD_DIR}/keycloak_source.zip"/>
     <property name="KEYCLOAK_SOURCE_LOCAL" value="keycloak_source.zip"/>
     <property name="KEYCLOAK_DESTINATION" value="${KEYCLOAK_PATH}/keycloak-${KEYCLOAK_VERSION}"/>
-    <property name="KEYCLOAK_CONFIGURATION_HA" value="build/keycloak-ha.cli"/>
-    <property name="KEYCLOAK_CONFIGURATION" value="build/keycloak.cli"/>
+    <property name="KEYCLOAK_CONFIGURATION_HA" value="../cli/radius-ha.cli"/>
+    <property name="KEYCLOAK_CONFIGURATION" value="../cli/radius.cli"/>
     <property name="KEYCLOAK_CONFIGURATION_SSL" value="build/ssl-s.cli"/>
     <property name="KEYCLOAK_CONFIGURATION_SSL-HA" value="build/ssl-ha.cli"/>
 
