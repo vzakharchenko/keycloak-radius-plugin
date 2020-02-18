@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.github.vzakharchenko.radius.password.UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD;
+
 public class RadiusCredentialProvider implements
         IRadiusCredentialProvider<RadiusCredentialModel>,
         CredentialInputUpdater,
@@ -73,6 +75,26 @@ public class RadiusCredentialProvider implements
     @Override
     public RadiusCredentialModel getCredentialFromModel(CredentialModel model) {
         return RadiusCredentialModel.createFromCredentialModel(model);
+    }
+
+    @Override
+    public CredentialTypeMetadata getCredentialTypeMetadata(
+            CredentialTypeMetadataContext metadataContext) {
+        CredentialTypeMetadata.CredentialTypeMetadataBuilder metadataBuilder =
+                CredentialTypeMetadata
+                        .builder().type(this.getType()).category(
+                        CredentialTypeMetadata.Category.BASIC_AUTHENTICATION)
+                        .displayName("password-display-name")
+                        .helpText("password-help-text")
+                        .iconCssClass("kcAuthenticatorPasswordClass");
+        UserModel user = metadataContext.getUser();
+        if (user != null && this.session.userCredentialManager()
+                .isConfiguredFor(this.session.getContext().getRealm(), user, this.getType())) {
+            metadataBuilder.updateAction(RADIUS_UPDATE_PASSWORD);
+        } else {
+            metadataBuilder.createAction(RADIUS_UPDATE_PASSWORD);
+        }
+        return metadataBuilder.removeable(false).build(this.session);
     }
 
     @Override

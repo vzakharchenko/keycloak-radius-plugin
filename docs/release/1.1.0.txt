@@ -3,3 +3,4 @@ support conditional attributes
 support reject attributes
 support accept attributes
 fixed StackOverflowError, if package size is 0
+keycloak 9.0.0

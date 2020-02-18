@@ -2,12 +2,14 @@ package com.github.vzakharchenko.radius.password;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
-import org.testng.Assert;
 import org.keycloak.credential.CredentialModel;
+import org.keycloak.credential.CredentialTypeMetadata;
+import org.keycloak.credential.CredentialTypeMetadataContext;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.models.cache.UserCache;
 import org.keycloak.models.credential.PasswordCredentialModel;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,6 +29,8 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
                     .createCredentialModel());
     private UserCache userCache = mock(UserCache.class);
 
+    private CredentialTypeMetadataContext metadataContext;
+
     @BeforeMethod
     public void beforeMethod() {
         reset(userCache);
@@ -38,6 +42,8 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         when(userCredentialManager.getStoredCredentialById(realmModel, userModel,
                 credentialModel.getId())).thenReturn(credentialModel);
         when(session.userCache()).thenReturn(userCache);
+        metadataContext = CredentialTypeMetadataContext.builder().user(userModel).build(session);
+        when(userCredentialManager.isConfiguredFor(any(),any(),anyString())).thenReturn(true);
     }
 
 
@@ -79,6 +85,21 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         RadiusCredentialModel credentialFromModel = credentialProvider
                 .getCredentialFromModel(ModelBuilder.createCredentialModel());
         Assert.assertEquals(credentialFromModel.getSecret().getPassword(), "secret");
+    }
+
+    @Test
+    public void testGetCredentialTypeMetadata() {
+        CredentialTypeMetadata credentialTypeMetadata = credentialProvider
+                .getCredentialTypeMetadata(metadataContext);
+        assertNotNull(credentialTypeMetadata);
+    }
+
+    @Test
+    public void testGetCredentialTypeMetadata2() {
+        when(userCredentialManager.isConfiguredFor(any(),any(),anyString())).thenReturn(false);
+        CredentialTypeMetadata credentialTypeMetadata = credentialProvider
+                .getCredentialTypeMetadata(metadataContext);
+        assertNotNull(credentialTypeMetadata);
     }
 
     @Test
