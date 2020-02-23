@@ -216,6 +216,59 @@ if accept Attribute is present and has valid value then access request will be a
 
 Example:
 [Role ACCEPT Attributes](#role-accept-attributes)
+
+### Assign Radius Attributes to Authorization Resource
+#### Change admin theme to "Radius"
+![radiusTheme](docs/radiusTheme.png)
+#### Enable Authorization on Radius Client
+![Authorization](docs/Authorization.png)
+#### [Create Resource](https://www.keycloak.org/docs/latest/authorization_services/#_resource_overview)
+![Authorization](docs/createResource.png)
+#### [Assign Attributes to Resource](https://www.keycloak.org/docs/latest/authorization_services/#resource-attributes)
+![assignAttributesToResource](docs/assignAttributesToResource.png)
+#### Create policy and permissions
+- [authorization policies](https://www.keycloak.org/docs/latest/authorization_services/#_policy_overview)
+![policies](docs/policies.png)
+- [authorization permissions](https://www.keycloak.org/docs/latest/authorization_services/#_permission_overview)
+![Permissions](docs/Permissions.png)
+#### Resource Conditional Attributes
+if conditional Attribute is present and has valid value then all other attributes will be applied.  
+(Example: apply user attributes only if NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>COND_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role Conditional Attributes](#role-conditional-attributes)/README.md:1
+#### Resource REJECT Attributes
+if reject Attribute is present and has valid value then access request will be rejected.  
+(Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>REJECT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role REJECT Attributes](#role-reject-attributes)
+#### Resource ACCEPT Attributes
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+(Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
+
+**Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
+
+- **PREFIX** = <pre>ACCEPT_</pre>
+- **ATTRIBUTE_NAME** attribute name from access-request
+- **VALUES** Comma-separated list of attribute values
+
+Example:
+[Role ACCEPT Attributes](#role-accept-attributes)
+
+
 ###  Hotspot Example (with Facebook login)
 
 [Hotspot Example (with Facebook login)](hotspot)
