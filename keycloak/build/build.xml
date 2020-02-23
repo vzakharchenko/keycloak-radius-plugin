@@ -19,12 +19,19 @@
     <property name="KEYCLOAK_CONFIGURATION_SSL" value="build/ssl-s.cli"/>
     <property name="KEYCLOAK_CONFIGURATION_SSL-HA" value="build/ssl-ha.cli"/>
 
+    <!-- Radius theme -->
+    <property name="KEYCLOAK_THEME" value="${BUILD_DIR}/artifacts/theme"/>
+
     <!-- Plugins -->
     <property name="KEYCLOAK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/radius-plugin"/>
     <property name="KEYCLOAK__MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
     <property name="KEYCLOAK_RAD_SEC_PLUGIN" value="${BUILD_DIR}/artifacts/rad-sec-plugin"/>
     <property name="KEYCLOAK_DISCONNECT_PLUGIN" value="${BUILD_DIR}/artifacts/radius-disconnect-plugin"/>
     <property name="KEYCLOAK_PROXY_PLUGIN" value="${BUILD_DIR}/artifacts/radius-proxy-plugin"/>
+
+    <first id="keycloakThemeZip">
+        <fileset dir="${KEYCLOAK_THEME}" includes="**"/>
+    </first>
 
     <first id="keycloakRadiusZip">
         <fileset dir="${KEYCLOAK_RADIUS_PLUGIN}" includes="**"/>
@@ -63,8 +70,13 @@
             <arg line="-o -q ${KEYCLOAK_SOURCE_LOCAL} -d ${KEYCLOAK_PATH}"/>
         </exec>
 
-        <!-- select Database-->
         <copydir src="build/ext" dest="${KEYCLOAK_DESTINATION}"/>
+
+        <!-- Install Theme-->
+        <exec executable="sh">
+            <arg value="${KEYCLOAK_DESTINATION}/bin/jboss-cli.sh"/>
+            <arg value="--command=module add --name=keycloak.plugins.radius.theme --resources=${toString:keycloakThemeZip}"/>
+        </exec>
 
         <!-- Install Radius Plugin-->
         <exec executable="sh">

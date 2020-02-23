@@ -30,7 +30,9 @@ public class KeycloakAttributesFactory implements IRadiusAttributeProvider,
             case ROLE:
                 keycloakAttributes = new RoleKeycloakAttributes(session, accessRequest);
                 break;
-
+            case AUTHORIZATION:
+                keycloakAttributes = new AuthorizationAttributes(session, accessRequest);
+                break;
             default:
                 throw new IllegalStateException(type + " does not support");
 

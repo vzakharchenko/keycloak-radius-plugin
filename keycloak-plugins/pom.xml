@@ -41,6 +41,7 @@
         <module>rad-sec-plugin</module>
         <module>radius-disconnect-plugin</module>
         <module>proxy-radius-plugin</module>
+        <module>radius-theme</module>
     </modules>
 
     <properties>
@@ -103,6 +104,13 @@
             <version>${keycloak.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-authz-policy-common -->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-authz-policy-common</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi-private</artifactId>

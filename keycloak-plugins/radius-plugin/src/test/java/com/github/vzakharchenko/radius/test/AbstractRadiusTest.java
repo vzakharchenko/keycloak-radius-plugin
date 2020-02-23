@@ -21,10 +21,15 @@ import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
 import com.github.vzakharchenko.radius.transaction.KeycloakHelper;
 import com.github.vzakharchenko.radius.transaction.KeycloakRadiusUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.keycloak.authorization.AuthorizationProvider;
+import org.keycloak.authorization.policy.evaluation.PolicyEvaluator;
+import org.keycloak.authorization.store.ResourceServerStore;
+import org.keycloak.authorization.store.ResourceStore;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.*;
+import org.keycloak.models.cache.authorization.CachedStoreFactoryProvider;
 import org.keycloak.provider.Provider;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.services.managers.AuthenticationManager;
@@ -56,93 +61,77 @@ public abstract class AbstractRadiusTest {
 
     public static final String RADIUS_SESSION_ID = "testSessionId";
     public static final String REALM_RADIUS = "realm-radius";
-
-    {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
     public static final String REALM_RADIUS_NAME = "RadiusName";
     public static final String CLIENT_ID = "CLIENT_ID";
     public static final String USER = "USER";
     @Mock
     protected KeycloakSession session;
-
     @Mock
     protected KeycloakTransactionManager keycloakTransactionManager;
-
     @Mock
     protected KeycloakSessionFactory keycloakSessionFactory;
-
     @Mock
     protected RealmModel realmModel;
-
     @Mock
     protected ClientModel clientModel;
-
     @Mock
     protected UserModel userModel;
-
     @Mock
     protected UserProvider userProvider;
-
     @Mock
     protected IRadiusConfiguration configuration;
     @Mock
     protected RoleModel radiusRole;
-
     @Mock
     protected UserCredentialManager userCredentialManager;
-
     protected UserSessionProvider userSessionProvider;
     @Mock
     protected UserSessionModel userSessionModel;
     @Mock
     protected AuthenticatedClientSessionModel authenticatedClientSessionModel;
-
     @Mock
     protected ClientConnection clientConnection;
-
     @Mock
     protected AuthProtocolFactory radiusAuthProtocolFactory;
     @Mock
     protected AuthProtocol authProtocol;
     @Mock
     protected KeycloakContext keycloakContext;
-
     @Mock
     protected KeycloakUriInfo keycloakUriInfo;
     @Mock
     protected HttpHeaders httpHeaders;
-
     @Mock
     protected KeycloakHelper keycloakHelper;
-
     @Mock
     protected EntityManager entityManager;
-
     @Mock
     protected TypedQuery query;
-
     @Mock
     protected IRadiusServiceProvider radiusServiceProvider;
-
     protected WritableDictionary realDictionary;
-
     @Mock
     protected IRadiusUserInfoBuilder radiusUserInfoBuilder;
     @Mock
     protected IRadiusUserInfoGetter radiusUserInfoGetter;
     @Mock
     protected IRadiusUserInfo radiusUserInfo;
-
     @Mock
     protected IRadiusCoAClient radiusCoAClient;
-
     protected EventBuilder eventBuilder;
     protected AccessToken accessToken;
-
-
+    protected AuthorizationProvider authorizationProvider;
+    @Mock
+    protected PolicyEvaluator policyEvaluator;
+    @Mock
+    protected ResourceServerStore resourceServerStore;
+    @Mock
+    protected ResourceStore resourceStore;
     protected Map<Class, Provider> providerByClass = new HashMap<>();
+
+    {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     protected List<? extends Object> resetMock() {
         return null;
@@ -197,14 +186,22 @@ public abstract class AbstractRadiusTest {
         reset(radiusUserInfoBuilder);
         reset(radiusCoAClient);
         reset(radiusUserInfoGetter);
+        reset(policyEvaluator);
+        reset(resourceServerStore);
+        reset(resourceStore);
         providerByClass.clear();
         accessToken = new AccessToken();
+        authorizationProvider = new AuthorizationProvider(session, realmModel, policyEvaluator);
         Answer<Object> providerAnswer = invocation -> {
             Object parameter = invocation.getArguments()[0];
             Class<? extends Provider> classToMock = (Class<? extends Provider>) parameter;
             Provider provider = providerByClass.get(classToMock);
             if (provider == null && classToMock != null) {
-                provider = mock(classToMock);
+                if (classToMock == AuthorizationProvider.class) {
+                    provider = authorizationProvider;
+                } else {
+                    provider = mock(classToMock);
+                }
                 providerByClass.put(classToMock, provider);
             }
             return provider;
@@ -214,14 +211,17 @@ public abstract class AbstractRadiusTest {
             Class<? extends Provider> classToMock = (Class<? extends Provider>) parameter;
             Provider provider = providerByClass.get(classToMock);
             if (provider == null && classToMock != null) {
-                provider = mock(classToMock);
+                if (classToMock == AuthorizationProvider.class) {
+                    provider = authorizationProvider;
+                } else {
+                    provider = mock(classToMock);
+                }
                 providerByClass.put(classToMock, provider);
             }
             HashSet<Object> set = new HashSet<>();
             set.add(provider);
             return set;
         };
-
         when(keycloakSessionFactory.create()).thenReturn(session);
         when(session.getProvider(any())).thenAnswer(providerAnswer);
         when(session.getProvider(any(), anyString())).thenAnswer(providerAnswer);
@@ -257,6 +257,7 @@ public abstract class AbstractRadiusTest {
         when(session.realms()).thenReturn(realmProvider);
         when(clientModel.getRealm()).thenReturn(realmModel);
         when(clientModel.getClientId()).thenReturn(CLIENT_ID);
+        when(clientModel.getId()).thenReturn(CLIENT_ID);
         when(clientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(realmModel);
         when(realmProvider.getRealm(anyString())).thenReturn(realmModel);
@@ -327,6 +328,11 @@ public abstract class AbstractRadiusTest {
         if (objects != null) {
             reset(objects.toArray(new Object[objects.size()]));
         }
+
+        when(getProvider(CachedStoreFactoryProvider.class)
+                .getResourceServerStore()).thenReturn(resourceServerStore);
+        when(getProvider(CachedStoreFactoryProvider.class)
+                .getResourceStore()).thenReturn(resourceStore);
         resetStatic();
         initDictionary();
         when(authProtocol.getAccessRequest()).thenReturn(
