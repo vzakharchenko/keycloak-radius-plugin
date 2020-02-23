@@ -88,6 +88,13 @@
                                     <version>${keycloak-plugin}</version>
                                     <outputDirectory>target/artifacts/radius-proxy-plugin</outputDirectory>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>radius-theme</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <type>zip</type>
+                                    <outputDirectory>target/artifacts/theme</outputDirectory>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

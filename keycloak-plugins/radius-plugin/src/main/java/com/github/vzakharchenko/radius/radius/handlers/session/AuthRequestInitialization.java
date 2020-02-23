@@ -87,6 +87,7 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
                     .address(clientConnection.getInetSocketAddress())
                     .protocol(protocol).getRadiusUserInfoGetter();
             KeycloakSessionUtils.addRadiusUserInfo(threadSession, radiusUserInfoGetter);
+            KeycloakSessionUtils.context(threadSession, radiusUserInfoGetter);
             return true;
         } else {
             event.event(EventType.LOGIN_ERROR).detail(
