@@ -4,7 +4,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
 <a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
 
-Run radius server inside [keycloak](https://www.keycloak.org/) .  
+Run radius server inside [keycloak](https://www.keycloak.org/).  
 features:
 - radius server inside [keycloak](https://www.keycloak.org/)
 - [radius oidc password](Examples/OneTimePasswordJSExample)
@@ -13,8 +13,8 @@ features:
 - use Kerberos credential(only if Radius client use PAP authorization)
 - can work as [radius proxy](#radius-proxy)
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
-- Map Keycloak [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
-- conditional attributes for Role/Group/User
+- Map Keycloak [authorization](#assign-radius-attributes-to-authorization-resource) ,  [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
+- conditional attributes for authorization/Role/Group/User
 - start/stop Keycloak Session ![sessionManagment.png](docs/sessionManagment.png)
 - BackChannel logout(Disconnect-message request)
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
