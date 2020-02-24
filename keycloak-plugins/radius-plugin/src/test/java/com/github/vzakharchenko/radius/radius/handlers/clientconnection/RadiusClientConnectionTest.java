@@ -24,6 +24,20 @@ public class RadiusClientConnectionTest extends AbstractRadiusTest {
         assertEquals(radiusClientConnection.getRemoteHost(),"123.123.123.123");
         assertEquals(radiusClientConnection.getRemotePort(), 0);
         accessRequest.addAttribute("Calling-Station-Id", "192.168.1.1");
-        assertEquals(radiusClientConnection.getLocalAddr(),"192.168.1.1");
+        accessRequest.addAttribute("NAS-IP-Address", "192.168.1.1");
+        assertEquals(radiusClientConnection.getRemoteAddr(),"192.168.1.1");
     }
+    @Test
+    public void testRadiusClientConnection2() {
+        InetSocketAddress inetSocketAddress =  InetSocketAddress.createUnresolved(ModelBuilder.IP, 0);
+        AccessRequest accessRequest = new AccessRequest(realDictionary, 0, new byte[16]);
+        RadiusClientConnection radiusClientConnection = new RadiusClientConnection(inetSocketAddress,
+                accessRequest);
+        assertEquals(radiusClientConnection.getLocalAddr(),"");
+        assertEquals(radiusClientConnection.getLocalPort(), 0);
+        assertEquals(radiusClientConnection.getRemoteAddr(),"");
+    }
+
+
+
 }

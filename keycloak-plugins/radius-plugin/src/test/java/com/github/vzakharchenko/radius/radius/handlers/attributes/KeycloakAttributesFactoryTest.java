@@ -42,5 +42,11 @@ public class KeycloakAttributesFactoryTest extends AbstractRadiusTest {
                 .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.GROUP);
         assertTrue(keycloakAttributes instanceof GroupKeycloakAttributes);
     }
+    @Test
+    public void createKeycloakAttributesAuthorizationTest() {
+        KeycloakAttributes keycloakAttributes = keycloakAttributesFactory
+                .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.AUTHORIZATION);
+        assertTrue(keycloakAttributes instanceof AuthorizationAttributes);
+    }
 
 }

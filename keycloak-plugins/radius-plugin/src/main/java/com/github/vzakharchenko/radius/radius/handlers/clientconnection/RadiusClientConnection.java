@@ -29,7 +29,7 @@ public class RadiusClientConnection implements ClientConnection {
         if (address != null) {
             return address.getHostAddress();
         } else {
-            return null;
+            return "";
         }
     }
 
