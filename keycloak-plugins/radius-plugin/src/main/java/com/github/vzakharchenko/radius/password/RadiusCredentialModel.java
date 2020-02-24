@@ -2,6 +2,7 @@ package com.github.vzakharchenko.radius.password;
 
 import com.github.vzakharchenko.radius.models.RadiusCredentialData;
 import com.github.vzakharchenko.radius.models.RadiusSecretData;
+import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.util.JsonSerialization;
 
@@ -49,18 +50,13 @@ public final class RadiusCredentialModel extends CredentialModel {
 
         RadiusCredentialModel passwordCredentialModel = new RadiusCredentialModel(
                 credentialData, secretData);
-
-        try {
-            passwordCredentialModel.setCredentialData(JsonSerialization
-                    .writeValueAsString(credentialData));
-            passwordCredentialModel.setSecretData(JsonSerialization
-                    .writeValueAsString(secretData));
-            passwordCredentialModel.setType(TYPE);
-            passwordCredentialModel.setId(id);
-            return passwordCredentialModel;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        passwordCredentialModel.setCredentialData(RadiusLibraryUtils
+                .writeValueAsString(credentialData));
+        passwordCredentialModel.setSecretData(RadiusLibraryUtils
+                .writeValueAsString(secretData));
+        passwordCredentialModel.setType(TYPE);
+        passwordCredentialModel.setId(id);
+        return passwordCredentialModel;
     }
 
     public RadiusCredentialData getCredential() {

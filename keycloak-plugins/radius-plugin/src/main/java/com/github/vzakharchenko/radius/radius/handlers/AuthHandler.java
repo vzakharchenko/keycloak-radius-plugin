@@ -37,7 +37,7 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
 
     private IAuthRequestInitialization authRequestInitialization;
 
-    private boolean verifyPassword0(IRadiusUserInfoGetter radiusUserInfoGetter,
+    protected boolean verifyPassword0(IRadiusUserInfoGetter radiusUserInfoGetter,
                                     AuthProtocol authProtocol) {
         if (radiusUserInfoGetter != null) {
             List<String> passwords = radiusUserInfoGetter.getRadiusUserInfo().getPasswords();

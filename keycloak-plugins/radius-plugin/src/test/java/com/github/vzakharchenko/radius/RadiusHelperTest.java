@@ -7,6 +7,8 @@ import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.tinyradius.packet.RadiusPacket;
+import org.tinyradius.packet.RadiusPackets;
 
 import java.util.*;
 
@@ -122,7 +124,9 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void test() {
+    public void testGetRealm() {
+        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        RadiusHelper.getRealm(session, radiusPacket);
     }
 
     @Override

@@ -56,10 +56,6 @@ public class MikrotikDictionaryProviderFactory
     public void parseDictionary(DictionaryParser dictionaryParser,
                                 InputStream mikrotik,
                                 WritableDictionary dictionary) throws IOException {
-        if (mikrotik == null) {
-            throw new IllegalStateException("resource \"" +
-                    MIKROTIK + "\" does not exists");
-        }
         File file = new File(System.getProperty("java.io.tmpdir"),
                 UUID.randomUUID().toString());
         try {

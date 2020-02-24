@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
+import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.models.CoASettings;
 import com.github.vzakharchenko.radius.providers.IRadiusCOAProvider;
@@ -47,7 +48,7 @@ public class AccountingSessionManager implements IAccountingSessionManager {
     public IAccountingSessionManager init() {
 
         IRadiusUserInfoBuilder radiusUserInfoBuilder = RadiusUserInfoBuilder.create();
-        RealmModel realm = RadiusLibraryUtils.getRealm(session, accountingRequest);
+        RealmModel realm = RadiusHelper.getRealm(session, accountingRequest);
         radiusUserInfoBuilder.realmModel(realm);
         userName = RadiusLibraryUtils.getUserName(accountingRequest);
         UserModel user = RadiusLibraryUtils.getUserModel(session, userName, realm);

@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.mikrotik.services;
 
-import com.github.vzakharchenko.mikrotik.MikrotikConstantUtils;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProviderFactory;
 import org.keycloak.Config;
@@ -8,6 +7,8 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.packet.AccessRequest;
+
+import static com.github.vzakharchenko.mikrotik.dictionary.MikrotikDictionaryProviderFactory.MIKROTIK;
 
 public class PPPServiceProviderFactory
         implements IRadiusServiceProviderFactory, IRadiusServiceProvider {
@@ -41,7 +42,7 @@ public class PPPServiceProviderFactory
 
     @Override
     public String attributeName() {
-        return MikrotikConstantUtils.MIKROTIK_SERVICE_ATTRIBUTE;
+        return MIKROTIK;
     }
 
     @Override

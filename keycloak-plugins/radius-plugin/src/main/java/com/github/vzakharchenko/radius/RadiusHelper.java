@@ -11,6 +11,8 @@ import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.tinyradius.attribute.RadiusAttribute;
+import org.tinyradius.packet.RadiusPacket;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -143,6 +145,28 @@ public final class RadiusHelper {
             }
         }
         return serviceMap;
+    }
+
+    private static String getRealmName(String attributeName, RadiusPacket radiusPacket) {
+        RadiusAttribute attribute = radiusPacket.getAttribute(attributeName);
+        return (attribute != null) ? attribute.getValueString() : null;
+    }
+
+    private static RealmModel getRealm(KeycloakSession session,
+                                       RadiusPacket radiusPacket,
+                                       Collection<String> attributes) {
+        for (String attribute : attributes) {
+            String realmName = getRealmName(attribute, radiusPacket);
+            if (realmName != null) {
+                return session.realms().getRealm(realmName);
+            }
+        }
+        return null;
+    }
+
+    public static RealmModel getRealm(KeycloakSession session, RadiusPacket radiusPacket) {
+        List<String> attributes = getRealmAttributes(session);
+        return getRealm(session, radiusPacket, attributes);
     }
 
     @VisibleForTesting

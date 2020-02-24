@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2;
 
+import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -21,10 +23,7 @@ public final class MSCHAPV2AuthenticatorUtils {
             byte[] authenticatorChallenge,
             byte[] userName) throws NoSuchAlgorithmException {
         //CHECKSTYLE:ON
-        byte[] pBytes = password;
-        if (pBytes == null) {
-            pBytes = new byte[16];
-        }
+        byte[] pBytes = RadiusLibraryUtils.getOrEmpty(password, 16);
         byte[] passwordHashHash = getPasswordHashHash(pBytes);
 
         MessageDigest md = getMessageDigestSHA1();

@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.mikrotik.services;
 
-import com.github.vzakharchenko.mikrotik.MikrotikConstantUtils;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -24,7 +23,7 @@ public class PPPServiceProviderFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        Assert.assertEquals(loginServiceProviderFactory.attributeName(), MikrotikConstantUtils.MIKROTIK_SERVICE_ATTRIBUTE);
+        Assert.assertEquals(loginServiceProviderFactory.attributeName(), "mikrotik");
         Assert.assertEquals(loginServiceProviderFactory.getId(), MIKROTIK_PPP_SERVICE);
         assertEquals(loginServiceProviderFactory.serviceName(), "ppp");
         loginServiceProviderFactory.close();

@@ -1,9 +1,9 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
+import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.providers.IRadiusAttributeProvider;
-import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.handlers.attributes.KeycloakAttributesType;
 import com.github.vzakharchenko.radius.radius.handlers.clientconnection.RadiusClientConnection;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
@@ -38,7 +38,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     @Override
     public RealmModel getRealm() {
-        return RadiusLibraryUtils.getRealm(session, accessRequest);
+        return RadiusHelper.getRealm(session, accessRequest);
     }
 
     protected abstract void answer(RadiusPacket answer,

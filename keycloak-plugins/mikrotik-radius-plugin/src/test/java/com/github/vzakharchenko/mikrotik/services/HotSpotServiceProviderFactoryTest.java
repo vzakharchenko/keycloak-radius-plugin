@@ -1,12 +1,11 @@
 package com.github.vzakharchenko.mikrotik.services;
 
-import com.github.vzakharchenko.mikrotik.MikrotikConstantUtils;
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.packet.AccessRequest;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -23,7 +22,7 @@ public class HotSpotServiceProviderFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        Assert.assertEquals(hotSpotServiceProviderFactory.attributeName(), MikrotikConstantUtils.MIKROTIK_SERVICE_ATTRIBUTE);
+        Assert.assertEquals(hotSpotServiceProviderFactory.attributeName(), "mikrotik");
         Assert.assertEquals(hotSpotServiceProviderFactory.getId(), HotSpotServiceProviderFactory.MIKROTIK_HOTSPOT_SERVICE);
         assertEquals(hotSpotServiceProviderFactory.serviceName(), "hotspot");
         hotSpotServiceProviderFactory.close();
@@ -59,6 +58,7 @@ public class HotSpotServiceProviderFactoryTest extends AbstractRadiusTest {
         when(accessRequest.getAttribute("Service-Type")).thenReturn(null);
         assertFalse(hotSpotServiceProviderFactory.checkService(accessRequest));
     }
+
     @Test
     public void testAccessRequestMSCHAP() {
         AccessRequest accessRequest = spy(new AccessRequest(realDictionary, 0, new byte[16]));

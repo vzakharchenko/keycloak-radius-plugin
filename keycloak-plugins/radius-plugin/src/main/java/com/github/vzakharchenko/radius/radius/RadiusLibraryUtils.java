@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.radius.radius;
 
-import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
 import com.github.vzakharchenko.radius.models.Attribute26Holder;
 import org.jboss.logging.Logger;
@@ -11,13 +10,14 @@ import org.keycloak.models.ClientModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.util.JsonSerialization;
 import org.tinyradius.attribute.AttributeType;
 import org.tinyradius.attribute.RadiusAttribute;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.RadiusPacket;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,29 +55,6 @@ public final class RadiusLibraryUtils {
         replaceTypeType(attributeType, attribute26Holder.getNewType());
         return attributeType
                 .create(dictionary, attribute26Holder.getValue());
-    }
-
-
-    private static String getRealmName(String attributeName, RadiusPacket radiusPacket) {
-        RadiusAttribute attribute = radiusPacket.getAttribute(attributeName);
-        return (attribute != null) ? attribute.getValueString() : null;
-    }
-
-    private static RealmModel getRealm(KeycloakSession session,
-                                       RadiusPacket radiusPacket,
-                                       Collection<String> attributes) {
-        for (String attribute : attributes) {
-            String realmName = getRealmName(attribute, radiusPacket);
-            if (realmName != null) {
-                return session.realms().getRealm(realmName);
-            }
-        }
-        return null;
-    }
-
-    public static RealmModel getRealm(KeycloakSession session, RadiusPacket radiusPacket) {
-        List<String> attributes = RadiusHelper.getRealmAttributes(session);
-        return getRealm(session, radiusPacket, attributes);
     }
 
 
@@ -122,5 +99,17 @@ public final class RadiusLibraryUtils {
     public static String getAttributeValue(RadiusPacket radiusPacket, String attributeName) {
         String attributeValue = radiusPacket.getAttributeValue(attributeName);
         return attributeValue == null ? "" : attributeValue;
+    }
+
+    public static byte[] getOrEmpty(byte[] data, int size) {
+        return data != null ? data : new byte[size];
+    }
+
+    public static String writeValueAsString(Object obj) {
+        try {
+            return JsonSerialization.writeValueAsString(obj);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
