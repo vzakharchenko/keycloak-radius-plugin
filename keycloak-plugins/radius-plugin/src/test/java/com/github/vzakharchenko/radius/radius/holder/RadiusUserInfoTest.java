@@ -6,8 +6,7 @@ import org.testng.annotations.Test;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 
 public class RadiusUserInfoTest extends AbstractRadiusTest {
 
@@ -19,7 +18,7 @@ public class RadiusUserInfoTest extends AbstractRadiusTest {
         IRadiusUserInfoGetter radiusUserInfoGetter = radiusUserInfoBuilder.addPasswords(Arrays.asList("test"))
                 .clientConnection(clientConnection).clientModel(clientModel)
                 .address(new InetSocketAddress(0))
-                .userModel(userModel).realmModel(realmModel).activePassword("test")
+                .userModel(userModel).realmModel(realmModel).activePassword("test").forceReject()
                 .protocol(authProtocol).radiusSecret("testSecret").getRadiusUserInfoGetter();
         IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
         assertEquals(radiusUserInfoGetter.getBuilder(), radiusUserInfoGetter);
@@ -32,6 +31,7 @@ public class RadiusUserInfoTest extends AbstractRadiusTest {
         assertEquals(radiusUserInfo.getProtocol(), authProtocol);
         assertEquals(radiusUserInfo.getRadiusSecret(), "testSecret");
         assertNotNull(radiusUserInfo.getAddress());
+        assertTrue(radiusUserInfo.isForceReject());
 
 
     }
