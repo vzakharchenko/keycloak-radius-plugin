@@ -1,4 +1,4 @@
-# [Keycloak](https://www.keycloak.org/) Radius Integration
+# Embedded Radius Server in Keycloak](https://www.keycloak.org/) SSO
 [![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)  
 [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
@@ -6,7 +6,7 @@
 
 Run radius server inside [keycloak](https://www.keycloak.org/).  
 features:
-- radius server inside [keycloak](https://www.keycloak.org/)
+- Embedded radius server in [keycloak](https://www.keycloak.org/)
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](Examples/OTPPasswordJSExample)
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
