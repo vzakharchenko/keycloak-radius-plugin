@@ -84,6 +84,22 @@ public class PAPTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testPasswordOtpPassword() {
+        request.setUserPassword("test123456");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        papProtocol.setOtpPasswordGetter(passwordFactory);
+        assertTrue(papProtocol.verifyPassword("test123456"));
+    }
+
+    @Test
+    public void testPasswordOtpPasswordFailed() {
+        request.setUserPassword("test1234567");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        papProtocol.setOtpPasswordGetter(passwordFactory);
+        assertFalse(papProtocol.verifyPassword("test1234565"));
+    }
+
+    @Test
     public void testNoOtpPassword() {
         request.setUserPassword("1234567");
         PAPProtocol papProtocol = new PAPProtocol(request, session);

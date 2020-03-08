@@ -9,9 +9,9 @@ import com.github.vzakharchenko.radius.radius.handlers.clientconnection.RadiusCl
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OTPPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
-import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
@@ -97,17 +97,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     @Override
     public final boolean verifyPassword(String password) {
-        return verifyProtocolPassword(password);
-    }
-
-
-    public boolean verifyPasswordOTP(String password) {
-        if (verifyProtocolPassword(password)) {
-            markActivePassword(password);
-            return true;
-        } else {
-            return false;
-        }
+        return verifyProtocolPassword(password) || verifyPassword0(password, true);
     }
 
     @Override
@@ -119,13 +109,18 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return false;
     }
 
-    @Override
-    public final boolean verifyPassword() {
+    private String excludeOtp(String password, String otp, boolean checkPassword) {
+        return checkPassword ? StringUtils.removeEnd(password, otp) : otp;
+    }
+
+    private boolean verifyPassword0(String originPassword, boolean checkPassword) {
         AtomicBoolean ret = new AtomicBoolean(false);
         Map<String, OtpHolder> otPs = otpPasswordGetter.getOTPs(session);
         otPs.values().forEach(otpHolder -> otpHolder
                 .getPasswords().forEach(password -> {
-                    if (verifyPasswordOTP(password) || verifyOtpPasswords(password)) {
+                    String excludeOtp = excludeOtp(originPassword, password, checkPassword);
+                    if (verifyProtocolPassword(excludeOtp)) {
+                        markActivePassword(excludeOtp);
                         otpPasswordGetter.validOTP(session,
                                 password,
                                 otpHolder.getCredentialModel().getId(),
@@ -136,19 +131,11 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return ret.get() || verifyProtocolPassword();
     }
 
-    protected boolean verifyOtpPasswords(String otpPassword) {
-        IRadiusUserInfo radiusSessionInfo = KeycloakSessionUtils.getRadiusSessionInfo(session);
-        String password = radiusSessionInfo == null ? null : radiusSessionInfo
-                .getPasswords().stream()
-                .filter(p -> verifyPassword(p + otpPassword))
-                .findFirst().orElse(null);
-        if (password != null) {
-            markActivePassword(password + otpPassword);
-            return true;
-        } else {
-            return false;
-        }
+    @Override
+    public final boolean verifyPassword() {
+        return verifyPassword0("", false);
     }
+
 
     protected void markActivePassword(String userPassword) {
         IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
