@@ -13,12 +13,3 @@ jobs:
       - run:
           name: build and test plugins
           command: cd keycloak-plugins && mvn clean install && mvn coveralls:report -Dcoveralls=false -DrepoToken=$COVERALLS_TOKEN
-      - run:
-          name: install hotspot ui
-          command: cd hotspot/source && npm i
-      - run:
-          name: build hotspot ui
-          command: cd hotspot/source && npm run lint
-      - run:
-          name: build hotspot ui
-          command: cd hotspot/source && npm run build
