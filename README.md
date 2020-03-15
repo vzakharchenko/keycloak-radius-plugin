@@ -15,10 +15,10 @@ features:
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
 - Map Keycloak [authorization](#assign-radius-attributes-to-authorization-resource) ,  [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
 - conditional attributes for authorization/Role/Group/User
-- start/stop Keycloak Session ![sessionManagment.png](docs/sessionManagment.png)
+- start/stop Keycloak Session ![sessionManagment.png](./docs/sessionManagment.png)
 - BackChannel logout(Disconnect-message request)
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
-- [Social Hotspot Login](hotspot)
+- [Social Hotspot Login](https://github.com/vzakharchenko/mikrotik-hotspot-oauth)
 
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
