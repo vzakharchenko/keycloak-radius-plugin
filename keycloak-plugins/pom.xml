@@ -21,8 +21,8 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/vzakharchenko/keycloak-radius-plugin</url>
-        <connection>scm:git:https://github.com/vzakharchenko/keycloak-radius-plugin.git</connection>
+        <url>git@github.com:vzakharchenko/keycloak-radius-plugin.git</url>
+        <connection>scm:git:git@github.com:vzakharchenko/keycloak-radius-plugin.git</connection>
         <tag>v1.2.3-9.0.3</tag>
     </scm>
 
