@@ -112,13 +112,13 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <ant antfile="build/build.xml" inheritRefs="false">
                                     <target name="build_project"/>
                                     <property name="KEYCLOAK_VERSION" value="${keyCloakVersion}"/>
                                     <property name="PRODUCTION" value="${production}"/>
                                 </ant>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
