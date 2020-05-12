@@ -1,0 +1,31 @@
+#
+# to use this, run `docker-compose up` in the directory holding this gist.
+# or wget/curl the file and pipe it it into `docker-compose up`
+#
+
+version: "3.5"
+
+services:
+
+  keycloak:
+    image: jboss/keycloak:latest
+    environment:
+      KEYCLOAK_IMPORT: /config/realm-example.json
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      RADIUS_SHARED_SECRET: secret
+      RADIUS_UDP: 'true'
+      RADIUS_UDP_AUTH_PORT: 1812
+      RADIUS_UDP_ACCOUNT_PORT: 1813
+      RADIUS_RADSEC: 'false'
+      RADIUS_RADSEC_PRIVATEKEY: /config/private.key
+      RADIUS_RADSEC_CERTIFICATE: /config/public.crt
+      RADIUS_COA: 'false'
+      RADIUS_COA_PORT: 3799
+    ports:
+      - "8090:8080" #  UI
+    volumes:
+      - ../cli:/opt/radius/cli
+      - ./scripts:/opt/radius/scripts
+      - ./config:/config
+    entrypoint: /opt/radius/scripts/docker-entrypoint.sh

@@ -6,10 +6,10 @@
 3. Page 2 ![CertificatePage2](../../docs/CertificatePage2.png)
 4. download private key to ${KEYCLOAK_PATH}/config/private.key
 5. download PEM Certificate to ${KEYCLOAK_PATH}/config/public.crt
-6. enable radSec( [sharedSecret have to be "radsec"](https://wiki.mikrotik.com/wiki/Manual:RADIUS_Client) ) :
+6. enable radSec( [Mikrotik sharedSecret have to be "radsec"](https://wiki.mikrotik.com/wiki/Manual:RADIUS_Client) ) :
 <pre><code>{
   {
-   "sharedSecret":"redsec",
+   "sharedSecret":"radsec",
    "authPort":1812,
    "accountPort":1813,
    "useUdpRadius":true,
