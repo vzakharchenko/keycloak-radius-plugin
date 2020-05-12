@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 
 PROPERTY_FILE=./keycloak-plugins/release.properties
