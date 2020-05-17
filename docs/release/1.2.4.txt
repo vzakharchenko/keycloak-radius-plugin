@@ -1,1 +1,2 @@
+ - keycloak 10.0.1
  - run inside docker
