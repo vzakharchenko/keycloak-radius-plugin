@@ -1,4 +1,4 @@
-# Radius REJECT_ example
+# Radius REJECT_ , ACCEPT_ example
 
 Build and Start
 1. build and run keycloak  
