@@ -19,11 +19,14 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.credential.OTPCredentialModel;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
+import org.tinyradius.packet.RadiusPackets;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 
 public abstract class AbstractAuthProtocol implements AuthProtocol {
     protected final AccessRequest accessRequest;
@@ -57,7 +60,8 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     }
 
     @Override
-    public final void prepareAnswer(RadiusPacket answer) {
+    public final RadiusPacket prepareAnswer(RadiusPacket answer) {
+        RadiusPacket resAnswer = answer;
         answer.addAttribute("Acct-Interim-Interval", "60");
         IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
                 .getRadiusUserInfo(session);
@@ -71,7 +75,11 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
             }
             answer(answer, radiusUserInfoGetter);
             KeycloakSessionUtils.clearOneTimePassword(session);
+            resAnswer = radiusUserInfoGetter.getRadiusUserInfo().isForceReject() ?
+                    RadiusPackets.create(accessRequest.getDictionary(), ACCESS_REJECT,
+                            accessRequest.getIdentifier()) : answer;
         }
+        return resAnswer;
     }
 
     protected boolean isValidProtocol() {

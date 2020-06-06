@@ -5,7 +5,7 @@
  - password can be used only once
 
 Build and Start
-1. build and run keycloak
+1. build and run keycloak (docker https://github.com/vzakharchenko/keycloak-radius-plugin/tree/master/docker)
 <pre>
  - download and unzip keycloak-radius.zip (https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
  - unzip keycloak-radius.zip -d keycloak-radius

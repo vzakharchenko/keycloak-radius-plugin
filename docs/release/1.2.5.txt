@@ -1,0 +1,4 @@
+- keycloak 10.0.2
+- fixed docker
+- added example with accept and reject conditions
+- fixed issue with accept and reject conditions

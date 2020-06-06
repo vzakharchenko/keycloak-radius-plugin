@@ -68,6 +68,15 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testChannelReadRadiusReject() {
+        when(radiusUserInfo.isForceReject()).thenReturn(true);
+        authHandler.getChannelHandler(session);
+        authHandler.setAuthRequestInitialization(authRequestInitialization);
+        authHandler.channelReadRadius(channelHandlerContext, requestCtx);
+        verify(channelHandlerContext).writeAndFlush(any());
+    }
+
+    @Test
     public void testChannelRead0() throws InterruptedException {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);

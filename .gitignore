@@ -25,6 +25,7 @@ hs_err_pid*
 
 node_modules
 package-lock.json
+yarn.lock
 keycloak.json
 .env.json
 storage.json
