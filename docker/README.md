@@ -2,6 +2,7 @@
 
 ## RUN Instance
 ```
+docker network create docker_default
 docker-compose -f docker/docker-compose-keycloak.yaml create
 docker-compose -f docker/docker-compose-keycloak.yaml start
 ```

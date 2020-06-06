@@ -14,7 +14,7 @@ public interface AuthProtocol {
 
     boolean isValid(InetSocketAddress address);
 
-    void prepareAnswer(RadiusPacket answer);
+    RadiusPacket prepareAnswer(RadiusPacket answer);
 
     ProtocolType getType();
 

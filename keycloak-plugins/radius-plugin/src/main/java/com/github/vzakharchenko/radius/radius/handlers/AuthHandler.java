@@ -75,7 +75,7 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
             answer = RadiusPackets.create(request.getDictionary(),
                     type, request.getIdentifier());
             if (type != ACCESS_REJECT) {
-                authProtocol.prepareAnswer(answer);
+                answer = authProtocol.prepareAnswer(answer);
             }
         } else {
             answer = RadiusPackets.create(request.getDictionary(),

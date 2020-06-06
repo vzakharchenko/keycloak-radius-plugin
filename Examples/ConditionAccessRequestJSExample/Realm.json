@@ -61,7 +61,7 @@
         "account": ["view-profile", "manage-account"]
       }
     }
-    ],
+  ],
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,

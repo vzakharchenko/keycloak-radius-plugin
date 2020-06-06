@@ -22,8 +22,12 @@ services:
       RADIUS_RADSEC_CERTIFICATE: /config/public.crt
       RADIUS_COA: 'false'
       RADIUS_COA_PORT: 3799
+      "keycloak.profile.feature.upload_scripts": enabled
     ports:
       - "8090:8080" #  UI
+      - "8190:8190" #  DEBUG
+      - "1812:1812/udp" #  RADIUS
+      - "1813:1813/udp" #  RADIUS
     volumes:
       - ../cli:/opt/radius/cli
       - ./scripts:/opt/radius/scripts
