@@ -113,7 +113,7 @@ Example:
 <pre>COND_NAS-IP-Address = "192.168.88.1, 192.168.88.2"</pre>
 ![ConditionalRole](docs/ConditionalRole.png)
 The role will only be applied if the NAS server address is 192.168.88.1 or 192.168.88.2.
-#### Role REJECT Attributes
+#### Role REJECT Attributes ([Example](Examples/ConditionAccessRequestJSExample))
 if reject Attribute is present and has valid value then access request will be rejected.  
 (Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
 
@@ -128,7 +128,7 @@ Example:
 ![reject_conditional](docs/reject_conditional.png)
 The role will only be applied if the NAS server address is not 192.168.88.2, otherwise request will be rejected
 
-#### Role ACCEPT Attributes
+#### Role ACCEPT Attributes ([Example](Examples/ConditionAccessRequestJSExample))
 if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
 
@@ -283,3 +283,6 @@ Example:
 ### Radius Proxy
 
 [Radius Proxy Module](keycloak-plugins/proxy-radius-plugin)
+
+### Development
+[wiki page](https://github.com/vzakharchenko/keycloak-radius-plugin/wiki/Development)
