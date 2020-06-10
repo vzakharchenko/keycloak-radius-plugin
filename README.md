@@ -27,6 +27,7 @@ features:
  - [Reject and Accept condition example](Examples/ConditionAccessRequestJSExample)
  - [Radius and OIDC integration example](Examples/OneTimePasswordJSExample)
  - [OTP Password example](Examples/OTPPasswordJSExample)
+ - [Default Realm example(if the radius client does not support realm attribute)](Examples/RadiusDefaultRealmJSExample)
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
 2. unzip release <pre><code>unzip keycloak-radius.zip -d keycloak-radius</pre></code>
