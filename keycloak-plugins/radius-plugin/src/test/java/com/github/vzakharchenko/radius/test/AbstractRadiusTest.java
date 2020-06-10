@@ -127,6 +127,9 @@ public abstract class AbstractRadiusTest {
     protected ResourceServerStore resourceServerStore;
     @Mock
     protected ResourceStore resourceStore;
+    @Mock
+    protected RealmProvider realmProvider;
+
     protected Map<Class, Provider> providerByClass = new HashMap<>();
 
     {
@@ -189,6 +192,7 @@ public abstract class AbstractRadiusTest {
         reset(policyEvaluator);
         reset(resourceServerStore);
         reset(resourceStore);
+        reset(realmProvider);
         providerByClass.clear();
         accessToken = new AccessToken();
         authorizationProvider = new AuthorizationProvider(session, realmModel, policyEvaluator);
@@ -253,7 +257,6 @@ public abstract class AbstractRadiusTest {
         userSessionProvider = session.getProvider(UserSessionProvider.class);
         assertNotNull(userSessionProvider);
         when(session.sessions()).thenReturn(userSessionProvider);
-        RealmProvider realmProvider = getProvider(RealmProvider.class);
         when(session.realms()).thenReturn(realmProvider);
         when(clientModel.getRealm()).thenReturn(realmModel);
         when(clientModel.getClientId()).thenReturn(CLIENT_ID);
