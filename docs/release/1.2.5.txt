@@ -2,3 +2,5 @@
 - fixed docker
 - added example with accept and reject conditions
 - fixed issue with accept and reject conditions
+- added support reject attribute without condition (REJECT_RADIUS)
+- added example with keycloak authorization

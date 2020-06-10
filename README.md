@@ -16,11 +16,17 @@ features:
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
 - Map Keycloak [authorization](#assign-radius-attributes-to-authorization-resource) ,  [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
 - conditional attributes for authorization/Role/Group/User
+- reject attribute for authorization/Role/Group/User
+- dynamically assign attributes based on keycloak policies(Role, [javascript](Examples/RadiusAuthorizationJSExample), Time, User)
 - start/stop Keycloak Session ![sessionManagment.png](./docs/sessionManagment.png)
 - BackChannel logout(Disconnect-message request)
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
 - [Social Hotspot Login](https://github.com/vzakharchenko/mikrotik-hotspot-oauth)
-
+## Examples
+ - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)
+ - [Reject and Accept condition example](Examples/ConditionAccessRequestJSExample)
+ - [Radius and OIDC integration example](Examples/OneTimePasswordJSExample)
+ - [OTP Password example](Examples/OTPPasswordJSExample)
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
 2. unzip release <pre><code>unzip keycloak-radius.zip -d keycloak-radius</pre></code>
@@ -128,6 +134,12 @@ Example:
 ![reject_conditional](docs/reject_conditional.png)
 The role will only be applied if the NAS server address is not 192.168.88.2, otherwise request will be rejected
 
+#### Role REJECT WITHOUT CONDITION
+If Reject Attribute is present then access request will be rejected.
+**Structure of Attribute:** ```REJECT_RADIUS=<ANY VALUE>```
+Example:
+<pre>REJECT_RADIUS = "true"</pre>
+
 #### Role ACCEPT Attributes ([Example](Examples/ConditionAccessRequestJSExample))
 if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
@@ -170,6 +182,14 @@ if reject Attribute is present and has valid value then access request will be r
 
 Example:
 [Role REJECT Attributes](#role-reject-attributes)
+
+
+#### Group REJECT WITHOUT CONDITION
+If Reject Attribute is present then access request will be rejected.
+**Structure of Attribute:** ```REJECT_RADIUS=<ANY VALUE>```
+Example:
+<pre>REJECT_RADIUS = "true"</pre>
+
 #### Group ACCEPT Attributes
 if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
@@ -259,6 +279,12 @@ if reject Attribute is present and has valid value then access request will be r
 
 Example:
 [Role REJECT Attributes](#role-reject-attributes)
+#### Resource REJECT without condition
+If Reject Attribute is present then access request will be rejected.
+**Structure of Attribute:** ```REJECT_RADIUS=<ANY VALUE>```
+Example:
+<pre>REJECT_RADIUS = "true"</pre>
+
 #### Resource ACCEPT Attributes
 if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
