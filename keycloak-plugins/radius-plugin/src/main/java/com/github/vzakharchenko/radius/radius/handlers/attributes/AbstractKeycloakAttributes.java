@@ -56,12 +56,16 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
         return false;
     }
 
+    protected void rejectAttribute(Map<String, Set<String>> attributes) {
+        if (attributes.get(REJECT_RADIUS) != null) {
+            radiusUserInfoGetter.getBuilder().forceReject();
+        }
+    }
+
     protected Map<String, Set<String>> filter(Map<String, Set<String>> attributes) {
         if (conditionalAttributes(attributes)) {
+            rejectAttribute(attributes);
             return filterServiceAttributes(attributes);
-        }
-        if (attributes.get(REJECT_RADIUS) != null){
-          radiusUserInfoGetter.getBuilder().forceReject();
         }
         return new HashMap<>();
     }
@@ -76,11 +80,13 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
                         Objects.equals(s1, attribute.getValueString())));
     }
 
-    private boolean isValidConditional(String radiusAttributeName, Collection<String> values) {
+    private boolean isValidConditional(String radiusAttributeName,
+                                       Collection<String> values,
+                                       boolean defaultResult) {
         if (testAttribute(radiusAttributeName, accessRequest.getDictionary())) {
             return isValidConditional0(radiusAttributeName, values);
         }
-        return true;
+        return defaultResult;
     }
 
     protected boolean conditionalAttributes(
@@ -90,7 +96,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
         if (attributeName.toUpperCase(Locale.US).startsWith(prefix)) {
             String radiusAttributeName = attributeName
                     .replaceFirst("(?i)" + prefix, "");
-            return isValidConditional(radiusAttributeName, values);
+            return isValidConditional(radiusAttributeName, values, defaultResult);
         }
         return defaultResult;
     }

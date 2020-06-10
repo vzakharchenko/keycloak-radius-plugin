@@ -101,6 +101,22 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testRejectAttribute() {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("testAttribute", Arrays.asList("0002", "0004"));
+        map.put("testAttribute2", Collections.emptyList());
+        map.put("REJECT_RADIUS", Arrays.asList("true"));
+        map.put("testAttribute3", null);
+
+        when(roleModel.getAttributes()).thenReturn(map);
+        Map<String, Set<String>> attributes = roleKeycloakAttributes
+                .getAttributes(roleModel);
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 4);
+        verify(radiusUserInfoBuilder).forceReject();
+    }
+
+    @Test
     public void testConditionalRejectFalse() {
         HashMap<String, List<String>> map = new HashMap<>();
         map.put("testAttribute", Arrays.asList("0002", "0004"));
@@ -113,7 +129,7 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
                 .getAttributes(roleModel);
         assertNotNull(attributes);
         assertEquals(attributes.size(), 4);
-        verify(radiusUserInfoBuilder,never()).forceReject();
+        verify(radiusUserInfoBuilder, never()).forceReject();
     }
 
     @Test
@@ -130,7 +146,7 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
                 .getAttributes(roleModel);
         assertNotNull(attributes);
         assertEquals(attributes.size(), 5);
-        verify(radiusUserInfoBuilder,never()).forceReject();
+        verify(radiusUserInfoBuilder, never()).forceReject();
     }
 
     @Test
@@ -164,6 +180,7 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
         assertNotNull(attributes);
         assertEquals(attributes.size(), 4);
     }
+
     @Test
     public void testConditionalAttributeFalse() {
         HashMap<String, List<String>> map = new HashMap<>();
