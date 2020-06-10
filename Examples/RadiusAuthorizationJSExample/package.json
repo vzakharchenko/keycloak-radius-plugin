@@ -1,0 +1,27 @@
+{
+  "name": "radius-authorization-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vzakharchenko/keycloak-radius-plugin.git"
+  },
+  "author": "vzakharchenko",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/vzakharchenko/keycloak-radius-plugin/issues"
+  },
+  "homepage": "https://github.com/vzakharchenko/keycloak-radius-plugin#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "*",
+    "express-handlebars": "*",
+    "node-radius-client": "*",
+    "node-radius-utils": "*",
+    "path": "*"
+  }
+}

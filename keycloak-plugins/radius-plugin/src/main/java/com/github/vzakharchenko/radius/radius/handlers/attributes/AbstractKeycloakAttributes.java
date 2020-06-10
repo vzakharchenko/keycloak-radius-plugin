@@ -21,6 +21,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     public static final String REJECT_CONDITIONS = "REJECT_";
     public static final String CONDITION = "COND_";
     public static final String ACCEPT_CONDITION = "ACCEPT_";
+    public static final String REJECT_RADIUS = "REJECT_RADIUS";
     protected final KeycloakSession session;
     protected final IRadiusUserInfoGetter radiusUserInfoGetter;
     protected final AccessRequest accessRequest;
@@ -58,6 +59,9 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     protected Map<String, Set<String>> filter(Map<String, Set<String>> attributes) {
         if (conditionalAttributes(attributes)) {
             return filterServiceAttributes(attributes);
+        }
+        if (attributes.get(REJECT_RADIUS) != null){
+          radiusUserInfoGetter.getBuilder().forceReject();
         }
         return new HashMap<>();
     }
