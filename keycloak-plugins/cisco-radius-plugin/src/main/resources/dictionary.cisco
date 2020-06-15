@@ -1,0 +1,152 @@
+# dictionary.cisco
+#
+#		Accounting VSAs originally by
+#		"Marcelo M. Sosa Lugones" <marcelo@sosa.com.ar>
+#
+# Version:	$Id$
+#
+#  For documentation on Cisco RADIUS attributes, see:
+#
+# http://www.cisco.com/univercd/cc/td/doc/product/access/acs_serv/vapp_dev/vsaig3.htm
+#
+#  For general documentation on Cisco RADIUS configuration, see:
+#
+# http://www.cisco.com/en/US/partner/tech/tk583/tk547/tsd_technology_support_sub-protocol_home.html
+#
+
+VENDOR	9	Cisco
+
+#
+#	Standard attribute
+#
+
+VENDORATTR  9	Cisco-AVPair				1	string
+VENDORATTR  9	Cisco-NAS-Port				2	string
+
+#
+#  T.37 Store-and-Forward attributes.
+#
+VENDORATTR  9	Cisco-Fax-Account-Id-Origin		3	string
+VENDORATTR  9	Cisco-Fax-Msg-Id			4	string
+VENDORATTR  9	Cisco-Fax-Pages				5	string
+VENDORATTR  9	Cisco-Fax-Coverpage-Flag		6	string
+VENDORATTR  9	Cisco-Fax-Modem-Time			7	string
+VENDORATTR  9	Cisco-Fax-Connect-Speed			8	string
+VENDORATTR  9	Cisco-Fax-Recipient-Count		9	string
+VENDORATTR  9	Cisco-Fax-Process-Abort-Flag		10	string
+VENDORATTR  9	Cisco-Fax-Dsn-Address			11	string
+VENDORATTR  9	Cisco-Fax-Dsn-Flag			12	string
+VENDORATTR  9	Cisco-Fax-Mdn-Address			13	string
+VENDORATTR  9	Cisco-Fax-Mdn-Flag			14	string
+VENDORATTR  9	Cisco-Fax-Auth-Status			15	string
+VENDORATTR  9	Cisco-Email-Server-Address		16	string
+VENDORATTR  9	Cisco-Email-Server-Ack-Flag		17	string
+VENDORATTR  9	Cisco-Gateway-Id			18	string
+VENDORATTR  9	Cisco-Call-Type				19	string
+VENDORATTR  9	Cisco-Port-Used				20	string
+VENDORATTR  9	Cisco-Abort-Cause			21	string
+
+#
+#  Voice over IP attributes.
+#
+VENDORATTR  9	h323-remote-address			23	string
+VENDORATTR  9	h323-conf-id				24	string
+VENDORATTR  9	h323-setup-time				25	string
+VENDORATTR  9	h323-call-origin			26	string
+VENDORATTR  9	h323-call-type				27	string
+VENDORATTR  9	h323-connect-time			28	string
+VENDORATTR  9	h323-disconnect-time			29	string
+VENDORATTR  9	h323-disconnect-cause			30	string
+VENDORATTR  9	h323-voice-quality			31	string
+VENDORATTR  9	h323-gw-id				33	string
+VENDORATTR  9	h323-incoming-conf-id			35	string
+
+VENDORATTR  9	sip-conf-id				100	string
+VENDORATTR  9	h323-credit-amount			101	string
+VENDORATTR  9	h323-credit-time			102	string
+VENDORATTR  9	h323-return-code			103	string
+VENDORATTR  9	h323-prompt-id				104	string
+VENDORATTR  9	h323-time-and-day			105	string
+VENDORATTR  9	h323-redirect-number			106	string
+VENDORATTR  9	h323-preferred-lang			107	string
+VENDORATTR  9	h323-redirect-ip-address		108	string
+VENDORATTR  9	h323-billing-model			109	string
+VENDORATTR  9	h323-currency				110	string
+VENDORATTR  9	subscriber				111	string
+VENDORATTR  9	gw-rxd-cdn				112	string
+VENDORATTR  9	gw-final-xlated-cdn			113	string
+VENDORATTR  9	remote-media-address			114	string
+VENDORATTR  9	release-source				115	string
+VENDORATTR  9	gw-rxd-cgn				116	string
+VENDORATTR  9	gw-final-xlated-cgn			117	string
+
+# SIP Attributes
+VENDORATTR  9	call-id					141	string
+VENDORATTR  9	session-protocol			142	string
+VENDORATTR  9	method					143	string
+VENDORATTR  9	prev-hop-via				144	string
+VENDORATTR  9	prev-hop-ip				145	string
+VENDORATTR  9	incoming-req-uri			146	string
+VENDORATTR  9	outgoing-req-uri			147	string
+VENDORATTR  9	next-hop-ip				148	string
+VENDORATTR  9	next-hop-dn				149	string
+VENDORATTR  9	sip-hdr					150	string
+
+#
+#	Extra attributes sent by the Cisco, if you configure
+#	"radius-server vsa accounting" (requires IOS11.2+).
+#
+VENDORATTR  9	Cisco-Multilink-ID			187	integer
+VENDORATTR  9	Cisco-Num-In-Multilink			188	integer
+VENDORATTR  9	Cisco-Pre-Input-Octets			190	integer
+VENDORATTR  9	Cisco-Pre-Output-Octets			191	integer
+VENDORATTR  9	Cisco-Pre-Input-Packets			192	integer
+VENDORATTR  9	Cisco-Pre-Output-Packets		193	integer
+VENDORATTR  9	Cisco-Maximum-Time			194	integer
+VENDORATTR  9	Cisco-Disconnect-Cause			195	integer
+VENDORATTR  9	Cisco-Data-Rate				197	integer
+VENDORATTR  9	Cisco-PreSession-Time			198	integer
+VENDORATTR  9	Cisco-PW-Lifetime			208	integer
+VENDORATTR  9	Cisco-IP-Direct				209	integer
+VENDORATTR  9	Cisco-PPP-VJ-Slot-Comp			210	integer
+VENDORATTR  9	Cisco-PPP-Async-Map			212	integer
+VENDORATTR  9	Cisco-IP-Pool-Definition		217	string
+VENDORATTR  9	Cisco-Assign-IP-Pool			218	integer
+VENDORATTR  9	Cisco-Route-IP				228	integer
+VENDORATTR  9	Cisco-Link-Compression			233	integer
+VENDORATTR  9	Cisco-Target-Util			234	integer
+VENDORATTR  9	Cisco-Maximum-Channels			235	integer
+VENDORATTR  9	Cisco-Data-Filter			242	integer
+VENDORATTR  9	Cisco-Call-Filter			243	integer
+VENDORATTR  9	Cisco-Idle-Limit			244	integer
+VENDORATTR  9	Cisco-Account-Info			250	string
+VENDORATTR  9	Cisco-Service-Info			251	string
+VENDORATTR  9	Cisco-Command-Code			252	string
+VENDORATTR  9	Cisco-Control-Info			253	string
+VENDORATTR  9	Cisco-Xmit-Rate				255	integer
+
+VALUE	Cisco-Disconnect-Cause		Unknown			2
+VALUE	Cisco-Disconnect-Cause		CLID-Authentication-Failure 4
+VALUE	Cisco-Disconnect-Cause		No-Carrier		10
+VALUE	Cisco-Disconnect-Cause		Lost-Carrier		11
+VALUE	Cisco-Disconnect-Cause		No-Detected-Result-Codes 12
+VALUE	Cisco-Disconnect-Cause		User-Ends-Session	20
+VALUE	Cisco-Disconnect-Cause		Idle-Timeout		21
+VALUE	Cisco-Disconnect-Cause		Exit-Telnet-Session	22
+VALUE	Cisco-Disconnect-Cause		No-Remote-IP-Addr	23
+VALUE	Cisco-Disconnect-Cause		Exit-Raw-TCP		24
+VALUE	Cisco-Disconnect-Cause		Password-Fail		25
+VALUE	Cisco-Disconnect-Cause		Raw-TCP-Disabled	26
+VALUE	Cisco-Disconnect-Cause		Control-C-Detected	27
+VALUE	Cisco-Disconnect-Cause		EXEC-Program-Destroyed	28
+VALUE	Cisco-Disconnect-Cause		Timeout-PPP-LCP		40
+VALUE	Cisco-Disconnect-Cause		Failed-PPP-LCP-Negotiation 41
+VALUE	Cisco-Disconnect-Cause		Failed-PPP-PAP-Auth-Fail 42
+VALUE	Cisco-Disconnect-Cause		Failed-PPP-CHAP-Auth	43
+VALUE	Cisco-Disconnect-Cause		Failed-PPP-Remote-Auth	44
+VALUE	Cisco-Disconnect-Cause		PPP-Remote-Terminate	45
+VALUE	Cisco-Disconnect-Cause		PPP-Closed-Event	46
+VALUE	Cisco-Disconnect-Cause		Session-Timeout		100
+VALUE	Cisco-Disconnect-Cause		Session-Failed-Security	101
+VALUE	Cisco-Disconnect-Cause		Session-End-Callback	102
+VALUE	Cisco-Disconnect-Cause		Invalid-Protocol	120
