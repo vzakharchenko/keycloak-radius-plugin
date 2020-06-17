@@ -54,6 +54,11 @@ public class RadiusLogout implements IRadiusCOAProvider,
 
     }
 
+    private String getIp(DisconnectMessageModel dmm) {
+        return dmm.getNasIp() == null || dmm.getNasIp().isEmpty()
+                ? dmm.getAddress() : dmm.getNasIp();
+    }
+
 
     protected void checkSessions(KeycloakSession session) {
         DmTableManager disconnectMessageManager = new DisconnectMessageManager(session);
@@ -63,7 +68,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
             if (!KeycloakSessionUtils.isActiveSession(session,
                     dmm.getKeycloakSessionId(), dmm.getRealmId())) {
                 requestCoA(session, dmm, new RadiusEndpoint(
-                                new InetSocketAddress(dmm.getNasIp(),
+                                new InetSocketAddress(getIp(dmm),
                                         RadiusConfigHelper.getCoASettings().getCoaPort()),
                                 dmm.getSecret()),
                         ex -> disconnectMessageManager.increaseEndAttempts(dmm, ex.getMessage()));

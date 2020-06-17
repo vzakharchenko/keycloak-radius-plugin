@@ -152,6 +152,28 @@ public class RadiusLogoutTest extends AbstractJPATest {
     }
 
     @Test
+    public void checkInActiveSessionsTest2() {
+        when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
+                .thenReturn(null);
+        DisconnectMessageModel disconnectMessageModel = createDisconnectMessageModel();
+        disconnectMessageModel.setNasIp(null);
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
+        radiusLogout.checkSessions(session);
+        verify(radiusCoAClient).requestCoA(any(), any());
+    }
+
+    @Test
+    public void checkInActiveSessionsTest3() {
+        when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
+                .thenReturn(null);
+        DisconnectMessageModel disconnectMessageModel = createDisconnectMessageModel();
+        disconnectMessageModel.setNasIp("");
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
+        radiusLogout.checkSessions(session);
+        verify(radiusCoAClient).requestCoA(any(), any());
+    }
+
+    @Test
     public void checkSessionsTestError() {
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(null);
