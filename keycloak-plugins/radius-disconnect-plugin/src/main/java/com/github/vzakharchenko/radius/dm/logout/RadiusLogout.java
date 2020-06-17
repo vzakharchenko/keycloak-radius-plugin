@@ -128,8 +128,12 @@ public class RadiusLogout implements IRadiusCOAProvider,
     protected void prepareDisconnectMessagePacket(RadiusPacket dmPacket,
                                                   DisconnectMessageModel dm) {
         dmPacket.addAttribute("Acct-Session-Id", dm.getRadiusSessionId());
-        dmPacket.addAttribute("NAS-IP-Address", dm.getNasIp());
-        dmPacket.addAttribute("Calling-Station-Id", dm.getCallingStationId());
+        if (dm.getNasIp() != null) {
+            dmPacket.addAttribute("NAS-IP-Address", dm.getNasIp());
+        }
+        if (dm.getCallingStationId() != null) {
+            dmPacket.addAttribute("Calling-Station-Id", dm.getCallingStationId());
+        }
         RadiusLibraryUtils.setUserName(dmPacket, dm.getUserName());
         if (dm.getNasPort() != null) {
             dmPacket.addAttribute("NAS-Port", dm.getNasPort());

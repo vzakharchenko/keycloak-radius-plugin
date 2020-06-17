@@ -1,6 +1,7 @@
 embed-server --server-config=standalone-ha.xml
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.mikrotik)
+/subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.cisco)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.rad.sec)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.dm)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.proxy)

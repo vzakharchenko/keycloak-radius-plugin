@@ -78,6 +78,12 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>cisco-radius-plugin</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/cisco-radius-plugin</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
                                     <artifactId>radius-disconnect-plugin</artifactId>
                                     <version>${keycloak-plugin}</version>
                                     <outputDirectory>target/artifacts/radius-disconnect-plugin</outputDirectory>

@@ -5,3 +5,4 @@
 - added support reject attribute without condition (REJECT_RADIUS)
 - added example with keycloak authorization
 - support Default Realm (if radius client does not support the realm attribute)
+- support cisco

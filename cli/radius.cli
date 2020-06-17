@@ -1,6 +1,7 @@
 embed-server --server-config=standalone.xml
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.mikrotik)
+/subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.cisco)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.rad.sec)
 /subsystem=keycloak-server:list-add(name=providers,value=module:keycloak.plugins.radius.dm)
 /subsystem=keycloak-server/theme=defaults/:write-attribute(name=modules,value=["keycloak.plugins.radius.theme"])
