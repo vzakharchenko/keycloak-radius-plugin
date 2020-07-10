@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.globalreachtech</groupId>
             <artifactId>tinyradius-netty</artifactId>
-            <version>1.1.4</version>
+            <version>1.4.12</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
