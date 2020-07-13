@@ -49,7 +49,7 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
         verify(userSessionProvider).createUserSession(realmModel,
                 userModel,
                 "USER",
-                "",
+                "0.0.0.0",
                 "radius",
                 false,
                 null,
