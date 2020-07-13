@@ -17,7 +17,7 @@ public class RadiusClientConnectionTest extends AbstractRadiusTest {
         AccessRequest accessRequest = new AccessRequest(realDictionary, 0, new byte[16]);
         RadiusClientConnection radiusClientConnection = new RadiusClientConnection(inetSocketAddress,
                 accessRequest);
-        assertEquals(radiusClientConnection.getLocalAddr(),"");
+        assertEquals(radiusClientConnection.getLocalAddr(),"123.123.123.123");
         assertEquals(radiusClientConnection.getLocalPort(), 0);
         assertNotNull(radiusClientConnection.getRemoteAddr());
         assertNotNull(radiusClientConnection.getInetSocketAddress());

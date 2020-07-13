@@ -46,7 +46,7 @@ public class RadiusClientConnection implements ClientConnection {
     @Override
     public String getLocalAddr() {
         String attributeValue = radiusPacket.getAttributeValue("Calling-Station-Id");
-        return attributeValue == null ? "" : attributeValue;
+        return attributeValue == null ? getRemoteAddr() : attributeValue;
     }
 
     @Override
