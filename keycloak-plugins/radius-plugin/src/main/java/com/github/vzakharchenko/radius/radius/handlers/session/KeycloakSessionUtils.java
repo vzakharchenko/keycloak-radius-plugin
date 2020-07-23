@@ -73,7 +73,7 @@ public final class KeycloakSessionUtils {
                 .getClientConnection()
                 .getLocalAddr() + ")");
         Resteasy.pushContext(HttpHeaders.class, new ResteasyHttpHeaders(headers));
-        session.getContext().setConnection(radiusUserInfo.getClientConnection());
+        Resteasy.pushContext(ClientConnection.class, radiusUserInfo.getClientConnection());
         session.getContext().setRealm(radiusUserInfo.getRealmModel());
         session.getContext().setClient(radiusUserInfo.getClientModel());
 
