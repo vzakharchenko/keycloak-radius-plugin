@@ -17,6 +17,7 @@ else
   curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=rad-sec-plugin&e=jar&v=LATEST" --output ~/artifacts/rad-sec-plugin.zip
   curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=mikrotik-radius-plugin&e=jar&v=LATEST" --output ~/artifacts/mikrotik-radius-plugin.zip
   curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=cisco-radius-plugin&e=jar&v=LATEST" --output ~/artifacts/cisco-radius-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=chillispot-radius-plugin&e=jar&v=LATEST" --output ~/artifacts/chillispot-radius-plugin.zip
 
 echo "Radius Theme Installing..."
 # Radius Theme
@@ -36,6 +37,10 @@ echo "Mikrotik..."
 echo "Cisco..."
 # Cisco Module
 /opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.cisco --resources=~/artifacts/cisco-radius-plugin.zip --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"
+
+echo "Chillispot..."
+# Cisco Module
+/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.chillispot --resources=~/artifacts/chillispot-radius-plugin.zip --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"
 
 echo "Disconnect..."
 # Disconnect Module

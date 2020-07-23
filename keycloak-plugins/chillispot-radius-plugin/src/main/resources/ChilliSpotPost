@@ -1,0 +1,5 @@
+# Inline with RFC 2882 use of VSE-Authorize-Only for remote config
+# Note that 14559 = 0x38df is used as prefix for the VSE.
+# This is recognized as the best (but bad) way of doing VSEs.
+# (ChilliSpot Only - CoovaChilli uses Service-Type = Administrative-User)
+VALUE	Service-Type			ChilliSpot-Authorize-Only 954138625

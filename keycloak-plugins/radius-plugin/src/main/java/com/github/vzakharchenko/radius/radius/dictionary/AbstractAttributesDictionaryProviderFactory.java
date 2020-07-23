@@ -8,15 +8,16 @@ import org.keycloak.models.KeycloakSessionFactory;
 
 import java.util.List;
 
-public class ChilliSpotDictionaryProviderFactory
+public abstract class AbstractAttributesDictionaryProviderFactory
+        <T extends IRadiusDictionaryProvider>
         extends AbstractDictionaryProvider
         implements
-        IRadiusDictionaryProviderFactory<IRadiusDictionaryProvider> {
+        IRadiusDictionaryProviderFactory<T> {
 
 
     @Override
-    public IRadiusDictionaryProvider create(KeycloakSession session) {
-        return this;
+    public T create(KeycloakSession session) {
+        return (T) this;
     }
 
     @Override
@@ -35,17 +36,7 @@ public class ChilliSpotDictionaryProviderFactory
     }
 
     @Override
-    public String getId() {
-        return "ChilliSpot-Dictionary";
-    }
-
-    @Override
     public List<String> getRealmAttributes() {
         return null;
-    }
-
-    @Override
-    protected String getResource() {
-        return "ChilliSpot";
     }
 }

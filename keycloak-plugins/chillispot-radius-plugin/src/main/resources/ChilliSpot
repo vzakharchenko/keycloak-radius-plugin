@@ -14,9 +14,3 @@ VENDORATTR  14559	ChilliSpot-OriginalURL			9	string
 VENDORATTR  14559	ChilliSpot-UAM-Allowed			100	string
 VENDORATTR  14559	ChilliSpot-MAC-Allowed			101	string
 VENDORATTR  14559	ChilliSpot-Interval			102	integer
-
-# Inline with RFC 2882 use of VSE-Authorize-Only for remote config
-# Note that 14559 = 0x38df is used as prefix for the VSE.
-# This is recognized as the best (but bad) way of doing VSEs.
-# (ChilliSpot Only - CoovaChilli uses Service-Type = Administrative-User)
-VALUE	Service-Type			ChilliSpot-Authorize-Only 954138625

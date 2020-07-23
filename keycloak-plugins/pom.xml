@@ -43,6 +43,7 @@
         <module>radius-disconnect-plugin</module>
         <module>proxy-radius-plugin</module>
         <module>radius-theme</module>
+        <module>chillispot-radius-plugin</module>
     </modules>
 
     <properties>

@@ -9,15 +9,20 @@ import java.io.IOException;
 public abstract class AbstractDictionaryProvider implements
         IRadiusDictionaryProvider {
 
-    protected abstract String getResource();
+    protected abstract String getResourceName();
 
     @Override
     public void parseDictionary(WritableDictionary dictionary) {
         DictionaryParser dictionaryParser = DictionaryParser.newClasspathParser();
         try {
-            dictionaryParser.parseDictionary(dictionary, getResource());
+            dictionaryParser.parseDictionary(dictionary, getResourceName());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Override
+    public void parsePostDictionary(WritableDictionary dictionary) {
+
     }
 }

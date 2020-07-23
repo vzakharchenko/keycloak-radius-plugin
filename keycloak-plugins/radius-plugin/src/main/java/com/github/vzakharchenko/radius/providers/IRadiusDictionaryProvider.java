@@ -10,4 +10,6 @@ public interface IRadiusDictionaryProvider extends Provider {
     List<String> getRealmAttributes();
 
     void parseDictionary(WritableDictionary dictionary);
+
+    void parsePostDictionary(WritableDictionary writableDictionary);
 }

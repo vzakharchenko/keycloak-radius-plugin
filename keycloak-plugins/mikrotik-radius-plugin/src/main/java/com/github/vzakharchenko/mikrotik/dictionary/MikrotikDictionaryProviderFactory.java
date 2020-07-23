@@ -1,41 +1,14 @@
 package com.github.vzakharchenko.mikrotik.dictionary;
 
 import com.github.vzakharchenko.radius.providers.AbstractRadiusDictionaryProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProviderFactory;
-import org.keycloak.Config;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakSessionFactory;
 
 import java.util.Collections;
 import java.util.List;
 
 public class MikrotikDictionaryProviderFactory
-        extends AbstractRadiusDictionaryProvider implements
-        IRadiusDictionaryProviderFactory<IRadiusDictionaryProvider> {
-
+        extends AbstractRadiusDictionaryProvider<MikrotikDictionaryProviderFactory> {
 
     public static final String MIKROTIK = "mikrotik";
-
-    @Override
-    public IRadiusDictionaryProvider create(KeycloakSession session) {
-        return this;
-    }
-
-    @Override
-    public void init(Config.Scope config) {
-
-    }
-
-    @Override
-    public void postInit(KeycloakSessionFactory factory) {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
 
     @Override
     public String getId() {

@@ -1,4 +1,4 @@
-package com.github.vzakharchenko.radius.radius.dictionary;
+package com.github.vzakharchenko.chillispot.dictionary;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.annotations.Test;
@@ -24,5 +24,6 @@ public class ChilliSpotDictionaryProviderFactoryTest extends AbstractRadiusTest 
         realDictionary = dictionaryParser
                 .parseDictionary("org/tinyradius/dictionary/default_dictionary");
         dictionaryProviderFactory.parseDictionary(realDictionary);
+        dictionaryProviderFactory.parsePostDictionary(realDictionary);
     }
 }

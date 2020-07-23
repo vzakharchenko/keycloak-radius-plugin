@@ -84,6 +84,12 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.github.vzakharchenko</groupId>
+                                    <artifactId>chillispot-radius-plugin</artifactId>
+                                    <version>${keycloak-plugin}</version>
+                                    <outputDirectory>target/artifacts/chillispot-radius-plugin</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.vzakharchenko</groupId>
                                     <artifactId>radius-disconnect-plugin</artifactId>
                                     <version>${keycloak-plugin}</version>
                                     <outputDirectory>target/artifacts/radius-disconnect-plugin</outputDirectory>

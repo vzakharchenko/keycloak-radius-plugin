@@ -24,5 +24,6 @@ public class MicrosoftDictionaryProviderFactoryTest extends AbstractRadiusTest {
         realDictionary = dictionaryParser
                 .parseDictionary("org/tinyradius/dictionary/default_dictionary");
         dictionaryProviderFactory.parseDictionary(realDictionary);
+        dictionaryProviderFactory.parsePostDictionary(realDictionary);
     }
 }
