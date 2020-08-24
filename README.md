@@ -1,13 +1,13 @@
 # Embedded Radius Server in [Keycloak](https://www.keycloak.org/) SSO
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)  
-![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)  
-![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)  
-[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
-<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>  
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)
+![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]
+<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
 [![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
 
-Run radius server inside [keycloak](https://www.keycloak.org/).  
+Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)
 - [radius oidc password](Examples/OneTimePasswordJSExample)
@@ -45,7 +45,7 @@ features:
  - <pre><code>cd keycloak-plugins</pre></code>
  - <pre><code>mvn clean install</pre></code>
 ### Configure keycloak
-***requirements***: [keycloak 11.0.0](https://downloads.jboss.org/keycloak/11.0.0/keycloak-11.0.0.zip)
+***requirements***: [keycloak 11.0.1](https://downloads.jboss.org/keycloak/11.0.1/keycloak-11.0.1.zip)
 - setup radius-plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.2.7-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec"</pre></code>
 - setup rad-sec plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.rad.sec --resources=${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.2.7-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"</pre></code>
 - setup mikrotik plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.mikrotik --resources=${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.2.7-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius"</pre></code>
@@ -112,7 +112,7 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 
 ![RoleAttributes](docs/RoleAttributes.png)
 #### Role Conditional Attributes
-if conditional Attribute is present and has valid value then all other attributes will be applied.  
+if conditional Attribute is present and has valid value then all other attributes will be applied.
 (Example: apply role attributes only if NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -126,7 +126,7 @@ Example:
 ![ConditionalRole](docs/ConditionalRole.png)
 The role will only be applied if the NAS server address is 192.168.88.1 or 192.168.88.2.
 #### Role REJECT Attributes ([Example](Examples/ConditionAccessRequestJSExample))
-if reject Attribute is present and has valid value then access request will be rejected.  
+if reject Attribute is present and has valid value then access request will be rejected.
 (Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -147,7 +147,7 @@ Example:
 <pre>REJECT_RADIUS = "true"</pre>
 
 #### Role ACCEPT Attributes ([Example](Examples/ConditionAccessRequestJSExample))
-if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -165,7 +165,7 @@ The role will only be applied if the NAS server address is not 192.168.88.2, oth
 > **_NOTE:_**  SubGroups supported
 ![groupAttributes](docs/groupAttributes.png)
 #### Group Conditional Attributes
-if conditional Attribute is present and has valid value then all other attributes will be applied.  
+if conditional Attribute is present and has valid value then all other attributes will be applied.
 (Example: apply group attributes only if NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -177,7 +177,7 @@ if conditional Attribute is present and has valid value then all other attribute
 Example:
 [Role Conditional Attributes](#role-conditional-attributes)/README.md:1
 #### Group REJECT Attributes
-if reject Attribute is present and has valid value then access request will be rejected.  
+if reject Attribute is present and has valid value then access request will be rejected.
 (Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -197,7 +197,7 @@ Example:
 <pre>REJECT_RADIUS = "true"</pre>
 
 #### Group ACCEPT Attributes
-if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -211,7 +211,7 @@ Example:
 ### Assign Radius Attributes to User
 ![userAttributes](docs/userAttributes.png)
 #### User Conditional Attributes
-if conditional Attribute is present and has valid value then all other attributes will be applied.  
+if conditional Attribute is present and has valid value then all other attributes will be applied.
 (Example: apply user attributes only if NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -223,7 +223,7 @@ if conditional Attribute is present and has valid value then all other attribute
 Example:
 [Role Conditional Attributes](#role-conditional-attributes)/README.md:1
 #### User REJECT Attributes
-if reject Attribute is present and has valid value then access request will be rejected.  
+if reject Attribute is present and has valid value then access request will be rejected.
 (Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -235,7 +235,7 @@ if reject Attribute is present and has valid value then access request will be r
 Example:
 [Role REJECT Attributes](#role-reject-attributes)
 #### User ACCEPT Attributes
-if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -262,7 +262,7 @@ Example:
 - [authorization permissions](https://www.keycloak.org/docs/latest/authorization_services/#_permission_overview)
 ![Permissions](docs/Permissions.png)
 #### Resource Conditional Attributes
-if conditional Attribute is present and has valid value then all other attributes will be applied.  
+if conditional Attribute is present and has valid value then all other attributes will be applied.
 (Example: apply user attributes only if NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -274,7 +274,7 @@ if conditional Attribute is present and has valid value then all other attribute
 Example:
 [Role Conditional Attributes](#role-conditional-attributes)/README.md:1
 #### Resource REJECT Attributes
-if reject Attribute is present and has valid value then access request will be rejected.  
+if reject Attribute is present and has valid value then access request will be rejected.
 (Example: reject user request if access request contains attribute NAS-IP-Address= 192.168.88.1)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
@@ -292,7 +292,7 @@ Example:
 <pre>REJECT_RADIUS = "true"</pre>
 
 #### Resource ACCEPT Attributes
-if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.  
+if accept Attribute is present and has valid value then access request will be accepted, otherwise rejected.
 (Example: accept user request if access request contains attribute NAS-IP-Address= 192.168.88.1,192.168.88.2)
 
 **Structure of Attribute:** <pre>\<PREFIX\>\<ATTRIBUTE_NAME\>=\<values\></pre>
