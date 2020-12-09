@@ -223,7 +223,7 @@ public final class MSCHAPHelper {
     private static void parityKey(byte[] szOut, final byte[] szIn, final int offset) {
         int i;
         int cNext = 0;
-        int cWorking = 0;
+        int cWorking;
 
         for (i = 0; i < 7; i++) {
             cWorking = 0xFF & szIn[i + offset];
