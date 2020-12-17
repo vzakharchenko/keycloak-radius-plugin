@@ -19,16 +19,16 @@ public class CoAChannelInitializerTest extends AbstractRadiusTest {
     private ChannelPipeline channelPipeline;
 
     @BeforeMethod
-    public void beforeMethods(){
+    public void beforeMethods() {
         reset(datagramChannel);
         reset(channelPipeline);
         when(datagramChannel.pipeline()).thenReturn(channelPipeline);
     }
 
     @Test
-    public void coaTest(){
+    public void coaTest() {
         CoAChannelInitializer coAChannelInitializer = new CoAChannelInitializer(new ClientPacketCodec(new PacketEncoder(realDictionary)));
         coAChannelInitializer.initChannel(datagramChannel);
-        verify(channelPipeline).addLast(any(ChannelHandler.class),any(ChannelHandler.class));
+        verify(channelPipeline).addLast(any(ChannelHandler.class), any(ChannelHandler.class));
     }
 }

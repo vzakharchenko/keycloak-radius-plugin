@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
-import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPassword;
@@ -15,9 +14,12 @@ import org.testng.annotations.Test;
 import org.tinyradius.packet.AccessRequest;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
@@ -42,7 +44,7 @@ public class PAPTest extends AbstractRadiusTest {
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
     }
 
-    public void enableOTP(){
+    public void enableOTP() {
         Map<String, OtpHolder> otpHolderMap = otpPasswordInfo.getOtpHolderMap();
         otpPasswordInfo = new OtpPassword(false);
         otpPasswordInfo.putAll(otpHolderMap);
@@ -123,22 +125,23 @@ public class PAPTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testAccessRequest(){
+    public void testAccessRequest() {
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         AccessRequest accessRequest = papProtocol.getAccessRequest();
         assertNotNull(accessRequest);
     }
 
     @Test
-    public void testIsValid(){
+    public void testIsValid() {
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         assertTrue(papProtocol.isValid(new InetSocketAddress(0)));
     }
+
     @Test
-    public void testIsNotValid(){
-       // request.addAttribute(REALM_RADIUS, "33");
-         reset(realmProvider);
-         when(realmProvider.getRealm(Config.getAdminRealm())).thenReturn(realmModel);
+    public void testIsNotValid() {
+        // request.addAttribute(REALM_RADIUS, "33");
+        reset(realmProvider);
+        when(realmProvider.getRealm(Config.getAdminRealm())).thenReturn(realmModel);
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         assertFalse(papProtocol.isValid(new InetSocketAddress(0)));
     }

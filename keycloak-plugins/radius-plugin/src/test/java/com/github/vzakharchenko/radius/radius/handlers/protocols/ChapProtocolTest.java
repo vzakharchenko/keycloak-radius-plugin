@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
 public class ChapProtocolTest extends AbstractRadiusTest {
-    private Dictionary dictionary = mock(Dictionary.class);
+    private final Dictionary dictionary = mock(Dictionary.class);
 
     @BeforeMethod
     public void before() {

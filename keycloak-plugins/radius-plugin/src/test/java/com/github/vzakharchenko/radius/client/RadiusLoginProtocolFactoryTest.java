@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
 public class RadiusLoginProtocolFactoryTest extends AbstractRadiusTest {
-    private RadiusLoginProtocolFactory radiusLoginProtocolFactory = new RadiusLoginProtocolFactory();
+    private final RadiusLoginProtocolFactory radiusLoginProtocolFactory = new RadiusLoginProtocolFactory();
 
     @Test
     public void testMethods() {
@@ -40,7 +40,7 @@ public class RadiusLoginProtocolFactoryTest extends AbstractRadiusTest {
         HashMap<String, ProtocolMapperModel> map = new HashMap<>();
         when(protocolFactory.getBuiltinMappers()).thenReturn(map);
         radiusLoginProtocolFactory.postInit(keycloakSessionFactory);
-        assertEquals(map.size(),1);
+        assertEquals(map.size(), 1);
 
     }
 }

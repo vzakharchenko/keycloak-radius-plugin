@@ -31,7 +31,6 @@ import org.keycloak.models.*;
 import org.keycloak.models.cache.authorization.CachedStoreFactoryProvider;
 import org.keycloak.provider.Provider;
 import org.keycloak.representations.AccessToken;
-import org.keycloak.services.managers.AuthenticationManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
@@ -49,8 +48,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.Security;
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_EXPIRATION;
