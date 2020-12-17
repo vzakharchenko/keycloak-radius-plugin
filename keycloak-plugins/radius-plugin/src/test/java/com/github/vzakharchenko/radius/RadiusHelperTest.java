@@ -7,6 +7,7 @@ import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.codec.binary.Hex;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import org.tinyradius.packet.RadiusPackets;
 
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
 import static org.mockito.Mockito.*;
@@ -33,9 +35,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Mock
     private WritableDictionary dictionary;
 
+
     @BeforeMethod
     public void beforeMethods() {
-        reset(radiusServiceProvider1, radiusServiceProvider2, dictionary);
+        reset(radiusServiceProvider1, radiusServiceProvider2, dictionary, stream);
         when(radiusServiceProvider1.attributeName()).thenReturn("n1");
         when(radiusServiceProvider2.attributeName()).thenReturn("n1");
         when(dictionary.getAttributeTypeByName("realm-attribute"))
@@ -45,7 +48,6 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(dictionary.getAttributeTypeByName("r3"))
                 .thenReturn(new AttributeType(3, "r3", "string"));
         DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
-
     }
 
     @Test

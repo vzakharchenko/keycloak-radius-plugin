@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.radius.radius.handlers.otp;
 
-import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import org.keycloak.credential.*;
@@ -32,10 +31,14 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
         return session.userCredentialManager();
     }
 
+    private boolean isUserRequireOtp(UserModel userModel) {
+        return userModel.getRequiredActions().stream().anyMatch(s -> Objects
+                .equals(s, UserModel.RequiredAction.CONFIGURE_TOTP.name()));
+    }
 
-    private Map<String, OtpHolder> getOTPPasswords(RealmModel realm,
-                                                   CredentialModel credential) {
-        Map<String, OtpHolder> otpHolderMap = new HashMap<>();
+    private void initOTPPasswords(RealmModel realm,
+                                  OtpPasswordInfo otpPasswordInfo,
+                                  CredentialModel credential) {
         OTPCredentialModel otpCredentialModel = OTPCredentialModel
                 .createFromCredentialModel(credential);
         OTPSecretData secretData = otpCredentialModel.getOTPSecretData();
@@ -43,10 +46,9 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
         OTPPolicy policy = realm.getOTPPolicy();
         IOTPPassword otpPassword = otpPasswordFactories.get(credentialData.getSubType());
         if (otpPassword != null) {
-            otpHolderMap.putAll(otpPassword.getOTPPasswords(
+            otpPasswordInfo.putAll(otpPassword.getOTPPasswords(
                     credentialData, policy, secretData, credential));
         }
-        return otpHolderMap;
     }
 
     private List<CredentialModel> filterCredentials(KeycloakSession session,
@@ -61,17 +63,17 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
     }
 
     @Override
-    public Map<String, OtpHolder> getOTPs(KeycloakSession session) {
+    public OtpPasswordInfo getOTPs(KeycloakSession session) {
         IRadiusUserInfo radiusSessionInfo = KeycloakSessionUtils
                 .getRadiusSessionInfo(session);
         UserModel userModel = radiusSessionInfo.getUserModel();
         RealmModel realm = radiusSessionInfo.getRealmModel();
         List<CredentialModel> credentials = filterCredentials(session, realm, userModel);
-        Map<String, OtpHolder> otpHolderMap = new HashMap<>();
+        OtpPasswordInfo otpPasswordInfo = new OtpPassword(isUserRequireOtp(userModel));
         for (CredentialModel credential : credentials) {
-            otpHolderMap.putAll(getOTPPasswords(realm, credential));
+            initOTPPasswords(realm, otpPasswordInfo, credential);
         }
-        return otpHolderMap;
+        return otpPasswordInfo;
     }
 
     @Override
