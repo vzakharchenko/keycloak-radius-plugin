@@ -11,7 +11,7 @@ Build and Start
 2. open [http://localhost:8090/auth/]() and initialize master realm with login/password. ![initRealm](../../docs/importRealm2.png)
 3. open Administration Console
 4. import realm from file [Realm.json](Realm.json) ![importRealm](../../docs/importRealm.png)
-5. add User test/test for realm oneTimePassword ![createUser](../../docs/createUser.png)![setPassword_1](../../docs/setPassword_1.png)
+5. add User test/test for realm :oneTimePassword" ![createUser](../../docs/createUser.png)![setPassword_1](../../docs/setPassword_1.png)
 6. imporsonate user and logout ![impersonateUserExample](../../docs/impersonateUserExample.png) ![impersonateUserExample2](../../docs/impersonateUserExample2.png)
 7. login to realm as user test and configure otp ![impersonateUserExample3](../../docs/impersonateUserExample3.png) ![impersonateUserExample4](../../docs/impersonateUserExample4.png)
 8. install example
