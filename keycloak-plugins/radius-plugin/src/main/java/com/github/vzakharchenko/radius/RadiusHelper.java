@@ -5,6 +5,7 @@ import com.github.vzakharchenko.radius.configuration.IRadiusConfiguration;
 import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
+import com.github.vzakharchenko.radius.password.UpdateRadiusPassword;
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.google.common.annotations.VisibleForTesting;
@@ -78,7 +79,11 @@ public final class RadiusHelper {
         List<CredentialModel> credentials = keycloakSession
                 .userCredentialManager()
                 .getStoredCredentialsByType(realm, userModel, RadiusCredentialModel.TYPE);
-        if (!credentials.isEmpty()) {
+        if (userModel.getRequiredActions().stream()
+                .noneMatch(rAction -> Objects.equals(rAction,
+                        UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD) ||
+                        Objects.equals(rAction, UserModel.RequiredAction.UPDATE_PASSWORD.name())) &&
+                !credentials.isEmpty()) {
             CredentialModel credentialModel = credentials.get(0);
             RadiusCredentialModel model = RadiusCredentialModel
                     .createFromCredentialModel(credentialModel);

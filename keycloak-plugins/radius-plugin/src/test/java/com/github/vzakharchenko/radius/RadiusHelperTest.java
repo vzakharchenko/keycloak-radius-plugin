@@ -2,6 +2,7 @@ package com.github.vzakharchenko.radius;
 
 import com.github.vzakharchenko.radius.client.RadiusLoginProtocolFactory;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
+import com.github.vzakharchenko.radius.password.UpdateRadiusPassword;
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
@@ -9,6 +10,7 @@ import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.codec.binary.Hex;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.UserModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -77,6 +79,24 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     public void testCurrentPassword() {
         String password = RadiusHelper.getCurrentPassword(session, realmModel, userModel);
         assertEquals(password, "secret");
+    }
+
+    @Test
+    public void testCurrentPasswordNotValid() {
+        when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
+                asList(UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD)));
+        String password = RadiusHelper.getCurrentPassword(session,
+                realmModel, userModel);
+        assertNull(password);
+    }
+
+    @Test
+    public void testCurrentPasswordNotValidAction() {
+        when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
+                asList(UserModel.RequiredAction.UPDATE_PASSWORD.name())));
+        String password = RadiusHelper.getCurrentPassword(session,
+                realmModel, userModel);
+        assertNull(password);
     }
 
     @Test
