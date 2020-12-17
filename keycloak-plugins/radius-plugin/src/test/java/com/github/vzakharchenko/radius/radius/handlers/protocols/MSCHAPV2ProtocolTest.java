@@ -18,13 +18,13 @@ import static org.testng.Assert.*;
 
 public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
 
-    private String username = "vassio1";
-    private String password = "1";
-    private String msChap2Response = "0000beaa25fd93d518e76cf98dd749278fbb000000000000000064441659eef40f9a6d9c0192b36ff507443533b655778705";
-    private String msChapChallenge = "72d57222d7801eb8d1c13837e8cfab4b";
-    private String ntResponse = "64441659eef40f9a6d9c0192b36ff507443533b655778705";
-    private String peerChallenge = "beaa25fd93d518e76cf98dd749278fbb";
-    private String authenticator = "549e192eca849fdd5b6ea1e6c34feaad";
+    private final String username = "vassio1";
+    private final String password = "1";
+    private final String msChap2Response = "0000beaa25fd93d518e76cf98dd749278fbb000000000000000064441659eef40f9a6d9c0192b36ff507443533b655778705";
+    private final String msChapChallenge = "72d57222d7801eb8d1c13837e8cfab4b";
+    private final String ntResponse = "64441659eef40f9a6d9c0192b36ff507443533b655778705";
+    private final String peerChallenge = "beaa25fd93d518e76cf98dd749278fbb";
+    private final String authenticator = "549e192eca849fdd5b6ea1e6c34feaad";
 
     public MSCHAPV2ProtocolTest() {
 
@@ -47,8 +47,9 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         MSCHAPV2Protocol papProtocol = new MSCHAPV2Protocol(request, session);
         assertEquals(papProtocol.getType(), ProtocolType.MSCHAPV2);
 
-        papProtocol.answer(new RadiusPacket(realDictionary,1,0), null);
+        papProtocol.answer(new RadiusPacket(realDictionary, 1, 0), null);
     }
+
     @Test
     public void testChapV2False1() {
         AccessRequest request = new AccessRequest(realDictionary, 0, new byte[16]);
@@ -105,10 +106,11 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         assertEquals(subAttributes.size(), 5);
         RadiusAttribute subAttribute = vendorSpecific.getSubAttribute("MS-CHAP2-Success");
         assertNotNull(subAttribute);
-        assertEquals(subAttribute.getValueString(),"1S=88CE0656242014B2F4C18969FDB1EA3416D37210");
+        assertEquals(subAttribute.getValueString(), "1S=88CE0656242014B2F4C18969FDB1EA3416D37210");
 
 
     }
+
     @Test
     public void testChapV2false() throws DecoderException {
         AccessRequest request = new AccessRequest(realDictionary, 0,

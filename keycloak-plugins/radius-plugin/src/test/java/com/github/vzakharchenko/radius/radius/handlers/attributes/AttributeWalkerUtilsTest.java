@@ -95,6 +95,7 @@ public class AttributeWalkerUtilsTest {
         assertEquals(attributes.get("attribute").size(), 2);
         assertEquals(attributes.get("attributeRole").size(), 1);
     }
+
     @Test
     public void testRoleWalker() {
         HashMap<String, Set<String>> attributes = new HashMap<>();

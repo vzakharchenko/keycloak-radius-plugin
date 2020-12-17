@@ -10,6 +10,9 @@ import org.keycloak.models.UserModel;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 
+import java.util.Collection;
+import java.util.Objects;
+
 public class PAPProtocol extends AbstractAuthProtocol {
 
 
@@ -44,17 +47,16 @@ public class PAPProtocol extends AbstractAuthProtocol {
                         credentialInput);
     }
 
-    @Override
-    public boolean verifyProtocolPassword() {
-        UserModel userModel = KeycloakSessionUtils
-                .getRadiusSessionInfo(session).getUserModel();
+    private boolean verifyPapPassword(String password) {
+        UserModel userModel = Objects.requireNonNull(KeycloakSessionUtils
+                .getRadiusSessionInfo(session)).getUserModel();
         UserCredentialManager userCredentialManager = session
                 .userCredentialManager();
         if (
                 verifyProtocolPassword(userCredentialManager, userModel, UserCredentialModel
-                        .password(accessRequest.getUserPassword())) ||
+                        .password(password)) ||
                         verifyProtocolPassword(userCredentialManager, userModel, UserCredentialModel
-                                .kerberos(accessRequest.getUserPassword()))
+                                .kerberos(password))
         ) {
             markActivePassword(accessRequest.getUserPassword());
             return true;
@@ -62,5 +64,9 @@ public class PAPProtocol extends AbstractAuthProtocol {
         return false;
     }
 
-
+    @Override
+    public boolean verifyPassword() {
+        Collection<String> passwordsWithOtp = getPasswordsWithOtp(accessRequest.getUserPassword());
+        return passwordsWithOtp.stream().anyMatch(this::verifyPapPassword);
+    }
 }

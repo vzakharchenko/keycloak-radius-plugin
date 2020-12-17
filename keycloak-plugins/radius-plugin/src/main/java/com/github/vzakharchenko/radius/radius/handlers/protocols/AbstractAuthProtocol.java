@@ -2,29 +2,27 @@ package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
-import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.providers.IRadiusAttributeProvider;
 import com.github.vzakharchenko.radius.radius.handlers.attributes.KeycloakAttributesType;
 import com.github.vzakharchenko.radius.radius.handlers.clientconnection.RadiusClientConnection;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OTPPasswordFactory;
+import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.lang3.StringUtils;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.models.credential.OTPCredentialModel;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 
@@ -105,7 +103,8 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     @Override
     public final boolean verifyPassword(String password) {
-        return verifyProtocolPassword(password) || verifyPassword0(password, true);
+        Collection<String> passwordsWithOtp = getPasswordsWithOtp(password);
+        return passwordsWithOtp.stream().anyMatch(s -> verifyProtocolPassword(password));
     }
 
     @Override
@@ -113,39 +112,21 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return accessRequest.copy();
     }
 
-    public boolean verifyProtocolPassword() {
-        return false;
-    }
-
-    private String excludeOtp(String password, String otp, boolean checkPassword) {
-        return checkPassword ? StringUtils.removeEnd(password, otp) : otp;
-    }
-
-    private boolean verifyPassword0(String originPassword, boolean checkPassword) {
-        AtomicBoolean ret = new AtomicBoolean(false);
-        Map<String, OtpHolder> otPs = otpPasswordGetter.getOTPs(session);
-        otPs.values().forEach(otpHolder -> otpHolder
-                .getPasswords().forEach(password -> {
-                    String excludeOtp = excludeOtp(originPassword, password, checkPassword);
-                    if (verifyProtocolPassword(excludeOtp)) {
-                        markActivePassword(excludeOtp);
-                        otpPasswordGetter.validOTP(session,
-                                password,
-                                otpHolder.getCredentialModel().getId(),
-                                OTPCredentialModel.TYPE);
-                        ret.set(true);
-                    }
-                }));
-        return ret.get() || verifyProtocolPassword();
+    protected Collection<String> getPasswordsWithOtp(String originPassword) {
+        OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
+        if (otpPasswordInfo.isUseOtp()) {
+            return otpPasswordInfo.getValidOtpPasswords(originPassword);
+        } else {
+            return Collections.singletonList(originPassword);
+        }
     }
 
     @Override
-    public final boolean verifyPassword() {
-        return verifyPassword0("", false);
+    public boolean verifyPassword() {
+        return false;
     }
 
-
-    protected void markActivePassword(String userPassword) {
+    public void markActivePassword(String userPassword) {
         IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
                 .getRadiusUserInfo(session);
         radiusUserInfoGetter.getBuilder().activePassword(userPassword);

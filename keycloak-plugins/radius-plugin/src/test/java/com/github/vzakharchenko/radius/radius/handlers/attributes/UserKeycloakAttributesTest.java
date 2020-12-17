@@ -14,7 +14,6 @@ import org.tinyradius.packet.RadiusPacket;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -109,7 +108,7 @@ public class UserKeycloakAttributesTest extends AbstractRadiusTest {
                 .getAttributes(userModel);
         assertNotNull(attributes);
         assertEquals(attributes.size(), 4);
-        verify(radiusUserInfoBuilder,never()).forceReject();
+        verify(radiusUserInfoBuilder, never()).forceReject();
     }
 
     @Test
@@ -126,7 +125,7 @@ public class UserKeycloakAttributesTest extends AbstractRadiusTest {
                 .getAttributes(userModel);
         assertNotNull(attributes);
         assertEquals(attributes.size(), 5);
-        verify(radiusUserInfoBuilder,never()).forceReject();
+        verify(radiusUserInfoBuilder, never()).forceReject();
     }
 
     @Test
@@ -160,6 +159,7 @@ public class UserKeycloakAttributesTest extends AbstractRadiusTest {
         assertNotNull(attributes);
         assertEquals(attributes.size(), 4);
     }
+
     @Test
     public void testConditionalAttributeFalse() {
         HashMap<String, List<String>> map = new HashMap<>();

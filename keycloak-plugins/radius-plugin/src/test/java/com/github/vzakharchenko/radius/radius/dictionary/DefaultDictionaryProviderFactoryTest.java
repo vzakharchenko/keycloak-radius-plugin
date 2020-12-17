@@ -9,7 +9,7 @@ import java.io.IOException;
 import static org.testng.Assert.*;
 
 public class DefaultDictionaryProviderFactoryTest extends AbstractRadiusTest {
-    private DefaultDictionaryProviderFactory dictionaryProviderFactory =
+    private final DefaultDictionaryProviderFactory dictionaryProviderFactory =
             new DefaultDictionaryProviderFactory();
 
     @Test

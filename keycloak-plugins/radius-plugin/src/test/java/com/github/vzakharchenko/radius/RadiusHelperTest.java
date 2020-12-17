@@ -33,9 +33,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Mock
     private WritableDictionary dictionary;
 
+
     @BeforeMethod
     public void beforeMethods() {
-        reset(radiusServiceProvider1, radiusServiceProvider2, dictionary);
+        reset(radiusServiceProvider1, radiusServiceProvider2, dictionary, stream);
         when(radiusServiceProvider1.attributeName()).thenReturn("n1");
         when(radiusServiceProvider2.attributeName()).thenReturn("n1");
         when(dictionary.getAttributeTypeByName("realm-attribute"))
@@ -45,7 +46,6 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(dictionary.getAttributeTypeByName("r3"))
                 .thenReturn(new AttributeType(3, "r3", "string"));
         DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
-
     }
 
     @Test
@@ -119,6 +119,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         assertNotNull(realmModel);
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
     }
+
     @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "Found more than one Radius Realm \\(RadiusName, second_realm\\). If you expect to use the Default Realm, than you should use only one realm with radius client")
     public void testRealmAttributesNullWith2DefaultRealm() {
         RealmModel secondRealm = mock(RealmModel.class);
@@ -127,10 +128,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel,secondRealm));
+        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
-         RadiusHelper.getRealm(session, radiusPacket);
+        RadiusHelper.getRealm(session, radiusPacket);
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
     }
 

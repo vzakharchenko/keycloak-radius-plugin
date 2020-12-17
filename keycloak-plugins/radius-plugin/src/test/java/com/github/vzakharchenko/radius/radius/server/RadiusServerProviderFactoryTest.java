@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 
 public class RadiusServerProviderFactoryTest extends AbstractRadiusTest {
-    private RadiusServerProviderFactory radiusServerProviderFactory = new RadiusServerProviderFactory();
+    private final RadiusServerProviderFactory radiusServerProviderFactory = new RadiusServerProviderFactory();
 
     @Mock
     private IRadiusServerProvider mikrotikRadiusServer;
@@ -58,6 +58,7 @@ public class RadiusServerProviderFactoryTest extends AbstractRadiusTest {
         verify(keycloakTransactionManager).begin();
         verify(keycloakTransactionManager).commit();
     }
+
     @Test
     public void testPostEvent() {
         doNothing().when(keycloakSessionFactory)

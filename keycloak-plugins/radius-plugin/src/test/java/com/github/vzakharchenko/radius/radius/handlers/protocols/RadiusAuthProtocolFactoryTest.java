@@ -12,8 +12,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class RadiusAuthProtocolFactoryTest extends AbstractRadiusTest {
-    private Dictionary dictionary = mock(Dictionary.class);
-    private AuthProtocolFactory radiusAuthProtocolFactory = RadiusAuthProtocolFactory
+    private final Dictionary dictionary = mock(Dictionary.class);
+    private final AuthProtocolFactory radiusAuthProtocolFactory = RadiusAuthProtocolFactory
             .getInstance();
 
     @BeforeMethod

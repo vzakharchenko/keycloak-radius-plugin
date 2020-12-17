@@ -25,12 +25,12 @@ import org.keycloak.authorization.store.ResourceServerStore;
 import org.keycloak.authorization.store.ResourceStore;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.connections.jpa.JpaConnectionProvider;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.*;
 import org.keycloak.models.cache.authorization.CachedStoreFactoryProvider;
 import org.keycloak.provider.Provider;
 import org.keycloak.representations.AccessToken;
-import org.keycloak.services.managers.AuthenticationManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.Security;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_EXPIRATION;
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
@@ -82,6 +83,9 @@ public abstract class AbstractRadiusTest {
     protected RoleModel radiusRole;
     @Mock
     protected UserCredentialManager userCredentialManager;
+    @Mock
+    protected Stream<CredentialModel> stream;
+
     protected UserSessionProvider userSessionProvider;
     @Mock
     protected UserSessionModel userSessionModel;
@@ -166,6 +170,7 @@ public abstract class AbstractRadiusTest {
         reset(configuration);
         reset(radiusRole);
         reset(userCredentialManager);
+        reset(stream);
         reset(userSessionModel);
         reset(clientConnection);
         reset(radiusAuthProtocolFactory);

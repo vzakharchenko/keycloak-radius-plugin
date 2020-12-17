@@ -9,7 +9,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 public class RadiusServerSpiTest {
-    private RadiusServerSpi radiusServerSpi = new RadiusServerSpi();
+    private final RadiusServerSpi radiusServerSpi = new RadiusServerSpi();
 
     @Test
     public void testMethods() {

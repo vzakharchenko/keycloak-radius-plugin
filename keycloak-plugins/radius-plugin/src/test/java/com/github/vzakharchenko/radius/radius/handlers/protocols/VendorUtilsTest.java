@@ -6,7 +6,7 @@ import static org.testng.Assert.assertNotNull;
 
 public class VendorUtilsTest {
     @Test
-    public void testVendorUtils(){
+    public void testVendorUtils() {
         assertNotNull(VendorUtils.MIKROTIK_REALM);
     }
 }

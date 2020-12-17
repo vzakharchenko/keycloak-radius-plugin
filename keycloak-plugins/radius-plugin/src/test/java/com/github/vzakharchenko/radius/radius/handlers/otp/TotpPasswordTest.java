@@ -17,7 +17,7 @@ import static org.testng.Assert.assertNotNull;
 
 public class TotpPasswordTest {
     public static final String ALGORITHM = "sha1";
-    private TotpPassword totpPassword = new TotpPassword();
+    private final TotpPassword totpPassword = new TotpPassword();
 
     @Test
     public void testHotpPassword() {
@@ -27,9 +27,9 @@ public class TotpPasswordTest {
         Map<String, OtpHolder> otpPasswords = totpPassword.getOTPPasswords(credentialData, policy, new OTPSecretData("1"), credential);
         assertNotNull(otpPasswords);
         OtpHolder otpHolder = otpPasswords.get(HOTP);
-        assertEquals(otpHolder.getCredentialModel(),credential);
-        assertEquals(otpHolder.getSubType(),HOTP);
+        assertEquals(otpHolder.getCredentialModel(), credential);
+        assertEquals(otpHolder.getSubType(), HOTP);
         List<String> passwords = otpHolder.getPasswords();
-        assertEquals(passwords.size(),2);
+        assertEquals(passwords.size(), 2);
     }
 }

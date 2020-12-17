@@ -6,12 +6,15 @@ import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.OTPCredentialProvider;
 import org.keycloak.credential.OTPCredentialProviderFactory;
 import org.keycloak.models.OTPPolicy;
+import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.OTPCredentialModel;
 import org.keycloak.models.utils.HmacOTP;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
 import static org.keycloak.models.credential.OTPCredentialModel.HOTP;
@@ -22,8 +25,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class OTPPasswordFactoryTest extends AbstractRadiusTest {
     public static final String CRED_ID = "credId";
-    private OTPPasswordFactory otpPasswordFactory = new OTPPasswordFactory();
-    private OTPPolicy otpPolicy = new OTPPolicy();
+    private final OTPPasswordFactory otpPasswordFactory = new OTPPasswordFactory();
+    private final OTPPolicy otpPolicy = new OTPPolicy();
 
     @BeforeMethod
     public void beforeMethods() {
@@ -47,7 +50,8 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testGetOTPs() {
-        Map<String, OtpHolder> otPs = otpPasswordFactory.getOTPs(session);
+        OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
+        Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();
         assertEquals(otPs.size(), 1);
         assertNotNull(otPs.get(TOTP));
         assertEquals(otPs.get(TOTP).getSubType(), TOTP);
@@ -57,9 +61,23 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
     }
 
     @Test
+    public void testGetOTPsRequiredAction() {
+        when(userModel.getRequiredActions())
+                .thenReturn(new HashSet<>(Arrays.asList(UserModel
+                        .RequiredAction.CONFIGURE_TOTP.name())));
+        when(userCredentialManager.getStoredCredentialsByType(realmModel,
+                userModel, OTPCredentialModel.TYPE))
+                .thenReturn(new ArrayList());
+        OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
+        Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();
+        assertEquals(otPs.size(), 0);
+    }
+
+    @Test
     public void testGetHOTPs() {
         otpPolicy.setType(HOTP);
-        Map<String, OtpHolder> otPs = otpPasswordFactory.getOTPs(session);
+        OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
+        Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();
         assertEquals(otPs.size(), 1);
         assertNotNull(otPs.get(HOTP));
         assertEquals(otPs.get(HOTP).getSubType(), HOTP);

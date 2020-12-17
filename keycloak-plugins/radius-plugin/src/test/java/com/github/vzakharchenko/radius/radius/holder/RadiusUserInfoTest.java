@@ -10,7 +10,7 @@ import static org.testng.Assert.*;
 
 public class RadiusUserInfoTest extends AbstractRadiusTest {
 
-    private RadiusUserInfoBuilder radiusUserInfoBuilder = (RadiusUserInfoBuilder)
+    private final RadiusUserInfoBuilder radiusUserInfoBuilder = (RadiusUserInfoBuilder)
             RadiusUserInfoBuilder.create();
 
     @Test

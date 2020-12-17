@@ -1,13 +1,13 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
+import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
+import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.keycloak.models.RealmProvider;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.server.SecretProvider;
-import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
-import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
-import com.github.vzakharchenko.radius.test.ModelBuilder;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -24,11 +24,10 @@ import static org.testng.Assert.assertTrue;
 public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
 
-    private AuthRequestInitialization authRequestInitialization;
-    private InetSocketAddress inetSocketAddress;
-
     @Mock
     SecretProvider secretProvider;
+    private AuthRequestInitialization authRequestInitialization;
+    private InetSocketAddress inetSocketAddress;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -143,6 +142,7 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
         authRequestInitialization
                 .afterAuth(2, session);
     }
+
     @Test
     public void testgetafterAuthReject() {
         when(userSessionProvider.getUserSessions(realmModel, userModel))
