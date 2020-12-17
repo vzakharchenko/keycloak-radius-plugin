@@ -9,7 +9,7 @@
     <property name="KEYCLOAK_VERSION" value="8.0.2"/>
     <property name="PRODUCTION" value="false"/>
     <property name="KEYCLOAK_URL"
-              value="https://downloads.jboss.org/keycloak/${KEYCLOAK_VERSION}/keycloak-${KEYCLOAK_VERSION}.zip"/>
+              value="https://github.com/keycloak/keycloak/releases/download/${KEYCLOAK_VERSION}/keycloak-${KEYCLOAK_VERSION}.zip"/>
     <property name="KEYCLOAK_PATH" value="${BUILD_DIR}/keycloak"/>
     <property name="KEYCLOAK_SOURCE" value="${BUILD_DIR}/keycloak_source.zip"/>
     <property name="KEYCLOAK_SOURCE_LOCAL" value="keycloak_source.zip"/>
