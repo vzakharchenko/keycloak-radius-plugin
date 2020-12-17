@@ -7,7 +7,6 @@ import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.codec.binary.Hex;
-import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.mockito.Mock;
@@ -20,7 +19,6 @@ import org.tinyradius.packet.RadiusPackets;
 
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
 import static org.mockito.Mockito.*;
