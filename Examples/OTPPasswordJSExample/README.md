@@ -21,7 +21,7 @@ npm i
 node server.js
 </pre>
 7. open [http://localhost:3001/](http://localhost:3001/)
-8. type login test<OTP Password> and otp ![otpPasswordClient](../../docs/otpPasswordClient.png) ![otp](../../docs/otp.png)
+8. type login test<OTP Password> ![otpPasswordClient](../../docs/otpPasswordClient.png) ![otp](../../docs/otp.png)
 9. click the "connect To Radius Server"
 
 "SUCCESS"
