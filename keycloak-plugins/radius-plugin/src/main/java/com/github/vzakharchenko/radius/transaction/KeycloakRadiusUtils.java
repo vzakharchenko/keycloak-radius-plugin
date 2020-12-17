@@ -8,8 +8,6 @@ import org.keycloak.models.KeycloakTransaction;
 public final class KeycloakRadiusUtils {
     private static final Logger LOGGER = Logger.getLogger(KeycloakRadiusUtils.class);
 
-    private static KeycloakHelper keycloakHelper = new KeycloakStaticHelper();
-
     private KeycloakRadiusUtils() {
     }
 
@@ -43,13 +41,5 @@ public final class KeycloakRadiusUtils {
     public static <T> T runJobInTransaction(KeycloakSession session,
                                             KeycloakSessionTaskWithReturn<T> task) {
         return runJobInTransaction(session.getKeycloakSessionFactory(), task);
-    }
-
-    public static KeycloakHelper getKeycloakHelper() {
-        return keycloakHelper;
-    }
-
-    public static void setKeycloakHelper(KeycloakHelper keycloakHelper) {
-        KeycloakRadiusUtils.keycloakHelper = keycloakHelper;
     }
 }

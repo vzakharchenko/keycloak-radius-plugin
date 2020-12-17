@@ -18,8 +18,6 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
-import com.github.vzakharchenko.radius.transaction.KeycloakHelper;
-import com.github.vzakharchenko.radius.transaction.KeycloakRadiusUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.keycloak.authorization.AuthorizationProvider;
 import org.keycloak.authorization.policy.evaluation.PolicyEvaluator;
@@ -102,8 +100,6 @@ public abstract class AbstractRadiusTest {
     @Mock
     protected HttpHeaders httpHeaders;
     @Mock
-    protected KeycloakHelper keycloakHelper;
-    @Mock
     protected EntityManager entityManager;
     @Mock
     protected TypedQuery query;
@@ -145,10 +141,6 @@ public abstract class AbstractRadiusTest {
         try {
             RadiusConfigHelper.setConfiguration(configuration);
             RadiusAuthProtocolFactory.setInstance(radiusAuthProtocolFactory);
-            KeycloakRadiusUtils.setKeycloakHelper(keycloakHelper);
-            when(keycloakHelper.getAuthResult(session))
-                    .thenReturn(new AuthenticationManager.AuthResult(userModel,
-                            userSessionModel, accessToken));
             RadiusHelper.setRealmAttributes(Collections.singletonList(REALM_RADIUS));
             RadiusHelper.getServiceMap0().clear();
             RadiusHelper.getServiceMap0().put("sName", new ArrayList<>(Collections

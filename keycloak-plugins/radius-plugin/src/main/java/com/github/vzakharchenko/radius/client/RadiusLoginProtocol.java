@@ -51,9 +51,9 @@ public class RadiusLoginProtocol implements LoginProtocol {
     }
 
     @Override
-    public void backchannelLogout(UserSessionModel userSession,
-                                  AuthenticatedClientSessionModel clientSession) {
-
+    public Response backchannelLogout(UserSessionModel userSession,
+                                      AuthenticatedClientSessionModel clientSession) {
+        return null;
     }
 
     @Override
