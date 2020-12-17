@@ -82,6 +82,6 @@ public class RadiusEvaluationDecisionCollectorTest extends AbstractRadiusTest {
                 Collections.emptyList(),
                 resourceServer,
                 new AuthorizationRequest(), result);
-        assertEquals(permissions.size(),1);
+        assertEquals(permissions.size(), 1);
     }
 }

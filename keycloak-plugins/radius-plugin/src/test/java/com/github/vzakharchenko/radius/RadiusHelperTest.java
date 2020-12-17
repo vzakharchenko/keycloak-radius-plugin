@@ -7,7 +7,6 @@ import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.codec.binary.Hex;
-import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.mockito.Mock;
@@ -20,7 +19,6 @@ import org.tinyradius.packet.RadiusPackets;
 
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
 import static org.mockito.Mockito.*;
@@ -121,6 +119,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         assertNotNull(realmModel);
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
     }
+
     @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "Found more than one Radius Realm \\(RadiusName, second_realm\\). If you expect to use the Default Realm, than you should use only one realm with radius client")
     public void testRealmAttributesNullWith2DefaultRealm() {
         RealmModel secondRealm = mock(RealmModel.class);
@@ -129,10 +128,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel,secondRealm));
+        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
-         RadiusHelper.getRealm(session, radiusPacket);
+        RadiusHelper.getRealm(session, radiusPacket);
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
     }
 

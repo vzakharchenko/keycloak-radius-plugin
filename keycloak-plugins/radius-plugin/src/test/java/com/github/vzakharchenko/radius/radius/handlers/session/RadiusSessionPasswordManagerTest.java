@@ -14,21 +14,23 @@ public class RadiusSessionPasswordManagerTest extends AbstractRadiusTest {
     IRadiusSessionPasswordManager radiusSessionPasswordManager = RadiusSessionPasswordManager.getInstance();
 
     @Test
-    public void testGetPassword(){
+    public void testGetPassword() {
         String currentPassword = radiusSessionPasswordManager.getCurrentPassword(userSessionModel);
-        assertEquals(currentPassword,"123");
+        assertEquals(currentPassword, "123");
     }
+
     @Test
-    public void testGetExpirationPassword(){
+    public void testGetExpirationPassword() {
         String currentPassword = radiusSessionPasswordManager.getCurrentPassword(userSessionModel);
-        assertEquals(currentPassword,"123");
+        assertEquals(currentPassword, "123");
         when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION)).thenReturn("0");
         assertNull(radiusSessionPasswordManager.getCurrentPassword(userSessionModel));
     }
+
     @Test
-    public void testGetExpirationPasswordNull(){
+    public void testGetExpirationPasswordNull() {
         String currentPassword = radiusSessionPasswordManager.getCurrentPassword(userSessionModel);
-        assertEquals(currentPassword,"123");
+        assertEquals(currentPassword, "123");
         when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION)).thenReturn(null);
         assertNull(radiusSessionPasswordManager.getCurrentPassword(userSessionModel));
     }

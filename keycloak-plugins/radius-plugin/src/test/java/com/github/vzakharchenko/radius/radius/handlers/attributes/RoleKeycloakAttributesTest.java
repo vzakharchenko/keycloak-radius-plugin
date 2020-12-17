@@ -14,7 +14,6 @@ import org.tinyradius.packet.RadiusPacket;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 

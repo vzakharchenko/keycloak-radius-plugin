@@ -25,8 +25,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class OTPPasswordFactoryTest extends AbstractRadiusTest {
     public static final String CRED_ID = "credId";
-    private OTPPasswordFactory otpPasswordFactory = new OTPPasswordFactory();
-    private OTPPolicy otpPolicy = new OTPPolicy();
+    private final OTPPasswordFactory otpPasswordFactory = new OTPPasswordFactory();
+    private final OTPPolicy otpPolicy = new OTPPolicy();
 
     @BeforeMethod
     public void beforeMethods() {
@@ -63,8 +63,10 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
     @Test
     public void testGetOTPsRequiredAction() {
         when(userModel.getRequiredActions())
-                .thenReturn(new HashSet<>(Arrays.asList(UserModel.RequiredAction.CONFIGURE_TOTP.name())));
-        when(userCredentialManager.getStoredCredentialsByType(realmModel, userModel, OTPCredentialModel.TYPE))
+                .thenReturn(new HashSet<>(Arrays.asList(UserModel
+                        .RequiredAction.CONFIGURE_TOTP.name())));
+        when(userCredentialManager.getStoredCredentialsByType(realmModel,
+                userModel, OTPCredentialModel.TYPE))
                 .thenReturn(new ArrayList());
         OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
         Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();

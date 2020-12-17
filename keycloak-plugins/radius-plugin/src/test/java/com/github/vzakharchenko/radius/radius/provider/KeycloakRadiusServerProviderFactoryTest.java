@@ -10,7 +10,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class KeycloakRadiusServerProviderFactoryTest extends AbstractRadiusTest {
-    private RadiusServerProviderFactory providerFactory = new RadiusServerProviderFactory();
+    private final RadiusServerProviderFactory providerFactory = new RadiusServerProviderFactory();
 
 
     @Override

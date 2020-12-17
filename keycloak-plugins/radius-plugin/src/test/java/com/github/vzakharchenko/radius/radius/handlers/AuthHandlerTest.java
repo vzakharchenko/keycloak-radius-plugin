@@ -24,7 +24,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class AuthHandlerTest extends AbstractRadiusTest {
-    private AuthHandler authHandler = new AuthHandler();
+    private final AuthHandler authHandler = new AuthHandler();
     private RequestCtx requestCtx;
     private RadiusEndpoint radiusEndpoint;
     @Mock
@@ -160,7 +160,9 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList());
         authHandler.verifyPassword0(radiusUserInfoGetter, authProtocol);
         verify(authProtocol).verifyPassword();
-    } @Test
+    }
+
+    @Test
     public void testVerifyPassword0_1() {
         reset(authProtocol);
         when(authProtocol.verifyPassword("p1")).thenReturn(true);
@@ -177,6 +179,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         authHandler.verifyPassword0(radiusUserInfoGetter, authProtocol);
         verify(authProtocol).verifyPassword();
     }
+
     @Test
     public void testVerifyPassword0_3() {
         reset(authProtocol);

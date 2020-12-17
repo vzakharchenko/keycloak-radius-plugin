@@ -1,7 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers;
 
 import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
-import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import io.netty.channel.ChannelHandlerContext;
 import org.mockito.Mock;
@@ -15,14 +14,13 @@ import org.tinyradius.util.RadiusEndpoint;
 import java.net.InetSocketAddress;
 
 import static com.github.vzakharchenko.radius.radius.handlers.AccountingHandler.ACCT_AUTHENTIC;
-import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_STATUS_TYPE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class AccountingHandlerTest extends AbstractRadiusTest {
-    private AccountingHandler accountingHandler = new AccountingHandler();
+    private final AccountingHandler accountingHandler = new AccountingHandler();
     private RequestCtx requestCtx;
     private RadiusEndpoint radiusEndpoint;
     @Mock
@@ -69,9 +67,10 @@ public class AccountingHandlerTest extends AbstractRadiusTest {
         accountingHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }
+
     @Test
     public void testChannelRead0Local() {
-        accountingRequest.addAttribute(ACCT_AUTHENTIC,"02");
+        accountingRequest.addAttribute(ACCT_AUTHENTIC, "02");
         accountingHandler.channelReadRadius(channelHandlerContext, requestCtx);
         verify(channelHandlerContext).writeAndFlush(any());
     }

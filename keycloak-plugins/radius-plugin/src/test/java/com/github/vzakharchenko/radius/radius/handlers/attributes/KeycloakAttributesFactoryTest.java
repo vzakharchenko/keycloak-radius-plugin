@@ -7,7 +7,7 @@ import org.tinyradius.packet.AccessRequest;
 import static org.testng.Assert.*;
 
 public class KeycloakAttributesFactoryTest extends AbstractRadiusTest {
-    private KeycloakAttributesFactory keycloakAttributesFactory =
+    private final KeycloakAttributesFactory keycloakAttributesFactory =
             new KeycloakAttributesFactory();
     private AccessRequest accessRequest;
 
@@ -42,6 +42,7 @@ public class KeycloakAttributesFactoryTest extends AbstractRadiusTest {
                 .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.GROUP);
         assertTrue(keycloakAttributes instanceof GroupKeycloakAttributes);
     }
+
     @Test
     public void createKeycloakAttributesAuthorizationTest() {
         KeycloakAttributes keycloakAttributes = keycloakAttributesFactory
