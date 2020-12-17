@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
+import com.github.vzakharchenko.radius.RadiusHelper;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPassword;
@@ -18,8 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
