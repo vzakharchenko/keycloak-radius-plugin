@@ -11,7 +11,7 @@ Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)
 - [radius oidc password](Examples/OneTimePasswordJSExample)
-- [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](Examples/OTPPasswordJSExample)
+- [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)  
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
 - use Kerberos credential(only if Radius client use PAP authorization)
 - can work as [radius proxy](#radius-proxy)
