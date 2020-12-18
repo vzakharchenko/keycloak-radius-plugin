@@ -1,0 +1,5 @@
+- Keycloak 12.0.0
+- requested password must contain the password and otp.
+- if user contains required action "CONFIGURE_TOTP", than access will be rejected, until user  configures own OTP
+- RadiusPassword with OTP without password will be rejected
+- rejected if user contains UPDATE_PASSWORD or RADIUS_UPDATE_PASSWORD actions

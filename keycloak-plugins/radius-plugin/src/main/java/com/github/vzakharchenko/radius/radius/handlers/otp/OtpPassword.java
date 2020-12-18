@@ -35,12 +35,26 @@ public class OtpPassword implements OtpPasswordInfo {
         return StringUtils.removeEnd(password, otp);
     }
 
+    private String includeOtp(String password, String otp) {
+        return password+ otp;
+    }
+
 
     @Override
     public Set<String> getValidOtpPasswords(String originPassword) {
         Set<String> passwords = new HashSet<>();
         otpHolders.values().forEach(otpHolder -> passwords.addAll(otpHolder
                 .getPasswords().stream().map(password -> excludeOtp(originPassword, password))
+                .filter(password -> !Objects.equals(password, originPassword))
+                .collect(Collectors.toList())));
+        return passwords;
+    }
+
+    @Override
+    public Set<String> addOtpPasswords(String originPassword) {
+        Set<String> passwords = new HashSet<>();
+        otpHolders.values().forEach(otpHolder -> passwords.addAll(otpHolder
+                .getPasswords().stream().map(password -> includeOtp(originPassword, password))
                 .filter(password -> !Objects.equals(password, originPassword))
                 .collect(Collectors.toList())));
         return passwords;

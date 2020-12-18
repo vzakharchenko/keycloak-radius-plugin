@@ -103,8 +103,8 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     @Override
     public final boolean verifyPassword(String password) {
-        Collection<String> passwordsWithOtp = getPasswordsWithOtp(password);
-        return passwordsWithOtp.stream().anyMatch(s -> verifyProtocolPassword(password));
+        Collection<String> passwordsWithOtp = addOtpToPassword(password);
+        return passwordsWithOtp.stream().anyMatch(this::verifyProtocolPassword);
     }
 
     @Override
@@ -116,6 +116,14 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
         if (otpPasswordInfo.isUseOtp()) {
             return otpPasswordInfo.getValidOtpPasswords(originPassword);
+        } else {
+            return Collections.singletonList(originPassword);
+        }
+    }
+    protected Collection<String> addOtpToPassword(String originPassword) {
+        OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
+        if (otpPasswordInfo.isUseOtp()) {
+            return otpPasswordInfo.addOtpPasswords(originPassword);
         } else {
             return Collections.singletonList(originPassword);
         }

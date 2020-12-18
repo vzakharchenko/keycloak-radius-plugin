@@ -13,4 +13,5 @@ public interface OtpPasswordInfo {
     Map<String, OtpHolder> getOtpHolderMap();
 
     Set<String> getValidOtpPasswords(String originPassword);
+    Set<String> addOtpPasswords(String originPassword);
 }
