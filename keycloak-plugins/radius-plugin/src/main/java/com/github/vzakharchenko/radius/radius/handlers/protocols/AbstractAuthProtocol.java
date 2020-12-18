@@ -112,21 +112,23 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return accessRequest.copy();
     }
 
-    protected Collection<String> getPasswordsWithOtp(String originPassword) {
+    private Collection<String> getPasswordOtp(String originPassword, boolean exclude) {
         OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
         if (otpPasswordInfo.isUseOtp()) {
-            return otpPasswordInfo.getValidOtpPasswords(originPassword);
+            return exclude ?
+                    otpPasswordInfo.getValidOtpPasswords(originPassword) :
+                    otpPasswordInfo.addOtpPasswords(originPassword);
         } else {
             return Collections.singletonList(originPassword);
         }
     }
+
+    protected Collection<String> getPasswordsWithOtp(String originPassword) {
+        return getPasswordOtp(originPassword, true);
+    }
+
     protected Collection<String> addOtpToPassword(String originPassword) {
-        OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
-        if (otpPasswordInfo.isUseOtp()) {
-            return otpPasswordInfo.addOtpPasswords(originPassword);
-        } else {
-            return Collections.singletonList(originPassword);
-        }
+        return getPasswordOtp(originPassword, false);
     }
 
     @Override
