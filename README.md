@@ -11,7 +11,7 @@ Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)
 - [radius oidc password](Examples/OneTimePasswordJSExample)
-- [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)  
+- [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
 - use Kerberos credential(only if Radius client use PAP authorization)
 - can work as [radius proxy](#radius-proxy)
@@ -45,7 +45,7 @@ features:
  - <pre><code>cd keycloak-plugins</pre></code>
  - <pre><code>mvn clean install</pre></code>
 ### Configure keycloak
-***requirements***: [keycloak 12.0.0](https://github.com/keycloak/keycloak/releases/download/12.0.0/keycloak-12.0.0.zip)
+***requirements***: [keycloak 12.0.1](https://github.com/keycloak/keycloak/releases/download/12.0.1/keycloak-12.0.1.zip)
 - setup radius-plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,org.apache.commons.lang3"</pre></code>
 - setup rad-sec plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.rad.sec --resources=${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
 - setup mikrotik plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.mikrotik --resources=${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
@@ -57,7 +57,7 @@ features:
 - run script for standalone <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
 - run script for standalone-ha <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-12.0.0.zip
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-12.0.1.zip
 - **SOURCE** - Path where you checked out the code and built the project
 ## Configuration
 ### Radius server config file
@@ -99,7 +99,7 @@ where
 <pre><code>
 #!/usr/bin/env bash
 set -e
-cd keycloak-12.0.0
+cd keycloak-12.0.1
 public_ip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' -m 1`
 sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 -Djboss.bind.address.private=${public_ip} -Djboss.node.name=${public_ip} -Djgroups.bind.address=${public_ip} --debug 8190 -Djboss.http.port=8090
 </pre></code>
