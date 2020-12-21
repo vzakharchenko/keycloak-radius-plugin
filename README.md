@@ -1,11 +1,11 @@
 # Embedded Radius Server in [Keycloak](https://www.keycloak.org/) SSO
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)
-![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
-![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]
-<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
-[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)  
+![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)  
+![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)  
+[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
+<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>  
+[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)  
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
@@ -69,7 +69,7 @@ where
   "accountPort": 1813,
   "numberThreads": 8,
   "useUdpRadius": true,
-  "otp": true,
+  "otp": false,
   "radsec": {
     "privateKey": "config/private.key",
     "certificate": "config/public.crt",
@@ -110,7 +110,7 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 ### Keycloak Client with Radius Protocol
 ![radiusProtocol](docs/radiusProtocol.png)
 
-### Map Radius password to Keycloak credentials
+### Mapping Radius Password to Keycloak Credentials
 
 | Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Keycloak Radius credentials | Keycloak Radius credentials with OTP | Keycloak OTP(if config file contains "otp":true) |
 |-----------------|----------------------|-------------------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
