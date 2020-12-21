@@ -10,6 +10,7 @@ public class RadiusConfigModel {
     private int authPort = 1812;
     private int accountPort = 1813;
     private int numberThreads = 8;
+    private boolean otp;
     private List<RadiusAccessModel> radiusIpAccess;
     private boolean useUdpRadius;
 
@@ -75,5 +76,13 @@ public class RadiusConfigModel {
 
     public void setCoa(CoASettingsModel coa) {
         this.coa = coa;
+    }
+
+    public boolean isOtp() {
+        return otp;
+    }
+
+    public void setOtp(boolean otp) {
+        this.otp = otp;
     }
 }

@@ -54,6 +54,10 @@
     </Match>
     <Match>
         <Bug pattern="BL_BURYING_LOGIC"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.PAPProtocol"/>
+    </Match>
+    <Match>
+        <Bug pattern="BL_BURYING_LOGIC"/>
         <Class name="com.github.vzakharchenko.radius.radius.handlers.attributes.AbstractKeycloakAttributes"/>
     </Match>
     <Match>

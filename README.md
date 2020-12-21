@@ -10,6 +10,7 @@
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)
+- use keycloak authentication and authorization for the embedded RADIUS server
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
@@ -68,6 +69,7 @@ where
   "accountPort": 1813,
   "numberThreads": 8,
   "useUdpRadius": true,
+  "otp": true,
   "radsec": {
     "privateKey": "config/private.key",
     "certificate": "config/public.crt",
@@ -94,6 +96,7 @@ where
    -  **coa** - CoA request configuration
    -  **port** - CoA port (Mikrotik:3799, Cisco:1700)
    -  **useCoA** - use CoA request
+   -  **otp** - use OTP without password
 ##
  Run Keycloak Locally
 <pre><code>
@@ -106,6 +109,14 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 
 ### Keycloak Client with Radius Protocol
 ![radiusProtocol](docs/radiusProtocol.png)
+
+### Map Radius password to Keycloak credentials
+
+| Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Keycloak Radius credentials | Keycloak Radius credentials with OTP | Keycloak OTP(if config file contains "otp":true) |
+|-----------------|----------------------|-------------------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
+| PAP             | Yes                  | Yes                           | Yes                         | Yes                                  | Yes                                              |
+| CHAP            | No                   | No                            | Yes                         | Yes                                  | Yes                                              |
+| MSCHAPV2        | No                   | No                            | Yes                         | Yes                                  | Yes                                              |
 
 ### Assign Radius Attributes to Role
 > **_NOTE:_**  Composite roles supported
@@ -324,6 +335,7 @@ Example:
 3. Structure Password in request:
     -  PAP password: <Keycloak Password/RADIUS Password><OTP>, example: testPassword123456, where testPassword is password, 123456 is otp
     -  MSCHAP/CHAP: <RADIUS Password><OTP>, example: testPassword123456, where testPassword is password, 123456 is otp
+    -  PAP password with Otp ()if config file contains "otp":true) : <OTP>, example: 123456, where 123456 is otp
 
 [OTP Password example](Examples/OTPPasswordJSExample)
 

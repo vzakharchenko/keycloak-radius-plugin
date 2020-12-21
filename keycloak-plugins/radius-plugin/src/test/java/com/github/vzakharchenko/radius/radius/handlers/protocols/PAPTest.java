@@ -1,10 +1,12 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
+import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPassword;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.keycloak.Config;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialModel;
@@ -97,6 +99,19 @@ public class PAPTest extends AbstractRadiusTest {
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         papProtocol.setOtpPasswordGetter(passwordFactory);
         assertFalse(papProtocol.verifyPassword());
+    }
+
+    @Test
+    public void testOtpPasswordValid() {
+        enableOTP();
+        reset(configuration);
+        when(configuration.getRadiusSettings())
+                .thenReturn(ModelBuilder.createRadiusOtpServerSettings());
+        RadiusConfigHelper.setConfiguration(configuration);
+        request.setUserPassword("123456");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        papProtocol.setOtpPasswordGetter(passwordFactory);
+        assertTrue(papProtocol.verifyPassword());
     }
 
     @Test

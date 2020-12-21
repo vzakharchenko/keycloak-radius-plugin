@@ -29,7 +29,7 @@ import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 public abstract class AbstractAuthProtocol implements AuthProtocol {
     protected final AccessRequest accessRequest;
     protected final KeycloakSession session;
-    private IOtpPasswordFactory otpPasswordGetter;
+    protected IOtpPasswordFactory otpPasswordGetter;
 
     public AbstractAuthProtocol(AccessRequest accessRequest, KeycloakSession session) {
         this.accessRequest = accessRequest;

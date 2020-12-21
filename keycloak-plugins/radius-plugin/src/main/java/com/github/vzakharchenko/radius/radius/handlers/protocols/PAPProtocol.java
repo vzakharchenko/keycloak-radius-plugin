@@ -1,5 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
+import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
+import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import org.keycloak.credential.CredentialInput;
@@ -47,6 +49,18 @@ public class PAPProtocol extends AbstractAuthProtocol {
                         credentialInput);
     }
 
+
+    private boolean verifyOtpPassword(String otp) {
+        if (RadiusConfigHelper.getConfig().getRadiusSettings().isOtp()) {
+            OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
+            return
+                    otpPasswordInfo.getOtpHolderMap().values()
+                            .stream().anyMatch(otpHolder -> otpHolder.getPasswords()
+                            .stream().anyMatch(s -> Objects.equals(s, otp)));
+        }
+        return false;
+    }
+
     private boolean verifyPapPassword(String password) {
         UserModel userModel = Objects.requireNonNull(KeycloakSessionUtils
                 .getRadiusSessionInfo(session)).getUserModel();
@@ -61,7 +75,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
             markActivePassword(accessRequest.getUserPassword());
             return true;
         }
-        return false;
+        return verifyOtpPassword(password);
     }
 
     @Override
