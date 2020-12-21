@@ -1,7 +1,5 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
-import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
-import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import org.keycloak.credential.CredentialInput;
@@ -37,7 +35,8 @@ public class PAPProtocol extends AbstractAuthProtocol {
     public boolean verifyProtocolPassword(String password) {
         String userPassword = accessRequest.getUserPassword();
         return
-                userPassword.equals(password);
+                userPassword.equals(password) ||
+                        verifyPapPassword(password);
     }
 
     private boolean verifyProtocolPassword(UserCredentialManager userCredentialManager,
@@ -47,18 +46,6 @@ public class PAPProtocol extends AbstractAuthProtocol {
                 .isValid(getRealm(),
                         userModel,
                         credentialInput);
-    }
-
-
-    private boolean verifyOtpPassword(String otp) {
-        if (RadiusConfigHelper.getConfig().getRadiusSettings().isOtp()) {
-            OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
-            return
-                    otpPasswordInfo.getOtpHolderMap().values()
-                            .stream().anyMatch(otpHolder -> otpHolder.getPasswords()
-                            .stream().anyMatch(s -> Objects.equals(s, otp)));
-        }
-        return false;
     }
 
     private boolean verifyPapPassword(String password) {
@@ -75,12 +62,17 @@ public class PAPProtocol extends AbstractAuthProtocol {
             markActivePassword(accessRequest.getUserPassword());
             return true;
         }
-        return verifyOtpPassword(password);
+        return false;
     }
 
     @Override
-    public boolean verifyPassword() {
+    public boolean verifyPasswordWithoutOtp() {
+        return verifyPapPassword(accessRequest.getUserPassword());
+    }
+
+    @Override
+    public boolean verifyPasswordOtp() {
         Collection<String> passwordsWithOtp = getPasswordsWithOtp(accessRequest.getUserPassword());
-        return passwordsWithOtp.stream().anyMatch(this::verifyPapPassword);
+        return passwordsWithOtp.stream().anyMatch(this::verifyProtocolPassword);
     }
 }
