@@ -41,6 +41,21 @@ public class ChapProtocolTest extends AbstractRadiusTest {
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
     }
 
+    public void beforeMethods() {
+        HashMap<String, OtpHolder> hashMap = new HashMap<>();
+        hashMap.put("otp", new OtpHolder("otp", new CredentialModel(),
+                Collections.singletonList("1")));
+        when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
+                any(CredentialInput.class))).thenReturn(false);
+        otpPasswordInfo = new OtpPassword(false);
+        otpPasswordInfo.putAll(hashMap);
+        when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
+        when(dictionary.getAttributeTypeByCode(0, 60))
+                .thenReturn(new AttributeType(60, "CHAP-Challenge", "octets"));
+        when(dictionary.getAttributeTypeByCode(0, 3))
+                .thenReturn(new AttributeType(3, "CHAP-Password", "octets"));
+    }
+
     @BeforeMethod
     public void before() {
         reset(passwordFactory);
@@ -60,16 +75,7 @@ public class ChapProtocolTest extends AbstractRadiusTest {
                                         DatatypeConverter.parseHexBinary(
                                                 "000ad48b2d944948e8014118aeb4e56923")));
         request.addAttribute(REALM_RADIUS, REALM_RADIUS_NAME);
-        HashMap<String, OtpHolder> hashMap = new HashMap<>();
-        hashMap.put("otp", new OtpHolder("otp", new CredentialModel(), Collections.singletonList("1")));
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(CredentialInput.class))).thenReturn(false);
-        otpPasswordInfo = new OtpPassword(false);
-        otpPasswordInfo.putAll(hashMap);
-        when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
-        when(dictionary.getAttributeTypeByCode(0, 60))
-                .thenReturn(new AttributeType(60, "CHAP-Challenge", "octets"));
-        when(dictionary.getAttributeTypeByCode(0, 3))
-                .thenReturn(new AttributeType(3, "CHAP-Password", "octets"));
+        beforeMethods();
     }
 
     @Test
