@@ -13,7 +13,7 @@ features:
 - use keycloak authentication and authorization for the embedded RADIUS server
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
-- use Keycloak user credentials, if radius access-request protocol is PAP. Otherwise is using [Keycloak Radius credentials](#keycloak-radius-credentials) or OTP
+- use [Keycloak user credentials, if radius access-request protocol is PAP](#mapping-radius-password-to-keycloak-credentials) Otherwise is using [Keycloak Radius credentials](#keycloak-radius-credentials) or OTP
 - [use Kerberos/ldap credentials(only if Radius client use PAP authorization)](#mapping-radius-password-to-keycloak-credentials)
 - can work as [radius proxy](#radius-proxy)
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
