@@ -333,11 +333,11 @@ Example:
 ![impersonateUserExample3](./docs/impersonateUserExample3.png) ![impersonateUserExample4](./docs/impersonateUserExample4.png)
 2.  password in request must contain the password and otp.
 3. Structure Password in request:
-    -  PAP password: <Keycloak Password/RADIUS Password><OTP>  
+    -  PAP password: ```<Keycloak Password/RADIUS Password><OTP>```  
            example: testPassword123456, where testPassword is password, 123456 is otp
-    -  MSCHAP/CHAP: <RADIUS Password><OTP>  
+    -  MSCHAP/CHAP: ```<RADIUS Password><OTP>```  
            example: testPassword123456, where testPassword is password, 123456 is otp
-    -  PAP password with Otp ()if config file contains "otp":true) : <OTP>  
+    -  PAP password with Otp (if config file contains "otp":true) : ```<OTP>```  
            example: 123456, where 123456 is otp
 
 [OTP Password example](Examples/OTPPasswordJSExample)
