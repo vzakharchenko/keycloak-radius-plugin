@@ -1,11 +1,11 @@
 # Embedded Radius Server in [Keycloak](https://www.keycloak.org/) SSO
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)  
-![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)  
-![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)  
-[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
-<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>  
-[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)  
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)
+![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]
+<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
+[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
@@ -14,7 +14,7 @@ features:
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
-- use Kerberos credential(only if Radius client use PAP authorization)
+- use Kerberos/ldap credentials(only if Radius client use PAP authorization)
 - can work as [radius proxy](#radius-proxy)
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
 - Map Keycloak [authorization](#assign-radius-attributes-to-authorization-resource) ,  [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
@@ -112,11 +112,11 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 
 ### Mapping Radius Password to Keycloak Credentials
 
-| Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Keycloak Radius credentials | Keycloak Radius credentials with OTP | Keycloak OTP(if config file contains "otp":true) |
-|-----------------|----------------------|-------------------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
-| PAP             | Yes                  | Yes                           | Yes                         | Yes                                  | Yes                                              |
-| CHAP            | No                   | No                            | Yes                         | Yes                                  | Yes                                              |
-| MSCHAPV2        | No                   | No                            | Yes                         | Yes                                  | Yes                                              |
+| Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Kerberos credentials | Ldap credentials | Keycloak Radius credentials | Keycloak Radius credentials with OTP | Keycloak OTP(if config file contains "otp":true) |
+|-----------------|----------------------|-------------------------------|----------------------|------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
+| PAP             | Yes                  | Yes                           | Yes                  | Yes              | Yes                         | Yes                                  | Yes                                              |
+| CHAP            | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
+| MSCHAPV2        | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
 
 ### Assign Radius Attributes to Role
 > **_NOTE:_**  Composite roles supported
