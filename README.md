@@ -1,11 +1,11 @@
 # Embedded Radius Server in [Keycloak](https://www.keycloak.org/) SSO
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)
-![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
-![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]
-<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
-[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)  
+![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)  
+![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)  
+[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
+<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>  
+[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)  
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
@@ -14,7 +14,7 @@ features:
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
 - use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
-- use Kerberos/ldap credentials(only if Radius client use PAP authorization)
+- [use Kerberos/ldap credentials(only if Radius client use PAP authorization)](#mapping-radius-password-to-keycloak-credentials)
 - can work as [radius proxy](#radius-proxy)
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
 - Map Keycloak [authorization](#assign-radius-attributes-to-authorization-resource) ,  [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
@@ -333,9 +333,12 @@ Example:
 ![impersonateUserExample3](./docs/impersonateUserExample3.png) ![impersonateUserExample4](./docs/impersonateUserExample4.png)
 2.  password in request must contain the password and otp.
 3. Structure Password in request:
-    -  PAP password: <Keycloak Password/RADIUS Password><OTP>, example: testPassword123456, where testPassword is password, 123456 is otp
-    -  MSCHAP/CHAP: <RADIUS Password><OTP>, example: testPassword123456, where testPassword is password, 123456 is otp
-    -  PAP password with Otp ()if config file contains "otp":true) : <OTP>, example: 123456, where 123456 is otp
+    -  PAP password: <Keycloak Password/RADIUS Password><OTP>  
+           example: testPassword123456, where testPassword is password, 123456 is otp
+    -  MSCHAP/CHAP: <RADIUS Password><OTP>  
+           example: testPassword123456, where testPassword is password, 123456 is otp
+    -  PAP password with Otp ()if config file contains "otp":true) : <OTP>  
+           example: 123456, where 123456 is otp
 
 [OTP Password example](Examples/OTPPasswordJSExample)
 
