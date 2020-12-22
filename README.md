@@ -25,6 +25,7 @@ features:
 - BackChannel logout(Disconnect-message request)
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
 - [Cisco plugin](keycloak-plugins/cisco-radius-plugin) (thanks [vbkunin](https://github.com/vbkunin))
+- [Chillispot plugin](keycloak-plugins/chillispot-radius-plugin)  
 - [Social Hotspot Login](https://github.com/vzakharchenko/mikrotik-hotspot-oauth)
 ## Examples
  - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)
