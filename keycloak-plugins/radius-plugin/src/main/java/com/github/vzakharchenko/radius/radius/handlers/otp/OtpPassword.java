@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.otp;
 
+import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,14 +51,29 @@ public class OtpPassword implements OtpPasswordInfo {
         return otpPasswords(originPassword, false);
     }
 
-    private Set<String> otpPasswords(String originPassword, boolean exclude) {
-        Set<String> passwords = new HashSet<>();
+    private void otpPasswords(Set<String> passwords, String originPassword, boolean exclude) {
         otpHolders.values().forEach(otpHolder -> passwords.addAll(otpHolder
-                .getPasswords().stream().map(password -> exclude ?
+                .getPasswords().stream()
+                .map(password -> exclude ?
                         excludeOtp(originPassword, password) :
                         includeOtp(originPassword, password))
-                .filter(password -> !Objects.equals(password, originPassword))
+                .filter(password -> !StringUtils.isEmpty(password) &&
+                        !Objects.equals(password, originPassword))
                 .collect(Collectors.toList())));
+    }
+
+    private void onlyOtp(Set<String> passwords) {
+        boolean allowedOtp = RadiusConfigHelper.getConfig().getRadiusSettings().isOtp();
+        if (allowedOtp) {
+            otpHolders.values().forEach(otpHolder ->
+                    passwords.addAll(otpHolder.getPasswords()));
+        }
+    }
+
+    private Set<String> otpPasswords(String originPassword, boolean exclude) {
+        Set<String> passwords = new HashSet<>();
+        otpPasswords(passwords, originPassword, exclude);
+        onlyOtp(passwords);
         return passwords;
     }
 }

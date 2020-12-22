@@ -86,4 +86,4 @@ Thumbs.db
 .env
 keycloak.properties
 #keycloak.json
-
+keycloak/data

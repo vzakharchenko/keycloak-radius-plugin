@@ -35,7 +35,8 @@ public class PAPProtocol extends AbstractAuthProtocol {
     public boolean verifyProtocolPassword(String password) {
         String userPassword = accessRequest.getUserPassword();
         return
-                userPassword.equals(password);
+                userPassword.equals(password) ||
+                        verifyPapPassword(password);
     }
 
     private boolean verifyProtocolPassword(UserCredentialManager userCredentialManager,
@@ -65,8 +66,13 @@ public class PAPProtocol extends AbstractAuthProtocol {
     }
 
     @Override
-    public boolean verifyPassword() {
+    public boolean verifyPasswordWithoutOtp() {
+        return verifyPapPassword(accessRequest.getUserPassword());
+    }
+
+    @Override
+    public boolean verifyPasswordOtp() {
         Collection<String> passwordsWithOtp = getPasswordsWithOtp(accessRequest.getUserPassword());
-        return passwordsWithOtp.stream().anyMatch(this::verifyPapPassword);
+        return passwordsWithOtp.stream().anyMatch(this::verifyProtocolPassword);
     }
 }

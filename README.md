@@ -1,19 +1,20 @@
 # Embedded Radius Server in [Keycloak](https://www.keycloak.org/) SSO
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)
-![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
-![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]
-<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
-[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-radius-plugin/tree/master)  
+![Java CI with Maven](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)  
+![Node.js Examples](https://github.com/vzakharchenko/keycloak-radius-plugin/workflows/Node.js%20Examples/badge.svg)  
+[![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)  
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]  
+<a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>  
+[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)  
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)
+- use keycloak authentication and authorization for the embedded RADIUS server
 - [radius oidc password](Examples/OneTimePasswordJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
-- use Keycloak user password, if radius access-request protocol is PAP. Otherwise is using radius-password credential or OTP
-- use Kerberos credential(only if Radius client use PAP authorization)
+- use [Keycloak user credentials, if radius access-request protocol is PAP](#mapping-radius-password-to-keycloak-credentials) Otherwise is using [Keycloak Radius credentials](#keycloak-radius-credentials) or OTP
+- [use Kerberos/ldap credentials(only if Radius client use PAP authorization)](#mapping-radius-password-to-keycloak-credentials)
 - can work as [radius proxy](#radius-proxy)
 - support [Radsec Protocol](keycloak-plugins/rad-sec-plugin/README.md#radsec-example) (Radius over TLS)
 - Map Keycloak [authorization](#assign-radius-attributes-to-authorization-resource) ,  [Role](#assign-radius-attributes-to-role), [Group](#assign-radius-attributes-to-group) and [User](#assign-radius-attributes-to-user) Attributes to Radius Attributes
@@ -23,7 +24,7 @@ features:
 - start/stop Keycloak Session ![sessionManagment.png](./docs/sessionManagment.png)
 - BackChannel logout(Disconnect-message request)
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
-- [Cisco plugin](keycloak-plugins/cisco-radius-plugin) (thanks [vbkunin](https://github.com/vbkunin)
+- [Cisco plugin](keycloak-plugins/cisco-radius-plugin) (thanks [vbkunin](https://github.com/vbkunin))
 - [Social Hotspot Login](https://github.com/vzakharchenko/mikrotik-hotspot-oauth)
 ## Examples
  - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)
@@ -46,14 +47,14 @@ features:
  - <pre><code>mvn clean install</pre></code>
 ### Configure keycloak
 ***requirements***: [keycloak 12.0.1](https://github.com/keycloak/keycloak/releases/download/12.0.1/keycloak-12.0.1.zip)
-- setup radius-plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,org.apache.commons.lang3"</pre></code>
-- setup rad-sec plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.rad.sec --resources=${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
-- setup mikrotik plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.mikrotik --resources=${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
-- setup cisco plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.cisco --resources=${SOURCE}/keycloak-plugins/cisco-radius-plugin/target/cisco-radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
-- setup chillispot plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.chillispot --resources=${SOURCE}/keycloak-plugins/chillispot-radius-plugin/target/chillispot-radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
-- setup radius-disconnect plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.dm --resources=${SOURCE}/keycloak-plugins/radius-disconnect-plugin/target/radius-disconnect-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.keycloak.keycloak-model-jpa,javax.persistence.api,org.hibernate,org.apache.commons.lang3"</pre></code>
-- setup proxy-radius plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.proxy --resources=${SOURCE}/keycloak-plugins/proxy-radius-plugin/target/proxy-radius-plugin-1.3.1-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
-- setup radius theme <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.theme --resources=${SOURCE}/keycloak-radius-plugin/keycloak-plugins/radius-theme/target/radius-theme-1.3.1-SNAPSHOT.zip</pre></code>
+- setup radius-plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,org.apache.commons.lang3"</pre></code>
+- setup rad-sec plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.rad.sec --resources=${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
+- setup mikrotik plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.mikrotik --resources=${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
+- setup cisco plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.cisco --resources=${SOURCE}/keycloak-plugins/cisco-radius-plugin/target/cisco-radius-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
+- setup chillispot plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.chillispot --resources=${SOURCE}/keycloak-plugins/chillispot-radius-plugin/target/chillispot-radius-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
+- setup radius-disconnect plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.dm --resources=${SOURCE}/keycloak-plugins/radius-disconnect-plugin/target/radius-disconnect-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.keycloak.keycloak-model-jpa,javax.persistence.api,org.hibernate,org.apache.commons.lang3"</pre></code>
+- setup proxy-radius plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.proxy --resources=${SOURCE}/keycloak-plugins/proxy-radius-plugin/target/proxy-radius-plugin-1.3.2-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
+- setup radius theme <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.theme --resources=${SOURCE}/keycloak-radius-plugin/keycloak-plugins/radius-theme/target/radius-theme-1.3.2-SNAPSHOT.zip</pre></code>
 - run script for standalone <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
 - run script for standalone-ha <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
 where
@@ -68,6 +69,7 @@ where
   "accountPort": 1813,
   "numberThreads": 8,
   "useUdpRadius": true,
+  "otp": false,
   "radsec": {
     "privateKey": "config/private.key",
     "certificate": "config/public.crt",
@@ -94,6 +96,7 @@ where
    -  **coa** - CoA request configuration
    -  **port** - CoA port (Mikrotik:3799, Cisco:1700)
    -  **useCoA** - use CoA request
+   -  **otp** - use OTP without password
 ##
  Run Keycloak Locally
 <pre><code>
@@ -106,6 +109,14 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 
 ### Keycloak Client with Radius Protocol
 ![radiusProtocol](docs/radiusProtocol.png)
+
+### Mapping Radius Password to Keycloak Credentials
+
+| Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Kerberos credentials | Ldap credentials | [Keycloak Radius credentials](#keycloak-radius-credentials) | [Keycloak Radius credentials](#keycloak-radius-credentials) with OTP | Keycloak OTP(if config file contains "otp":true) |
+|-----------------|----------------------|-------------------------------|----------------------|------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
+| PAP             | Yes                  | Yes                           | Yes                  | Yes              | Yes                         | Yes                                  | Yes                                              |
+| CHAP            | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
+| MSCHAPV2        | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
 
 ### Assign Radius Attributes to Role
 > **_NOTE:_**  Composite roles supported
@@ -316,14 +327,24 @@ Example:
 
 [Radius Proxy Module](keycloak-plugins/proxy-radius-plugin)
 
+### Keycloak Radius credentials
+ - Setup Radius Credentials during first time login
+     1. set Action "Update Radius Password" (or send this event to user be email) ![updateRadiusPassword](./docs/updateRadiusPassword.png)
+     2. User sets his own Radius password ![RadiusUserPassword](./docs/RadiusUserPassword.png)
+
+
 ### Otp Password
 
 1. enable Otp Password on Keycloak side. https://www.keycloak.org/docs/latest/server_admin/
 ![impersonateUserExample3](./docs/impersonateUserExample3.png) ![impersonateUserExample4](./docs/impersonateUserExample4.png)
 2.  password in request must contain the password and otp.
 3. Structure Password in request:
-    -  PAP password: <Keycloak Password/RADIUS Password><OTP>, example: testPassword123456, where testPassword is password, 123456 is otp
-    -  MSCHAP/CHAP: <RADIUS Password><OTP>, example: testPassword123456, where testPassword is password, 123456 is otp
+    -  PAP password: ```<Keycloak Password/RADIUS Password><OTP>```
+           example: testPassword123456, where testPassword is password, 123456 is otp
+    -  MSCHAP/CHAP: ```<RADIUS Password><OTP>```
+           example: testPassword123456, where testPassword is password, 123456 is otp
+    -  PAP password with Otp (if config file contains "otp":true) : ```<OTP>```
+           example: 123456, where 123456 is otp
 
 [OTP Password example](Examples/OTPPasswordJSExample)
 

@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
+import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
 import com.github.vzakharchenko.radius.providers.IRadiusAttributeProvider;
 import com.github.vzakharchenko.radius.radius.handlers.attributes.KeycloakAttributesType;
@@ -29,7 +30,7 @@ import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 public abstract class AbstractAuthProtocol implements AuthProtocol {
     protected final AccessRequest accessRequest;
     protected final KeycloakSession session;
-    private IOtpPasswordFactory otpPasswordGetter;
+    protected IOtpPasswordFactory otpPasswordGetter;
 
     public AbstractAuthProtocol(AccessRequest accessRequest, KeycloakSession session) {
         this.accessRequest = accessRequest;
@@ -131,9 +132,33 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return getPasswordOtp(originPassword, false);
     }
 
-    @Override
-    public boolean verifyPassword() {
+    protected boolean verifyPasswordWithoutOtp() {
         return false;
+    }
+
+    protected boolean verifyPasswordOtp() {
+        return false;
+    }
+
+    private boolean verifyPasswordWithOtp(OtpPasswordInfo otPs) {
+        return verifyPasswordOtp() ||
+                otPs.getOtpHolderMap().values().stream()
+                .anyMatch(otpHolder -> otpHolder
+                        .getPasswords().stream()
+                        .anyMatch(otp -> {
+                            boolean flag = verifyProtocolPassword(otp);
+                            if (flag) {
+                                markActivePassword(otp);
+                            }
+                            return flag;
+                        }));
+    }
+
+    @Override
+    public final boolean verifyPassword() {
+        OtpPasswordInfo otPs = otpPasswordGetter.getOTPs(session);
+        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtp() && otPs.isUseOtp() ?
+                verifyPasswordWithOtp(otPs) : verifyPasswordWithoutOtp();
     }
 
     public void markActivePassword(String userPassword) {

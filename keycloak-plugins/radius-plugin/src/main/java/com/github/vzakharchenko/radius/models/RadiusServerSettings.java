@@ -8,6 +8,7 @@ public class RadiusServerSettings {
     private boolean useUdpRadius;
     private int accountPort;
     private int numberThreads;
+    private boolean otp;
     private RadSecSettings radSecSettings;
     private CoASettings coASettings;
     private Map<String, String> accessMap;
@@ -74,5 +75,13 @@ public class RadiusServerSettings {
 
     public void setCoASettings(CoASettings coASettings) {
         this.coASettings = coASettings;
+    }
+
+    public boolean isOtp() {
+        return otp;
+    }
+
+    public void setOtp(boolean otp) {
+        this.otp = otp;
     }
 }

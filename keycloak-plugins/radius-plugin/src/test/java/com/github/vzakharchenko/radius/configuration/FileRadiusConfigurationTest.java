@@ -31,6 +31,7 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusConfigModel.setSharedSecret("GlobalShared");
         radiusConfigModel.setNumberThreads(19);
         radiusConfigModel.setUseUdpRadius(true);
+        radiusConfigModel.setOtp(true);
         RadiusAccessModel radiusAccessModel = new RadiusAccessModel();
         radiusAccessModel.setIp("ip");
         radiusAccessModel.setSharedSecret("ip");

@@ -13,6 +13,11 @@ public class ModelBuilder {
     public static final String SHARED = "shared";
     public static final String IP = "123.123.123.123";
 
+    public static RadiusServerSettings createRadiusOtpServerSettings() {
+        RadiusServerSettings radiusServerSettings = createRadiusServerSettings();
+        radiusServerSettings.setOtp(true);
+        return radiusServerSettings;
+    }
     public static RadiusServerSettings createRadiusServerSettings() {
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setSecret(SHARED);
