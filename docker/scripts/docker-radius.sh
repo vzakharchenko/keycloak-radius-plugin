@@ -1,9 +1,4 @@
 set -e
-
-configJSON="{\"sharedSecret\":\"$RADIUS_SHARED_SECRET\",\"authPort\":$RADIUS_UDP_AUTH_PORT,\"accountPort\":$RADIUS_UDP_ACCOUNT_PORT,\"useUdpRadius\":$RADIUS_UDP,\"radsec\":{\"privateKey\":\"$RADIUS_RADSEC_PRIVATEKEY\",\"certificate\":\"$RADIUS_RADSEC_CERTIFICATE\",\"useRadSec\":$RADIUS_RADSEC},\"coa\":{\"port\":$RADIUS_COA_PORT,\"useCoA\":$RADIUS_COA}}"
-echo "$configJSON"
-echo "$configJSON">/config/radius.config
-
 export FILE=~/status
 if [ -f "$FILE" ]; then
     echo "$FILE exist"
