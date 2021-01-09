@@ -126,7 +126,8 @@ public class RadiusServiceTest extends AbstractRadiusTest {
                 .getRealmRole(realmModel, RadiusServiceImpl.RADIUS_SESSION_ROLE))
                 .thenReturn(null);
         this.radiusService.init(clientModel);
-        verify(roleProvider, never()).addRealmRole(realmModel, RadiusServiceImpl.RADIUS_SESSION_ROLE);
+        verify(roleProvider, never())
+                .addRealmRole(realmModel, RadiusServiceImpl.RADIUS_SESSION_ROLE);
     }
 
     @Test

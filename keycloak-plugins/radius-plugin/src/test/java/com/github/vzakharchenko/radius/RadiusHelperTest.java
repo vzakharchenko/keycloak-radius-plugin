@@ -144,9 +144,11 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
     }
 
-    @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp =
+    @Test(expectedExceptions = IllegalStateException.class,
+            expectedExceptionsMessageRegExp =
             "Found more than one Radius Realm \\(RadiusName, second_realm\\). " +
-                    "If you expect to use the Default Realm, than you should use only one realm with radius client")
+                    "If you expect to use the Default Realm," +
+                    " than you should use only one realm with radius client")
     public void testRealmAttributesNullWith2DefaultRealm() {
         RealmModel secondRealm = mock(RealmModel.class);
         when(secondRealm.getId()).thenReturn("second_realm");
@@ -163,12 +165,14 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     }
 
     @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp =
-            "Radius Realm does not exist. Please create at least one realm with radius client")
+            "Radius Realm does not exist. " +
+                    "Please create at least one realm with radius client")
     public void testRealmEmpty() {
         when(realmProvider.getRealms()).thenReturn(Arrays.asList());
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
-        radiusPacket.addAttribute("User-Name", Hex.encodeHexString(USER.getBytes(Charset.defaultCharset())));
+        radiusPacket.addAttribute("User-Name",
+                Hex.encodeHexString(USER.getBytes(Charset.defaultCharset())));
         RadiusHelper.getRealm(session, radiusPacket);
     }
 
@@ -180,8 +184,10 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         IRadiusDictionaryProvider radiusDictionaryProvider = providers.iterator().next();
         when(radiusDictionaryProvider.getRealmAttributes()).thenReturn(Arrays.asList("r", "r3"));
         RadiusPacket radiusPacket = RadiusPackets.create(dictionary, 1, 1);
-        radiusPacket.addAttribute("realm-attribute", Hex.encodeHexString(REALM_RADIUS.getBytes(Charset.defaultCharset())));
-        radiusPacket.addAttribute("User-Name", Hex.encodeHexString(USER.getBytes(Charset.defaultCharset())));
+        radiusPacket.addAttribute("realm-attribute", Hex
+                .encodeHexString(REALM_RADIUS.getBytes(Charset.defaultCharset())));
+        radiusPacket.addAttribute("User-Name", Hex
+                .encodeHexString(USER.getBytes(Charset.defaultCharset())));
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
         assertNotNull(realmModel);
     }
@@ -214,7 +220,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(secondRealm.getId()).thenReturn("second_realm");
         when(secondRealm.getName()).thenReturn("second_realm");
         ClientModel secondClientModel = mock(ClientModel.class);
-        when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
+        when(secondClientModel.getProtocol())
+                .thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
         when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
@@ -231,7 +238,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(secondRealm.getId()).thenReturn("second_realm");
         when(secondRealm.getName()).thenReturn("second_realm");
         ClientModel secondClientModel = mock(ClientModel.class);
-        when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
+        when(secondClientModel.getProtocol())
+                .thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
         when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
