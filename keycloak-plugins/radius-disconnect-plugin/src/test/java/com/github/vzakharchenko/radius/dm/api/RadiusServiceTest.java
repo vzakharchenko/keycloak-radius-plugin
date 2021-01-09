@@ -63,7 +63,8 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         radiusService.create(session);
         radiusService.setKeycloakStaticHelper(keycloakStaticHelper);
         AccessToken.Access access = new AccessToken.Access();
-        access.roles(new HashSet<>(Collections.singletonList(RadiusServiceImpl.RADIUS_SESSION_ROLE)));
+        access.roles(new HashSet<>(Collections
+                .singletonList(RadiusServiceImpl.RADIUS_SESSION_ROLE)));
         accessToken = new AccessToken();
         accessToken.setRealmAccess(access);
         when(keycloakStaticHelper.getAccessToken(session)).thenReturn(accessToken);
@@ -83,8 +84,8 @@ public class RadiusServiceTest extends AbstractRadiusTest {
 
     @Test
     public void testCreate() {
-        RadiusService radiusService = this.radiusService.create(session);
-        assertNotNull(radiusService);
+        RadiusService rs = this.radiusService.create(session);
+        assertNotNull(rs);
     }
 
     @Test
@@ -114,7 +115,8 @@ public class RadiusServiceTest extends AbstractRadiusTest {
     @Test
     public void initAlreadyCreatedRealmTest() {
         this.radiusService.init(clientModel);
-        verify(roleProvider, never()).addRealmRole(realmModel, RadiusServiceImpl.RADIUS_SESSION_ROLE);
+        verify(roleProvider, never()).addRealmRole(realmModel,
+                RadiusServiceImpl.RADIUS_SESSION_ROLE);
     }
 
     @Test
@@ -141,19 +143,22 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         radiusService.checkToken();
     }
 
-    @Test(expectedExceptions = ForbiddenException.class, expectedExceptionsMessageRegExp = "UnAuthorized")
+    @Test(expectedExceptions = ForbiddenException.class,
+            expectedExceptionsMessageRegExp = "UnAuthorized")
     public void checkTokenWrongProtocolTest() {
         when(clientModel.getProtocol()).thenReturn(OIDCLoginProtocol.LOGIN_PROTOCOL);
         radiusService.checkToken();
     }
 
-    @Test(expectedExceptions = ForbiddenException.class, expectedExceptionsMessageRegExp = "UnAuthorized")
+    @Test(expectedExceptions = ForbiddenException.class,
+            expectedExceptionsMessageRegExp = "UnAuthorized")
     public void checkTokenDisabledClientTest() {
         when(clientModel.isEnabled()).thenReturn(false);
         radiusService.checkToken();
     }
 
-    @Test(expectedExceptions = ForbiddenException.class, expectedExceptionsMessageRegExp = "UnAuthorized")
+    @Test(expectedExceptions = ForbiddenException.class,
+            expectedExceptionsMessageRegExp = "UnAuthorized")
     public void checkTokenRoleTest() {
         AccessToken.Access access = new AccessToken.Access();
         access.roles(new HashSet<>(Collections.singletonList("SOME ROLE")));
@@ -163,7 +168,8 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         radiusService.checkToken();
     }
 
-    @Test(expectedExceptions = ForbiddenException.class, expectedExceptionsMessageRegExp = "UnAuthorized")
+    @Test(expectedExceptions = ForbiddenException.class,
+            expectedExceptionsMessageRegExp = "UnAuthorized")
     public void checkTokenWithoutTokenTest() {
         when(keycloakStaticHelper.getAccessToken(session)).thenReturn(null);
         radiusService.checkToken();
@@ -204,7 +210,8 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         disconnectMessageModel.setUserId(USER);
         disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
 
-        when(tableManager.getAllActiveSessions(any(), any())).thenReturn(Arrays.asList(disconnectMessageModel));
+        when(tableManager.getAllActiveSessions(any(), any()))
+                .thenReturn(Arrays.asList(disconnectMessageModel));
         RadiusInfoModel radiusInfo = radiusService.getRadiusInfo("test");
         assertNotNull(radiusInfo);
         assertNotNull(radiusInfo.getActiveSessions());

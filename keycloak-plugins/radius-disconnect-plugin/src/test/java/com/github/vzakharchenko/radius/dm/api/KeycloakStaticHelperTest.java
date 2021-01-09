@@ -5,8 +5,9 @@ import org.testng.annotations.Test;
 
 public class KeycloakStaticHelperTest extends AbstractRadiusTest {
     @Test(expectedExceptions = Throwable.class)
-    public void testMethod(){
-        KeycloakStaticHelper keycloakStaticHelper = new KeycloakStaticHelperImpl();
+    public void testMethod() {
+        KeycloakStaticHelper keycloakStaticHelper =
+                new KeycloakStaticHelperImpl();
         keycloakStaticHelper.getAccessToken(session);
     }
 }

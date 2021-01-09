@@ -341,7 +341,7 @@ public abstract class AbstractRadiusTest {
         when(getProvider(CachedStoreFactoryProvider.class)
                 .getResourceStore()).thenReturn(resourceStore);
         MultivaluedHashMap<String, String> map = new MultivaluedHashMap<>();
-        map.add(AUTHORIZATION,"Bearer TEST");
+        map.add(AUTHORIZATION, "Bearer TEST");
         when(httpHeaders.getRequestHeaders()).thenReturn(map);
         resetStatic();
         initDictionary();

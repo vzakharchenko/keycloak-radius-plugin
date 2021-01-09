@@ -29,6 +29,7 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         disconnectMessageManager.saveRadiusSession(disconnectMessageModel);
         verify(entityManager).persist(any());
     }
+
     @Test
     public void endSessionTest() {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
@@ -46,13 +47,14 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
     @Test
     public void failedEndSessionTest() {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
-        disconnectMessageManager.failEndSession(disconnectMessageModel,"error");
+        disconnectMessageManager.failEndSession(disconnectMessageModel, "error");
         verify(entityManager).persist(any());
     }
+
     @Test
     public void increaseEndAttemptsTestNull() {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
-        disconnectMessageManager.increaseEndAttempts(disconnectMessageModel,"" );
+        disconnectMessageManager.increaseEndAttempts(disconnectMessageModel, "");
         verify(entityManager).persist(any());
     }
 
@@ -64,8 +66,9 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(dmKeycloakEndModel));
         disconnectMessageManager.increaseEndAttempts(disconnectMessageModel, "");
         verify(entityManager).persist(dmKeycloakEndModel);
-        assertEquals(dmKeycloakEndModel.getAttempts().intValue(),2);
+        assertEquals(dmKeycloakEndModel.getAttempts().intValue(), 2);
     }
+
     @Test
     public void increaseEndAttemptsTestMax() {
 
@@ -73,11 +76,12 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         DMKeycloakEndModel dmKeycloakEndModel = new DMKeycloakEndModel();
         dmKeycloakEndModel.setAttempts(3);
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(dmKeycloakEndModel));
-        disconnectMessageManager.increaseEndAttempts(disconnectMessageModel, "max connection attempts");
+        disconnectMessageManager.increaseEndAttempts(disconnectMessageModel,
+                "max connection attempts");
         verify(entityManager).persist(dmKeycloakEndModel);
-        assertEquals(dmKeycloakEndModel.getAttempts().intValue(),3);
-        assertEquals(dmKeycloakEndModel.getEndMessage(),"max connection attempts");
-        assertEquals(dmKeycloakEndModel.getEndStatus(),"MAX_ATTEMPTS");
+        assertEquals(dmKeycloakEndModel.getAttempts().intValue(), 3);
+        assertEquals(dmKeycloakEndModel.getEndMessage(), "max connection attempts");
+        assertEquals(dmKeycloakEndModel.getEndStatus(), "MAX_ATTEMPTS");
     }
 
     @Test
@@ -110,9 +114,10 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
         List<DisconnectMessageModel> disconnectMessages = disconnectMessageManager
-                .getAllActiveSessions("test","test");
+                .getAllActiveSessions("test", "test");
         assertEquals(disconnectMessages.size(), 1);
     }
+
     @Test
     public void getActiveSessionTest() {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
@@ -120,7 +125,7 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         when(stream.findFirst()).thenReturn(Optional.of(disconnectMessageModel));
         when(typedQuery.getResultStream()).thenReturn(stream);
         DisconnectMessageModel disconnectMessage = disconnectMessageManager
-                .getActiveSession("test","ip","test"
+                .getActiveSession("test", "ip", "test"
                 );
         assertNotNull(disconnectMessage);
     }
