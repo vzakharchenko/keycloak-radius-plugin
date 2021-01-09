@@ -1,1 +1,3 @@
 - otp without password
+- specify realm in username: user@realm
+- support connection with VPN

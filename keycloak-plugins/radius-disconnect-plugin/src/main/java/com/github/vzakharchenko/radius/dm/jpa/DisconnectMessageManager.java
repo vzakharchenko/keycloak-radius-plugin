@@ -15,6 +15,8 @@ import java.util.UUID;
 public class DisconnectMessageManager implements DmTableManager {
 
     public static final int MAX_ATTEMPTS = 2;
+    public static final String SELECT_DMM_FROM_DISCONNECT_MESSAGE_MODEL_DMM =
+            "SELECT dmm FROM DisconnectMessageModel dmm ";
     private final EntityManager em;
 
     public DisconnectMessageManager(KeycloakSession session) {
@@ -33,7 +35,7 @@ public class DisconnectMessageManager implements DmTableManager {
     @Override
     public DisconnectMessageModel getDisconnectMessage(String userName, String radiusSessionId) {
         TypedQuery<DisconnectMessageModel> query = em.
-                createQuery("SELECT dmm FROM DisconnectMessageModel dmm " +
+                createQuery(SELECT_DMM_FROM_DISCONNECT_MESSAGE_MODEL_DMM +
                                 "WHERE dmm.userName = :userName " +
                                 "and dmm.radiusSessionId = :radiusSessionId ",
                         DisconnectMessageModel.class);
@@ -44,9 +46,9 @@ public class DisconnectMessageManager implements DmTableManager {
     }
 
     @Override
-    public List<DisconnectMessageModel> getAllActivedSessions() {
+    public List<DisconnectMessageModel> getAllActiveSessions() {
         TypedQuery<DisconnectMessageModel> query = em.
-                createQuery("SELECT dmm FROM DisconnectMessageModel dmm " +
+                createQuery(SELECT_DMM_FROM_DISCONNECT_MESSAGE_MODEL_DMM +
                                 " left join DMKeycloakEndModel kem on (dmm.id=kem.id)" +
                                 " left join DMClientEndModel cem on (dmm.id=cem.id) " +
                                 "WHERE kem.endDate is null and cem.endDate is null",
@@ -55,8 +57,50 @@ public class DisconnectMessageManager implements DmTableManager {
     }
 
     @Override
+    public List<DisconnectMessageModel> getAllActiveSessions(String realmId,
+                                                             String calledStationId) {
+        TypedQuery<DisconnectMessageModel> query = em.
+                createQuery(SELECT_DMM_FROM_DISCONNECT_MESSAGE_MODEL_DMM +
+                                " left join DMKeycloakEndModel kem on (dmm.id=kem.id)" +
+                                " left join DMClientEndModel cem on (dmm.id=cem.id) " +
+                                "WHERE  dmm.realmId= :realmId " +
+                                "and dmm.calledStationId=:calledStationId " +
+                                "and kem.endDate is null" +
+                                " and cem.endDate is null",
+                        DisconnectMessageModel.class);
+        query.setParameter("realmId", realmId);
+        query.setParameter("calledStationId", calledStationId);
+        return query.getResultList();
+    }
+
+    @Override
+    public DisconnectMessageModel getActiveSession(String realmId,
+                                                   String ip,
+                                                   String calledStationId) {
+        TypedQuery<DisconnectMessageModel> query = em.
+                createQuery(SELECT_DMM_FROM_DISCONNECT_MESSAGE_MODEL_DMM +
+                                " left join DMKeycloakEndModel kem on (dmm.id=kem.id)" +
+                                " left join DMClientEndModel cem on (dmm.id=cem.id) " +
+                                "WHERE kem.endDate is null and cem.endDate is null" +
+                                " and dmm.realmId= :realmId  " +
+                                " and dmm.framedIp= :framedIp " +
+                                " and dmm.calledStationId= :calledStationId " +
+                                "order by dmm.modifyDate DESC",
+                        DisconnectMessageModel.class);
+        query.setParameter("realmId", realmId);
+        query.setParameter("framedIp", ip);
+        query.setParameter("calledStationId", calledStationId);
+        query.setMaxResults(1);
+        return query.getResultStream().findFirst().orElse(null);
+    }
+
+    @Override
     public void successEndSession(DisconnectMessageModel dmm) {
-        DMKeycloakEndModel kem = new DMKeycloakEndModel();
+
+        DMKeycloakEndModel kem = getDMClientEndModel(dmm, DMKeycloakEndModel.class);
+        if (kem == null) {
+            kem = new DMKeycloakEndModel();
+        }
         kem.setEndDate(new Date());
         kem.setId(dmm.getId());
         kem.setModifyDate(new Date());

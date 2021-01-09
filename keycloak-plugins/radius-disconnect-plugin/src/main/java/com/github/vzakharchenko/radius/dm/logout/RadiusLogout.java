@@ -63,7 +63,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
     protected void checkSessions(KeycloakSession session) {
         DmTableManager disconnectMessageManager = new DisconnectMessageManager(session);
         List<DisconnectMessageModel> sessions = disconnectMessageManager
-                .getAllActivedSessions();
+                .getAllActiveSessions();
         for (DisconnectMessageModel dmm : sessions) {
             if (!KeycloakSessionUtils.isActiveSession(session,
                     dmm.getKeycloakSessionId(), dmm.getRealmId())) {
@@ -125,6 +125,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
                 .nasIp(getAttr("NAS-IP-Address", request))
                 .framedIp(getAttr("Framed-IP-Address", request))
                 .callingStationId(getAttr("Calling-Station-Id", request))
+                .calledStationId(getAttr("Called-Station-Id", request))
                 .keycloakSessionId(sessionId).build();
         new DisconnectMessageManager(session).saveRadiusSession(dm);
     }
@@ -149,6 +150,9 @@ public class RadiusLogout implements IRadiusCOAProvider,
 
         if (dm.getFramedIp() != null) {
             dmPacket.addAttribute("Framed-IP-Address", dm.getFramedIp());
+        }
+        if (dm.getCalledStationId() != null) {
+            dmPacket.addAttribute("Called-Station-Id", dm.getCalledStationId());
         }
     }
 

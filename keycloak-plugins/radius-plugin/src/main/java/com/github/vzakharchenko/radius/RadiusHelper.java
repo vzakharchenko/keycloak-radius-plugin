@@ -9,6 +9,7 @@ import com.github.vzakharchenko.radius.password.UpdateRadiusPassword;
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -164,19 +165,35 @@ public final class RadiusHelper {
         List<RealmModel> realms = session.realms()
                 .getRealms().stream().filter(realmModel -> realmModel
                         .getClients()
-                        .stream().anyMatch(clientModel -> {
-                            return Objects.equals(
-                                    clientModel.getProtocol(),
-                                    RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
-                        })).collect(Collectors.toList());
-        if (realms.size() != DEFAULT_REALM) {
-            throw new IllegalStateException("Found more than one Radius Realm (" + realms.stream()
-                    .map(RealmModel::getName)
-                    .collect(Collectors.joining(", ")) +
-                    "). If you expect to use the Default Realm, " +
-                    "than you should use only one realm with radius client");
+                        .stream().anyMatch(clientModel -> Objects.equals(
+                                clientModel.getProtocol(),
+                                RadiusLoginProtocolFactory.RADIUS_PROTOCOL)))
+                .collect(Collectors.toList());
+        switch (realms.size()) {
+            case 0:
+                throw new IllegalStateException("Radius Realm does not exist. " +
+                        "Please create at least one realm with radius client");
+            case DEFAULT_REALM:
+                break;
+            default:
+                throw new IllegalStateException("Found more than one Radius Realm (" +
+                        realms.stream().map(RealmModel::getName)
+                                .collect(Collectors.joining(", ")) +
+                        "). If you expect to use the Default Realm, " +
+                        "than you should use only one realm with radius client");
         }
         return realms.get(0);
+    }
+
+    private static RealmModel getRealmFromUserName(KeycloakSession session,
+                                                   RadiusPacket radiusPacket) {
+        String realmName = StringUtils.substringAfterLast(radiusPacket.getAttribute("User-Name")
+                .getValueString(), "@");
+        RealmModel realm = null;
+        if (StringUtils.isNotEmpty(realmName)) {
+            realm = session.realms().getRealm(realmName);
+        }
+        return (realm == null) ? getDefaultRealm(session) : realm;
     }
 
     private static RealmModel getRealm(KeycloakSession session,
@@ -188,7 +205,8 @@ public final class RadiusHelper {
                 return session.realms().getRealm(realmName);
             }
         }
-        return getDefaultRealm(session);
+
+        return getRealmFromUserName(session, radiusPacket);
     }
 
     public static RealmModel getRealm(KeycloakSession session, RadiusPacket radiusPacket) {

@@ -9,7 +9,14 @@ public interface DmTableManager {
 
     DisconnectMessageModel getDisconnectMessage(String userName, String radiusSessionId);
 
-    List<DisconnectMessageModel> getAllActivedSessions();
+    List<DisconnectMessageModel> getAllActiveSessions();
+
+    List<DisconnectMessageModel> getAllActiveSessions(String realmId,
+                                                      String calledStationId);
+
+    DisconnectMessageModel getActiveSession(String realmId,
+                                            String ip,
+                                            String calledStationId);
 
     void successEndSession(DisconnectMessageModel dmm);
 

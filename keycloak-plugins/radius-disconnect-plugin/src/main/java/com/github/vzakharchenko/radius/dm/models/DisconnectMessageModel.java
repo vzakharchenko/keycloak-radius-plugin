@@ -48,6 +48,9 @@ public class DisconnectMessageModel {
     @Column(name = "CALLING_STATION_ID")
     private String callingStationId;
 
+    @Column(name = "CALLED_STATION_ID")
+    private String calledStationId;
+
     @Column(name = "KEYCLOAK_SESSION_ID")
     private String keycloakSessionId;
 
@@ -185,5 +188,13 @@ public class DisconnectMessageModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCalledStationId() {
+        return calledStationId;
+    }
+
+    public void setCalledStationId(String calledStationId) {
+        this.calledStationId = calledStationId;
     }
 }

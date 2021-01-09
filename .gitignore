@@ -84,6 +84,7 @@ Thumbs.db
 *.iml
 *.idea
 .env
+radius.config
 keycloak.properties
 #keycloak.json
 keycloak/data

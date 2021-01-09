@@ -153,4 +153,10 @@
         <dropNotNullConstraint tableName="RADIUS_DM_KEYCLOAK_END_SESSION" columnName="END_DATE" columnDataType="TIMESTAMP"/>
     </changeSet>
 
+
+    <changeSet author="vaszakharchenko@gmail.com" id="dm-1.3.3">
+        <addColumn tableName="RADIUS_DM_SESSION">
+            <column name="CALLED_STATION_ID" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

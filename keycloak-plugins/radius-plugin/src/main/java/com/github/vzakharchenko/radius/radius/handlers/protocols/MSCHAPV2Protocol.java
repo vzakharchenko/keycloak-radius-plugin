@@ -82,7 +82,12 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
                 try {
                     return MSCHAPHelper.verifyMSCHAPv2(
                             accessRequest.getUserName().getBytes(UTF_8),
-                            plaintext.getBytes(UTF_8), msChapChallenge, msChap2Response);
+                            plaintext.getBytes(UTF_8), msChapChallenge, msChap2Response)
+                            ||
+                            MSCHAPHelper.verifyMSCHAPv2(
+                                    RadiusLibraryUtils.getRealUserName(accessRequest.getUserName(),
+                                            getRealm()).getBytes(UTF_8),
+                                    plaintext.getBytes(UTF_8), msChapChallenge, msChap2Response);
                 } catch (NoSuchAlgorithmException e) {
                     LOGGER.error("NoSuchAlgorithmException", e);
                     return false;

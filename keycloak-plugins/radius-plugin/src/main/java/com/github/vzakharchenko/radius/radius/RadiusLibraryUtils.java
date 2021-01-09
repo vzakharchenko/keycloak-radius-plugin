@@ -2,6 +2,7 @@ package com.github.vzakharchenko.radius.radius;
 
 import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
 import com.github.vzakharchenko.radius.models.Attribute26Holder;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.events.EventBuilder;
@@ -57,12 +58,35 @@ public final class RadiusLibraryUtils {
                 .create(dictionary, attribute26Holder.getValue());
     }
 
+    public static String getRealUserName(String username, RealmModel realm) {
+        return StringUtils.removeEnd(username, "@" + realm.getName());
+    }
+
+    public static UserModel getUserByUsername(KeycloakSession localSession,
+                                              String username, RealmModel realm) {
+        UserModel user = localSession.users().getUserByUsername(username, realm);
+        if (user == null) {
+            user = localSession.users().getUserByUsername(getRealUserName(username, realm),
+                    realm);
+        }
+        return user;
+    }
+
+    public static UserModel getUserByEmail(KeycloakSession localSession,
+                                           String username, RealmModel realm) {
+        UserModel user = localSession.users().getUserByEmail(username, realm);
+        if (user == null) {
+            user = localSession.users().getUserByEmail(getRealUserName(username, realm),
+                    realm);
+        }
+        return user;
+    }
 
     public static UserModel getUserModel(KeycloakSession localSession,
                                          String username, RealmModel realm) {
-        UserModel user = localSession.users().getUserByUsername(username, realm);
+        UserModel user = getUserByUsername(localSession, username, realm);
         if (user == null) {
-            user = localSession.users().getUserByEmail(username, realm);
+            user = getUserByEmail(localSession, username, realm);
         }
         return user;
     }
