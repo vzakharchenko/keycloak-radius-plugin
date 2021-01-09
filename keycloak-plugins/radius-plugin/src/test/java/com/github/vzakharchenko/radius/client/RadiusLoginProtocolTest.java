@@ -11,6 +11,6 @@ public class RadiusLoginProtocolTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        
+
     }
 }
