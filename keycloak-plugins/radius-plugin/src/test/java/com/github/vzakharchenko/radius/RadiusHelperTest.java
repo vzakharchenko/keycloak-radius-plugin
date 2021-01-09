@@ -158,7 +158,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         RadiusHelper.getRealm(session, radiusPacket);
     }
 
-    @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "Radius Realm does not exist. Please create at least one realm with radius client ")
+    @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "Radius Realm does not exist. Please create at least one realm with radius client")
     public void testRealmEmpty() {
         when(realmProvider.getRealms()).thenReturn(Arrays.asList());
         RadiusHelper.setRealmAttributes(Collections.emptyList());
