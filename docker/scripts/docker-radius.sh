@@ -39,7 +39,7 @@ echo "Chillispot..."
 
 echo "Disconnect..."
 # Disconnect Module
-/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.dm --resources=~/artifacts/radius-disconnect-plugin.zip --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.keycloak.keycloak-model-jpa,javax.persistence.api,org.hibernate"
+/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.dm --resources=~/artifacts/radius-disconnect-plugin.zip --dependencies=org.jboss.logging,org.keycloak.keycloak-core,javax.ws.rs.api,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.keycloak.keycloak-model-jpa,javax.persistence.api,org.hibernate"
 
 echo "Proxy..."
 # Proxy Module

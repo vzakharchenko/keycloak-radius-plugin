@@ -47,6 +47,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
                 .thenReturn(new AttributeType(2, "r", "string"));
         when(dictionary.getAttributeTypeByName("r3"))
                 .thenReturn(new AttributeType(3, "r3", "string"));
+        when(dictionary.getAttributeTypeByName("User-Name"))
+                .thenReturn(new AttributeType(4, "User-Name", "string"));
         DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
     }
 
@@ -135,6 +137,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     public void testRealmAttributesNullWithDefaultRealm() {
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        radiusPacket.addAttribute("User-Name", USER);
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
         assertNotNull(realmModel);
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
@@ -151,8 +154,17 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        radiusPacket.addAttribute("User-Name", Hex.encodeHexString(USER.getBytes(Charset.defaultCharset())));
         RadiusHelper.getRealm(session, radiusPacket);
-        assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "Radius Realm does not exist. Please create at least one realm with radius client ")
+    public void testRealmEmpty() {
+        when(realmProvider.getRealms()).thenReturn(Arrays.asList());
+        RadiusHelper.setRealmAttributes(Collections.emptyList());
+        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        radiusPacket.addAttribute("User-Name", Hex.encodeHexString(USER.getBytes(Charset.defaultCharset())));
+        RadiusHelper.getRealm(session, radiusPacket);
     }
 
     @Test
@@ -164,6 +176,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(radiusDictionaryProvider.getRealmAttributes()).thenReturn(Arrays.asList("r", "r3"));
         RadiusPacket radiusPacket = RadiusPackets.create(dictionary, 1, 1);
         radiusPacket.addAttribute("realm-attribute", Hex.encodeHexString(REALM_RADIUS.getBytes(Charset.defaultCharset())));
+        radiusPacket.addAttribute("User-Name", Hex.encodeHexString(USER.getBytes(Charset.defaultCharset())));
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
         assertNotNull(realmModel);
     }
@@ -186,7 +199,41 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Test
     public void testGetRealm() {
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        radiusPacket.addAttribute("User-Name", USER);
         RadiusHelper.getRealm(session, radiusPacket);
+    }
+
+    @Test
+    public void testRealmInUserName() {
+        RealmModel secondRealm = mock(RealmModel.class);
+        when(secondRealm.getId()).thenReturn("second_realm");
+        when(secondRealm.getName()).thenReturn("second_realm");
+        ClientModel secondClientModel = mock(ClientModel.class);
+        when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
+        when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
+        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
+        RadiusHelper.setRealmAttributes(Collections.emptyList());
+        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        radiusPacket.addAttribute("User-Name",USER+"@second_realm");
+        RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
+        assertNotNull(realmModel);
+    }
+
+    @Test
+    public void testRealmInUserEmail() {
+        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
+        RealmModel secondRealm = mock(RealmModel.class);
+        when(secondRealm.getId()).thenReturn("second_realm");
+        when(secondRealm.getName()).thenReturn("second_realm");
+        ClientModel secondClientModel = mock(ClientModel.class);
+        when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
+        when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
+        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
+        RadiusHelper.setRealmAttributes(Collections.emptyList());
+        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
+        radiusPacket.addAttribute("User-Name",USER+"@second_realm");
+        RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
+        assertNotNull(realmModel);
     }
 
     @Override

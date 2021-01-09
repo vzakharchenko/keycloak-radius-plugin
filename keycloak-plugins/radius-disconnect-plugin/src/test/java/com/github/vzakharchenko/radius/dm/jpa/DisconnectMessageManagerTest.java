@@ -8,13 +8,12 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 public class DisconnectMessageManagerTest extends AbstractJPATest {
     private DisconnectMessageManager disconnectMessageManager;
@@ -102,8 +101,28 @@ public class DisconnectMessageManagerTest extends AbstractJPATest {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
         List<DisconnectMessageModel> disconnectMessages = disconnectMessageManager
-                .getAllActivedSessions();
+                .getAllActiveSessions();
         assertEquals(disconnectMessages.size(), 1);
+    }
+
+    @Test
+    public void getAllActiveSessionsTest() {
+        DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
+        List<DisconnectMessageModel> disconnectMessages = disconnectMessageManager
+                .getAllActiveSessions("test","test");
+        assertEquals(disconnectMessages.size(), 1);
+    }
+    @Test
+    public void getActiveSessionTest() {
+        DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
+        Stream stream = mock(Stream.class);
+        when(stream.findFirst()).thenReturn(Optional.of(disconnectMessageModel));
+        when(typedQuery.getResultStream()).thenReturn(stream);
+        DisconnectMessageModel disconnectMessage = disconnectMessageManager
+                .getActiveSession("test","ip","test"
+                );
+        assertNotNull(disconnectMessage);
     }
 
 

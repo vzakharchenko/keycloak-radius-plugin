@@ -9,6 +9,9 @@
         <Bug pattern="JAXRS_ENDPOINT"/>
     </Match>
     <Match>
+        <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
+    </Match>
+    <Match>
         <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CHECKED"/>
     </Match>
     <Match>
@@ -49,6 +52,10 @@
         <Class name="com.github.vzakharchenko.radius.password.RadiusCredentialProvider"/>
     </Match>
     <Match>
+        <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
+        <Class name="com.github.vzakharchenko.radius.dm.api.RadiusServiceImpl"/>
+    </Match>
+    <Match>
         <Bug pattern="BL_BURYING_LOGIC"/>
         <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.AbstractAuthProtocol"/>
     </Match>
@@ -70,6 +77,10 @@
     <Match>
         <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
         <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
+    </Match>
+    <Match>
+        <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.MSCHAPV2Protocol"/>
     </Match>
     <Match>
         <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1"/>

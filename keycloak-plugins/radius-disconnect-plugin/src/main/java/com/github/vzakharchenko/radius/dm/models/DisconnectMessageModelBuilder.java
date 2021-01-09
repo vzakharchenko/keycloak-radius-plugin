@@ -70,6 +70,10 @@ public final class DisconnectMessageModelBuilder {
         disconnectMessageModel.setCallingStationId(callingStationId);
         return this;
     }
+    public DisconnectMessageModelBuilder calledStationId(String calledStationId) {
+        disconnectMessageModel.setCalledStationId(calledStationId);
+        return this;
+    }
 
     public DisconnectMessageModelBuilder keycloakSessionId(String keycloakSessionId) {
         disconnectMessageModel.setKeycloakSessionId(keycloakSessionId);

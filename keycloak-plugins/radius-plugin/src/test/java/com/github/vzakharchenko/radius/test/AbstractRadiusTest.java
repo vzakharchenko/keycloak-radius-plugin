@@ -44,6 +44,7 @@ import org.tinyradius.packet.AccessRequest;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.Security;
@@ -52,6 +53,7 @@ import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_EXPIRATION;
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;
@@ -129,6 +131,8 @@ public abstract class AbstractRadiusTest {
     protected ResourceStore resourceStore;
     @Mock
     protected RealmProvider realmProvider;
+    @Mock
+    protected RoleProvider roleProvider;
 
     protected Map<Class, Provider> providerByClass = new HashMap<>();
 
@@ -190,6 +194,7 @@ public abstract class AbstractRadiusTest {
         reset(resourceServerStore);
         reset(resourceStore);
         reset(realmProvider);
+        reset(roleProvider);
         providerByClass.clear();
         accessToken = new AccessToken();
         authorizationProvider = new AuthorizationProvider(session, realmModel, policyEvaluator);
@@ -229,6 +234,7 @@ public abstract class AbstractRadiusTest {
         when(session.getAllProviders(any())).thenAnswer(providerAnswers);
         when(session.getTransactionManager()).thenReturn(keycloakTransactionManager);
         when(session.getContext()).thenReturn(keycloakContext);
+        when(session.roles()).thenReturn(roleProvider);
         when(keycloakContext.getRealm()).thenReturn(realmModel);
         when(keycloakContext.getConnection()).thenReturn(clientConnection);
         when(keycloakContext.getClient()).thenReturn(clientModel);
@@ -259,6 +265,7 @@ public abstract class AbstractRadiusTest {
         when(clientModel.getClientId()).thenReturn(CLIENT_ID);
         when(clientModel.getId()).thenReturn(CLIENT_ID);
         when(clientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
+        when(clientModel.isEnabled()).thenReturn(true);
         when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(realmModel);
         when(realmProvider.getRealm(anyString())).thenReturn(realmModel);
         when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel));
@@ -270,6 +277,7 @@ public abstract class AbstractRadiusTest {
         when(realmModel.getClients()).thenReturn(Arrays.asList(clientModel));
         when(session.users()).thenReturn(userProvider);
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(userModel);
+        when(userProvider.getUserById(USER, realmModel)).thenReturn(userModel);
         when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(userModel);
         when(userModel.getUsername()).thenReturn(USER);
         when(userModel.getEmail()).thenReturn(USER);
@@ -316,7 +324,6 @@ public abstract class AbstractRadiusTest {
         when(authProtocol.getRealm()).thenReturn(realmModel);
         when(authProtocol.verifyPassword(anyString())).thenReturn(true);
         when(authProtocol.isValid(any())).thenReturn(true);
-
         JpaConnectionProvider jpaConnectionProvider = session
                 .getProvider(JpaConnectionProvider.class);
         when(jpaConnectionProvider.getEntityManager()).thenReturn(entityManager);
@@ -333,6 +340,9 @@ public abstract class AbstractRadiusTest {
                 .getResourceServerStore()).thenReturn(resourceServerStore);
         when(getProvider(CachedStoreFactoryProvider.class)
                 .getResourceStore()).thenReturn(resourceStore);
+        MultivaluedHashMap<String, String> map = new MultivaluedHashMap<>();
+        map.add(AUTHORIZATION,"Bearer TEST");
+        when(httpHeaders.getRequestHeaders()).thenReturn(map);
         resetStatic();
         initDictionary();
         when(authProtocol.getAccessRequest()).thenReturn(
