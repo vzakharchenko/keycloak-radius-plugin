@@ -28,6 +28,7 @@ features:
 - [Chillispot plugin](keycloak-plugins/chillispot-radius-plugin)  
 - [Social Hotspot Login](https://github.com/vzakharchenko/mikrotik-hotspot-oauth)  
 - [PPTP VPN with Radsec](https://github.com/vzakharchenko/pptp-radius-docker)  
+- [L2TP IPSec VPN with Radius and Radsec](https://github.com/vzakharchenko/l2tp-ipsec-radius-docker)  
 
 ## Examples
  - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)
