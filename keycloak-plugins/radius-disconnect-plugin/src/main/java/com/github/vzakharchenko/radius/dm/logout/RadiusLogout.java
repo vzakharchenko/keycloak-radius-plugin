@@ -164,6 +164,13 @@ public class RadiusLogout implements IRadiusCOAProvider,
                 radiusUserInfo.getRadiusSecret());
     }
 
+    protected RadiusEndpoint getRadiusHostEndpoint(DisconnectMessageModel dm,
+                                               IRadiusUserInfo radiusUserInfo) {
+        return new RadiusEndpoint(new InetSocketAddress(dm.getAddress(), RadiusConfigHelper
+                .getCoASettings().getCoaPort()),
+                radiusUserInfo.getRadiusSecret());
+    }
+
     protected void sendErrorEvent(
             KeycloakSession session,
             RadiusPacket answer
@@ -247,6 +254,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
                         getAttr("Acct-Session-Id", request));
         if (dm != null && !isDeviceRequest(disconnectMessageManager, request, dm)) {
             requestCoA(session, dm, getRadiusEndpoint(dm, radiusUserInfo), null);
+            requestCoA(session, dm, getRadiusHostEndpoint(dm, radiusUserInfo), null);
         }
     }
 }
