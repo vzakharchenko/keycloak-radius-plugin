@@ -16,15 +16,15 @@ import java.net.InetSocketAddress;
 
 public class RadiusProxyClient implements IRadiusProxyClient {
     private final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
-
+    private final Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup)
+            .channel(NioDatagramChannel.class);
     @Override
     public RadiusPacket requestProxy(Dictionary dictionary,
                                      IProxyRequestHandler coaRequestHandler) {
         final Timer timer = new HashedWheelTimer();
 
         final PacketEncoder packetEncoder = new PacketEncoder(dictionary);
-        final Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup)
-                .channel(NioDatagramChannel.class);
+
         try (RadiusClient rc = new RadiusClient(
                 bootstrap, new InetSocketAddress(0),
                 new BasicTimeoutHandler(timer, 3, 3000),
