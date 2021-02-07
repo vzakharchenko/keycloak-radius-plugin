@@ -15,8 +15,8 @@ import java.net.InetSocketAddress;
 
 public class RadiusCoAClient implements IRadiusCoAClient {
 
-    private final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
-    private final Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup)
+    private static final NioEventLoopGroup EVENT_EXECUTORS = new NioEventLoopGroup(4);
+    private static final Bootstrap BOOTSTRAP = new Bootstrap().group(EVENT_EXECUTORS)
             .channel(NioDatagramChannel.class);
 
     @Override
@@ -24,7 +24,7 @@ public class RadiusCoAClient implements IRadiusCoAClient {
         final Timer timer = new HashedWheelTimer();
         final PacketEncoder packetEncoder = new PacketEncoder(dictionary);
         try (RadiusClient rc = new RadiusClient(
-                bootstrap, new InetSocketAddress(0),
+                BOOTSTRAP, new InetSocketAddress(0),
                 new BasicTimeoutHandler(timer, 3, 3000),
                 new CoAChannelInitializer(new ClientPacketCodec(packetEncoder)))) {
             coaRequestHandler.call(rc);
