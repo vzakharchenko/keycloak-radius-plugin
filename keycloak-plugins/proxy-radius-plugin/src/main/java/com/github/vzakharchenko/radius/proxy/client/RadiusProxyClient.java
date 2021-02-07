@@ -18,6 +18,7 @@ public class RadiusProxyClient implements IRadiusProxyClient {
     private final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
     private final Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup)
             .channel(NioDatagramChannel.class);
+
     @Override
     public RadiusPacket requestProxy(Dictionary dictionary,
                                      IProxyRequestHandler coaRequestHandler) {
