@@ -15,12 +15,13 @@ import org.tinyradius.packet.RadiusPacket;
 import java.net.InetSocketAddress;
 
 public class RadiusProxyClient implements IRadiusProxyClient {
+    private final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
 
     @Override
     public RadiusPacket requestProxy(Dictionary dictionary,
                                      IProxyRequestHandler coaRequestHandler) {
         final Timer timer = new HashedWheelTimer();
-        final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
+
         final PacketEncoder packetEncoder = new PacketEncoder(dictionary);
         final Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup)
                 .channel(NioDatagramChannel.class);
