@@ -15,15 +15,16 @@ import java.net.InetSocketAddress;
 
 public class RadiusCoAClient implements IRadiusCoAClient {
 
+    private static final NioEventLoopGroup EVENT_EXECUTORS = new NioEventLoopGroup(4);
+    private static final Bootstrap BOOTSTRAP = new Bootstrap().group(EVENT_EXECUTORS)
+            .channel(NioDatagramChannel.class);
+
     @Override
     public void requestCoA(Dictionary dictionary, ICoaRequestHandler coaRequestHandler) {
         final Timer timer = new HashedWheelTimer();
-        final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
         final PacketEncoder packetEncoder = new PacketEncoder(dictionary);
-        final Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup)
-                .channel(NioDatagramChannel.class);
         try (RadiusClient rc = new RadiusClient(
-                bootstrap, new InetSocketAddress(0),
+                BOOTSTRAP, new InetSocketAddress(0),
                 new BasicTimeoutHandler(timer, 3, 3000),
                 new CoAChannelInitializer(new ClientPacketCodec(packetEncoder)))) {
             coaRequestHandler.call(rc);
