@@ -8,7 +8,7 @@ version: "3.5"
 services:
 
   keycloak:
-    image: jboss/keycloak:12.0.2
+    image: jboss/keycloak:12.0.3
     environment:
       KEYCLOAK_IMPORT: /config/realm-example.json
       KEYCLOAK_USER: admin
