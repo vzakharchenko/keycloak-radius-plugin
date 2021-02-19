@@ -55,9 +55,13 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Test
     public void testGetRandomByte() {
         byte randomByte1 = getRandomByte();
+        byte randomByte2 = getRandomByte();
+        byte randomByte3 = getRandomByte();
         assertNotEquals(randomByte1, 0);
-        assertNotEquals(randomByte1, getRandomByte());
-        assertNotEquals(getRandomByte(), getRandomByte());
+        assertNotEquals(randomByte2, 0);
+        assertNotEquals(randomByte3, 0);
+        assertNotEquals(randomByte1+randomByte2+randomByte3, getRandomByte()+getRandomByte()+getRandomByte());
+        assertNotEquals(getRandomByte()+getRandomByte()+getRandomByte(), getRandomByte()+getRandomByte()+getRandomByte());
     }
 
     @Test
