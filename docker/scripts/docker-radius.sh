@@ -5,14 +5,14 @@ if [ -f "$FILE" ]; then
 else
  echo "$FILE Created"
   mkdir ~/artifacts
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=radius-theme&e=zip&v=1.3.4" --output ~/artifacts/radius-theme.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=radius-plugin&e=jar&v=1.3.4" --output ~/artifacts/radius-plugin.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=radius-disconnect-plugin&e=jar&v=1.3.4" --output ~/artifacts/radius-disconnect-plugin.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=proxy-radius-plugin&e=jar&v=1.3.4" --output ~/artifacts/proxy-radius-plugin.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=rad-sec-plugin&e=jar&v=1.3.4" --output ~/artifacts/rad-sec-plugin.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=mikrotik-radius-plugin&e=jar&v=1.3.4" --output ~/artifacts/mikrotik-radius-plugin.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=cisco-radius-plugin&e=jar&v=1.3.4" --output ~/artifacts/cisco-radius-plugin.zip
-  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=chillispot-radius-plugin&e=jar&v=1.3.4" --output ~/artifacts/chillispot-radius-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=radius-theme&e=zip&v=1.3.5" --output ~/artifacts/radius-theme.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=radius-plugin&e=jar&v=1.3.5" --output ~/artifacts/radius-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=radius-disconnect-plugin&e=jar&v=1.3.5" --output ~/artifacts/radius-disconnect-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=proxy-radius-plugin&e=jar&v=1.3.5" --output ~/artifacts/proxy-radius-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=rad-sec-plugin&e=jar&v=1.3.5" --output ~/artifacts/rad-sec-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=mikrotik-radius-plugin&e=jar&v=1.3.5" --output ~/artifacts/mikrotik-radius-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=cisco-radius-plugin&e=jar&v=1.3.5" --output ~/artifacts/cisco-radius-plugin.zip
+  curl -J -L  "https://repository.sonatype.org/service/local/artifact/maven/content?r=central-proxy&g=com.github.vzakharchenko&a=chillispot-radius-plugin&e=jar&v=1.3.5" --output ~/artifacts/chillispot-radius-plugin.zip
 
 echo "Radius Theme Installing..."
 # Radius Theme
