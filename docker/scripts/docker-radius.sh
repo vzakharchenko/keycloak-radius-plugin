@@ -19,7 +19,7 @@ echo "Radius Theme Installing..."
 /opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.theme --resources=~/artifacts/radius-theme.zip"
 echo "Core..."
 # Core
-/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=~/artifacts/radius-plugin.zip --dependencies=--dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,org.apache.commons.lang3"
+/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=~/artifacts/radius-plugin.zip --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,org.apache.commons.lang3"
 
 echo "RadSec..."
 # RadSec Module
