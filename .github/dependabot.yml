@@ -1,0 +1,11 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/keycloak-plugins"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.globalreachtech:tinyradius-netty
+    versions:
+    - "> 1.1.4"
