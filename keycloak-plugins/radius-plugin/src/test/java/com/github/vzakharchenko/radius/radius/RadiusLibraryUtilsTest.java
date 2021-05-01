@@ -4,6 +4,8 @@ import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.keycloak.models.UserModel;
 import org.testng.annotations.Test;
+import org.tinyradius.attribute.AttributeType;
+import org.tinyradius.packet.RadiusPacket;
 
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
@@ -16,6 +18,13 @@ public class RadiusLibraryUtilsTest extends AbstractRadiusTest {
         byte[] bytes1 = {1};
         bytes = RadiusLibraryUtils.getOrEmpty(bytes1, 1);
         assertEquals(bytes, bytes1);
+    }
+
+
+    @Test
+    public void setUserNameTest() {
+        RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 1, 1);
+        RadiusLibraryUtils.setUserName(radiusPacket,"test");
     }
 
     @Test
@@ -51,5 +60,12 @@ public class RadiusLibraryUtilsTest extends AbstractRadiusTest {
         assertNull(userModel2);
         UserModel userModel3 = RadiusLibraryUtils.getUserByEmail(session, USER, realmModel);
         assertNotNull(userModel3);
+    }
+}
+
+ class AttributeType2 extends AttributeType{
+
+    public AttributeType2() {
+        super(1, "name", "string");
     }
 }
