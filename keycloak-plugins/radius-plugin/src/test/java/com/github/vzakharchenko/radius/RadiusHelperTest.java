@@ -257,7 +257,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Test()
     public void testSecureRandomFailed() {
         SecureRandom secureRandom = RadiusHelper.getSecureRandom("error");
-        assertEquals(secureRandom.getAlgorithm(),"NativePRNG");
+        assertEquals(secureRandom.getAlgorithm(), "NativePRNG");
     }
 
     @Override
