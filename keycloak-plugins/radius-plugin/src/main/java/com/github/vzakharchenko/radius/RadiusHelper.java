@@ -58,8 +58,12 @@ public final class RadiusHelper {
 
 
     public static SecureRandom getSecureRandom() {
+        return getSecureRandom("NativePRNGNonBlocking");
+    }
+
+    public static SecureRandom getSecureRandom(String alg) {
         try {
-            return SecureRandom.getInstance("NativePRNGNonBlocking");
+            return SecureRandom.getInstance(alg);
         } catch (NoSuchAlgorithmException e) {
             return new SecureRandom();
         }

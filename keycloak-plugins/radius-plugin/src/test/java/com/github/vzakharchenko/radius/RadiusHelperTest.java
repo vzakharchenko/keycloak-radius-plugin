@@ -20,6 +20,7 @@ import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
 import java.util.*;
 
 import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
@@ -60,8 +61,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         assertNotEquals(randomByte1, 0);
         assertNotEquals(randomByte2, 0);
         assertNotEquals(randomByte3, 0);
-        assertNotEquals(randomByte1+randomByte2+randomByte3, getRandomByte()+getRandomByte()+getRandomByte());
-        assertNotEquals(getRandomByte()+getRandomByte()+getRandomByte(), getRandomByte()+getRandomByte()+getRandomByte());
+        assertNotEquals(randomByte1 + randomByte2 + randomByte3, getRandomByte() + getRandomByte() + getRandomByte());
+        assertNotEquals(getRandomByte() + getRandomByte() + getRandomByte(), getRandomByte() + getRandomByte() + getRandomByte());
     }
 
     @Test
@@ -150,9 +151,9 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test(expectedExceptions = IllegalStateException.class,
             expectedExceptionsMessageRegExp =
-            "Found more than one Radius Realm \\(RadiusName, second_realm\\). " +
-                    "If you expect to use the Default Realm," +
-                    " than you should use only one realm with radius client")
+                    "Found more than one Radius Realm \\(RadiusName, second_realm\\). " +
+                            "If you expect to use the Default Realm," +
+                            " than you should use only one realm with radius client")
     public void testRealmAttributesNullWith2DefaultRealm() {
         RealmModel secondRealm = mock(RealmModel.class);
         when(secondRealm.getId()).thenReturn("second_realm");
@@ -251,6 +252,12 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         radiusPacket.addAttribute("User-Name", USER + "@second_realm");
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
         assertNotNull(realmModel);
+    }
+
+    @Test()
+    public void testSecureRandomFailed() {
+        SecureRandom secureRandom = RadiusHelper.getSecureRandom("error");
+        assertEquals(secureRandom.getAlgorithm(),"NativePRNG");
     }
 
     @Override
