@@ -10,7 +10,7 @@ import org.keycloak.representations.idm.authorization.AuthorizationRequest;
 import org.keycloak.representations.idm.authorization.Permission;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 public class RadiusEvaluationDecisionCollector extends DecisionPermissionCollector {
 
@@ -28,10 +28,11 @@ public class RadiusEvaluationDecisionCollector extends DecisionPermissionCollect
         }
         return false;
     }
+
     //CHECKSTYLE:OFF
     @Override
     protected void grantPermission(AuthorizationProvider authorizationProvider,
-                                   List<Permission> permissions,
+                                   Set<Permission> permissions,
                                    ResourcePermission permission,
                                    Collection<Scope> grantedScopes,
                                    ResourceServer resourceServer,

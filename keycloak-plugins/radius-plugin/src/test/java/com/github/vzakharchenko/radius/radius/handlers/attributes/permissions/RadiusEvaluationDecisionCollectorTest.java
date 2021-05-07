@@ -14,9 +14,10 @@ import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.keycloak.representations.idm.authorization.DecisionStrategy.AFFIRMATIVE;
 import static org.mockito.Mockito.reset;
@@ -75,7 +76,7 @@ public class RadiusEvaluationDecisionCollectorTest extends AbstractRadiusTest {
     public void testGrantPermission() {
         ResourcePermission resourcePermission = new ResourcePermission(resource, Arrays.asList(), resourceServer);
         Result result = new Result(resourcePermission, evaluation);
-        ArrayList<Permission> permissions = new ArrayList<>();
+        Set<Permission> permissions = new HashSet<>();
         radiusEvaluationDecisionCollector.grantPermission(authorizationProvider,
                 permissions,
                 resourcePermission,
