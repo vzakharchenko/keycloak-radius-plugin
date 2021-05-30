@@ -1,0 +1,11 @@
+{
+  "realm": "Radius-service-account-js-example",
+  "auth-server-url": "http://localhost:8090/auth",
+  "ssl-required": "external",
+  "resource": "service-client",
+  "credentials": {
+    "secret": "service-client-secret"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}

@@ -8,6 +8,7 @@ import org.keycloak.models.UserModel;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class RadiusUserInfoBuilder implements IRadiusUserInfoBuilder,
@@ -31,6 +32,12 @@ public final class RadiusUserInfoBuilder implements IRadiusUserInfoBuilder,
         }
         infoPasswords.addAll(passwords);
         return this;
+    }
+
+    @Override
+    public IRadiusUserInfoBuilder addPassword(String password) {
+        return password != null ? addPasswords(Collections
+                .singletonList(password)) : this;
     }
 
     @Override

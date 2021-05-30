@@ -29,3 +29,4 @@ jobs:
     - run: cd Examples/OTPPasswordJSExample && npm i
     - run: cd Examples/RadiusAuthorizationJSExample && npm i
     - run: cd Examples/RadiusDefaultRealmJSExample && npm i
+    - run: cd Examples/RadiusServiceAccountJSExample && npm i

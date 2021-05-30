@@ -1,8 +1,11 @@
-# Emulation of radius client which does not support the realm attribute
+# An example of a call from  backend service to radius using a service account (Service to Service communication)
 
 ## Description
-Emulation of radius client which does not support the realm attribute
+In this example keycloak users do not have access to the Embedded radius server,
+only backend service("Service-client") has access.
 
+Service Account Roles:
+![](../../docs/serviceAccountRoles.png)
 ## Build and Start
 1. build and run keycloak (select installation)
     1.1 [docker installation](../../docker)
@@ -33,7 +36,7 @@ Emulation of radius client which does not support the realm attribute
 
 5. install example
 <pre>
-cd Examples/RadiusDefaultRealmJSExample
+cd Examples/RadiusServiceAccountJSExample
 npm i
 npm run start
 </pre>

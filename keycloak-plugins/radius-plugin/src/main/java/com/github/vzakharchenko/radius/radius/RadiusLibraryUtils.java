@@ -4,6 +4,7 @@ import com.github.vzakharchenko.radius.event.log.EventLoggerUtils;
 import com.github.vzakharchenko.radius.models.Attribute26Holder;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
+import org.keycloak.authentication.authenticators.client.ClientIdAndSecretAuthenticator;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
@@ -72,6 +73,17 @@ public final class RadiusLibraryUtils {
         return user;
     }
 
+    public static UserModel getServiceAccount(KeycloakSession localSession,
+                                              String username, RealmModel realm) {
+        ClientModel clientModel = realm.getClients().stream().filter(clientModel1 ->
+                clientModel1.getClientId().equalsIgnoreCase(username) ||
+                        clientModel1.getClientId()
+                                .equalsIgnoreCase(getRealUserName(username, realm)))
+                .findFirst().orElse(null);
+
+        return clientModel != null ? localSession.users().getServiceAccount(clientModel) : null;
+    }
+
     public static UserModel getUserByEmail(KeycloakSession localSession,
                                            String username, RealmModel realm) {
         UserModel user = localSession.users().getUserByEmail(username, realm);
@@ -88,7 +100,7 @@ public final class RadiusLibraryUtils {
         if (user == null) {
             user = getUserByEmail(localSession, username, realm);
         }
-        return user;
+        return user == null ? getServiceAccount(localSession, username, realm) : user;
     }
 
     public static String getUserName(RadiusPacket radiusPacket) {
@@ -135,5 +147,20 @@ public final class RadiusLibraryUtils {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static String getServiceAccountPassword(UserModel userModel,
+                                                   RealmModel realmModel) {
+        if (userModel != null && userModel.isEnabled()
+                && userModel.getServiceAccountClientLink() != null) {
+            ClientModel clientModel = realmModel.
+                    getClientById(userModel
+                            .getServiceAccountClientLink());
+            return ClientIdAndSecretAuthenticator.PROVIDER_ID.equals(
+                    clientModel.getClientAuthenticatorType()
+            ) ?
+                    clientModel.getSecret() : null;
+        }
+        return null;
     }
 }

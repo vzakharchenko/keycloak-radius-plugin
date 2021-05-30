@@ -1,5 +1,5 @@
 {
-  "name": "reject-condition-example",
+  "name": "radius-service-account-example",
   "version": "1.0.0",
   "description": "REJECT_ condition Example",
   "main": "server.js",
@@ -23,6 +23,10 @@
     "express-handlebars": "*",
     "node-radius-client": "*",
     "node-radius-utils": "*",
-    "path": "*"
+    "path": "*",
+    "keycloak-connect": "*",
+    "express-session": "*",
+    "jsonwebtoken": "*",
+    "axios": "*"
   }
 }

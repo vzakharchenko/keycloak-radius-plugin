@@ -53,6 +53,8 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         userName = RadiusLibraryUtils.getUserName(accountingRequest);
         UserModel user = RadiusLibraryUtils.getUserModel(session, userName, realm);
         radiusUserInfoBuilder.userModel(user);
+        radiusUserInfoBuilder.addPassword(RadiusLibraryUtils
+                .getServiceAccountPassword(user, realm));
         ClientConnection clientConnection = new RadiusClientConnection(endpoint.getAddress(),
                 accountingRequest);
         radiusUserInfoBuilder.clientConnection(clientConnection).address(endpoint.getAddress())
