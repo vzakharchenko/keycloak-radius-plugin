@@ -6,7 +6,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 public class RadiusProxySpiTest {
-    private RadiusProxySpi radiusProviderSpi = new RadiusProxySpi();
+    private final RadiusProxySpi radiusProviderSpi = new RadiusProxySpi();
 
     @Test
     public void testMethods() {

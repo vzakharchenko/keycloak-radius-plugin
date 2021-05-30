@@ -18,7 +18,6 @@ import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 
 import javax.xml.bind.DatatypeConverter;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class ChapProtocolTest extends AbstractRadiusTest {
     @BeforeMethod
     public void before() {
         reset(passwordFactory);
-         request = new AccessRequest(realDictionary, 0, new byte[16]);
+        request = new AccessRequest(realDictionary, 0, new byte[16]);
         request
                 .getAttributes()
                 .add(

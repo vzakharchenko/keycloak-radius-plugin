@@ -23,11 +23,11 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 public class RadiusCredentialProviderTest extends AbstractRadiusTest {
-    private RadiusCredentialProvider credentialProvider;
     RadiusCredentialModel credentialModel = RadiusCredentialModel
             .createFromCredentialModel(ModelBuilder
                     .createCredentialModel());
-    private UserCache userCache = mock(UserCache.class);
+    private RadiusCredentialProvider credentialProvider;
+    private final UserCache userCache = mock(UserCache.class);
 
     private CredentialTypeMetadataContext metadataContext;
 
@@ -43,7 +43,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
                 credentialModel.getId())).thenReturn(credentialModel);
         when(session.userCache()).thenReturn(userCache);
         metadataContext = CredentialTypeMetadataContext.builder().user(userModel).build(session);
-        when(userCredentialManager.isConfiguredFor(any(),any(),anyString())).thenReturn(true);
+        when(userCredentialManager.isConfiguredFor(any(), any(), anyString())).thenReturn(true);
     }
 
 
@@ -96,7 +96,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
 
     @Test
     public void testGetCredentialTypeMetadata2() {
-        when(userCredentialManager.isConfiguredFor(any(),any(),anyString())).thenReturn(false);
+        when(userCredentialManager.isConfiguredFor(any(), any(), anyString())).thenReturn(false);
         CredentialTypeMetadata credentialTypeMetadata = credentialProvider
                 .getCredentialTypeMetadata(metadataContext);
         assertNotNull(credentialTypeMetadata);

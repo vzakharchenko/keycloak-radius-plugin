@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
 public class RadiusPasswordMapperTest extends AbstractRadiusTest {
-    private RadiusPasswordMapper passwordMapper = new RadiusPasswordMapper();
+    private final RadiusPasswordMapper passwordMapper = new RadiusPasswordMapper();
 
     private IDToken create() {
         IDToken idToken = new IDToken();

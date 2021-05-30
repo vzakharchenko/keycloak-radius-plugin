@@ -6,7 +6,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 public class RadiusServiceSpiTest {
-    private RadiusServiceSpi radiusProviderSpi = new RadiusServiceSpi();
+    private final RadiusServiceSpi radiusProviderSpi = new RadiusServiceSpi();
 
     @Test
     public void testMethods() {

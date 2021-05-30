@@ -7,7 +7,7 @@ import static org.testng.Assert.assertNotNull;
 
 public class RadiusConfigHelperTest extends AbstractRadiusTest {
     @Test
-    public void testConfig(){
+    public void testConfig() {
         assertNotNull(RadiusConfigHelper.getConfig());
         assertNotNull(RadiusConfigHelper.getCoASettings());
     }

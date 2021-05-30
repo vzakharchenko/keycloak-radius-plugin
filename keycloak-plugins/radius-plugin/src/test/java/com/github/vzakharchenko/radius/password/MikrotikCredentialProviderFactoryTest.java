@@ -7,7 +7,7 @@ import static org.testng.Assert.assertEquals;
 
 public class MikrotikCredentialProviderFactoryTest extends AbstractRadiusTest {
 
-    private RadiusCredentialProviderFactory
+    private final RadiusCredentialProviderFactory
             radiusCredentialProviderFactory = new RadiusCredentialProviderFactory();
 
     @Test

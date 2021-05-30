@@ -70,37 +70,46 @@ public class RadiusLibraryUtilsTest extends AbstractRadiusTest {
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
         when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(null);
         when(userProvider.getServiceAccount(clientModel)).thenReturn(userModel);
-        UserModel userModel = RadiusLibraryUtils.getUserModel(session, CLIENT_ID, realmModel);
+        UserModel userModel = RadiusLibraryUtils
+                .getUserModel(session, CLIENT_ID, realmModel);
         assertNotNull(userModel);
-        UserModel userModel2 = RadiusLibraryUtils.getUserByUsername(session, CLIENT_ID, realmModel);
+        UserModel userModel2 = RadiusLibraryUtils
+                .getUserByUsername(session, CLIENT_ID, realmModel);
         assertNull(userModel2);
-        UserModel userModel3 = RadiusLibraryUtils.getServiceAccount(session, CLIENT_ID, realmModel);
+        UserModel userModel3 = RadiusLibraryUtils
+                .getServiceAccount(session, CLIENT_ID, realmModel);
         assertNotNull(userModel3);
     }
+
     @Test
     public void getServiceAccountPassword1Null() {
-        assertNull(RadiusLibraryUtils.getServiceAccountPassword(null,realmModel));
+        assertNull(RadiusLibraryUtils.getServiceAccountPassword(null, realmModel));
     }
+
     @Test
     public void getServiceAccountPassword2Null() {
         UserModel userModel = mock(UserModel.class);
         when(userModel.isEnabled()).thenReturn(false);
-        assertNull(RadiusLibraryUtils.getServiceAccountPassword(userModel,realmModel));
+        assertNull(RadiusLibraryUtils.getServiceAccountPassword(userModel, realmModel));
     }
+
     @Test
     public void getServiceAccountPassword3Null() {
         when(userModel.getServiceAccountClientLink()).thenReturn(CLIENT_ID);
         when(realmModel.getClientById(CLIENT_ID)).thenReturn(clientModel);
         when(clientModel.getSecret()).thenReturn("test");
         when(clientModel.getClientAuthenticatorType()).thenReturn("123");
-        assertNull(RadiusLibraryUtils.getServiceAccountPassword(userModel,realmModel));
+        assertNull(RadiusLibraryUtils.getServiceAccountPassword(userModel, realmModel));
     }
+
     @Test
     public void getServiceAccountPasswordSuccess() {
         when(userModel.getServiceAccountClientLink()).thenReturn(CLIENT_ID);
         when(realmModel.getClientById(CLIENT_ID)).thenReturn(clientModel);
         when(clientModel.getSecret()).thenReturn("test");
-        when(clientModel.getClientAuthenticatorType()).thenReturn(ClientIdAndSecretAuthenticator.PROVIDER_ID);
-        assertEquals(RadiusLibraryUtils.getServiceAccountPassword(userModel,realmModel),"test");
+        when(clientModel.getClientAuthenticatorType())
+                .thenReturn(ClientIdAndSecretAuthenticator.PROVIDER_ID);
+        assertEquals(RadiusLibraryUtils
+                .getServiceAccountPassword(userModel, realmModel), "test");
     }
 }

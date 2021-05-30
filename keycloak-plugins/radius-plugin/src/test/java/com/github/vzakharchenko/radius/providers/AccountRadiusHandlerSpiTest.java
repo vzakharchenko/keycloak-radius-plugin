@@ -2,12 +2,12 @@ package com.github.vzakharchenko.radius.providers;
 
 import org.testng.annotations.Test;
 
+import static com.github.vzakharchenko.radius.providers.AccountingRadiusHandlerSPI.ACCOUNT_RADIUS_SPI;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static com.github.vzakharchenko.radius.providers.AccountingRadiusHandlerSPI.ACCOUNT_RADIUS_SPI;
 
 public class AccountRadiusHandlerSpiTest {
-    private AccountingRadiusHandlerSPI radiusProviderSpi =
+    private final AccountingRadiusHandlerSPI radiusProviderSpi =
             new AccountingRadiusHandlerSPI();
 
     @Test
