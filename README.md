@@ -23,6 +23,7 @@ features:
 - dynamically assign attributes based on keycloak policies(Role, [javascript](Examples/RadiusAuthorizationJSExample), Time, User)
 - start/stop Keycloak Session ![sessionManagment.png](./docs/sessionManagment.png)
 - BackChannel logout(Disconnect-message request)
+- Service to Service communication
 - [Mikrotik plugin](keycloak-plugins/mikrotik-radius-plugin)
 - [Cisco plugin](keycloak-plugins/cisco-radius-plugin) (thanks [vbkunin](https://github.com/vbkunin))
 - [Chillispot plugin](keycloak-plugins/chillispot-radius-plugin)
@@ -37,6 +38,7 @@ features:
  - [OTP Password example](Examples/OTPPasswordJSExample)
  - Specify Realm in username: username@realm
  - [Default Realm example(if the radius client does not support realm attribute)](Examples/RadiusDefaultRealmJSExample)
+ - [An example of a call from  backend service to radius using a service account (Service to Service communication)](Examples/RadiusServiceAccountJSExample)
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
 2. unzip release <pre><code>unzip keycloak-radius.zip -d keycloak-radius</pre></code>

@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface IRadiusUserInfoBuilder {
     IRadiusUserInfoBuilder addPasswords(List<String> passwords);
+    IRadiusUserInfoBuilder addPassword(String passwords);
 
     IRadiusUserInfoBuilder activePassword(String activePassword);
 
