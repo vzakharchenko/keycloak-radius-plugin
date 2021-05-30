@@ -300,7 +300,7 @@ if reject Attribute is present and has valid value then access request will be r
 - **VALUES** Comma-separated list of attribute values
 
 Example:
-[Role REJECT Attributes](#role-reject-attributes)
+[Role REJECT Attributes](#role-reject-attributes-example)
 #### Resource REJECT without condition
 If Reject Attribute is present then access request will be rejected.
 **Structure of Attribute:** ```REJECT_RADIUS=<ANY VALUE>```
@@ -318,7 +318,7 @@ if accept Attribute is present and has valid value then access request will be a
 - **VALUES** Comma-separated list of attribute values
 
 Example:
-[Role ACCEPT Attributes](#role-accept-attributes)
+[Role ACCEPT Attributes](#role-accept-attributes-example)
 
 
 ###  Hotspot Example (with Facebook login)
