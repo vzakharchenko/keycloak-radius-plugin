@@ -6,7 +6,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 public class RadiusDictionarySpiTest {
-    private RadiusDictionarySpi radiusProviderSpi = new RadiusDictionarySpi();
+    private final RadiusDictionarySpi radiusProviderSpi = new RadiusDictionarySpi();
 
     @Test
     public void testMethods() {

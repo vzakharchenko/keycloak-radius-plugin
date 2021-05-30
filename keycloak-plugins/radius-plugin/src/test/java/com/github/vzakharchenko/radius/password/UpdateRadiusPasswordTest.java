@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
-    private UpdateRadiusPassword updateRadiusPassword =
+    private final UpdateRadiusPassword updateRadiusPassword =
             new UpdateRadiusPassword();
 
     @Mock

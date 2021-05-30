@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class ConsoleUpdateRadiusPasswordTest extends AbstractRadiusTest {
-    private ConsoleUpdateRadiusPassword consoleUpdateRadiusPassword =
+    private final ConsoleUpdateRadiusPassword consoleUpdateRadiusPassword =
             ConsoleUpdateRadiusPassword.SINGLETON;
 
     @Mock

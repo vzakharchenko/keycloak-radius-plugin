@@ -18,6 +18,7 @@ public class ModelBuilder {
         radiusServerSettings.setOtp(true);
         return radiusServerSettings;
     }
+
     public static RadiusServerSettings createRadiusServerSettings() {
         RadiusServerSettings radiusServerSettings = new RadiusServerSettings();
         radiusServerSettings.setSecret(SHARED);

@@ -2,11 +2,11 @@ package com.github.vzakharchenko.radius.transaction;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.services.managers.AuthenticationManager;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 public class KeycloakRadiusUtilsTest extends AbstractRadiusTest {
     @Test

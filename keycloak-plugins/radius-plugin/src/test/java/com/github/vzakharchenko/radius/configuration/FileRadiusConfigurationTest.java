@@ -19,8 +19,8 @@ import java.util.Arrays;
 import static org.testng.Assert.*;
 
 public class FileRadiusConfigurationTest extends AbstractRadiusTest {
-    private FileRadiusConfiguration radiusConfiguration = new FileRadiusConfiguration();
-    private File config = new File("config", "radius.config");
+    private final FileRadiusConfiguration radiusConfiguration = new FileRadiusConfiguration();
+    private final File config = new File("config", "radius.config");
 
     private RadiusConfigModel radiusConfigModel;
 

@@ -5,7 +5,6 @@ import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;
-import static org.testng.AssertJUnit.assertEquals;
 
 public class RadiusCredentialModelTest {
     @Test
@@ -22,7 +21,7 @@ public class RadiusCredentialModelTest {
     public void testCreateFromValues() {
         RadiusCredentialModel fromCredentialModel = RadiusCredentialModel
                 .createFromValues(
-                        "111","1");
+                        "111", "1");
         assertNotNull(fromCredentialModel.getSecret());
         assertNotNull(fromCredentialModel.getCredential());
         AssertJUnit.assertEquals(fromCredentialModel.getSecret().getPassword(), "111");
@@ -32,7 +31,7 @@ public class RadiusCredentialModelTest {
     public void testCreateFromCredentialModelFail() {
         RadiusCredentialModel fromCredentialModel = RadiusCredentialModel
                 .createFromCredentialModel(
-                        ModelBuilder.createCredentialModel(null,"{sdfsd"));
+                        ModelBuilder.createCredentialModel(null, "{sdfsd"));
         assertNotNull(fromCredentialModel.getSecret());
         assertNotNull(fromCredentialModel.getCredential());
         AssertJUnit.assertEquals(fromCredentialModel.getSecret().getPassword(), "secret");

@@ -6,7 +6,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 public class RadiusCOASpiTest {
-    private RadiusCOASpi radiusProviderSpi = new RadiusCOASpi();
+    private final RadiusCOASpi radiusProviderSpi = new RadiusCOASpi();
 
     @Test
     public void testMethods() {
