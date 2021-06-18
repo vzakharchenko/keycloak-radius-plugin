@@ -1,4 +1,4 @@
-FROM jboss/keycloak:13.0.1
+FROM jboss/keycloak:14.0.0
 MAINTAINER Vasyl Zakharchenko <vaszakharchenko@gmail.com>
 LABEL author="Vasyl Zakharchenko"
 LABEL email="vaszakharchenko@gmail.com"
