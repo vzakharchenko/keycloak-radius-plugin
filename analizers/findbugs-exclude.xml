@@ -103,6 +103,10 @@
         <Class name="com.github.vzakharchenko.radsec.server.RadSecServerProvider"/>
     </Match>
     <Match>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+        <Class name="com.github.vzakharchenko.radius.configuration.FileRadiusConfiguration"/>
+    </Match>
+    <Match>
         <Bug pattern="CE_CLASS_ENVY"/>
         <Class name="com.github.vzakharchenko.radius.dm.logout.RadiusLogout"/>
     </Match>

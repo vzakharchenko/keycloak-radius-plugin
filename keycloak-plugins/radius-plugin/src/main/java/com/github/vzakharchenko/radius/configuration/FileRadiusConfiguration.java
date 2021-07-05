@@ -29,10 +29,10 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
     }
 
     private File configPath() {
-        return System.getenv(FILE_VARIABLE) != null ?
-                new File(System.getenv(FILE_VARIABLE), CONFIG) :
-                new File(System.getenv(FILE_CONFIG_VARIABLE) != null ?
-                        System.getenv(FILE_CONFIG_VARIABLE) : CONFIG);
+        return System.getenv(FILE_CONFIG_VARIABLE) != null ?
+                new File(System.getenv(FILE_CONFIG_VARIABLE)) :
+                new File(System.getenv(FILE_VARIABLE) != null ?
+                        new File(System.getenv(FILE_VARIABLE), CONFIG).getAbsolutePath() : CONFIG);
     }
 
     @Override
