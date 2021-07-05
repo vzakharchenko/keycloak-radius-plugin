@@ -65,11 +65,27 @@ features:
 - run script for standalone <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
 - run script for standalone-ha <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-14.0.0.zip
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-14.0.0.zip (you can use instead of KEYCLOAK_PATH use RADIUS_CONFIG_PATH)
 - **SOURCE** - Path where you checked out the code and built the project
+### Environment Variables
+
+| Variable Name      | Variable Value                         | Config file Location                         |
+|--------------------|----------------------------------------|----------------------------------------------|
+| KEYCLOAK_PATH      | Path where you are unpacked keycloak   | ${KEYCLOAK_PATH}/config/radius.config        |
+| RADIUS_CONFIG_PATH | Path where you store radius.config     | ${RADIUS_CONFIG_PATH}/radius.config          |
+
+Examples:
+```
+export RADIUS_CONFIG_PATH= /opt/keycloak/radius/config
+```
+or
+```
+export KEYCLOAK_PATH= /opt/keycloak/
+```
+
 ## Configuration
 ### Radius server config file
--  create file ${KEYCLOAK_PATH}config/radius.config
+-  create file ${KEYCLOAK_PATH}config/radius.config or ${RADIUS_CONFIG_PATH}/radius.config
 -  example <pre><code>{
   "sharedSecret": "radsec",
   "authPort": 1812,

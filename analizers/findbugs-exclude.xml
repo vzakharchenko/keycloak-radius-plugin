@@ -83,6 +83,10 @@
         <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.MSCHAPV2Protocol"/>
     </Match>
     <Match>
+        <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
+        <Class name="com.github.vzakharchenko.radius.configuration.FileRadiusConfiguration"/>
+    </Match>
+    <Match>
         <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1"/>
         <Class name="com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2.MSCHAPV2AuthenticatorUtils"/>
     </Match>

@@ -1,5 +1,5 @@
 {
-  "name": "reject-condition-example",
+  "name": "radius-default-example",
   "version": "1.0.0",
   "description": "REJECT_ condition Example",
   "main": "server.js",
