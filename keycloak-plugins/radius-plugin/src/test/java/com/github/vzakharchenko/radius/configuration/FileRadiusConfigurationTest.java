@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
+import static com.github.vzakharchenko.radius.configuration.FileRadiusConfiguration.CONFIG;
 import static org.testng.Assert.*;
 
 public class FileRadiusConfigurationTest extends AbstractRadiusTest {
@@ -41,7 +43,6 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         coASettingsModel.setPort(1000);
         coASettingsModel.setUseCoA(true);
         radiusConfigModel.setCoa(coASettingsModel);
-
         FileUtils.write(config,
                 JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
     }
@@ -56,6 +57,29 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
         assertNotNull(radiusSettings);
         assertEquals(radiusSettings.getAccountPort(), 1813);
+    }
+
+    @Test
+    public void testMethodsEnvs() throws Exception {
+      withEnvironmentVariable(FileRadiusConfiguration.FILE_VARIABLE, ".")
+                .execute(() -> {
+                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_VARIABLE),".");
+                    RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+                    assertNotNull(radiusSettings);
+                    assertEquals(radiusSettings.getAccountPort(), 1813);
+                });
+
+    }
+    @Test
+    public void testRadiusEnvs() throws Exception {
+      withEnvironmentVariable(FileRadiusConfiguration.FILE_CONFIG_VARIABLE, "./config")
+                .execute(() -> {
+                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_CONFIG_VARIABLE),"./config");
+                    RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+                    assertNotNull(radiusSettings);
+                    assertEquals(radiusSettings.getAccountPort(), 1813);
+                });
+
     }
 
     @Test

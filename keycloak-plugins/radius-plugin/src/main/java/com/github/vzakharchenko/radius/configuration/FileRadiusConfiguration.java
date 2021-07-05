@@ -1,6 +1,8 @@
 package com.github.vzakharchenko.radius.configuration;
 
-import com.github.vzakharchenko.radius.models.*;
+import com.github.vzakharchenko.radius.models.CoASettings;
+import com.github.vzakharchenko.radius.models.RadSecSettings;
+import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.models.file.CoASettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
@@ -17,15 +19,26 @@ import java.util.stream.Collectors;
 
 public class FileRadiusConfiguration implements IRadiusConfiguration {
 
+    public static final String FILE_VARIABLE = "KEYCLOAK_PATH";
+    public static final String FILE_CONFIG_VARIABLE = "RADIUS_CONFIG_PATH";
+    public static final String CONFIG = "config";
+
     private RadiusServerSettings radiusSettings;
 
     protected FileRadiusConfiguration() {
     }
 
+    private File configPath() {
+        return System.getenv(FILE_VARIABLE) != null ?
+                new File(System.getenv(FILE_VARIABLE), CONFIG) :
+                new File(System.getenv(FILE_CONFIG_VARIABLE) != null ?
+                        System.getenv(FILE_CONFIG_VARIABLE) : CONFIG);
+    }
+
     @Override
     public RadiusServerSettings getRadiusSettings() {
         if (radiusSettings == null) {
-            File file = new File("config", "radius.config");
+            File file = new File(configPath(), "radius.config");
             if (!file.exists()) {
                 throw new IllegalStateException(file.getAbsolutePath() + " does not exist");
             }
