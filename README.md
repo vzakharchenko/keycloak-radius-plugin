@@ -65,7 +65,7 @@ features:
 - run script for standalone <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
 - run script for standalone-ha <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-14.0.0.zip (you can use instead of KEYCLOAK_PATH use RADIUS_CONFIG_PATH)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-14.0.0.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 ### Environment Variables
 
