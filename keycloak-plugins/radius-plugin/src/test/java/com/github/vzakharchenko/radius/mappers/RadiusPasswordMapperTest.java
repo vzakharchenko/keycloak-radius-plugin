@@ -5,7 +5,6 @@ import com.github.vzakharchenko.radius.providers.IRadiusServerProvider;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.keycloak.models.ProtocolMapperModel;
-import org.keycloak.protocol.ProtocolMapper;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
 import org.keycloak.representations.IDToken;
 import org.testng.annotations.BeforeMethod;

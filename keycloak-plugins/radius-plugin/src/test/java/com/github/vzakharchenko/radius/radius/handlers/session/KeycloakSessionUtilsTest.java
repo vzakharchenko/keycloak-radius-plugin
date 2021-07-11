@@ -49,6 +49,7 @@ public class KeycloakSessionUtilsTest extends AbstractRadiusTest {
         KeycloakSessionUtils.clearOneTimePassword(session);
         verify(userSessionModel).removeNote(RADIUS_SESSION_PASSWORD);
     }
+
     @Test
     public void getClearSessionPassword() {
 
@@ -56,7 +57,7 @@ public class KeycloakSessionUtilsTest extends AbstractRadiusTest {
                 .thenReturn("false");
         when(radiusUserInfo.getActivePassword()).thenReturn("123");
         KeycloakSessionUtils.clearOneTimePassword(session);
-        verify(userSessionModel,never()).removeNote(RADIUS_SESSION_PASSWORD);
+        verify(userSessionModel, never()).removeNote(RADIUS_SESSION_PASSWORD);
     }
 
     @Test
