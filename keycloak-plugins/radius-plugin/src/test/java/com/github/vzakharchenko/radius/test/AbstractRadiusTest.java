@@ -51,8 +51,7 @@ import java.security.Security;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_EXPIRATION;
-import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
+import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.*;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -311,6 +310,8 @@ public abstract class AbstractRadiusTest {
         when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION)).thenReturn(String.valueOf(Integer.MAX_VALUE));
         when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD))
                 .thenReturn("123");
+        when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD_TYPE))
+                .thenReturn("true");
 
         when(userSessionModel.getRealm()).thenReturn(realmModel);
         when(userSessionModel.getUser()).thenReturn(userModel);

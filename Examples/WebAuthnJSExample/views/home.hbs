@@ -1,0 +1,29 @@
+<table border="1">
+    <caption>OneTime Radius User Credential</caption>
+    <tr>
+        <th>User Name</th>
+        <th>Session Password(JWT)</th>
+        <th>Password Expiration</th>
+        <th>Test</th>
+        <th>Test Status</th>
+    </tr>
+    <tr>
+        <td>{{name}}</td>
+        <td>{{password}}</td>
+        <td>{{exp}}</td>
+        <td>
+            <form action="/" method="post">
+
+                <p>
+                Radius Shared Secret:
+                <br>
+                <input name="secret" type="password" value="secret"></p>
+                <p> <input name="userName"  type="hidden" value="{{name}}"></p>
+                <p> <input name="oneTimePassword"  type="hidden" value="{{password}}"></p>
+                <p> <input name="realm"  type="hidden" value="{{realm}}"></p>
+                <p><input type="submit" value="Connect To Radius Server"></p>
+            </form>
+        </td>
+        <td>{{status}}</td>
+    </tr>
+</table>

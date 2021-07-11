@@ -4,10 +4,14 @@ import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.providers.IRadiusServerProvider;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
+import org.keycloak.models.ProtocolMapperModel;
+import org.keycloak.protocol.ProtocolMapper;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
 import org.keycloak.representations.IDToken;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
 import static org.keycloak.protocol.oidc.mappers.AbstractOIDCProtocolMapper.TOKEN_MAPPER_CATEGORY;
@@ -16,6 +20,7 @@ import static org.testng.Assert.*;
 
 public class RadiusPasswordMapperTest extends AbstractRadiusTest {
     private final RadiusPasswordMapper passwordMapper = new RadiusPasswordMapper();
+    private ProtocolMapperModel protocolMapperModel = new ProtocolMapperModel();
 
     private IDToken create() {
         IDToken idToken = new IDToken();
@@ -24,7 +29,7 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        assertEquals(passwordMapper.getConfigProperties().size(), 3);
+        assertEquals(passwordMapper.getConfigProperties().size(), 4);
         assertEquals(passwordMapper.getDisplayCategory(), TOKEN_MAPPER_CATEGORY);
         assertEquals(passwordMapper.getProtocol(), OIDCLoginProtocol.LOGIN_PROTOCOL);
         assertEquals(passwordMapper.getDisplayType(), "Radius Session Password Mapper");
@@ -36,12 +41,13 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
     public void beforeMethods() {
         IRadiusServerProvider provider = session
                 .getProvider(IRadiusServerProvider.class);
+        protocolMapperModel.setConfig(new HashMap<>());
     }
 
     @Test
     public void testSetClaim() {
         IDToken token = create();
-        passwordMapper.setClaim(token, null, userSessionModel, session, null);
+        passwordMapper.setClaim(token, protocolMapperModel, userSessionModel, session, null);
         assertEquals(token.getOtherClaims().get("s"), "123");
         assertEquals(token.getOtherClaims().get("n"), "preferred_username");
         assertEquals(token.getOtherClaims().get("np"), "s");
@@ -53,7 +59,7 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
         when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD))
                 .thenReturn(null);
         IDToken token = create();
-        passwordMapper.setClaim(token, null, userSessionModel, session, null);
+        passwordMapper.setClaim(token, protocolMapperModel, userSessionModel, session, null);
         assertNotEquals(token.getOtherClaims().get("s"), "123");
         assertEquals(token.getOtherClaims().get("n"), "preferred_username");
         assertEquals(token.getOtherClaims().get("np"), "s");
@@ -66,7 +72,7 @@ public class RadiusPasswordMapperTest extends AbstractRadiusTest {
         when(configuration.getRadiusSettings())
                 .thenReturn(radiusCommonSettings);
         IDToken token = create();
-        passwordMapper.setClaim(token, null, userSessionModel, session, null);
+        passwordMapper.setClaim(token, protocolMapperModel, userSessionModel, session, null);
         assertNull(token.getOtherClaims().get("s"));
         assertNull(token.getOtherClaims().get("n"));
         assertNull(token.getOtherClaims().get("np"));

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public final class RadiusHelper {
 
-    public static final int MAX_PASSWORD_SIZE = 10;
+    public static final int MAX_PASSWORD_SIZE = 14;
     private static final char[] PSEUDO = {
             '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'a', 'b', 'c', 'd', 'e',
