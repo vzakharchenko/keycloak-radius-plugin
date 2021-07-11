@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.mappers;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
+import org.apache.commons.lang3.BooleanUtils;
 import org.keycloak.models.ClientSessionContext;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ProtocolMapperModel;
@@ -22,9 +23,16 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
     private static final List<ProviderConfigProperty> PROVIDER_CONFIG_PROPERTIES =
             new ArrayList<>();
 
+    public static final String ONE_TIME_PASSWORD = "oneTimePassword";
+
     static {
         OIDCAttributeMapperHelper.addIncludeInTokensConfig(PROVIDER_CONFIG_PROPERTIES,
                 RadiusPasswordMapper.class);
+        PROVIDER_CONFIG_PROPERTIES.add(new ProviderConfigProperty(ONE_TIME_PASSWORD,
+                "One Time Password",
+                "If enabled, the password is valid only once," +
+                        " otherwise the password is active while the session is active",
+                ProviderConfigProperty.BOOLEAN_TYPE, Boolean.TRUE));
 
     }
 
@@ -62,7 +70,10 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
                             ClientSessionContext clientSessionCtx) {
         //CHECKSTYLE:ON
         if (RadiusHelper.isUseRadius()) {
-            token.getOtherClaims().put("s", getPassword(userSession, token));
+            token.getOtherClaims().put("s",
+                    getPassword(userSession, token, BooleanUtils.toBooleanObject(
+                            mappingModel.getConfig()
+                                    .get(RadiusPasswordMapper.ONE_TIME_PASSWORD))));
             token.getOtherClaims().put("n", userNameFieldMapper());
             token.getOtherClaims().put("np", passwordFieldMapper());
         }
@@ -76,11 +87,13 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
         return PASSWORD_FIELD;
     }
 
-    protected String getPassword(UserSessionModel userSession, IDToken token) {
+    protected String getPassword(UserSessionModel userSession,
+                                 IDToken token,
+                                 Boolean oneTomePassword) {
         IRadiusSessionPasswordManager radiusSessionPasswordManager =
                 RadiusSessionPasswordManager.getInstance();
         return radiusSessionPasswordManager
-                .password(userSession, token);
+                .password(userSession, token, oneTomePassword);
     }
 
 }

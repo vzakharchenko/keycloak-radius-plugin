@@ -4,6 +4,7 @@ import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.annotations.Test;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD;
+import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.RADIUS_SESSION_PASSWORD_TYPE;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -38,6 +39,24 @@ public class KeycloakSessionUtilsTest extends AbstractRadiusTest {
         when(radiusUserInfo.getActivePassword()).thenReturn("123");
         KeycloakSessionUtils.clearOneTimePassword(session);
         verify(userSessionModel).removeNote(RADIUS_SESSION_PASSWORD);
+    }
+
+    @Test
+    public void getClearOneTimePasswordDefault() {
+        when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD_TYPE))
+                .thenReturn(null);
+        when(radiusUserInfo.getActivePassword()).thenReturn("123");
+        KeycloakSessionUtils.clearOneTimePassword(session);
+        verify(userSessionModel).removeNote(RADIUS_SESSION_PASSWORD);
+    }
+    @Test
+    public void getClearSessionPassword() {
+
+        when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD_TYPE))
+                .thenReturn("false");
+        when(radiusUserInfo.getActivePassword()).thenReturn("123");
+        KeycloakSessionUtils.clearOneTimePassword(session);
+        verify(userSessionModel,never()).removeNote(RADIUS_SESSION_PASSWORD);
     }
 
     @Test

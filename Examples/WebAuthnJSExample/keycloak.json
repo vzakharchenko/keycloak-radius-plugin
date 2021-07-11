@@ -1,0 +1,10 @@
+{
+  "realm": "webauthn",
+  "auth-server-url": "http://localhost:8090/auth/",
+  "ssl-required": "external",
+  "resource": "webauthn-client",
+  "credentials": {
+    "secret": "48bd47dd-9663-4552-ae6a-8f1deab6cf9b"
+  },
+  "confidential-port": 0
+}

@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.mappers;
 
 import com.github.vzakharchenko.radius.RadiusHelper;
+import org.apache.commons.lang3.BooleanUtils;
 import org.keycloak.common.util.Time;
 import org.keycloak.models.UserSessionModel;
 import org.keycloak.representations.IDToken;
@@ -13,6 +14,7 @@ public final class RadiusSessionPasswordManager implements IRadiusSessionPasswor
 
     public static final String RADIUS_SESSION_PASSWORD = "RADIUS_SESSION_PASSWORD";
     public static final String RADIUS_SESSION_EXPIRATION = "RADIUS_SESSION_EXPERATION";
+    public static final String RADIUS_SESSION_PASSWORD_TYPE = "RADIUS_SESSION_PASSWORD_TYPE";
 
     private static final RadiusSessionPasswordManager
             INSTANCE = new RadiusSessionPasswordManager();
@@ -38,12 +40,14 @@ public final class RadiusSessionPasswordManager implements IRadiusSessionPasswor
     }
 
     @Override
-    public String password(UserSessionModel sessionModel, IDToken token) {
+    public String password(UserSessionModel sessionModel, IDToken token, Boolean oneTomePassword) {
         String sessionNote = getCurrentPassword(sessionModel);
         if (sessionNote == null) {
             sessionNote = RadiusHelper.generatePassword();
             sessionModel.setNote(RADIUS_SESSION_PASSWORD, sessionNote);
             sessionModel.setNote(RADIUS_SESSION_EXPIRATION, String.valueOf(token.getExpiration()));
+            sessionModel.setNote(RADIUS_SESSION_PASSWORD_TYPE, String.valueOf(BooleanUtils
+                    .toBooleanDefaultIfNull(oneTomePassword, true)));
         }
         return sessionNote;
     }
@@ -56,7 +60,10 @@ public final class RadiusSessionPasswordManager implements IRadiusSessionPasswor
     @Override
     public void clearIfExists(UserSessionModel sessionModel, String password) {
         String sessionNote = getCurrentPassword(sessionModel);
-        if (Objects.equals(sessionNote, password)) {
+        if (Objects.equals(sessionNote, password) &&
+                BooleanUtils.toBooleanDefaultIfNull(
+                        BooleanUtils.toBooleanObject(sessionModel
+                                .getNote(RADIUS_SESSION_PASSWORD_TYPE)), true)) {
             clear(sessionModel);
         }
     }

@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.client;
 
+import com.github.vzakharchenko.radius.mappers.RadiusPasswordMapper;
 import org.keycloak.Config;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.*;
@@ -19,6 +20,7 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
 
     public static final String RADIUS_PROTOCOL = "radius-protocol";
     public static final String ONE_TIME_RADIUS_PASSWORD = "OneTime Radius Password";
+    public static final String SESSION_RADIUS_PASSWORD = "Session Radius Password";
 
 
     @Override
@@ -50,15 +52,17 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
 
     }
 
-    public static ProtocolMapperModel createClaimMapper() {
+    public static ProtocolMapperModel createClaimMapper(String id,
+                                                        String name, boolean onetimePassword) {
         ProtocolMapperModel mapper = new ProtocolMapperModel();
-        mapper.setName(ONE_TIME_RADIUS_PASSWORD);
-        mapper.setProtocolMapper(OIDC_RADIUS_PASSWORD_ID);
+        mapper.setName(name);
+        mapper.setProtocolMapper(id);
         mapper.setProtocol(OIDCLoginProtocol.LOGIN_PROTOCOL);
         Map<String, String> config = new HashMap<>();
         config.put(INCLUDE_IN_ACCESS_TOKEN, "true");
         config.put(INCLUDE_IN_ID_TOKEN, "true");
         config.put(INCLUDE_IN_USERINFO, "true");
+        config.put(RadiusPasswordMapper.ONE_TIME_PASSWORD, String.valueOf(onetimePassword));
         mapper.setConfig(config);
         return mapper;
     }
@@ -68,7 +72,13 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
         ProviderFactory<LoginProtocol> protocolProviderFactory = factory
                 .getProviderFactory(LoginProtocol.class, OIDCLoginProtocol.LOGIN_PROTOCOL);
         ((LoginProtocolFactory) protocolProviderFactory)
-                .getBuiltinMappers().put(ONE_TIME_RADIUS_PASSWORD, createClaimMapper());
+                .getBuiltinMappers().put(ONE_TIME_RADIUS_PASSWORD,
+                createClaimMapper(OIDC_RADIUS_PASSWORD_ID,
+                        ONE_TIME_RADIUS_PASSWORD, true));
+        ((LoginProtocolFactory) protocolProviderFactory)
+                .getBuiltinMappers().put(SESSION_RADIUS_PASSWORD,
+                createClaimMapper(OIDC_RADIUS_PASSWORD_ID,
+                        SESSION_RADIUS_PASSWORD, false));
     }
 
     @Override

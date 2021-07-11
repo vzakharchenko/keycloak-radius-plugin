@@ -12,6 +12,7 @@ features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)
 - use keycloak authentication and authorization for the embedded RADIUS server
 - [radius oidc password](Examples/OneTimePasswordJSExample)
+- [webAuthn authentication. Radius Authentication using your fingerprint or FIDO2 security key](Examples/WebAuthnJSExample)
 - [radius OTP password (TOTP/HOTP via Google Authenticator or FreeOTP)](#otp-password)
 - use [Keycloak user credentials, if radius access-request protocol is PAP](#mapping-radius-password-to-keycloak-credentials) Otherwise is using [Keycloak Radius credentials](#keycloak-radius-credentials) or OTP
 - [use Kerberos/ldap credentials(only if Radius client use PAP authorization)](#mapping-radius-password-to-keycloak-credentials)
@@ -30,15 +31,17 @@ features:
 - [Social Hotspot Login](https://github.com/vzakharchenko/mikrotik-hotspot-oauth)
 - [PPTP VPN with Radsec](https://github.com/vzakharchenko/pptp-radius-docker)
 - [L2TP IPSec VPN with Radius and Radsec](https://github.com/vzakharchenko/l2tp-ipsec-radius-docker)
+- Specify Realm in username: username@realm
 
 ## Examples
  - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)
  - [Reject and Accept condition example](Examples/ConditionAccessRequestJSExample)
  - [Radius and OIDC integration example](Examples/OneTimePasswordJSExample)
  - [OTP Password example](Examples/OTPPasswordJSExample)
- - Specify Realm in username: username@realm
  - [Default Realm example(if the radius client does not support realm attribute)](Examples/RadiusDefaultRealmJSExample)
  - [An example of a call from  backend service to radius using a service account (Service to Service communication)](Examples/RadiusServiceAccountJSExample)
+ - [WebAuthn authentication. Radius Authentication using your fingerprint or FIDO2 security key](Examples/WebAuthnJSExample)
+
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
 2. unzip release <pre><code>unzip keycloak-radius.zip -d keycloak-radius</pre></code>
@@ -371,5 +374,7 @@ Example:
 
 [OTP Password example](Examples/OTPPasswordJSExample)
 
+### WebAuthn Authentication
+[wiki page](https://github.com/vzakharchenko/keycloak-radius-plugin/wiki/WebAuthnRadius)
 ### Development
 [wiki page](https://github.com/vzakharchenko/keycloak-radius-plugin/wiki/Development)
