@@ -39,8 +39,6 @@ node server.js
  ![](../../docs/WebAuthNameLabel.png)
 10. click the "connect To Radius Server" ![testOneTimePassword](../../docs/testOneTimePassword.png)
 - Press Once - "SUCCESS"
-- all other clicks - "REJECT"
-- If you wait 5 mins -  "REJECT"
 
 
 
