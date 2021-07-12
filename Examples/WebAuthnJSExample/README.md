@@ -38,7 +38,7 @@ node server.js
  ![](../../docs/securityKeyOrFingerPrintRegistration.png)
  ![](../../docs/WebAuthNameLabel.png)
 10. click the "connect To Radius Server" ![testOneTimePassword](../../docs/testOneTimePassword.png)
-- Press Once - "SUCCESS"
+
 
 
 
