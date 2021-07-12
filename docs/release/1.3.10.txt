@@ -1,0 +1,2 @@
+- added RADIUS_CONFIG_PATH - Path where you store radius.config
+- added support Session Radius Password
