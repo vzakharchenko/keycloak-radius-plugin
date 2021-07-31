@@ -61,7 +61,6 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     @Override
     public final RadiusPacket prepareAnswer(RadiusPacket answer) {
         RadiusPacket resAnswer = answer;
-        answer.addAttribute("Acct-Interim-Interval", "60");
         IRadiusUserInfoGetter radiusUserInfoGetter = KeycloakSessionUtils
                 .getRadiusUserInfo(session);
         if (radiusUserInfoGetter != null) {
