@@ -99,8 +99,4 @@
     <module name="Translation"/>
     <module name="FileLength"/>
     <module name="FileTabCharacter"/>
-    <module name="RegexpSingleline">
-        <property name="format" value="\s+$"/>
-        <property name="message" value="Line has trailing spaces."/>
-    </module>
 </module>
