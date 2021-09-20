@@ -18,6 +18,7 @@ services:
       RADIUS_UDP_AUTH_PORT: 1812
       RADIUS_UDP_ACCOUNT_PORT: 1813
       RADIUS_RADSEC: 'false'
+      RADIUS_DICTIONARY: ''
       RADIUS_RADSEC_PRIVATEKEY: /config/private.key
       RADIUS_RADSEC_CERTIFICATE: /config/public.crt
       RADIUS_COA: 'false'

@@ -24,6 +24,7 @@ RADIUS_UDP_ACCOUNT_PORT=1813
 RADIUS_RADSEC=false
 RADIUS_RADSEC_PRIVATEKEY="/config/private.key"
 RADIUS_RADSEC_CERTIFICATE="/config/public.crt"
+RADIUS_DICTIONARY=""
 RADIUS_COA=false
 RADIUS_COA_PORT="3799"
 ```
@@ -37,6 +38,7 @@ RADIUS_COA_PORT="3799"
 - **RADIUS_RADSEC_CERTIFICATE** - certificate for RadSec
 - **RADIUS_COA** -send disconnect message if the keycloak session has expired
 - **RADIUS_COA_PORT** - CoA port (Mikrotik:3799, Cisco:1700)
+- **RADIUS_DICTIONARY** - path to the dictionary file in freeradius format
 
 ### [Keycloak Configuration](https://github.com/keycloak/keycloak-containers/blob/master/server/README.md)
 
