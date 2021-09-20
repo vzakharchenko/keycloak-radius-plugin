@@ -17,7 +17,8 @@ public class DefaultDictionaryProviderFactoryTest extends AbstractRadiusTest {
         dictionaryProviderFactory.close();
         dictionaryProviderFactory.init(null);
         dictionaryProviderFactory.postInit(null);
-        assertNull(dictionaryProviderFactory.getRealmAttributes());
+        assertNotNull(dictionaryProviderFactory.getRealmAttributes());
+        assertTrue(dictionaryProviderFactory.getRealmAttributes().isEmpty());
         assertNotNull(dictionaryProviderFactory.create(session));
         DictionaryParser dictionaryParser = DictionaryParser.newClasspathParser();
         realDictionary = dictionaryParser
