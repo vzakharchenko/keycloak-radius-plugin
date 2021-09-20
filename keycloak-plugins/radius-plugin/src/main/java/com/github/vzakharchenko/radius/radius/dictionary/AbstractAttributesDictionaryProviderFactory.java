@@ -6,6 +6,7 @@ import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractAttributesDictionaryProviderFactory
@@ -37,6 +38,6 @@ public abstract class AbstractAttributesDictionaryProviderFactory
 
     @Override
     public List<String> getRealmAttributes() {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 }

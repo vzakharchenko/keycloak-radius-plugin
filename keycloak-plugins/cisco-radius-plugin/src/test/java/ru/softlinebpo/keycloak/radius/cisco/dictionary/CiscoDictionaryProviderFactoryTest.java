@@ -16,7 +16,8 @@ public class CiscoDictionaryProviderFactoryTest extends AbstractRadiusTest {
         dictionaryProviderFactory.close();
         dictionaryProviderFactory.init(null);
         dictionaryProviderFactory.postInit(null);
-        assertNull(dictionaryProviderFactory.getRealmAttributes());
+        assertNotNull(dictionaryProviderFactory.getRealmAttributes());
+        assertTrue(dictionaryProviderFactory.getRealmAttributes().isEmpty());
         assertNotNull(dictionaryProviderFactory.create(session));
         assertEquals(dictionaryProviderFactory.getId(),"Cisco-Dictionary");
 
