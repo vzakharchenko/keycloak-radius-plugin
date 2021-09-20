@@ -1,1 +1,2 @@
 - keycloak 15.0.2
+- added support custom dictionary

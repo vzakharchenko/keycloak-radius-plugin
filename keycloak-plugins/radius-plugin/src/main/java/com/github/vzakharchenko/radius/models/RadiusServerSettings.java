@@ -9,6 +9,7 @@ public class RadiusServerSettings {
     private int accountPort;
     private int numberThreads;
     private boolean otp;
+    private String externalDictionary;
     private RadSecSettings radSecSettings;
     private CoASettings coASettings;
     private Map<String, String> accessMap;
@@ -83,5 +84,13 @@ public class RadiusServerSettings {
 
     public void setOtp(boolean otp) {
         this.otp = otp;
+    }
+
+    public String getExternalDictionary() {
+        return externalDictionary;
+    }
+
+    public void setExternalDictionary(String externalDictionary) {
+        this.externalDictionary = externalDictionary;
     }
 }

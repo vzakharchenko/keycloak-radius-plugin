@@ -26,6 +26,7 @@ public class ModelBuilder {
         accessList.put(IP, "ip_secret");
         radiusServerSettings.setAccessMap(accessList);
         radiusServerSettings.setUseUdpRadius(true);
+        radiusServerSettings.setExternalDictionary("");
         radiusServerSettings.setRadSecSettings(new RadSecSettings());
         radiusServerSettings.setAccountPort(9813);
         radiusServerSettings.setAuthPort(9812);

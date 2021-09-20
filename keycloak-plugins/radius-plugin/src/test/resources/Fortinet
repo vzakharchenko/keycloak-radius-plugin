@@ -1,0 +1,8 @@
+VENDOR		12356   Fortinet
+
+VENDORATTR	12356 Fortinet-Group-Name			1	string
+VENDORATTR	12356 Fortinet-Client-IP-Address		2	ipaddr
+VENDORATTR	12356 Fortinet-Vdom-Name			3	string
+VENDORATTR	12356 Fortinet-Client-IPv6-Address		4	octets
+VENDORATTR	12356 Fortinet-Interface-Name			5	string
+VENDORATTR	12356 Fortinet-Access-Profile			6	string

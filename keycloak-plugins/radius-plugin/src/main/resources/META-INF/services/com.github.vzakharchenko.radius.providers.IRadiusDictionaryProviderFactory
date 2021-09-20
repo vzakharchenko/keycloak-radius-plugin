@@ -1,2 +1,3 @@
 com.github.vzakharchenko.radius.radius.dictionary.DefaultDictionaryProviderFactory
 com.github.vzakharchenko.radius.radius.dictionary.MicrosoftDictionaryProviderFactory
+com.github.vzakharchenko.radius.radius.dictionary.ExternalDictionaryProviderFactory
