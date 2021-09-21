@@ -10,7 +10,7 @@
 2. add user account to openldap  
     2.1 login http://localhost:8080/ with login: **cn=admin,dc=example,dc=org** and password=**admin** ![ldap1](../../docs/ldap1.png)  
     2.2 add "Courier Mail: Account" ![ldap2](../../docs/ldap2.png) ![ldap2](../../docs/ldap3.png)  
-3. open [http://localhost:8090/auth/]  
+3. open [http://localhost:8090/auth/](http://localhost:8090/auth/)  
 4. login **admin**/**admin**  
 5. sync LDAP Users ![ldap4](../../docs/ldap4.png) ![ldap5](../../docs/ldap5.png)  
 6. Configure OTP  
