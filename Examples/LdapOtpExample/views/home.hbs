@@ -1,0 +1,27 @@
+       <form action="/" method="post">
+<table border="1">
+    <caption>LDAP OTP Radius User Credential</caption>
+    <tr>
+        <th>LDAP User Name</th>
+        <th>LDAP Password+OTP</th>
+        <th>Realm Name</th>
+        <th>Test</th>
+        <th>Test Status</th>
+    </tr>
+    <tr>
+        <td><input name="userName"  type="text"></td>
+        <td> <input name="otpPassword"  type="text"></td>
+        <td> <input name="realm"  type="text" value="ldap"></td>
+        <td>
+                <p>
+                Radius Shared Secret:
+                <br>
+                <input name="secret" type="password" value="secret"></p>
+                </p>
+                <p><input type="submit" value="Connect To Radius Server"></p>
+        </td>
+        <td>{{status}}</td>
+    </tr>
+</table>
+
+            </form>

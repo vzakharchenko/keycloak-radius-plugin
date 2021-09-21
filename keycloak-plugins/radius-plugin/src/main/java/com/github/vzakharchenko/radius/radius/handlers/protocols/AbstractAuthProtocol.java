@@ -92,7 +92,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
                     .createMasterEvent(session,
                             new RadiusClientConnection(address, accessRequest));
             event.event(EventType.LOGIN).detail(EventLoggerUtils.RADIUS_MESSAGE,
-                    "Protocol " + getClass() + " is not valid.")
+                            "Protocol " + getClass() + " is not valid.")
                     .error("Please set Realm name in radius configuration");
         }
         return isValid;
@@ -141,22 +141,23 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     private boolean verifyPasswordWithOtp(OtpPasswordInfo otPs) {
         return verifyPasswordOtp() ||
-                otPs.getOtpHolderMap().values().stream()
-                .anyMatch(otpHolder -> otpHolder
-                        .getPasswords().stream()
-                        .anyMatch(otp -> {
-                            boolean flag = verifyProtocolPassword(otp);
-                            if (flag) {
-                                markActivePassword(otp);
-                            }
-                            return flag;
-                        }));
+                (RadiusConfigHelper.getConfig().getRadiusSettings().isOtp() &&
+                        otPs.getOtpHolderMap().values().stream()
+                                .anyMatch(otpHolder -> otpHolder
+                                        .getPasswords().stream()
+                                        .anyMatch(otp -> {
+                                            boolean flag = verifyProtocolPassword(otp);
+                                            if (flag) {
+                                                markActivePassword(otp);
+                                            }
+                                            return flag;
+                                        })));
     }
 
     @Override
     public final boolean verifyPassword() {
         OtpPasswordInfo otPs = otpPasswordGetter.getOTPs(session);
-        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtp() && otPs.isUseOtp() ?
+        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtp() || otPs.isUseOtp() ?
                 verifyPasswordWithOtp(otPs) : verifyPasswordWithoutOtp();
     }
 
