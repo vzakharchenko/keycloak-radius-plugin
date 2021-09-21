@@ -1,4 +1,4 @@
-# LDAP Radius OTP Password Example (Google Authenticator)
+# LDAP Radius with OTP Password Example (Google Authenticator)
 
 # Build and Start
 1.Run keycloak, openldap and phpldapadmin inside docker-compose  
