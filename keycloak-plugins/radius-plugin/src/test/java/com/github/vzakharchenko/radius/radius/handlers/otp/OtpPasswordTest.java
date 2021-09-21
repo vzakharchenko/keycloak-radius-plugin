@@ -55,7 +55,7 @@ public class OtpPasswordTest extends AbstractRadiusTest {
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("123")));
         otpPassword.putAll(otpHolderMap);
-        Set<String> validOtpPasswords = otpPassword.getValidOtpPasswords("test123");
+        Set<String> validOtpPasswords = otpPassword.getValidOtpPasswords("test123", false);
         Assert.assertNotNull(validOtpPasswords);
         Assert.assertEquals(validOtpPasswords.size(), 1);
     }
@@ -65,17 +65,26 @@ public class OtpPasswordTest extends AbstractRadiusTest {
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("123")));
         otpPassword.putAll(otpHolderMap);
-        Set<String> validOtpPasswords = otpPassword.getValidOtpPasswords("test1234");
+        Set<String> validOtpPasswords = otpPassword.getValidOtpPasswords("test1234", false);
         Assert.assertNotNull(validOtpPasswords);
         Assert.assertEquals(validOtpPasswords.size(), 0);
     }
 
     @Test
+    public void otpPasswordsTest0() {
+        HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
+        otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("123")));
+        otpPassword.putAll(otpHolderMap);
+        Set<String> validOtpPasswords = otpPassword.addOtpPasswords("test123",true);
+        Assert.assertNotNull(validOtpPasswords);
+        Assert.assertEquals(validOtpPasswords.size(), 2);
+    }
+    @Test
     public void otpPasswordsTest() {
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("123")));
         otpPassword.putAll(otpHolderMap);
-        Set<String> validOtpPasswords = otpPassword.addOtpPasswords("test123");
+        Set<String> validOtpPasswords = otpPassword.addOtpPasswords("test123",false);
         Assert.assertNotNull(validOtpPasswords);
         Assert.assertEquals(validOtpPasswords.size(), 1);
     }
@@ -84,7 +93,7 @@ public class OtpPasswordTest extends AbstractRadiusTest {
     public void otpPasswordsNotValidTest() {
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpPassword.putAll(otpHolderMap);
-        Set<String> validOtpPasswords = otpPassword.addOtpPasswords("test1234");
+        Set<String> validOtpPasswords = otpPassword.addOtpPasswords("test1234", false);
         Assert.assertNotNull(validOtpPasswords);
         Assert.assertEquals(validOtpPasswords.size(), 0);
     }

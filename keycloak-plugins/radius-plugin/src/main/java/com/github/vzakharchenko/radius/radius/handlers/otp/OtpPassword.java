@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.radius.radius.handlers.otp;
 
-import com.github.vzakharchenko.radius.configuration.RadiusConfigHelper;
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,13 +41,13 @@ public class OtpPassword implements OtpPasswordInfo {
 
 
     @Override
-    public Set<String> getValidOtpPasswords(String originPassword) {
-        return otpPasswords(originPassword, true);
+    public Set<String> getValidOtpPasswords(String originPassword, boolean otpWithoutPassword) {
+        return otpPasswords(originPassword, true, otpWithoutPassword);
     }
 
     @Override
-    public Set<String> addOtpPasswords(String originPassword) {
-        return otpPasswords(originPassword, false);
+    public Set<String> addOtpPasswords(String originPassword, boolean otpWithoutPassword) {
+        return otpPasswords(originPassword, false, otpWithoutPassword);
     }
 
     private void otpPasswords(Set<String> passwords, String originPassword, boolean exclude) {
@@ -63,17 +62,18 @@ public class OtpPassword implements OtpPasswordInfo {
     }
 
     private void onlyOtp(Set<String> passwords) {
-        boolean allowedOtp = RadiusConfigHelper.getConfig().getRadiusSettings().isOtp();
-        if (allowedOtp) {
-            otpHolders.values().forEach(otpHolder ->
-                    passwords.addAll(otpHolder.getPasswords()));
-        }
+        otpHolders.values().forEach(otpHolder ->
+                passwords.addAll(otpHolder.getPasswords()));
     }
 
-    private Set<String> otpPasswords(String originPassword, boolean exclude) {
+    private Set<String> otpPasswords(String originPassword,
+                                     boolean exclude,
+                                     boolean otpWithoutPassword) {
         Set<String> passwords = new HashSet<>();
         otpPasswords(passwords, originPassword, exclude);
-        onlyOtp(passwords);
+        if (otpWithoutPassword) {
+            onlyOtp(passwords);
+        }
         return passwords;
     }
 }
