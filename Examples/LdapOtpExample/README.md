@@ -3,6 +3,7 @@
 # Build and Start
 1. build and run keycloak, openldap and phpldapadmin
     ```
+          cd Examples/LdapOtpExample
           docker-compose -f docker-compose.yaml up
     ```
 2. add user account to openldap
