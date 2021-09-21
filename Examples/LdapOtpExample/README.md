@@ -23,7 +23,7 @@ npm i
 node server.js
 ```
 8. open [http://localhost:3001/](http://localhost:3001/)  
-9. type login **vaszakharchenko@gmail.com** password: **testOTP_Password** ![ldap9](../../docs/ldap9.png)  
+9. type login **vaszakharchenko@gmail.com** password: **test```<OTP_CODE>```** ![ldap9](../../docs/ldap9.png)  
 9. click the "connect To Radius Server"  
   
 "SUCCESS"
