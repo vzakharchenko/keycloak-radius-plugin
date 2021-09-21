@@ -4,8 +4,9 @@
 1.Run keycloak, openldap and phpldapadmin inside docker-compose  
     ```
           cd Examples/LdapOtpExample
+          
           docker-compose -f docker-compose.yaml up
-    ```
+    ```  
 2. add user account to openldap  
     2.1 login http://localhost:8080/ with login: **cn=admin,dc=example,dc=org** and password=**admin** ![ldap1](../../docs/ldap1.png)  
     2.2 add "Courier Mail: Account" ![ldap2](../../docs/ldap2.png) ![ldap2](../../docs/ldap3.png)  
