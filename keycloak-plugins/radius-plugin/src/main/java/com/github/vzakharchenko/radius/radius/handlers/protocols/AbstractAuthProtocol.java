@@ -116,8 +116,10 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
         if (otpPasswordInfo.isUseOtp()) {
             return exclude ?
-                    otpPasswordInfo.getValidOtpPasswords(originPassword) :
-                    otpPasswordInfo.addOtpPasswords(originPassword);
+                    otpPasswordInfo.getValidOtpPasswords(originPassword,
+                            supportOtpWithoutPassword()) :
+                    otpPasswordInfo.addOtpPasswords(originPassword,
+                            supportOtpWithoutPassword());
         } else {
             return Collections.singletonList(originPassword);
         }
@@ -139,9 +141,13 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return false;
     }
 
-    private boolean verifyPasswordWithOtp(OtpPasswordInfo otPs) {
+    protected boolean supportOtpWithoutPassword() {
+        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtp();
+    }
+
+    protected boolean verifyPasswordWithOtp(OtpPasswordInfo otPs) {
         return verifyPasswordOtp() ||
-                (RadiusConfigHelper.getConfig().getRadiusSettings().isOtp() &&
+                (supportOtpWithoutPassword() &&
                         otPs.getOtpHolderMap().values().stream()
                                 .anyMatch(otpHolder -> otpHolder
                                         .getPasswords().stream()
@@ -157,7 +163,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     @Override
     public final boolean verifyPassword() {
         OtpPasswordInfo otPs = otpPasswordGetter.getOTPs(session);
-        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtp() || otPs.isUseOtp() ?
+        return supportOtpWithoutPassword() || otPs.isUseOtp() ?
                 verifyPasswordWithOtp(otPs) : verifyPasswordWithoutOtp();
     }
 

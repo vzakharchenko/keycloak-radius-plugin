@@ -35,7 +35,7 @@ features:
 
 ## Examples
  - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)
- - [Reject and Accept condition example](Examples/ConditionAccessRequestJSExample)
+ - [Reject and Accept by condition example](Examples/ConditionAccessRequestJSExample)
  - [Radius and OIDC integration example](Examples/OneTimePasswordJSExample)
  - [OTP Password example](Examples/OTPPasswordJSExample)
  - [Ldap Password with OTP example](Examples/LdapOtpExample)
@@ -143,7 +143,7 @@ sh bin/standalone.sh  -c standalone-ha.xml -b 0.0.0.0 -Djboss.bind.address.manag
 
 | Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Kerberos credentials | Ldap credentials | [Keycloak Radius credentials](#keycloak-radius-credentials) | [Keycloak Radius credentials](#keycloak-radius-credentials) with OTP | Keycloak OTP(if config file contains "otp":true) |
 |-----------------|----------------------|-------------------------------|----------------------|------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
-| PAP             | Yes                  | Yes                           | Yes                  | Yes              | Yes                         | Yes                                  | Yes                                              |
+| PAP             | Yes                  | Yes                           | Yes                  | Yes              | Yes                         | Yes                                  | NO                                              |
 | CHAP            | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
 | MSCHAPV2        | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
 

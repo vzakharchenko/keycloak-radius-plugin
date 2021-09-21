@@ -102,7 +102,7 @@ public class PAPTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testOtpPasswordValid() {
+    public void testOtpPasswordOTPWithoutPassword() {
         enableOTP();
         reset(configuration);
         when(configuration.getRadiusSettings())
@@ -111,7 +111,22 @@ public class PAPTest extends AbstractRadiusTest {
         request.setUserPassword("123456");
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         papProtocol.setOtpPasswordGetter(passwordFactory);
-        assertTrue(papProtocol.verifyPassword());
+        assertFalse(papProtocol.verifyPassword());
+    }
+
+
+    @Test
+    public void testOtpPasswordWithoutPassword() {
+        otpPasswordInfo = new OtpPassword(false);
+        when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
+        reset(configuration);
+        when(configuration.getRadiusSettings())
+                .thenReturn(ModelBuilder.createRadiusOtpServerSettings());
+        RadiusConfigHelper.setConfiguration(configuration);
+        request.setUserPassword("123456");
+        PAPProtocol papProtocol = new PAPProtocol(request, session);
+        papProtocol.setOtpPasswordGetter(passwordFactory);
+        assertFalse(papProtocol.verifyPassword());
     }
 
     @Test

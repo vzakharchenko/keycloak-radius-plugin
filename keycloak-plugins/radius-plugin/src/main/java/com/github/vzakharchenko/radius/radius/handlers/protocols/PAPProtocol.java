@@ -79,4 +79,9 @@ public class PAPProtocol extends AbstractAuthProtocol {
         Collection<String> passwordsWithOtp = getPasswordsWithOtp(accessRequest.getUserPassword());
         return passwordsWithOtp.stream().anyMatch(this::verifyProtocolPassword);
     }
+
+    @Override
+    protected boolean supportOtpWithoutPassword() {
+        return false;
+    }
 }
