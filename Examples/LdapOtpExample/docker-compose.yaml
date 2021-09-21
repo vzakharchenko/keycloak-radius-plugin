@@ -52,7 +52,7 @@ services:
     depends_on:
       - openldap
   keycloak:
-    image: vassio/keycloak-radius-plugin
+    image: vassio/keycloak-radius-plugin:latest
     environment:
       KEYCLOAK_IMPORT: /realm-example.json
       KEYCLOAK_USER: admin

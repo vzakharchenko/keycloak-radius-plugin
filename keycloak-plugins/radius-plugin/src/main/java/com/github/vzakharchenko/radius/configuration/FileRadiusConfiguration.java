@@ -90,6 +90,7 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         radiusServerSettings.setCoASettings(transform(configModel.getCoa()));
         radiusServerSettings.setUseUdpRadius(configModel.isUseUdpRadius());
         radiusServerSettings.setOtp(configModel.isOtp());
+        radiusServerSettings.setExternalDictionary(configModel.getExternalDictionary());
         if (configModel.getRadiusIpAccess() != null) {
             radiusServerSettings
                     .setAccessMap(configModel.getRadiusIpAccess().stream().collect(

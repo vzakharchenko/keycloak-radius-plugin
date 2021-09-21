@@ -11,6 +11,7 @@ public class RadiusConfigModel {
     private int accountPort = 1813;
     private int numberThreads = 8;
     private boolean otp;
+    private String externalDictionary;
     private List<RadiusAccessModel> radiusIpAccess;
     private boolean useUdpRadius;
 
@@ -84,5 +85,13 @@ public class RadiusConfigModel {
 
     public void setOtp(boolean otp) {
         this.otp = otp;
+    }
+
+    public String getExternalDictionary() {
+        return externalDictionary;
+    }
+
+    public void setExternalDictionary(String externalDictionary) {
+        this.externalDictionary = externalDictionary;
     }
 }
