@@ -31,3 +31,4 @@ jobs:
     - run: cd Examples/RadiusDefaultRealmJSExample && npm i
     - run: cd Examples/RadiusServiceAccountJSExample && npm i
     - run: cd Examples/WebAuthnJSExample && npm i
+    - run: cd Examples/LdapOtpExample && npm i

@@ -1400,11 +1400,11 @@
                 "is.binary.attribute": [
                   "false"
                 ],
-                "always.read.value.from.ldap": [
-                  "false"
-                ],
                 "read.only": [
                   "true"
+                ],
+                "always.read.value.from.ldap": [
+                  "false"
                 ],
                 "user.model.attribute": [
                   "username"
@@ -1423,10 +1423,10 @@
                 "is.mandatory.in.ldap": [
                   "false"
                 ],
-                "read.only": [
+                "always.read.value.from.ldap": [
                   "true"
                 ],
-                "always.read.value.from.ldap": [
+                "read.only": [
                   "true"
                 ],
                 "user.model.attribute": [
@@ -1446,11 +1446,11 @@
                 "is.mandatory.in.ldap": [
                   "false"
                 ],
-                "always.read.value.from.ldap": [
-                  "false"
-                ],
                 "read.only": [
                   "true"
+                ],
+                "always.read.value.from.ldap": [
+                  "false"
                 ],
                 "user.model.attribute": [
                   "email"
@@ -1469,10 +1469,10 @@
                 "is.mandatory.in.ldap": [
                   "true"
                 ],
-                "read.only": [
+                "always.read.value.from.ldap": [
                   "true"
                 ],
-                "always.read.value.from.ldap": [
+                "read.only": [
                   "true"
                 ],
                 "user.model.attribute": [
@@ -1492,10 +1492,10 @@
                 "is.mandatory.in.ldap": [
                   "true"
                 ],
-                "always.read.value.from.ldap": [
+                "read.only": [
                   "true"
                 ],
-                "read.only": [
+                "always.read.value.from.ldap": [
                   "true"
                 ],
                 "user.model.attribute": [
@@ -1515,10 +1515,10 @@
                 "is.mandatory.in.ldap": [
                   "false"
                 ],
-                "always.read.value.from.ldap": [
+                "read.only": [
                   "true"
                 ],
-                "read.only": [
+                "always.read.value.from.ldap": [
                   "true"
                 ],
                 "user.model.attribute": [
@@ -1533,13 +1533,13 @@
             "true"
           ],
           "fullSyncPeriod": [
-            "60000"
-          ],
-          "usersDn": [
-            "dc=example,dc=org"
+            "604800"
           ],
           "connectionPooling": [
             "true"
+          ],
+          "usersDn": [
+            "dc=example,dc=org"
           ],
           "cachePolicy": [
             "DEFAULT"
@@ -1553,20 +1553,20 @@
           "enabled": [
             "true"
           ],
-          "usernameLDAPAttribute": [
-            "mail"
-          ],
-          "changedSyncPeriod": [
-            "-1"
-          ],
           "bindCredential": [
             "admin"
           ],
           "bindDn": [
             "cn=admin,dc=example,dc=org"
           ],
+          "usernameLDAPAttribute": [
+            "mail"
+          ],
+          "changedSyncPeriod": [
+            "86400"
+          ],
           "lastSync": [
-            "1632177624"
+            "1632009032"
           ],
           "vendor": [
             "other"
@@ -1574,14 +1574,14 @@
           "uuidLDAPAttribute": [
             "entryUUID"
           ],
-          "connectionUrl": [
-            "ldap://openldap"
-          ],
           "allowKerberosAuthentication": [
             "false"
           ],
+          "connectionUrl": [
+            "ldap://openldap"
+          ],
           "syncRegistrations": [
-            "false"
+            "true"
           ],
           "authType": [
             "simple"
