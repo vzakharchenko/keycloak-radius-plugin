@@ -38,6 +38,7 @@ features:
  - [Reject and Accept condition example](Examples/ConditionAccessRequestJSExample)
  - [Radius and OIDC integration example](Examples/OneTimePasswordJSExample)
  - [OTP Password example](Examples/OTPPasswordJSExample)
+ - [Ldap Password with OTP example](Examples/LdapOtpExample)
  - [Default Realm example(if the radius client does not support realm attribute)](Examples/RadiusDefaultRealmJSExample)
  - [An example of a call from  backend service to radius using a service account (Service to Service communication)](Examples/RadiusServiceAccountJSExample)
  - [WebAuthn authentication. Radius Authentication using your fingerprint or FIDO2 security key](Examples/WebAuthnJSExample)

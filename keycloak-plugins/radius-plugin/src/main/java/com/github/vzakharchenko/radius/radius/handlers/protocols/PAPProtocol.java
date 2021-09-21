@@ -2,6 +2,7 @@ package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserCredentialManager;
@@ -49,6 +50,9 @@ public class PAPProtocol extends AbstractAuthProtocol {
     }
 
     private boolean verifyPapPassword(String password) {
+        if (StringUtils.isEmpty(password)) {
+            return false;
+        }
         UserModel userModel = Objects.requireNonNull(KeycloakSessionUtils
                 .getRadiusSessionInfo(session)).getUserModel();
         UserCredentialManager userCredentialManager = session

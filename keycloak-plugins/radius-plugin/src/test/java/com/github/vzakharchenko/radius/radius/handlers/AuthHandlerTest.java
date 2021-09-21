@@ -165,6 +165,8 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testVerifyPassword0_1() {
         reset(authProtocol);
+        when(authProtocol.verifyPassword("")).thenReturn(false);
+        when(authProtocol.verifyPassword(null)).thenReturn(false);
         when(authProtocol.verifyPassword("p1")).thenReturn(true);
         when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList("p", "p1"));
         authHandler.verifyPassword0(radiusUserInfoGetter, authProtocol);
