@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.github.vzakharchenko</groupId>
             <artifactId>tinyradius-netty</artifactId>
-            <version>1.1.4.1</version>
+            <version>1.1.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
