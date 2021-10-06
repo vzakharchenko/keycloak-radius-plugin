@@ -29,6 +29,7 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
 
     private static final int MS_CHAP_CHALLENGE = 11;
     private static final int MS_CHAP2_RESPONSE = 25;
+    private static final int MS_CHAP_RESPONSE = 1;
     private static final int MICROSOFT = 311;
 
     private byte[] msChapChallenge;
@@ -54,8 +55,12 @@ public class MSCHAPV2Protocol extends AbstractAuthProtocol {
     }
 
     private RadiusAttribute getChap2ResponseAttribute(AccessRequest accessRequest) {
-        return accessRequest
+        RadiusAttribute attribute = accessRequest
                 .getAttribute(MICROSOFT, MS_CHAP2_RESPONSE);
+        if (attribute == null) {
+            attribute = accessRequest.getAttribute(MICROSOFT, MS_CHAP_RESPONSE);
+        }
+        return attribute;
     }
 
     private void initMSCHAPV2Protocol(RadiusAttribute msChapChallengeAttribute,
