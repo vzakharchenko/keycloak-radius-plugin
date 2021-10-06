@@ -110,6 +110,44 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
 
 
     }
+    @Test
+    public void testChapV2_MS_CHAP_ResponseTrue() throws DecoderException {
+        AccessRequest request = new AccessRequest(realDictionary, 0,
+                Hex.decodeHex(authenticator.toCharArray()));
+        request.setUserPassword(password);
+        request.setUserName(username);
+
+        VendorSpecificAttribute vendorSpecificAttribute = new VendorSpecificAttribute(realDictionary, 311);
+        vendorSpecificAttribute.addSubAttribute(Attributes
+                .createAttribute(realDictionary, 311, 1,
+                        DatatypeConverter.parseHexBinary(
+                                "0000beaa25fd93d518e76cf98dd749278fbb000000000000000064441659eef40f9a6d9c0192b36ff507443533b655778705")));
+        vendorSpecificAttribute.addSubAttribute(Attributes
+                .createAttribute(realDictionary, 311, 11,
+                        DatatypeConverter.parseHexBinary(
+                                "72d57222d7801eb8d1c13837e8cfab4b")));
+
+        request
+                .getAttributes()
+                .add(
+                        vendorSpecificAttribute
+                );
+
+        MSCHAPV2Protocol chapProtocol = new MSCHAPV2Protocol(request, session);
+        assertTrue(chapProtocol.verifyPassword("1"));
+        RadiusPacket answer = new RadiusPacket(realDictionary, 2, 1);
+        chapProtocol.answer(answer, radiusUserInfoGetter);
+        List<RadiusAttribute> attributes = answer.getAttributes();
+        assertEquals(attributes.size(), 1);
+        VendorSpecificAttribute vendorSpecific = (VendorSpecificAttribute) attributes.get(0);
+        List<RadiusAttribute> subAttributes = vendorSpecific.getSubAttributes();
+        assertEquals(subAttributes.size(), 5);
+        RadiusAttribute subAttribute = vendorSpecific.getSubAttribute("MS-CHAP2-Success");
+        assertNotNull(subAttribute);
+        assertEquals(subAttribute.getValueString(), "1S=88CE0656242014B2F4C18969FDB1EA3416D37210");
+
+
+    }
 
     @Test
     public void testChapV2false() throws DecoderException {
