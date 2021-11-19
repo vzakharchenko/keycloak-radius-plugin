@@ -55,7 +55,7 @@
         <properties-maven-plugin>1.0.0</properties-maven-plugin>
         <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
         <maven-enforcer-plugin>3.0.0</maven-enforcer-plugin>
-        <spotbugs-maven-plugin>4.4.2.2</spotbugs-maven-plugin>
+        <spotbugs-maven-plugin>4.5.0.0</spotbugs-maven-plugin>
         <maven-pmd-plugin>3.15.0</maven-pmd-plugin>
         <fast-build>false</fast-build>
 
