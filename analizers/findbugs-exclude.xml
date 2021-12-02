@@ -125,4 +125,8 @@
         <Bug pattern="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"/>
         <Class name="com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager"/>
     </Match>
+    <Match>
+        <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
+        <Class name="com.github.vzakharchenko.radsec.server.RadSecServerProvider"/>
+    </Match>
 </FindBugsFilter>
