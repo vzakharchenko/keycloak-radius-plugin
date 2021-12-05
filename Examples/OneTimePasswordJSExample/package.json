@@ -25,6 +25,7 @@
     "keycloak-connect": "*",
     "node-radius-client": "*",
     "node-radius-utils": "*",
-    "path": "*"
+    "path": "*",
+    "hbs": "*"
   }
 }

@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const exphbs = require('express-handlebars');
+const {engine} = require('express-handlebars/dist/index');
 const Client = require('node-radius-client');
 const session = require('express-session');
 const path = require('path');
@@ -26,11 +26,9 @@ app.use(keycloak.middleware());
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.engine('.hbs', exphbs({
-    defaultLayout: 'main',
-    extname: '.hbs',
-    layoutsDir: path.join(__dirname, 'views/layouts')
-}));
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('main', './views');
 
 app.set('view engine', '.hbs');
 
