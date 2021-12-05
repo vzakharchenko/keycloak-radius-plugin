@@ -27,6 +27,7 @@
     "keycloak-connect": "*",
     "express-session": "*",
     "jsonwebtoken": "*",
-    "axios": "*"
+    "axios": "*",
+    "hbs": "*"
   }
 }
