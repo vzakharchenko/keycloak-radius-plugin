@@ -44,7 +44,6 @@ if the current minute is  divisible by 2 then assign attribute "REJECT_RADIUS" a
 |     User    |     password    |
 |:------------|:----------------|
 | testuser    | testUser        |
-| acceptUser  | acceptUser      |
 
 |     RESOURCE     |  ATTRIBUTES           |                                                  |
 |:-----------------|:----------------------|:-------------------------------------------------|
