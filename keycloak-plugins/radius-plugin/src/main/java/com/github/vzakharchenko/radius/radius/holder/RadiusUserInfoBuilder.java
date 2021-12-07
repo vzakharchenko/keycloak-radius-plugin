@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.radius.holder;
 
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
@@ -24,8 +25,8 @@ public final class RadiusUserInfoBuilder implements IRadiusUserInfoBuilder,
     }
 
     @Override
-    public IRadiusUserInfoBuilder addPasswords(List<String> passwords) {
-        List<String> infoPasswords = radiusUserInfo.getPasswords();
+    public IRadiusUserInfoBuilder addPasswords(List<PasswordData> passwords) {
+        List<PasswordData> infoPasswords = radiusUserInfo.getPasswords();
         if (infoPasswords == null) {
             infoPasswords = new ArrayList<>();
             radiusUserInfo.setPasswords(infoPasswords);
@@ -37,7 +38,7 @@ public final class RadiusUserInfoBuilder implements IRadiusUserInfoBuilder,
     @Override
     public IRadiusUserInfoBuilder addPassword(String password) {
         return password != null ? addPasswords(Collections
-                .singletonList(password)) : this;
+                .singletonList(PasswordData.create(password))) : this;
     }
 
     @Override

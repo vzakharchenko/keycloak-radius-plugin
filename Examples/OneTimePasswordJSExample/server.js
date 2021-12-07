@@ -101,5 +101,7 @@ app.get('/', keycloak.protect(), (request, response) => {
     renderUI(request, response, "<<==");
 });
 
-app.listen(3000);
+app.listen(3000, ()=>{
+    console.log(`http://localhost:3000`)
+});
 

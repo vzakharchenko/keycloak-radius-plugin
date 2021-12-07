@@ -5,6 +5,7 @@ import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPassword;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.keycloak.Config;
@@ -41,14 +42,14 @@ public class PAPTest extends AbstractRadiusTest {
         HashMap<String, OtpHolder> hashMap = new HashMap<>();
         hashMap.put("otp", new OtpHolder("otp", new CredentialModel(), Collections.singletonList("123456")));
         when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(CredentialInput.class))).thenReturn(false);
-        otpPasswordInfo = new OtpPassword(false);
+        otpPasswordInfo = new OtpPassword(false, clientModel);
         otpPasswordInfo.putAll(hashMap);
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
     }
 
     public void enableOTP() {
         Map<String, OtpHolder> otpHolderMap = otpPasswordInfo.getOtpHolderMap();
-        otpPasswordInfo = new OtpPassword(false);
+        otpPasswordInfo = new OtpPassword(false, clientModel);
         otpPasswordInfo.putAll(otpHolderMap);
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
     }
@@ -59,10 +60,10 @@ public class PAPTest extends AbstractRadiusTest {
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         assertEquals(papProtocol.getType(), ProtocolType.PAP);
         papProtocol.answer(null, null);
-        assertTrue(papProtocol.verifyPassword("test"));
+        assertTrue(papProtocol.verifyPassword(PasswordData.create("test")));
         assertFalse(papProtocol.verifyPassword(null));
-        assertFalse(papProtocol.verifyPassword(""));
-        assertFalse(papProtocol.verifyPassword("asdf"));
+        assertFalse(papProtocol.verifyPassword(PasswordData.create("")));
+        assertFalse(papProtocol.verifyPassword(PasswordData.create("asdf")));
 
 
     }
@@ -117,7 +118,7 @@ public class PAPTest extends AbstractRadiusTest {
 
     @Test
     public void testOtpPasswordWithoutPassword() {
-        otpPasswordInfo = new OtpPassword(false);
+        otpPasswordInfo = new OtpPassword(false, clientModel);
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
         reset(configuration);
         when(configuration.getRadiusSettings())
@@ -135,7 +136,7 @@ public class PAPTest extends AbstractRadiusTest {
         request.setUserPassword("test123456");
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         papProtocol.setOtpPasswordGetter(passwordFactory);
-        assertTrue(papProtocol.verifyPassword("test"));
+        assertTrue(papProtocol.verifyPassword(PasswordData.create("test")));
     }
 
     @Test
@@ -143,7 +144,7 @@ public class PAPTest extends AbstractRadiusTest {
         request.setUserPassword("test1234567");
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         papProtocol.setOtpPasswordGetter(passwordFactory);
-        assertFalse(papProtocol.verifyPassword("test2"));
+        assertFalse(papProtocol.verifyPassword(PasswordData.create("test2")));
     }
 
     @Test

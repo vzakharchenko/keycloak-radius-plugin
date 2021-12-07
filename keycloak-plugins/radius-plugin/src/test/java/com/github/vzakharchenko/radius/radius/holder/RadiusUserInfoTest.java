@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.holder;
 
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.annotations.Test;
 
@@ -15,7 +16,7 @@ public class RadiusUserInfoTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        IRadiusUserInfoGetter radiusUserInfoGetter = radiusUserInfoBuilder.addPasswords(Arrays.asList("test"))
+        IRadiusUserInfoGetter radiusUserInfoGetter = radiusUserInfoBuilder.addPasswords(Arrays.asList(PasswordData.create("test")))
                 .clientConnection(clientConnection).clientModel(clientModel)
                 .address(new InetSocketAddress(0))
                 .userModel(userModel).realmModel(realmModel).activePassword("test").forceReject()

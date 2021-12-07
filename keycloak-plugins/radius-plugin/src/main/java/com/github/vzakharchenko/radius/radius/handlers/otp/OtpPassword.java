@@ -1,17 +1,23 @@
 package com.github.vzakharchenko.radius.radius.handlers.otp;
 
+import com.github.vzakharchenko.radius.client.RadiusLoginProtocolFactory;
 import com.github.vzakharchenko.radius.models.OtpHolder;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.keycloak.models.ClientModel;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class OtpPassword implements OtpPasswordInfo {
     private final boolean requiredAction;
+    private final boolean clientUseOTP;
     private final Map<String, OtpHolder> otpHolders = new HashMap<>();
 
-    public OtpPassword(boolean requiredAction) {
+    public OtpPassword(boolean requiredAction, ClientModel clientModel) {
         this.requiredAction = requiredAction;
+        String attribute = clientModel.getAttribute(RadiusLoginProtocolFactory.OTP);
+        this.clientUseOTP = attribute == null || BooleanUtils.toBoolean(attribute);
     }
 
     @Override
@@ -21,7 +27,7 @@ public class OtpPassword implements OtpPasswordInfo {
 
     @Override
     public boolean isUseOtp() {
-        return requiredAction || !otpHolders.isEmpty();
+        return clientUseOTP && (requiredAction || !otpHolders.isEmpty());
     }
 
     @Override

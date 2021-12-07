@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.radius.holder;
 
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
@@ -10,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 public interface IRadiusUserInfo {
-    List<String> getPasswords();
+    List<PasswordData> getPasswords();
 
     String getActivePassword();
 

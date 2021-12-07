@@ -1,6 +1,7 @@
 package com.github.vzakharchenko.radius.radius.holder;
 
 import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocol;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
@@ -10,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 /* default */ class RadiusUserInfo implements IRadiusUserInfo {
-    private List<String> passwords;
+    private List<PasswordData> passwords;
     private UserModel userModel;
     private String activePassword;
     private String radiusSecret;
@@ -22,11 +23,11 @@ import java.util.List;
     private boolean forceReject;
 
     @Override
-    public List<String> getPasswords() {
+    public List<PasswordData> getPasswords() {
         return passwords;
     }
 
-    public void setPasswords(List<String> passwords) {
+    public void setPasswords(List<PasswordData> passwords) {
         this.passwords = passwords;
     }
 

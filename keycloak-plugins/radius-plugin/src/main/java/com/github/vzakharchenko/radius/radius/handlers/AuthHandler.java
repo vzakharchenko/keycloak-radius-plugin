@@ -7,6 +7,7 @@ import com.github.vzakharchenko.radius.radius.handlers.protocols.RadiusAuthProto
 import com.github.vzakharchenko.radius.radius.handlers.session.AuthRequestInitialization;
 import com.github.vzakharchenko.radius.radius.handlers.session.IAuthRequestInitialization;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.google.common.annotations.VisibleForTesting;
 import io.netty.channel.ChannelHandler;
@@ -40,10 +41,10 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
     protected boolean verifyPassword0(IRadiusUserInfoGetter radiusUserInfoGetter,
                                     AuthProtocol authProtocol) {
         if (radiusUserInfoGetter != null) {
-            List<String> passwords = radiusUserInfoGetter.getRadiusUserInfo().getPasswords();
-            for (String password : passwords) {
+            List<PasswordData> passwords = radiusUserInfoGetter.getRadiusUserInfo().getPasswords();
+            for (PasswordData password : passwords) {
                 if (authProtocol.verifyPassword(password)) {
-                    radiusUserInfoGetter.getBuilder().activePassword(password);
+                    radiusUserInfoGetter.getBuilder().activePassword(password.getPassword());
                     return true;
                 }
             }

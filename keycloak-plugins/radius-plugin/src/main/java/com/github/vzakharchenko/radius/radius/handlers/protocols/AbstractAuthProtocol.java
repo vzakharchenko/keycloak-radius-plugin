@@ -10,8 +10,10 @@ import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OTPPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
@@ -102,7 +104,10 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
 
     @Override
-    public final boolean verifyPassword(String password) {
+    public final boolean verifyPassword(PasswordData password) {
+        if (password == null || StringUtils.isEmpty(password.getPassword())){
+            return false;
+        }
         Collection<String> passwordsWithOtp = addOtpToPassword(password);
         return passwordsWithOtp.stream().anyMatch(this::verifyProtocolPassword);
     }
@@ -112,24 +117,24 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return accessRequest.copy();
     }
 
-    private Collection<String> getPasswordOtp(String originPassword, boolean exclude) {
+    private Collection<String> getPasswordOtp(PasswordData originPassword, boolean exclude) {
         OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
-        if (otpPasswordInfo.isUseOtp()) {
+        if (otpPasswordInfo.isUseOtp() && !originPassword.isSessionPassword()) {
             return exclude ?
-                    otpPasswordInfo.getValidOtpPasswords(originPassword,
+                    otpPasswordInfo.getValidOtpPasswords(originPassword.getPassword(),
                             supportOtpWithoutPassword()) :
-                    otpPasswordInfo.addOtpPasswords(originPassword,
+                    otpPasswordInfo.addOtpPasswords(originPassword.getPassword(),
                             supportOtpWithoutPassword());
         } else {
-            return Collections.singletonList(originPassword);
+            return Collections.singletonList(originPassword.getPassword());
         }
     }
 
     protected Collection<String> getPasswordsWithOtp(String originPassword) {
-        return getPasswordOtp(originPassword, true);
+        return getPasswordOtp(PasswordData.create(originPassword), true);
     }
 
-    protected Collection<String> addOtpToPassword(String originPassword) {
+    protected Collection<String> addOtpToPassword(PasswordData originPassword) {
         return getPasswordOtp(originPassword, false);
     }
 
