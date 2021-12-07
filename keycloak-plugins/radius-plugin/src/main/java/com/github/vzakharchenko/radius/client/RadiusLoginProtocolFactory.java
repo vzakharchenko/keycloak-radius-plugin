@@ -21,6 +21,8 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
     public static final String RADIUS_PROTOCOL = "radius-protocol";
     public static final String ONE_TIME_RADIUS_PASSWORD = "OneTime Radius Password";
     public static final String SESSION_RADIUS_PASSWORD = "Session Radius Password";
+    public static final String OTP = "radius.OTP";
+    public static final String TRUE = "true";
 
 
     @Override
@@ -40,6 +42,7 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
 
     @Override
     public void setupClientDefaults(ClientRepresentation rep, ClientModel newClient) {
+        newClient.setAttribute(OTP, TRUE);
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.github.vzakharchenko.radius.radius.handlers.protocols.AuthProtocolFac
 import com.github.vzakharchenko.radius.radius.handlers.protocols.RadiusAuthProtocolFactory;
 import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
@@ -245,7 +246,7 @@ public abstract class AbstractRadiusTest {
         when(radiusUserInfo.getRealmModel()).thenReturn(realmModel);
         when(radiusUserInfo.getRadiusSecret()).thenReturn("secret");
         when(radiusUserInfo.getClientModel()).thenReturn(clientModel);
-        when(radiusUserInfo.getPasswords()).thenReturn(Collections.singletonList("secret"));
+        when(radiusUserInfo.getPasswords()).thenReturn(Collections.singletonList(PasswordData.create("secret")));
         when(radiusUserInfo.getAddress()).thenReturn(new InetSocketAddress(0));
         when(radiusUserInfoGetter.getBuilder()).thenReturn(radiusUserInfoBuilder);
         when(radiusUserInfoGetter.getRadiusUserInfo()).thenReturn(radiusUserInfo);
@@ -323,7 +324,7 @@ public abstract class AbstractRadiusTest {
                 sessionModelHashMap);
         when(clientConnection.getRemoteAddr()).thenReturn("111.111.111.112");
         when(authProtocol.getRealm()).thenReturn(realmModel);
-        when(authProtocol.verifyPassword(anyString())).thenReturn(true);
+        when(authProtocol.verifyPassword(any())).thenReturn(true);
         when(authProtocol.isValid(any())).thenReturn(true);
         JpaConnectionProvider jpaConnectionProvider = session
                 .getProvider(JpaConnectionProvider.class);

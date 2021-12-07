@@ -5,6 +5,7 @@ import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.radius.handlers.otp.IOtpPasswordFactory;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPassword;
 import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.keycloak.credential.CredentialInput;
@@ -35,7 +36,7 @@ public class ChapProtocolTest extends AbstractRadiusTest {
 
     public void enableOTP() {
         Map<String, OtpHolder> otpHolderMap = otpPasswordInfo.getOtpHolderMap();
-        otpPasswordInfo = new OtpPassword(false);
+        otpPasswordInfo = new OtpPassword(false, clientModel);
         otpPasswordInfo.putAll(otpHolderMap);
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
     }
@@ -46,7 +47,7 @@ public class ChapProtocolTest extends AbstractRadiusTest {
                 Collections.singletonList("1")));
         when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
                 any(CredentialInput.class))).thenReturn(false);
-        otpPasswordInfo = new OtpPassword(false);
+        otpPasswordInfo = new OtpPassword(false, clientModel);
         otpPasswordInfo.putAll(hashMap);
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
         when(dictionary.getAttributeTypeByCode(0, 60))
@@ -84,10 +85,10 @@ public class ChapProtocolTest extends AbstractRadiusTest {
         CHAPProtocol chapProtocol = new CHAPProtocol(request, session);
         assertEquals(chapProtocol.getType(), ProtocolType.CHAP);
         chapProtocol.answer(null, null);
-        assertTrue(chapProtocol.verifyPassword("1"));
-        assertFalse(chapProtocol.verifyPassword("2"));
+        assertTrue(chapProtocol.verifyPassword(PasswordData.create("1")));
+        assertFalse(chapProtocol.verifyPassword(PasswordData.create("2")));
         assertFalse(chapProtocol.verifyPassword(null));
-        assertFalse(chapProtocol.verifyPassword(""));
+        assertFalse(chapProtocol.verifyPassword(PasswordData.create("")));
         assertFalse(chapProtocol.verifyPassword());
     }
 

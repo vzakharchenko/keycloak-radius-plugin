@@ -1,1 +1,4 @@
 - ignore OTP without password for PAP authorization
+- updated radius theme
+- added "radius.OTP" attribute to radius client
+- session password applied without OTP

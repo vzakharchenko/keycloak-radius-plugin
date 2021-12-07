@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols;
 
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -69,7 +70,7 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
                                                 "00007EF3351F4F81BEC7643EFEC07534750B00000000000000004D25397B8A3778CD5D7467B62B0934C8F27D6121ADE1C17E")));
 
         MSCHAPV2Protocol chapProtocol = new MSCHAPV2Protocol(request, session);
-        assertFalse(chapProtocol.verifyPassword("1"));
+        assertFalse(chapProtocol.verifyPassword(PasswordData.create("1")));
     }
 
     @Test
@@ -96,7 +97,7 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
                 );
 
         MSCHAPV2Protocol chapProtocol = new MSCHAPV2Protocol(request, session);
-        assertTrue(chapProtocol.verifyPassword("1"));
+        assertTrue(chapProtocol.verifyPassword(PasswordData.create("1")));
         RadiusPacket answer = new RadiusPacket(realDictionary, 2, 1);
         chapProtocol.answer(answer, radiusUserInfoGetter);
         List<RadiusAttribute> attributes = answer.getAttributes();
@@ -135,7 +136,7 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
                 );
 
         MSCHAPV2Protocol chapProtocol = new MSCHAPV2Protocol(request, session);
-        assertFalse(chapProtocol.verifyPassword("2"));
+        assertFalse(chapProtocol.verifyPassword(PasswordData.create("2")));
         RadiusPacket answer = new RadiusPacket(realDictionary, 1, 1);
         chapProtocol.answer(answer, radiusUserInfoGetter);
         List<RadiusAttribute> attributes = answer.getAttributes();

@@ -2,6 +2,7 @@ package com.github.vzakharchenko.radius.radius.handlers;
 
 import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
 import com.github.vzakharchenko.radius.radius.handlers.session.IAuthRequestInitialization;
+import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import io.netty.channel.ChannelHandlerContext;
@@ -165,10 +166,10 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testVerifyPassword0_1() {
         reset(authProtocol);
-        when(authProtocol.verifyPassword("")).thenReturn(false);
+        when(authProtocol.verifyPassword(PasswordData.create(""))).thenReturn(false);
         when(authProtocol.verifyPassword(null)).thenReturn(false);
-        when(authProtocol.verifyPassword("p1")).thenReturn(true);
-        when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList("p", "p1"));
+        when(authProtocol.verifyPassword(PasswordData.create("p1"))).thenReturn(true);
+        when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList(PasswordData.create("p"), PasswordData.create("p1")));
         authHandler.verifyPassword0(radiusUserInfoGetter, authProtocol);
         verify(authProtocol, never()).verifyPassword();
     }
@@ -176,8 +177,8 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     @Test
     public void testVerifyPassword0_2() {
         reset(authProtocol);
-        when(authProtocol.verifyPassword("p1")).thenReturn(true);
-        when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList("p"));
+        when(authProtocol.verifyPassword(PasswordData.create("p1"))).thenReturn(true);
+        when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList(PasswordData.create("p")));
         authHandler.verifyPassword0(radiusUserInfoGetter, authProtocol);
         verify(authProtocol).verifyPassword();
     }

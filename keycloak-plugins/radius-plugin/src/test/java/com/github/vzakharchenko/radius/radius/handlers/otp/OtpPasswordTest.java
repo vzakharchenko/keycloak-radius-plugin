@@ -11,24 +11,26 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
+import static org.mockito.Mockito.when;
+
 public class OtpPasswordTest extends AbstractRadiusTest {
 
     private OtpPassword otpPassword;
 
     @BeforeMethod
     public void testBeforeMethods() {
-        otpPassword = new OtpPassword(false);
+        otpPassword = new OtpPassword(false, clientModel);
     }
 
     @Test
     public void requiredAndEmpty() {
-        otpPassword = new OtpPassword(true);
+        otpPassword = new OtpPassword(true, clientModel);
         Assert.assertTrue(otpPassword.isUseOtp());
     }
 
     @Test
     public void requiredAndNotEmpty() {
-        otpPassword = new OtpPassword(true);
+        otpPassword = new OtpPassword(true, clientModel);
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("test")));
         otpPassword.putAll(otpHolderMap);
@@ -37,17 +39,35 @@ public class OtpPasswordTest extends AbstractRadiusTest {
 
     @Test
     public void notRequiredAndEmpty() {
-        otpPassword = new OtpPassword(false);
+        otpPassword = new OtpPassword(false, clientModel);
         Assert.assertFalse(otpPassword.isUseOtp());
     }
 
     @Test
     public void notRequiredAndNotEmpty() {
-        otpPassword = new OtpPassword(false);
+        otpPassword = new OtpPassword(false, clientModel);
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("test")));
         otpPassword.putAll(otpHolderMap);
         Assert.assertTrue(otpPassword.isUseOtp());
+    }
+    @Test
+    public void disabledInClient() {
+        when(clientModel.getAttribute("OTP")).thenReturn("false");
+        otpPassword = new OtpPassword(false, clientModel);
+        HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
+        otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("test")));
+        otpPassword.putAll(otpHolderMap);
+        Assert.assertFalse(otpPassword.isUseOtp());
+    }
+    @Test
+    public void disabledInClient2() {
+        when(clientModel.getAttribute("OTP")).thenReturn("False");
+        otpPassword = new OtpPassword(false, clientModel);
+        HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
+        otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("test")));
+        otpPassword.putAll(otpHolderMap);
+        Assert.assertFalse(otpPassword.isUseOtp());
     }
 
     @Test

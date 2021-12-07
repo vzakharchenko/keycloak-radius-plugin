@@ -29,12 +29,12 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
         this.secretProvider = secretProvider;
     }
 
-    private List<String> getSessionPasswords(
+    private List<PasswordData> getSessionPasswords(
             KeycloakSession keycloakSession,
             RealmModel realmModel,
             UserModel userModel
     ) {
-        List<String> passwords = new ArrayList<>();
+        List<PasswordData> passwords = new ArrayList<>();
         if (userModel.isEnabled()) {
             List<UserSessionModel> userSessions = keycloakSession.sessions()
                     .getUserSessions(realmModel, userModel);
@@ -42,7 +42,7 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
                 String sessionPassword = RadiusSessionPasswordManager
                         .getInstance().getCurrentPassword(userSession);
                 if (sessionPassword != null) {
-                    passwords.add(sessionPassword);
+                    passwords.add(PasswordData.create(sessionPassword, true));
                 }
             }
         }
@@ -56,13 +56,13 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
             ClientModel client) {
         IRadiusUserInfoBuilder radiusUserInfoBuilder = RadiusUserInfoBuilder.create();
         radiusUserInfoBuilder.realmModel(realmModel);
-        List<String> passwords = new ArrayList<>(
+        List<PasswordData> passwords = new ArrayList<>(
                 getSessionPasswords(keycloakSession, realmModel, userModel));
         String currentPassword = RadiusHelper.getCurrentPassword(
                 keycloakSession, realmModel, userModel
         );
         if (currentPassword != null && !currentPassword.isEmpty()) {
-            passwords.add(currentPassword);
+            passwords.add(PasswordData.create(currentPassword));
         }
         return radiusUserInfoBuilder.addPasswords(passwords).userModel(userModel)
                 .clientModel(client);

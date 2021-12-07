@@ -5,6 +5,7 @@ import org.keycloak.models.ProtocolMapperModel;
 import org.keycloak.protocol.LoginProtocol;
 import org.keycloak.protocol.LoginProtocolFactory;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
+import org.keycloak.representations.idm.ClientRepresentation;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -19,7 +20,7 @@ public class RadiusLoginProtocolFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        radiusLoginProtocolFactory.setupClientDefaults(null, null);
+        radiusLoginProtocolFactory.setupClientDefaults(new ClientRepresentation(), clientModel);
         radiusLoginProtocolFactory.createDefaultClientScopes(null, false);
         radiusLoginProtocolFactory.close();
         radiusLoginProtocolFactory.init(null);
