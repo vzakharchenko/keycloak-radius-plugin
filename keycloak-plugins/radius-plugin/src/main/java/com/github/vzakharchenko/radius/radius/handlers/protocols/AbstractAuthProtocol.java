@@ -105,7 +105,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
     @Override
     public final boolean verifyPassword(PasswordData password) {
-        if (password == null || StringUtils.isEmpty(password.getPassword())){
+        if (password == null || StringUtils.isEmpty(password.getPassword())) {
             return false;
         }
         Collection<String> passwordsWithOtp = addOtpToPassword(password);

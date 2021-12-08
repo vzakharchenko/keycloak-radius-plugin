@@ -3,8 +3,8 @@ package com.github.vzakharchenko.radius.radius.handlers.session;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class PasswordData {
-    private String password;
+public final class PasswordData {
+    private final String password;
     private boolean session;
 
     private PasswordData(String password) {
@@ -36,7 +36,8 @@ public class PasswordData {
 
         PasswordData that = (PasswordData) o;
 
-        return new EqualsBuilder().append(session, that.session).append(password, that.password).isEquals();
+        return new EqualsBuilder().append(session, that.session)
+                .append(password, that.password).isEquals();
     }
 
     @Override
@@ -44,10 +45,11 @@ public class PasswordData {
         return new HashCodeBuilder(17, 37).append(password).append(session).toHashCode();
     }
 
-    public static PasswordData create(String password){
+    public static PasswordData create(String password) {
         return new PasswordData(password);
     }
-    public static PasswordData create(String password, boolean session){
+
+    public static PasswordData create(String password, boolean session) {
         return new PasswordData(password, session);
     }
 
