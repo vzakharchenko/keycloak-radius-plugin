@@ -69,7 +69,8 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
         UserModel userModel = radiusSessionInfo.getUserModel();
         RealmModel realm = radiusSessionInfo.getRealmModel();
         List<CredentialModel> credentials = filterCredentials(session, realm, userModel);
-        OtpPasswordInfo otpPasswordInfo = new OtpPassword(isUserRequireOtp(userModel), radiusSessionInfo.getClientModel());
+        OtpPasswordInfo otpPasswordInfo = new OtpPassword(isUserRequireOtp(userModel),
+                radiusSessionInfo.getClientModel());
         for (CredentialModel credential : credentials) {
             initOTPPasswords(realm, otpPasswordInfo, credential);
         }

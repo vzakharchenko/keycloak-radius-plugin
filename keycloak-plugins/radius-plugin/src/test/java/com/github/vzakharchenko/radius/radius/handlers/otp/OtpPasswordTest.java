@@ -53,7 +53,7 @@ public class OtpPasswordTest extends AbstractRadiusTest {
     }
     @Test
     public void disabledInClient() {
-        when(clientModel.getAttribute("OTP")).thenReturn("false");
+        when(clientModel.getAttribute("radius.OTP")).thenReturn("false");
         otpPassword = new OtpPassword(false, clientModel);
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("test")));
@@ -62,7 +62,7 @@ public class OtpPasswordTest extends AbstractRadiusTest {
     }
     @Test
     public void disabledInClient2() {
-        when(clientModel.getAttribute("OTP")).thenReturn("False");
+        when(clientModel.getAttribute("radius.OTP")).thenReturn("False");
         otpPassword = new OtpPassword(false, clientModel);
         HashMap<String, OtpHolder> otpHolderMap = new HashMap<>();
         otpHolderMap.put("1", new OtpHolder("1", new CredentialModel(), Arrays.asList("test")));

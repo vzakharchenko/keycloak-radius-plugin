@@ -62,9 +62,9 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
         mapper.setProtocolMapper(id);
         mapper.setProtocol(OIDCLoginProtocol.LOGIN_PROTOCOL);
         Map<String, String> config = new HashMap<>();
-        config.put(INCLUDE_IN_ACCESS_TOKEN, "true");
-        config.put(INCLUDE_IN_ID_TOKEN, "true");
-        config.put(INCLUDE_IN_USERINFO, "true");
+        config.put(INCLUDE_IN_ACCESS_TOKEN, TRUE);
+        config.put(INCLUDE_IN_ID_TOKEN, TRUE);
+        config.put(INCLUDE_IN_USERINFO, TRUE);
         config.put(RadiusPasswordMapper.ONE_TIME_PASSWORD, String.valueOf(onetimePassword));
         mapper.setConfig(config);
         return mapper;
