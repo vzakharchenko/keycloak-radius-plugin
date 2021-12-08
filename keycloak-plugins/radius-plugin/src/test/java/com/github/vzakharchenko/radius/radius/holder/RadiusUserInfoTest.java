@@ -5,7 +5,7 @@ import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.testng.annotations.Test;
 
 import java.net.InetSocketAddress;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.testng.Assert.*;
 
@@ -16,7 +16,8 @@ public class RadiusUserInfoTest extends AbstractRadiusTest {
 
     @Test
     public void testMethods() {
-        IRadiusUserInfoGetter radiusUserInfoGetter = radiusUserInfoBuilder.addPasswords(Arrays.asList(PasswordData.create("test")))
+        IRadiusUserInfoGetter radiusUserInfoGetter = radiusUserInfoBuilder.addPasswords(
+                        Collections.singletonList(PasswordData.create("test")))
                 .clientConnection(clientConnection).clientModel(clientModel)
                 .address(new InetSocketAddress(0))
                 .userModel(userModel).realmModel(realmModel).activePassword("test").forceReject()
