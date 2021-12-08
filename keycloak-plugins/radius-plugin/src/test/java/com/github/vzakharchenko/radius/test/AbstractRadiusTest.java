@@ -246,7 +246,9 @@ public abstract class AbstractRadiusTest {
         when(radiusUserInfo.getRealmModel()).thenReturn(realmModel);
         when(radiusUserInfo.getRadiusSecret()).thenReturn("secret");
         when(radiusUserInfo.getClientModel()).thenReturn(clientModel);
-        when(radiusUserInfo.getPasswords()).thenReturn(Collections.singletonList(PasswordData.create("secret")));
+        when(radiusUserInfo.getPasswords()).thenReturn(
+                Collections.singletonList(
+                        PasswordData.create("secret")));
         when(radiusUserInfo.getAddress()).thenReturn(new InetSocketAddress(0));
         when(radiusUserInfoGetter.getBuilder()).thenReturn(radiusUserInfoBuilder);
         when(radiusUserInfoGetter.getRadiusUserInfo()).thenReturn(radiusUserInfo);

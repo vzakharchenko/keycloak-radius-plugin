@@ -169,7 +169,9 @@ public class AuthHandlerTest extends AbstractRadiusTest {
         when(authProtocol.verifyPassword(PasswordData.create(""))).thenReturn(false);
         when(authProtocol.verifyPassword(null)).thenReturn(false);
         when(authProtocol.verifyPassword(PasswordData.create("p1"))).thenReturn(true);
-        when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList(PasswordData.create("p"), PasswordData.create("p1")));
+        when(radiusUserInfo.getPasswords()).thenReturn(
+                Arrays.asList(PasswordData.create("p"),
+                        PasswordData.create("p1")));
         authHandler.verifyPassword0(radiusUserInfoGetter, authProtocol);
         verify(authProtocol, never()).verifyPassword();
     }
