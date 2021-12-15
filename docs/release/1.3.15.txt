@@ -1,2 +1,1 @@
-- keycloak 15.1.0
 - removed log4j dependency
