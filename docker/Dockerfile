@@ -13,6 +13,8 @@ RUN /opt/radius/scripts/docker-radius.sh
 RUN rm -rf /opt/jboss/keycloak/standalone/configuration/standalone_xml_history
 EXPOSE 8080
 EXPOSE 9990
+EXPOSE 1812/udp
+EXPOSE 1813/udp
 ENTRYPOINT [ "/opt/radius/scripts/docker-radius-entrypoint.sh" ]
 
 CMD ["-b", "0.0.0.0"]

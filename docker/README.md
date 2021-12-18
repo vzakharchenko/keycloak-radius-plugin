@@ -46,7 +46,7 @@ RADIUS_COA_PORT="3799"
 Create a new Docker container from this image (replace `./radius.env` with your own `env` file):
 
 ```
-docker run -d --name keycloak-radius-plugin --env-file .example.radius.env --restart=always -p 8080:8080 vassio/keycloak-radius-plugin
+docker run -d --name keycloak-radius-plugin --env-file .example.radius.env --restart=always -p 8080:8080 -p1812:1812/udp -p1813:1813/udp vassio/keycloak-radius-plugin
 ```
 
 
