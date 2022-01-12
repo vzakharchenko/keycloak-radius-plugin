@@ -53,7 +53,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <properties-maven-plugin>1.0.0</properties-maven-plugin>
-        <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
+        <maven-compiler-plugin>3.9.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.0.0</maven-enforcer-plugin>
         <spotbugs-maven-plugin>4.5.3.0</spotbugs-maven-plugin>
         <maven-pmd-plugin>3.15.0</maven-pmd-plugin>
