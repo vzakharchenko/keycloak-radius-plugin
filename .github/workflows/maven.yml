@@ -23,6 +23,6 @@ jobs:
     - name: Build with Maven
       run: cd keycloak-plugins && mvn clean install
     - name: Download keycloak
-      run: cd keycloak && ./keycloak/init.sh
+      run: cd keycloak && ./init.sh
     - name: build keycloak
       run: cd keycloak && mvn clean install
