@@ -87,7 +87,7 @@ mvn versions:set -DnewVersion=$tagDevVersion
 cd ..
 # create release
 git pull
-hub release create -a ./keycloak/target/keycloak-radius-legacy.zip  -a ./keycloak-quarkus/target/keycloak-radius.zip -a -m "Keycloak with radius server ${tagName}
+hub release create -a ./keycloak/target/keycloak-radius-legacy.zip  -a ./keycloak-quarkus/target/keycloak-radius.zip -m "Keycloak with radius server ${tagName}
 
 
 releaseNotes:
