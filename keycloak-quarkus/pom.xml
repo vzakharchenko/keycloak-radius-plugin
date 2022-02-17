@@ -128,7 +128,7 @@
                     <descriptors>
                         <descriptor>assembly/build.xml</descriptor>
                     </descriptors>
-                    <finalName>keycloak-radius-legacy</finalName>
+                    <finalName>keycloak-radius</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
