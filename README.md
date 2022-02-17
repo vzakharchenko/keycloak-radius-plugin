@@ -57,6 +57,7 @@ features:
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
+***requirements***: [keycloak 17.0.0](https://github.com/keycloak/keycloak/releases/download/17.0.0/keycloak-17.0.0.zip)
 ```bash
 cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.4.2-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/radius-plugin-1.4.2-SNAPSHOT.jar
 cp ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.4.2-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/rad-sec-plugin-1.4.2-SNAPSHOT.jar
