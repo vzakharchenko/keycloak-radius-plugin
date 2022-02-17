@@ -3,7 +3,7 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1">
-
+        <validCheckSum>7:137aaa40d056e0c13a09a945a52fda58</validCheckSum>
         <createTable tableName="RADIUS_DM_SESSION">
             <column name="SESSION_ID" type="VARCHAR(128)">
                 <constraints nullable="false"/>
@@ -61,10 +61,12 @@
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_2">
+        <validCheckSum>7:8ea61f55f1ffe230e4c21a3e668f0090</validCheckSum>
         <dropNotNullConstraint tableName="RADIUS_DM_SESSION" columnName="END_DATE" columnDataType="TIMESTAMP"/>
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_3">
+        <validCheckSum>7:d44077774930b99384c8e4dd8182f15e</validCheckSum>
         <addColumn tableName="RADIUS_DM_SESSION">
             <column name="END_STATUS" type="VARCHAR(36)"/>
             <column name="SECRET" type="VARCHAR(36)"/>
@@ -74,6 +76,7 @@
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_4">
+        <validCheckSum>7:eb05e954dcc4aa1fba085b69748a02ff</validCheckSum>
         <addColumn tableName="RADIUS_DM_SESSION">
             <column name="RADIUS_SESSION_ID" type="VARCHAR(36)"/>
             <column name="MODIFY_DATE" type="TIMESTAMP">
@@ -83,13 +86,14 @@
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_5">
+        <validCheckSum>7:a943a809d598b5586a87ea01cfab075f</validCheckSum>
         <addColumn tableName="RADIUS_DM_SESSION">
             <column name="END_CAUSE" type="VARCHAR(256)"/>
         </addColumn>
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_6">
-
+        <validCheckSum>7:201d7b0e8be839107c2ef220bd83f6b5</validCheckSum>
         <dropColumn columnName="END_CAUSE" tableName="RADIUS_DM_SESSION"/>
         <dropColumn columnName="END_STATUS" tableName="RADIUS_DM_SESSION"/>
         <dropColumn columnName="END_MESSAGE" tableName="RADIUS_DM_SESSION"/>
@@ -150,11 +154,13 @@
     </changeSet>
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.0.1_7">
+        <validCheckSum>7:060fcc94974472cf8012b77e533e2bff</validCheckSum>
         <dropNotNullConstraint tableName="RADIUS_DM_KEYCLOAK_END_SESSION" columnName="END_DATE" columnDataType="TIMESTAMP"/>
     </changeSet>
 
 
     <changeSet author="vaszakharchenko@gmail.com" id="dm-1.3.3">
+        <validCheckSum>7:c71fd24ff2f1165fb18411238ee45f97</validCheckSum>
         <addColumn tableName="RADIUS_DM_SESSION">
             <column name="CALLED_STATION_ID" type="VARCHAR(36)"/>
         </addColumn>
