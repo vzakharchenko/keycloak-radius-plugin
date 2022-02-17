@@ -26,5 +26,7 @@ jobs:
       run: cd keycloak && ./init.sh
     - name: build keycloak
       run: cd keycloak && mvn clean install
+    - name: Download keycloak-quarkus
+      run: cd keycloak-quarkus && ./init.sh
     - name: build keycloak-quarkus
       run: cd keycloak-quarkus && mvn clean install
