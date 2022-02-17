@@ -1,0 +1,2 @@
+- keycloak-17.0.0
+- keycloak legacy version (wildfly)

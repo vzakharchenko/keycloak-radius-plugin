@@ -102,6 +102,15 @@ installation steps:
 2. <pre>cd keycloak-radius</pre>
 3. <pre>sh bin/kc.sh --debug 8190 start-dev --http-port=8090</pre>
 4. open http://localhost:8090
-5. default radius shared Secret: <pre>secret</pre>" $tagName
+5. default radius shared Secret: <pre>secret</pre>
+
+Keycloak WildFly (deprecated) installation steps:
+1. download and unzip keycloak-radius.zip <pre>unzip keycloak-radius-legacy.zip -d keycloak-radius</pre>
+2. <pre>cd keycloak-radius</pre>
+3. <pre>sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</pre>
+4. open http://localhost:8090
+5. default radius shared Secret: <pre>secret</pre>
+
+" $tagName
 
 
