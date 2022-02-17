@@ -1,3 +1,3 @@
  set -e
  rm -rf data
- cp -r target/keycloak/keycloak-16.1.1/standalone/data data
+ cp -r target/keycloak/keycloak-17.0.0/standalone/data data
