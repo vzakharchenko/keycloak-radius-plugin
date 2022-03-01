@@ -8,8 +8,8 @@
 [![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
 
 
-**forbidden to use and create pull requests for Russian occupiers**
-**Российский корабль иди на хуй**
+- **forbidden to use and create pull requests for Russian occupiers**
+- **Российский корабль иди на хуй**
 
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
