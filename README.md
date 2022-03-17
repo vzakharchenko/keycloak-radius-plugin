@@ -7,6 +7,11 @@
 <a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
 [![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
 
+
+- **forbidden to use and create pull requests for Russian occupiers**
+- **Российский корабль иди на хуй**
+
+
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
 - Embedded radius server in [keycloak](https://www.keycloak.org/)

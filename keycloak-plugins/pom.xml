@@ -53,7 +53,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <properties-maven-plugin>1.0.0</properties-maven-plugin>
-        <maven-compiler-plugin>3.10.0</maven-compiler-plugin>
+        <maven-compiler-plugin>3.10.1</maven-compiler-plugin>
         <maven-enforcer-plugin>3.0.0</maven-enforcer-plugin>
         <spotbugs-maven-plugin>4.5.3.0</spotbugs-maven-plugin>
         <maven-pmd-plugin>3.16.0</maven-pmd-plugin>
@@ -124,6 +124,7 @@
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-authz-policy-common</artifactId>
             <version>${keycloak.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -199,7 +200,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.3.1</version>
+            <version>4.4.0</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -413,7 +414,7 @@
                     <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-databind</artifactId>
-                        <version>2.13.1</version>
+                        <version>2.13.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -453,7 +454,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.5.3</version>
+                        <version>4.6.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
