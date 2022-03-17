@@ -124,6 +124,7 @@
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-authz-policy-common</artifactId>
             <version>${keycloak.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
