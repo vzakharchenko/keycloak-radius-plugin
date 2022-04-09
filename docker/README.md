@@ -42,12 +42,17 @@ RADIUS_COA_PORT="3799"
 
 ### [Keycloak Configuration](https://github.com/keycloak/keycloak-containers/blob/master/server/README.md)
 
-### Start the Keycloak Radius Server
+### Start the Keycloak Radius Server (dev mode)
 Create a new Docker container from this image (replace `./radius.env` with your own `env` file):
 
 ```
 docker run -d --name keycloak-radius-plugin --env-file .example.radius.env --restart=always -p 8080:8080 -p1812:1812/udp -p1813:1813/udp vassio/keycloak-radius-plugin start-dev
 ```
+
+### Start the Keycloak Radius Server (production mode)
+Create a new Docker container from this image (replace `./radius.env` with your own `env` file):
+
+[maltegrosse comment](https://github.com/vzakharchenko/keycloak-radius-plugin/issues/542#issuecomment-1094090516)
 
 
 ## RUN Instance
