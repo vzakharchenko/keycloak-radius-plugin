@@ -1,1 +1,2 @@
 - keycloak 17.0.1
+- switch to docker multiarch
