@@ -1,9 +1,5 @@
 name: keycloak-radius-plugin amd64
 
-on:
-  push:
-    branches: main
-
 jobs:
   multi:
     runs-on: ubuntu-latest
@@ -36,4 +32,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            vassio/pptp-radius-docker:snapshot
+            vassio/keycloak-radius-plugin:snapshot
