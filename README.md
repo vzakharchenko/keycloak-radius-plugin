@@ -34,6 +34,7 @@ features:
 - [PPTP VPN with Radsec](https://github.com/vzakharchenko/pptp-radius-docker)
 - [L2TP IPSec VPN with Radius and Radsec](https://github.com/vzakharchenko/l2tp-ipsec-radius-docker)
 - Specify Realm in username: username@realm
+- support docker arm64 and arm/v7
 
 ## Examples
  - [Assign attributes dynamically using javascript policy](Examples/RadiusAuthorizationJSExample)

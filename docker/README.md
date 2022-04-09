@@ -12,6 +12,14 @@ Get the trusted build from the [Docker Hub registry](https://hub.docker.com/r/va
 docker pull vassio/keycloak-radius-plugin
 ```
 
+## Download multiarch(amd64, arm64, arm/v7)
+
+Get the trusted build from the [Docker Hub registry](https://hub.docker.com/r/vassio/keycloak-radius-plugin/):
+
+```
+docker pull vassio/keycloak-radius-plugin:latest-multiarch
+```
+
 ## How to use this image
 
 ### Environment variables
@@ -47,6 +55,10 @@ Create a new Docker container from this image (replace `./radius.env` with your 
 
 ```
 docker run -d --name keycloak-radius-plugin --env-file .example.radius.env --restart=always -p 8080:8080 -p1812:1812/udp -p1813:1813/udp vassio/keycloak-radius-plugin start-dev
+```
+- arm64, arm/v7 version
+```
+docker run -d --name keycloak-radius-plugin --env-file .example.radius.env --restart=always -p 8080:8080 -p1812:1812/udp -p1813:1813/udp vassio/keycloak-radius-plugin:latest-multiarch start-dev
 ```
 
 ### Start the Keycloak Radius Server (production mode)
