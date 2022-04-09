@@ -1,5 +1,11 @@
 name: keycloak-radius-plugin amd64
-
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Bump Version
+        default: snapshot
+        required: true
 jobs:
   multi:
     runs-on: ubuntu-latest
@@ -28,8 +34,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ..docker/Dockerfile
+          file: ../docker/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            vassio/keycloak-radius-plugin:snapshot
+            vassio/keycloak-radius-plugin:${{ github.event.inputs.version }}
