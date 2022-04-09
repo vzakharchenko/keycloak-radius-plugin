@@ -1,4 +1,4 @@
-name: keycloak-radius-plugin amd64
+name: keycloak-radius-plugin amd64, arm64, arm/v7
 on:
   workflow_dispatch:
     inputs:
