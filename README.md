@@ -7,10 +7,7 @@
 <a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
 [![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
 
-
-- **forbidden to use and create pull requests for Russian occupiers**
 - **Российский корабль иди на хуй**
-
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
@@ -47,6 +44,9 @@ features:
  - [Default Realm example(if the radius client does not support realm attribute)](Examples/RadiusDefaultRealmJSExample)
  - [An example of a call from  backend service to radius using a service account (Service to Service communication)](Examples/RadiusServiceAccountJSExample)
  - [WebAuthn authentication. Radius Authentication using your fingerprint or FIDO2 security key](Examples/WebAuthnJSExample)
+
+## Donate
+<a href="https://secure.wayforpay.com/button/bf1e79d05af0c" style="display:inline-block!important;background:#2B3160 url('https://s3.eu-central-1.amazonaws.com/w4p-merch/button/bg6x2.png') no-repeat center right;background-size:cover;width: 256px!important;height:54px!important;border:none!important;border-radius:14px!important;padding:18px!important;text-decoration:none!important;box-shadow:3px 2px 8px rgba(71,66,66,0.22)!important;text-align:left!important;box-sizing:border-box!important;" onmouseover="this.style.opacity='0.8';" onmouseout="this.style.opacity='1';"><span style="font-family:Verdana,Arial,sans-serif!important;font-weight:bold!important;font-size:14px!important;color:#ffffff!important;line-height:18px!important;vertical-align:middle!important;">Donate</span></a>
 
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
