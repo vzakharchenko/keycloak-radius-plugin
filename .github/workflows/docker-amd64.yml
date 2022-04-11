@@ -39,3 +39,4 @@ jobs:
           push: true
           tags: |
             vassio/keycloak-radius-plugin:${{ github.event.inputs.version }}-multiarch
+            vassio/keycloak-radius-plugin:latest-multiarch
