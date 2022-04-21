@@ -74,7 +74,8 @@ public class AuthorizationAttributesTest extends AbstractRadiusTest {
         RadiusAttribute radiusAttribute = attributeType.create(dictionary, "0");
         accessRequest.addAttribute(radiusAttribute);
 
-        when(resourceStore.findByResourceServer(resourceServer)).thenReturn(Arrays.asList(resource));
+        when(resourceStore.findByResourceServer(resourceServer))
+                .thenReturn(Arrays.asList(resource));
         when(resourceServerStore.findById(CLIENT_ID)).thenReturn(resourceServer);
         resourcePermission = new ResourcePermission(resource, resourceServer, new HashMap<>());
 
