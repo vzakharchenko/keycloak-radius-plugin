@@ -38,12 +38,12 @@ public class AuthorizationAttributes extends AbstractKeycloakAttributes<Resource
                                              UserModel userModel, RealmModel realmModel) {
         StoreFactory storeFactory = authorizationProvider.getStoreFactory();
         List<Resource> resources = storeFactory
-                .getResourceStore().findByResourceServer(resourceServer.getId());
+                .getResourceStore().findByResourceServer(resourceServer);
         PermissionEvaluator permissionEvaluator = authorizationProvider.evaluators()
                 .from(resources.stream().map(resource ->
                                 new ResourcePermission(resource, storeFactory
                                         .getResourceServerStore()
-                                        .findById(resource.getResourceServer()),
+                                        .findById(resource.getResourceServer().getId()),
                                         new HashMap<>())).collect(Collectors.toList()),
                         new DefaultEvaluationContext(
                                 new UserModelIdentity(realmModel, userModel), session));

@@ -63,7 +63,7 @@ features:
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
-***requirements***: [keycloak 17.0.1](https://github.com/keycloak/keycloak/releases/download/17.0.1/keycloak-17.0.1.zip)
+***requirements***: [keycloak 18.0.0](https://github.com/keycloak/keycloak/releases/download/18.0.0/keycloak-18.0.0.zip)
 ```bash
 cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.4.4-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/radius-plugin-1.4.4-SNAPSHOT.jar
 cp ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.4.4-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/rad-sec-plugin-1.4.4-SNAPSHOT.jar
@@ -75,11 +75,11 @@ cp ${SOURCE}/keycloak-plugins/proxy-radius-plugin/target/proxy-radius-plugin-1.4
 cp ${SOURCE}/keycloak-radius-plugin/keycloak-plugins/radius-theme/target/radius-theme-1.4.4-SNAPSHOT.zip ${KEYCLOAK_PATH}/providers/radius-theme-1.4.4-SNAPSHOT.jar
 ```
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-17.0.1.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-18.0.0.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 
 ### Configure Keycloak WildFly (deprecated)
-***requirements***: [keycloak 17.0.1](https://github.com/keycloak/keycloak/releases/download/17.0.1/keycloak-legacy-17.0.1.zip)
+***requirements***: [keycloak 18.0.0](https://github.com/keycloak/keycloak/releases/download/18.0.0/keycloak-legacy-18.0.0.zip)
 - setup radius-plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius --resources=${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.4.4-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,javax.servlet.api,org.jboss.resteasy.resteasy-jaxrs,javax.ws.rs.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,org.apache.commons.lang3"</pre></code>
 - setup rad-sec plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.rad.sec --resources=${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.4.4-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
 - setup mikrotik plugin <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --command="module add --name=keycloak.plugins.radius.mikrotik --resources=${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.4.4-SNAPSHOT.jar --dependencies=org.jboss.logging,org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.apache.commons.io,javax.activation.api,com.fasterxml.jackson.core.jackson-databind,org.keycloak.keycloak-common,com.fasterxml.jackson.core.jackson-core,javax.transaction.api,org.hibernate,io.netty,org.slf4j,javax.xml.bind.api,org.apache.commons.codec,keycloak.plugins.radius,org.apache.commons.lang3"</pre></code>
@@ -91,7 +91,7 @@ where
 - run script for standalone <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius.cli</pre></code>
 - run script for standalone-ha <pre><code>${KEYCLOAK_PATH}/bin/jboss-cli.sh --file=${SOURCE}/cli/radius-ha.cli</pre></code>
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-17.0.1.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-18.0.0.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 ### Environment Variables
 
@@ -153,7 +153,7 @@ where
 ```bash
 #!/usr/bin/env bash
 set -e
-cd keycloak-17.0.1
+cd keycloak-18.0.0
 sh bin/kc.sh --debug 8190 start-dev --http-port=8090
 ```
 
