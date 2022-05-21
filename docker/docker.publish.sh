@@ -1,8 +1,8 @@
 rm -rf ./cli
 
 docker build -t keycloak-radius-plugin .
-docker tag  keycloak-radius-plugin vassio/keycloak-radius-plugin:1.4.2
-docker push vassio/keycloak-radius-plugin:1.4.2
+docker tag  keycloak-radius-plugin vassio/keycloak-radius-plugin:1.4.4
+docker push vassio/keycloak-radius-plugin:1.4.4
 
 docker tag  keycloak-radius-plugin vassio/keycloak-radius-plugin:latest
 docker push vassio/keycloak-radius-plugin:latest
