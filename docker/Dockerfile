@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:17.0.1
+FROM quay.io/keycloak/keycloak:18.0.0
 MAINTAINER Vasyl Zakharchenko <vaszakharchenko@gmail.com>
 LABEL author="Vasyl Zakharchenko"
 LABEL email="vaszakharchenko@gmail.com"
