@@ -6,6 +6,12 @@
         <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
     </Match>
     <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+    </Match>
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_RUNTIMEEXCEPTION"/>
+    </Match>
+    <Match>
         <Bug pattern="JAXRS_ENDPOINT"/>
     </Match>
     <Match>
