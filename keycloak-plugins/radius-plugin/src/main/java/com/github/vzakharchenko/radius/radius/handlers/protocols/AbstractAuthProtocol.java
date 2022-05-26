@@ -109,7 +109,15 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
             return false;
         }
         Collection<String> passwordsWithOtp = addOtpToPassword(password);
-        return passwordsWithOtp.stream().anyMatch(this::verifyProtocolPassword);
+        String passwordOtp = passwordsWithOtp.stream()
+                .filter(this::verifyProtocolPassword)
+                .findFirst().orElse(null);
+        if (!StringUtils.isEmpty(passwordOtp)) {
+            KeycloakSessionUtils.getRadiusUserInfo(session).getBuilder()
+                    .activePassword(passwordOtp);
+            return true;
+        }
+        return false;
     }
 
     @Override

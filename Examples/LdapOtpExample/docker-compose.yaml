@@ -55,7 +55,7 @@ services:
     image: vassio/keycloak-radius-plugin:latest
     environment:
       KEYCLOAK_IMPORT: /realm-example.json
-      KEYCLOAK_USER: admin
+      KEYCLOAK_ADMIN: admin
       KEYCLOAK_PASSWORD: admin
       RADIUS_SHARED_SECRET: secret
       RADIUS_UDP: 'true'
