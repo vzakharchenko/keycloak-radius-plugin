@@ -12,6 +12,7 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.google.common.annotations.VisibleForTesting;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -39,12 +40,16 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
     private IAuthRequestInitialization authRequestInitialization;
 
     protected boolean verifyPassword0(IRadiusUserInfoGetter radiusUserInfoGetter,
-                                    AuthProtocol authProtocol) {
+                                      AuthProtocol authProtocol) {
         if (radiusUserInfoGetter != null) {
             List<PasswordData> passwords = radiusUserInfoGetter.getRadiusUserInfo().getPasswords();
             for (PasswordData password : passwords) {
                 if (authProtocol.verifyPassword(password)) {
-                    radiusUserInfoGetter.getBuilder().activePassword(password.getPassword());
+                    if (StringUtils.isEmpty(radiusUserInfoGetter
+                            .getRadiusUserInfo()
+                            .getActivePassword())) { //otp password
+                        radiusUserInfoGetter.getBuilder().activePassword(password.getPassword());
+                    }
                     return true;
                 }
             }
