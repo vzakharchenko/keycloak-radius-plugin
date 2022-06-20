@@ -1,1 +1,2 @@
-- Mikrotik login with OTP fails with WinBox but Mikrotik logs show successful login, then logout 
+- Mikrotik login with OTP fails with WinBox but Mikrotik logs show successful login, then logout
+- keycloak 18.0.1
