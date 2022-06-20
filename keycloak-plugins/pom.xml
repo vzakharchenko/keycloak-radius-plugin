@@ -5,7 +5,7 @@
     <groupId>com.github.vzakharchenko</groupId>
     <artifactId>keycloak-plugins</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.5-SNAPSHOT</version>
+    <version>1.4.5</version>
 
     <name>Keycloak Radius Server</name>
     <description>Extension for keycloak for working as Radius Server</description>
@@ -23,7 +23,7 @@
     <scm>
         <url>git@github.com:vzakharchenko/keycloak-radius-plugin.git</url>
         <connection>scm:git:git@github.com:vzakharchenko/keycloak-radius-plugin.git</connection>
-        <tag>HEAD</tag>
+        <tag>v1.4.5-18.0.1</tag>
     </scm>
 
     <developers>
