@@ -4,6 +4,7 @@ import com.github.vzakharchenko.radius.models.CoASettings;
 import com.github.vzakharchenko.radius.models.RadSecSettings;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
+import com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType;
 import org.keycloak.credential.CredentialModel;
 
 import java.util.HashMap;
@@ -15,7 +16,9 @@ public class ModelBuilder {
 
     public static RadiusServerSettings createRadiusOtpServerSettings() {
         RadiusServerSettings radiusServerSettings = createRadiusServerSettings();
-        radiusServerSettings.setOtp(true);
+        radiusServerSettings.addOtpWithoutPassword(ProtocolType.CHAP);
+        radiusServerSettings.addOtpWithoutPassword(ProtocolType.MSCHAPV2);
+        radiusServerSettings.addOtpWithoutPassword(ProtocolType.PAP);
         return radiusServerSettings;
     }
 

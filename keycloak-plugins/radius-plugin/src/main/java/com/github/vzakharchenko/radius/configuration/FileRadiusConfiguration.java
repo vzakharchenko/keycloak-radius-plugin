@@ -7,7 +7,10 @@ import com.github.vzakharchenko.radius.models.file.CoASettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
 import com.github.vzakharchenko.radius.models.file.RadiusConfigModel;
+import com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType;
+import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
 import com.google.common.annotations.VisibleForTesting;
+import org.jboss.logging.Logger;
 import org.keycloak.util.JsonSerialization;
 
 import java.io.File;
@@ -15,10 +18,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class FileRadiusConfiguration implements IRadiusConfiguration {
+import static com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType.CHAP;
+import static com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType.MSCHAPV2;
+import static com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType.PAP;
 
+public class FileRadiusConfiguration implements IRadiusConfiguration {
+    private static final Logger LOGGER = Logger.getLogger(KeycloakRadiusServer.class);
     public static final String FILE_VARIABLE = "KEYCLOAK_PATH";
     public static final String FILE_CONFIG_VARIABLE = "RADIUS_CONFIG_PATH";
     public static final String CONFIG = "config";
@@ -89,8 +98,10 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         radiusServerSettings.setRadSecSettings(transform(configModel.getRadsec()));
         radiusServerSettings.setCoASettings(transform(configModel.getCoa()));
         radiusServerSettings.setUseUdpRadius(configModel.isUseUdpRadius());
-        radiusServerSettings.setOtp(configModel.isOtp());
         radiusServerSettings.setExternalDictionary(configModel.getExternalDictionary());
+
+        transformOtpWithoutPassword(configModel, radiusServerSettings);
+
         if (configModel.getRadiusIpAccess() != null) {
             radiusServerSettings
                     .setAccessMap(configModel.getRadiusIpAccess().stream().collect(
@@ -98,5 +109,38 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
                                     RadiusAccessModel::getSharedSecret)));
         }
         return radiusServerSettings;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void transformOtpWithoutPassword(RadiusConfigModel configModel,
+                                                    RadiusServerSettings radiusServerSettings) {
+        Set<String> otpWithoutPassword = configModel.getOtpWithoutPassword();
+        if (otpWithoutPassword.isEmpty() && configModel.isOtp()) {
+            transformOtpLegacy(radiusServerSettings);
+        } else {
+            otpWithoutPassword.forEach(val -> {
+                try {
+                    radiusServerSettings.addOtpWithoutPassword(
+                            ProtocolType.valueOf(val.toUpperCase(Locale.ROOT)));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.errorf("RADIUS configuration \"otpWithoutPassword\" contains " +
+                            "unsupported value \"%1$s\", this value is ignored.", val);
+                }
+            });
+            if (configModel.isOtp()) {
+                LOGGER.warn("RADIUS configuration \"otp\":true is superseded by " +
+                        "\"otpWithoutPassword\" setting, \"otp\" is ignored.");
+            }
+        }
+    }
+
+    private static void transformOtpLegacy(RadiusServerSettings radiusServerSettings) {
+        // legacy support for pre 1.4.13 configuration
+        LOGGER.warnf("RADIUS configuration \"otp\":true is superseded by \"otpWithoutPassword" +
+                        "\" setting, please update your configuration. " + "Instead " +
+                        "\"otpWithoutPassword\":[\"%1$s\", \"%2$s\"] is used, not \"%3$s\".",
+                CHAP.name(), MSCHAPV2.name(), PAP.name());
+        radiusServerSettings.addOtpWithoutPassword(CHAP);
+        radiusServerSettings.addOtpWithoutPassword(MSCHAPV2);
     }
 }

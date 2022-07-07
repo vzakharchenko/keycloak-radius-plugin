@@ -95,10 +95,7 @@ public class ChapProtocolTest extends AbstractRadiusTest {
     @Test
     public void testOtpPasswordValid() {
         enableOTP();
-        reset(configuration);
-        when(configuration.getRadiusSettings())
-                .thenReturn(ModelBuilder.createRadiusOtpServerSettings());
-        RadiusConfigHelper.setConfiguration(configuration);
+        enableOtpWithoutPassword();
         CHAPProtocol chapProtocol = new CHAPProtocol(request, session);
         chapProtocol.setOtpPasswordGetter(passwordFactory);
         assertTrue(chapProtocol.verifyPassword());

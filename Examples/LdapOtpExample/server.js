@@ -24,7 +24,8 @@ function renderUI(request, response, status) {
 }
 
 const radiusClient = new Client({
-    host: 'localhost',
+    host: 'ssotest01.mgm-tp.com',
+    timeout: 25000,
     dictionaries: [
         dictionaries.rfc2865.file,
         dictionaries.mikrotik.file
@@ -38,8 +39,9 @@ app.post('/', (request, response) => {
             [dictionaries.rfc2865.attributes.USER_NAME, request.body.userName],
             [dictionaries.rfc2865.attributes.USER_PASSWORD, request.body.otpPassword],
             // [],
-            ['Vendor-Specific', 14988,
-                [[dictionaries.mikrotik.attributes.MIKROTIK_REALM, Buffer.from(request.body.realm)]]],
+            // TODO - disable realm
+            // ['Vendor-Specific', 14988,
+            //     [[dictionaries.mikrotik.attributes.MIKROTIK_REALM, Buffer.from(request.body.realm)]]],
         ],
     }).then((result) => {
         console.log('result', result.code);
