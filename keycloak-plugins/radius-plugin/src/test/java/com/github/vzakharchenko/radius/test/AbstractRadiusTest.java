@@ -83,8 +83,9 @@ public abstract class AbstractRadiusTest {
     protected IRadiusConfiguration configuration;
     @Mock
     protected RoleModel radiusRole;
+
     @Mock
-    protected UserCredentialManager userCredentialManager;
+    protected SubjectCredentialManager subjectCredentialManager;
     @Mock
     protected Stream<CredentialModel> stream;
 
@@ -173,7 +174,7 @@ public abstract class AbstractRadiusTest {
         reset(userProvider);
         reset(configuration);
         reset(radiusRole);
-        reset(userCredentialManager);
+        reset(subjectCredentialManager);
         reset(stream);
         reset(userSessionModel);
         reset(clientConnection);
@@ -257,7 +258,6 @@ public abstract class AbstractRadiusTest {
                 .thenReturn(radiusUserInfoGetter);
         when(keycloakTransactionManager.isActive()).thenReturn(true);
         when(keycloakTransactionManager.getRollbackOnly()).thenReturn(false);
-        when(session.userCredentialManager()).thenReturn(userCredentialManager);
         when(session.getKeycloakSessionFactory()).thenReturn(keycloakSessionFactory);
         userSessionProvider = session.getProvider(UserSessionProvider.class);
         assertNotNull(userSessionProvider);
@@ -286,13 +286,11 @@ public abstract class AbstractRadiusTest {
         when(userModel.isEnabled()).thenReturn(true);
         when(userModel.hasRole(radiusRole)).thenReturn(true);
         when(userModel.getAttributes()).thenReturn(new HashMap<>());
+        when(userModel.credentialManager()).thenReturn(subjectCredentialManager);
         when(configuration.getRadiusSettings())
                 .thenReturn(ModelBuilder.createRadiusServerSettings());
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
-                        RadiusCredentialModel.TYPE))
-                .thenReturn(Collections
-                        .singletonList(ModelBuilder.createCredentialModel()));
+//        when(subjectCredentialManager.getStoredCredentialById(anyString())).thenReturn(ModelBuilder.createCredentialModel());
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream(RadiusCredentialModel.TYPE)).thenReturn(Stream.of(ModelBuilder.createCredentialModel()));
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Arrays.asList(userSessionModel));
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))

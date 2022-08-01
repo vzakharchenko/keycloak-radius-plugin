@@ -1,4 +1,4 @@
-FROM maltegrosse/keycloak-multiarch:18.0.2
+FROM maltegrosse/keycloak-multiarch:19.0.0
 MAINTAINER Vasyl Zakharchenko <vaszakharchenko@gmail.com>
 LABEL author="Vasyl Zakharchenko"
 LABEL email="vaszakharchenko@gmail.com"

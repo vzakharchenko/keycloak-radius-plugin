@@ -5,7 +5,6 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.UserCredentialManager;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
 import org.tinyradius.packet.AccessRequest;
@@ -40,12 +39,10 @@ public class PAPProtocol extends AbstractAuthProtocol {
                         verifyPapPassword(password);
     }
 
-    private boolean verifyProtocolPassword(UserCredentialManager userCredentialManager,
-                                           UserModel userModel,
+    private boolean verifyProtocolPassword(UserModel userModel,
                                            CredentialInput credentialInput) {
-        return userCredentialManager
-                .isValid(getRealm(),
-                        userModel,
+        return userModel.credentialManager()
+                .isValid(
                         credentialInput);
     }
 
@@ -55,12 +52,10 @@ public class PAPProtocol extends AbstractAuthProtocol {
         }
         UserModel userModel = Objects.requireNonNull(KeycloakSessionUtils
                 .getRadiusSessionInfo(session)).getUserModel();
-        UserCredentialManager userCredentialManager = session
-                .userCredentialManager();
         if (
-                verifyProtocolPassword(userCredentialManager, userModel, UserCredentialModel
+                verifyProtocolPassword(userModel, UserCredentialModel
                         .password(password)) ||
-                        verifyProtocolPassword(userCredentialManager, userModel, UserCredentialModel
+                        verifyProtocolPassword(userModel, UserCredentialModel
                                 .kerberos(password))
         ) {
             markActivePassword(accessRequest.getUserPassword());

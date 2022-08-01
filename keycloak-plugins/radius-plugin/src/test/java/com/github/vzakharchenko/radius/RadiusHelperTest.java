@@ -8,6 +8,7 @@ import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.codec.binary.Hex;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
@@ -69,30 +70,30 @@ public class RadiusHelperTest extends AbstractRadiusTest {
             assertNotEquals(randomByte1 + randomByte2 + randomByte3, getRandomByte() + getRandomByte() + getRandomByte());
             assertNotEquals(getRandomByte() + getRandomByte() + getRandomByte(), getRandomByte() + getRandomByte() + getRandomByte());
         } catch (Exception e){
-            LOGGER.error(e.getMessage(), e);
+            testGetRandomByte();
         }
     }
 
     @Test
     public void testPassword() {
-        String password = RadiusHelper.getPassword(session, realmModel, userModel);
+        String password = RadiusHelper.getPassword( userModel);
         assertEquals(password, "secret");
     }
 
     @Test(expectedExceptions = IllegalStateException.class,
             expectedExceptionsMessageRegExp = "USER does not have radius password")
     public void testPasswordEmptyCredential() {
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
-                .thenReturn(new ArrayList<>());
-        assertNull(RadiusHelper.getPassword(session, realmModel, userModel));
+                .thenReturn(new ArrayList<CredentialModel>().stream());
+        assertNull(RadiusHelper.getPassword(userModel));
     }
 
 
     @Test
     public void testCurrentPassword() {
-        String password = RadiusHelper.getCurrentPassword(session, realmModel, userModel);
+        String password = RadiusHelper.getCurrentPassword(userModel);
         assertEquals(password, "secret");
     }
 
@@ -100,8 +101,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     public void testCurrentPasswordNotValid() {
         when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
                 asList(UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD)));
-        String password = RadiusHelper.getCurrentPassword(session,
-                realmModel, userModel);
+        String password = RadiusHelper.getCurrentPassword( userModel);
         assertNull(password);
     }
 
@@ -109,18 +109,17 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     public void testCurrentPasswordNotValidAction() {
         when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
                 asList(UserModel.RequiredAction.UPDATE_PASSWORD.name())));
-        String password = RadiusHelper.getCurrentPassword(session,
-                realmModel, userModel);
+        String password = RadiusHelper.getCurrentPassword(userModel);
         assertNull(password);
     }
 
     @Test
     public void testCurrentPasswordEmptyCredential() {
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(userModel.credentialManager()
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
-                .thenReturn(new ArrayList<>());
-        assertNull(RadiusHelper.getCurrentPassword(session, realmModel, userModel));
+                .thenReturn(new ArrayList<CredentialModel>().stream());
+        assertNull(RadiusHelper.getCurrentPassword(userModel));
     }
 
     @Test

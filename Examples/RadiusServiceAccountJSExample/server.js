@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const {engine} = require('express-handlebars/dist/index');
+const engine = require('express-handlebars');
 const Client = require('node-radius-client');
 const session = require('express-session');
 const path = require('path');

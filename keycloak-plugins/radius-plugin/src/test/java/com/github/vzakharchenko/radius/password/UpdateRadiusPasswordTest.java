@@ -3,7 +3,6 @@ package com.github.vzakharchenko.radius.password;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.jboss.resteasy.spi.HttpRequest;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.credential.CredentialModel;
@@ -25,7 +24,8 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
     private final UpdateRadiusPassword updateRadiusPassword =
@@ -107,55 +107,36 @@ public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testCreateDisplay() {
-        assertEquals(updateRadiusPassword
-                .createDisplay(session, null), updateRadiusPassword);
-    }
-
-    @Test
     public void testCreate() {
         assertEquals(updateRadiusPassword
                 .create(session), updateRadiusPassword);
     }
 
     @Test
-    public void testCreateDisplayConsole() {
-        assertNull(updateRadiusPassword
-                .createDisplay(session, "dfdsf"));
-    }
-
-    @Test
-    public void testCreateDisplayConsoleUpdate() {
-        assertEquals(updateRadiusPassword
-                        .createDisplay(session, OAuth2Constants.DISPLAY_CONSOLE),
-                ConsoleUpdateRadiusPassword.SINGLETON);
-    }
-
-    @Test
     public void testProcessActionUpdate() {
         updateRadiusPassword.processAction(context);
         verify(context).success();
-        verify(userCredentialManager)
-                .updateCredential(any(), any(), any(CredentialModel.class));
+        verify(subjectCredentialManager)
+                .updateStoredCredential(any(CredentialModel.class));
     }
 
 
     @Test
     public void testProcessActionCreate() {
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         updateRadiusPassword.processAction(context);
         verify(context).success();
-        verify(userCredentialManager)
-                .createCredential(any(), any(), any(CredentialModel.class));
+        verify(subjectCredentialManager)
+                .createStoredCredential(any(CredentialModel.class));
     }
 
     @Test
     public void testProcessActionError() {
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE)).thenThrow(new ModelException());
         updateRadiusPassword.processAction(context);
         verify(context).challenge(any());
@@ -163,8 +144,8 @@ public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
 
     @Test
     public void testProcessActionGlobalError() {
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE)).thenThrow(new RuntimeException());
         updateRadiusPassword.processAction(context);
         verify(context).challenge(any());

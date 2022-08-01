@@ -41,7 +41,7 @@ public class PAPTest extends AbstractRadiusTest {
         request.addAttribute(REALM_RADIUS, REALM_RADIUS_NAME);
         HashMap<String, OtpHolder> hashMap = new HashMap<>();
         hashMap.put("otp", new OtpHolder("otp", new CredentialModel(), Collections.singletonList("123456")));
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel), any(CredentialInput.class))).thenReturn(false);
+        when(subjectCredentialManager.isValid(any(CredentialInput.class))).thenReturn(false);
         otpPasswordInfo = new OtpPassword(false, clientModel);
         otpPasswordInfo.putAll(hashMap);
         when(passwordFactory.getOTPs(session)).thenReturn(otpPasswordInfo);
@@ -79,7 +79,7 @@ public class PAPTest extends AbstractRadiusTest {
     public void testPapPasswordSuccess() {
         request.setUserPassword("test");
         PAPProtocol papProtocol = new PAPProtocol(request, session);
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
+        when(subjectCredentialManager.isValid(
                 any(CredentialInput.class))).thenReturn(true);
         assertTrue(papProtocol.verifyPassword());
     }
@@ -88,7 +88,7 @@ public class PAPTest extends AbstractRadiusTest {
     public void testPapKerberosSuccess() {
         request.setUserPassword("test");
         PAPProtocol papProtocol = new PAPProtocol(request, session);
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
+        when(subjectCredentialManager.isValid(
                 any(CredentialInput.class))).thenReturn(false, true);
         assertTrue(papProtocol.verifyPassword());
     }

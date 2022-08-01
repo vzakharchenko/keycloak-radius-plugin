@@ -13,9 +13,11 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,28 +38,24 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         reset(userCache);
         credentialProvider = new RadiusCredentialProvider(session);
 
-        when(userCredentialManager.createCredential(eq(realmModel),
-                eq(userModel), any(RadiusCredentialModel.class))).thenReturn(
+        when(subjectCredentialManager.createStoredCredential( any(RadiusCredentialModel.class))).thenReturn(
                 credentialModel);
-        when(userCredentialManager.getStoredCredentialById(realmModel, userModel,
+        when(subjectCredentialManager.getStoredCredentialById(
                 credentialModel.getId())).thenReturn(credentialModel);
-        when(session.userCache()).thenReturn(userCache);
         metadataContext = CredentialTypeMetadataContext.builder().user(userModel).build(session);
-        when(userCredentialManager.isConfiguredFor(any(), any(), anyString())).thenReturn(true);
+        when(subjectCredentialManager.isConfiguredFor(anyString())).thenReturn(true);
     }
 
 
     @Test
     public void testCreateCredential() {
-        when(userCredentialManager.getStoredCredentialById(realmModel, userModel,
+        when(subjectCredentialManager.getStoredCredentialById(
                 credentialModel.getId())).thenReturn(null);
         CredentialModel credential = credentialProvider.createCredential(realmModel, userModel
                 , RadiusCredentialModel
                         .createFromCredentialModel(ModelBuilder.createCredentialModel()));
         assertEquals(credential.getSecretData(), "{\"password\":\"secret\"}");
-        verify(userCredentialManager).createCredential(eq(realmModel),
-                eq(userModel), any(RadiusCredentialModel.class));
-        verify(userCache).evict(realmModel, userModel);
+        verify(subjectCredentialManager).createStoredCredential(any(RadiusCredentialModel.class));
     }
 
 
@@ -70,14 +68,13 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
                                 .createFromCredentialModel(ModelBuilder
                                         .createCredentialModel(null)));
         assertEquals(credential.getSecretData(), "{\"password\":\"secret\"}");
-        verify(userCredentialManager).updateCredential(eq(realmModel),
-                eq(userModel), any(RadiusCredentialModel.class));
+        verify(subjectCredentialManager).updateStoredCredential(any(RadiusCredentialModel.class));
     }
 
     @Test
     public void testDeleteCred() {
         credentialProvider.deleteCredential(realmModel, userModel, "id");
-        verify(userCredentialManager).removeStoredCredential(realmModel, userModel, "id");
+        verify(subjectCredentialManager).removeStoredCredentialById( "id");
     }
 
     @Test
@@ -96,7 +93,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
 
     @Test
     public void testGetCredentialTypeMetadata2() {
-        when(userCredentialManager.isConfiguredFor(any(), any(), anyString())).thenReturn(false);
+        when(subjectCredentialManager.isConfiguredFor(anyString())).thenReturn(false);
         CredentialTypeMetadata credentialTypeMetadata = credentialProvider
                 .getCredentialTypeMetadata(metadataContext);
         assertNotNull(credentialTypeMetadata);
@@ -117,22 +114,22 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         assertFalse(credentialProvider.isValid(realmModel, userModel,
                 UserCredentialModel.password("secret")));
 
-        when(userCredentialManager
-                .getStoredCredentialById(realmModel, userModel, credentialModel
+        when(subjectCredentialManager
+                .getStoredCredentialById(credentialModel
                         .getId())).thenReturn(ModelBuilder
                 .createCredentialModel(123L, "{\"password\":\"\"}"));
         assertFalse(credentialProvider.isValid(realmModel, userModel,
                 UserCredentialModel.password("secret")));
 
-        when(userCredentialManager
-                .getStoredCredentialById(realmModel, userModel, credentialModel
+        when(subjectCredentialManager
+                .getStoredCredentialById(credentialModel
                         .getId())).thenReturn(ModelBuilder
                 .createCredentialModel(123L, null));
         assertFalse(credentialProvider.isValid(realmModel, userModel,
                 UserCredentialModel.password("secret")));
 
-        when(userCredentialManager
-                .getStoredCredentialById(realmModel, userModel, credentialModel
+        when(subjectCredentialManager
+                .getStoredCredentialById(credentialModel
                         .getId())).thenReturn(null);
         assertFalse(credentialProvider.isValid(realmModel, userModel,
                 UserCredentialModel.password("secret")));
@@ -153,11 +150,11 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
     @Test
     public void onCache() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         ConcurrentHashMap value = new ConcurrentHashMap();
         when(cachedUserModel.getCachedWith()).thenReturn(value);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(Arrays.asList(credentialModel));
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream(credentialProvider.getType()))
+                .thenReturn(Stream.of(credentialModel));
         credentialProvider.onCache(realmModel, cachedUserModel, userModel);
         assertTrue(!value.isEmpty());
     }
@@ -165,11 +162,11 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
     @Test
     public void onCache2() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         ConcurrentHashMap value = new ConcurrentHashMap();
         when(cachedUserModel.getCachedWith()).thenReturn(value);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(Collections.emptyList());
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream( credentialProvider.getType()))
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         credentialProvider.onCache(realmModel, cachedUserModel, userModel);
         assertTrue(!value.isEmpty());
     }
@@ -177,25 +174,26 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
     @Test
     public void onCacheEmpty() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         ConcurrentHashMap value = new ConcurrentHashMap();
         when(cachedUserModel.getCachedWith()).thenReturn(value);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(null);
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream(credentialProvider.getType()))
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         credentialProvider.onCache(realmModel, cachedUserModel, userModel);
-        assertTrue(value.isEmpty());
+        assertFalse(value.isEmpty());
     }
 
     @Test
     public void ongGetPassword() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         when(cachedUserModel.isMarkedForEviction()).thenReturn(false);
         ConcurrentHashMap value = new ConcurrentHashMap();
         value.put(RadiusCredentialProvider.PASSWORD_CACHE_KEY, Arrays.asList(credentialModel));
         when(cachedUserModel.getCachedWith()).thenReturn(value);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(null);
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream(
+               credentialProvider.getType()))
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         assertNotNull(credentialProvider.getPassword(realmModel, cachedUserModel));
     }
 
@@ -203,10 +201,10 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
     @Test
     public void ongGetPassword2() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         when(cachedUserModel.isMarkedForEviction()).thenReturn(true);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(Arrays.asList(credentialModel));
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream(credentialProvider.getType()))
+                .thenReturn(Stream.of(credentialModel));
         assertNotNull(credentialProvider.getPassword(realmModel, cachedUserModel));
     }
 
@@ -214,26 +212,26 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
     @Test
     public void ongGetPasswordEmpty() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         when(cachedUserModel.isMarkedForEviction()).thenReturn(true);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(Collections.emptyList());
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream(credentialProvider.getType()))
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         assertNull(credentialProvider.getPassword(realmModel, cachedUserModel));
     }
 
     @Test
     public void ongGetPasswordNull() {
         CachedUserModel cachedUserModel = mock(CachedUserModel.class);
+        when(cachedUserModel.credentialManager()).thenReturn(subjectCredentialManager);
         when(cachedUserModel.isMarkedForEviction()).thenReturn(true);
-        when(userCredentialManager.getStoredCredentialsByType(
-                realmModel, cachedUserModel, credentialProvider.getType()))
-                .thenReturn(null);
+        when(subjectCredentialManager.getStoredCredentialsByTypeStream( credentialProvider.getType()))
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         assertNull(credentialProvider.getPassword(realmModel, cachedUserModel));
     }
 
     @Test
     public void testMethods() {
-        assertEquals(credentialProvider.getCredentialStore(), userCredentialManager);
+        assertEquals(credentialProvider.getCredentialStore(userModel), subjectCredentialManager);
         assertEquals(credentialProvider.getType(), RadiusCredentialModel.TYPE);
         credentialProvider.disableCredentialType(realmModel, userModel, "");
         assertEquals(credentialProvider

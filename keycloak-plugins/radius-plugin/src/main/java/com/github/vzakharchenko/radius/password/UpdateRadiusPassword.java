@@ -2,8 +2,10 @@ package com.github.vzakharchenko.radius.password;
 
 import org.jboss.logging.Logger;
 import org.keycloak.Config;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.authentication.*;
+import org.keycloak.authentication.InitiatedActionSupport;
+import org.keycloak.authentication.RequiredActionContext;
+import org.keycloak.authentication.RequiredActionFactory;
+import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
@@ -11,13 +13,17 @@ import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
-import org.keycloak.models.*;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.KeycloakSessionFactory;
+import org.keycloak.models.ModelException;
+import org.keycloak.models.UserModel;
 import org.keycloak.services.validation.Validation;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.keycloak.events.Errors.PASSWORD_CONFIRM_ERROR;
 import static org.keycloak.events.Errors.PASSWORD_MISSING;
@@ -26,7 +32,7 @@ import static org.keycloak.services.messages.Messages.NOTMATCH_PASSWORD;
 
 
 public class UpdateRadiusPassword implements RequiredActionProvider,
-        RequiredActionFactory, DisplayTypeRequiredActionFactory {
+        RequiredActionFactory {
     public static final String UPDATE_RADIUS_PASSWORD_ID = "UPDATE_RADIUS_PASSWORD";
     public static final String USERNAME = "username";
     public static final String RADIUS_UPDATE_PASSWORD = UPDATE_RADIUS_PASSWORD_ID;
@@ -105,25 +111,19 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
 
     protected void success(RequiredActionContext context,
                            String passwordNew) {
-        RealmModel realm = context.getRealm();
         UserModel user = context.getUser();
-        List<CredentialModel> credentials = context
-                .getSession()
-                .userCredentialManager()
-                .getStoredCredentialsByType(realm,
-                        user,
-                        RadiusCredentialModel.TYPE);
+        List<CredentialModel> credentials = user.credentialManager()
+                .getStoredCredentialsByTypeStream(
+                        RadiusCredentialModel.TYPE).collect(Collectors.toList());
         RadiusCredentialModel credentialModel = RadiusCredentialModel
                 .createFromValues(passwordNew, user.getId());
         if (credentials.isEmpty()) {
-            context
-                    .getSession()
-                    .userCredentialManager()
-                    .createCredential(realm, user,
+            user.credentialManager()
+                    .createStoredCredential(
                             credentialModel);
         } else {
-            context.getSession().userCredentialManager()
-                    .updateCredential(realm, user,
+            user.credentialManager()
+                    .updateStoredCredential(
                             credentialModel);
         }
         context.success();
@@ -179,19 +179,6 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
     public RequiredActionProvider create(KeycloakSession session) {
         return this;
     }
-
-
-    @Override
-    public RequiredActionProvider createDisplay(KeycloakSession session, String displayType) {
-        if (displayType == null) {
-            return this;
-        }
-        if (!OAuth2Constants.DISPLAY_CONSOLE.equalsIgnoreCase(displayType)) {
-            return null;
-        }
-        return ConsoleUpdateRadiusPassword.SINGLETON;
-    }
-
 
     @Override
     public void init(Config.Scope config) {

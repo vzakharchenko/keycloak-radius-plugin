@@ -77,17 +77,16 @@ public final class RadiusHelper {
     }
 
     public static String getCurrentPassword(
-            KeycloakSession keycloakSession,
-            RealmModel realm,
             UserModel userModel
     ) {
-        List<CredentialModel> credentials = keycloakSession
-                .userCredentialManager()
-                .getStoredCredentialsByType(realm, userModel, RadiusCredentialModel.TYPE);
+        List<CredentialModel> credentials = userModel.credentialManager()
+                .getStoredCredentialsByTypeStream(RadiusCredentialModel.TYPE)
+                .collect(Collectors.toList());
         if (userModel.getRequiredActions().stream()
                 .noneMatch(rAction -> Objects.equals(rAction,
                         UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD) ||
-                        Objects.equals(rAction, UserModel.RequiredAction.UPDATE_PASSWORD.name())) &&
+                        Objects.equals(rAction,
+                                UserModel.RequiredAction.UPDATE_PASSWORD.name())) &&
                 !credentials.isEmpty()) {
             CredentialModel credentialModel = credentials.get(0);
             RadiusCredentialModel model = RadiusCredentialModel
@@ -98,11 +97,9 @@ public final class RadiusHelper {
     }
 
     public static String getPassword(
-            KeycloakSession keycloakSession,
-            RealmModel realm,
             UserModel userModel
     ) {
-        String currentPassword = getCurrentPassword(keycloakSession, realm, userModel);
+        String currentPassword = getCurrentPassword(userModel);
         if (currentPassword == null) {
             throw new IllegalStateException(userModel.getUsername() +
                     " does not have radius password");

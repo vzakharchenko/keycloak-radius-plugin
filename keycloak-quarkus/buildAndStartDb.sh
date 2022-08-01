@@ -1,5 +1,5 @@
 set -e
 ./build.sh
-rm -rf target/keycloak/keycloak-18.0.2/data
-cp -r data target/keycloak/keycloak-18.0.2/data
+rm -rf target/keycloak/keycloak-19.0.0/data
+cp -r data target/keycloak/keycloak-19.0.0/data
 ./start.sh

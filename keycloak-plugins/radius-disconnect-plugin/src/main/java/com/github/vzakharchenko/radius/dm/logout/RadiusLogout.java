@@ -79,7 +79,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
     private void timerSessions(KeycloakSession session) {
         TimerProvider provider = session.getProvider(TimerProvider.class);
         provider.schedule(
-                new ClusterAwareScheduledTaskRunner(
+                new RadiusClusterAwareScheduledTaskRunner(
                         session.getKeycloakSessionFactory(),
                         this::checkSessions,
                         60_000),
