@@ -5,9 +5,9 @@ import org.keycloak.credential.CredentialModel;
 import java.util.List;
 
 public class OtpHolder {
-    private String subType;
-    private CredentialModel credentialModel;
-    private List<String> passwords;
+    private final String subType;
+    private final CredentialModel credentialModel;
+    private final List<String> passwords;
 
     public OtpHolder(String subType, CredentialModel credentialModel,
                      List<String> passwords) {

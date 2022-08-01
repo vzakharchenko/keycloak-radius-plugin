@@ -1,13 +1,12 @@
 package com.github.vzakharchenko.radsec.server;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import com.github.vzakharchenko.radius.models.RadSecSettings;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 public class RadSecServerProviderFactoryTest extends AbstractRadiusTest {
     public RadSecServerProviderFactory radSecServerProviderFactory =
@@ -16,7 +15,8 @@ public class RadSecServerProviderFactoryTest extends AbstractRadiusTest {
     @Test
     public void testMethods() {
         radSecServerProviderFactory.postInit(session, null);
-        Assert.assertEquals(radSecServerProviderFactory.getId(), RadSecServerProviderFactory.RADSEC_PROVIDER);
+        Assert.assertEquals(radSecServerProviderFactory.getId(),
+                RadSecServerProviderFactory.RADSEC_PROVIDER);
     }
 
     @Test

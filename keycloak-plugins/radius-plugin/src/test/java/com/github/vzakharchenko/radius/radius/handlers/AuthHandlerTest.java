@@ -95,7 +95,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0_Protocol_not_Valid() {
+    public void testChannelRead0ProtocolnotValid() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authProtocol.isValid(any())).thenReturn(false);
@@ -105,7 +105,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0_exception() {
+    public void testChannelRead0exception() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authProtocol.isValid(any())).thenThrow(new RuntimeException("1"));
@@ -115,7 +115,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test()
-    public void testChannelRead0_exception2() {
+    public void testChannelRead0exception2() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(session.getTransactionManager()).thenThrow(new RuntimeException("1"));
@@ -125,7 +125,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0_session1() {
+    public void testChannelRead0session1() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(session.getAttribute("RADIUS_INFO",
@@ -137,7 +137,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0_session2() {
+    public void testChannelRead0session2() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(radiusUserInfo.getPasswords()).thenReturn(new ArrayList<>());
@@ -146,7 +146,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testChannelRead0_init() {
+    public void testChannelRead0init() {
         authHandler.getChannelHandler(session);
         authHandler.setAuthRequestInitialization(authRequestInitialization);
         when(authRequestInitialization.init(any(), any(), any(), any())).thenReturn(false);
@@ -164,7 +164,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testVerifyPassword0_1() {
+    public void testVerifyPassword01() {
         reset(authProtocol);
         when(authProtocol.verifyPassword(PasswordData.create(""))).thenReturn(false);
         when(authProtocol.verifyPassword(null)).thenReturn(false);
@@ -177,7 +177,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testVerifyPassword0_2() {
+    public void testVerifyPassword02() {
         reset(authProtocol);
         when(authProtocol.verifyPassword(PasswordData.create("p1"))).thenReturn(true);
         when(radiusUserInfo.getPasswords()).thenReturn(Arrays.asList(PasswordData.create("p")));
@@ -186,7 +186,7 @@ public class AuthHandlerTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testVerifyPassword0_3() {
+    public void testVerifyPassword03() {
         reset(authProtocol);
 
         authHandler.verifyPassword0(null, authProtocol);

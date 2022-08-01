@@ -112,7 +112,7 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testgetRadiusPasswords_Realm_Does_Not_Exists() {
+    public void testgetRadiusPasswordsRealmDoesNotExists() {
         RealmProvider provider = getProvider(RealmProvider.class);
         when(provider.getRealm(REALM_RADIUS_NAME)).thenReturn(null);
         when(authProtocol.getRealm()).thenReturn(null);
@@ -121,14 +121,14 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void testgetRadiusPasswords_UserName_Does_Not_Exists() {
+    public void testgetRadiusPasswordsUserNameDoesNotExists() {
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
         testgetRadiusPasswords();
     }
 
 
     @Test
-    public void testgetRadiusPasswords_User_Does_Not_Exists() {
+    public void testgetRadiusPasswordsUserDoesNotExists() {
         when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
         when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(null);
         assertFalse(authRequestInitialization
