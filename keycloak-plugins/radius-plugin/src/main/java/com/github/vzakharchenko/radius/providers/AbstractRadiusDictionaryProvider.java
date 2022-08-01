@@ -30,7 +30,7 @@ public abstract class AbstractRadiusDictionaryProvider<T extends IRadiusDictiona
     public void parseDictionary(DictionaryParser dictionaryParser,
                                 WritableDictionary dictionary,
                                 String resourceName) throws IOException {
-        try (InputStream inputStream = getClass().getClassLoader()
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(resourceName)) {
             parseDictionary(dictionaryParser, inputStream, dictionary);
         }

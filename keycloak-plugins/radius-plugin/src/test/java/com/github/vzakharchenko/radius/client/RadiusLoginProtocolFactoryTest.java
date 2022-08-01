@@ -16,19 +16,24 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
 public class RadiusLoginProtocolFactoryTest extends AbstractRadiusTest {
-    private final RadiusLoginProtocolFactory radiusLoginProtocolFactory = new RadiusLoginProtocolFactory();
+    private final RadiusLoginProtocolFactory radiusLoginProtocolFactory =
+            new RadiusLoginProtocolFactory();
 
     @Test
     public void testMethods() {
-        radiusLoginProtocolFactory.setupClientDefaults(new ClientRepresentation(), clientModel);
-        radiusLoginProtocolFactory.createDefaultClientScopes(null, false);
+        radiusLoginProtocolFactory.setupClientDefaults(
+                new ClientRepresentation(), clientModel);
+        radiusLoginProtocolFactory.createDefaultClientScopes(
+                null, false);
         radiusLoginProtocolFactory.close();
         radiusLoginProtocolFactory.init(null);
 
-        assertNull(radiusLoginProtocolFactory.createProtocolEndpoint(null, null));
+        assertNull(radiusLoginProtocolFactory
+                .createProtocolEndpoint(null, null));
         assertNotNull(radiusLoginProtocolFactory.create(session));
         assertEquals(radiusLoginProtocolFactory.getBuiltinMappers().size(), 0);
-        Assert.assertEquals(radiusLoginProtocolFactory.getId(), RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
+        Assert.assertEquals(radiusLoginProtocolFactory.getId(),
+                RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
 
 
     }
@@ -36,7 +41,8 @@ public class RadiusLoginProtocolFactoryTest extends AbstractRadiusTest {
     @Test
     public void testPostInit() {
         LoginProtocolFactory protocolFactory = mock(LoginProtocolFactory.class);
-        when(keycloakSessionFactory.getProviderFactory(LoginProtocol.class, OIDCLoginProtocol.LOGIN_PROTOCOL))
+        when(keycloakSessionFactory.getProviderFactory(LoginProtocol.class,
+                OIDCLoginProtocol.LOGIN_PROTOCOL))
                 .thenReturn(protocolFactory);
         HashMap<String, ProtocolMapperModel> map = new HashMap<>();
         when(protocolFactory.getBuiltinMappers()).thenReturn(map);

@@ -33,7 +33,8 @@ public class RadiusProxyTest extends AbstractRadiusTest {
         radiusProxy.setComponentProxy(componentProxy);
         radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
         when(componentProxy.proxy(any(), any(), any())).thenReturn(radiusPacket);
-        radiusEndpoint = new RadiusEndpoint(new InetSocketAddress(0), "test");
+        radiusEndpoint = new RadiusEndpoint(
+                new InetSocketAddress(0), "test");
     }
 
     @Test
@@ -48,23 +49,29 @@ public class RadiusProxyTest extends AbstractRadiusTest {
     @Test
     public void testProxyAccessRequest() {
         RequestCtx requestCtx = new RequestCtx(
-                new AccessRequest(realDictionary, 1, new byte[16]), radiusEndpoint);
-        RadiusPacket proxy = radiusProxy.proxy(session, requestCtx, RadiusPackets.create(realDictionary, 3, 1));
+                new AccessRequest(realDictionary, 1,
+                        new byte[16]), radiusEndpoint);
+        RadiusPacket proxy = radiusProxy.proxy(session,
+                requestCtx, RadiusPackets.create(realDictionary, 3, 1));
         assertEquals(proxy, radiusPacket);
     }
 
     @Test
     public void testProxyAccountingRequest() {
         RequestCtx requestCtx = new RequestCtx(
-                new AccountingRequest(realDictionary, 1, new byte[16]), radiusEndpoint);
-        RadiusPacket proxy = radiusProxy.proxy(session, requestCtx, RadiusPackets.create(realDictionary, 3, 1));
+                new AccountingRequest(realDictionary, 1,
+                        new byte[16]), radiusEndpoint);
+        RadiusPacket proxy = radiusProxy.proxy(session, requestCtx,
+                RadiusPackets.create(realDictionary, 3, 1));
         assertEquals(proxy, radiusPacket);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testProxyError() {
         RequestCtx requestCtx = new RequestCtx(
-                RadiusPackets.create(realDictionary, 41, 1, new byte[16]), radiusEndpoint);
-        radiusProxy.proxy(session, requestCtx, RadiusPackets.create(realDictionary, 3, 1));
+                RadiusPackets.create(realDictionary, 41,
+                        1, new byte[16]), radiusEndpoint);
+        radiusProxy.proxy(session, requestCtx,
+                RadiusPackets.create(realDictionary, 3, 1));
     }
 }

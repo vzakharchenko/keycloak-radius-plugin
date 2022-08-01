@@ -22,6 +22,7 @@ public final class MSCHAPHelper {
 
     private static final int AUTH_VECTOR_LENGTH = 16;
     private static final int MAX_STRING_LENGTH = 254;
+    public static final int ROOM_MAX = 253;
 
     private MSCHAPHelper() {
     }
@@ -119,8 +120,8 @@ public final class MSCHAPHelper {
     private static int getInlen(int room0, byte[] input) {
         int room = room0;
         /* Be paranoid. */
-        if (room > 253) {
-            room = 253;
+        if (room > ROOM_MAX) {
+            room = ROOM_MAX;
         }
         room -= 2;
         room -= (room & 0x0f);

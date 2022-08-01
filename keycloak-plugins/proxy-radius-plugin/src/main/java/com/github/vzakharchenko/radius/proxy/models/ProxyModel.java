@@ -1,9 +1,9 @@
 package com.github.vzakharchenko.radius.proxy.models;
 
 public class ProxyModel {
-    private String address;
-    private int port;
-    private String secret;
+    private final String address;
+    private final int port;
+    private final String secret;
 
     public ProxyModel(String address, int port, String secret) {
         this.address = address;
