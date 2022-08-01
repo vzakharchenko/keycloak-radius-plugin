@@ -3,6 +3,7 @@ package com.github.vzakharchenko.radius.radius.handlers.session;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.RealmProvider;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -60,10 +61,10 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
     @Test
     public void testgetRadiusSessionPasswords() {
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         assertTrue(authRequestInitialization
                 .init(inetSocketAddress, USER, authProtocol, session));
 
@@ -89,10 +90,10 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
     public void testgetRadiusPasswordsWithoutPassword() {
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Collections.emptyList());
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new ArrayList<CredentialModel>().stream());
         assertTrue(authRequestInitialization
                 .init(inetSocketAddress, USER, authProtocol, session));
 //        assertNotNull(radiusUserInfo);

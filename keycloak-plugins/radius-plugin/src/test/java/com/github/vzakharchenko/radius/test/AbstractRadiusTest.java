@@ -83,8 +83,9 @@ public abstract class AbstractRadiusTest {
     protected IRadiusConfiguration configuration;
     @Mock
     protected RoleModel radiusRole;
+
     @Mock
-    protected UserCredentialManager userCredentialManager;
+    protected SubjectCredentialManager subjectCredentialManager;
     @Mock
     protected Stream<CredentialModel> stream;
 
@@ -173,7 +174,7 @@ public abstract class AbstractRadiusTest {
         reset(userProvider);
         reset(configuration);
         reset(radiusRole);
-        reset(userCredentialManager);
+        reset(subjectCredentialManager);
         reset(stream);
         reset(userSessionModel);
         reset(clientConnection);
@@ -197,7 +198,8 @@ public abstract class AbstractRadiusTest {
         reset(roleProvider);
         providerByClass.clear();
         accessToken = new AccessToken();
-        authorizationProvider = new AuthorizationProvider(session, realmModel, policyEvaluator);
+        authorizationProvider = new
+                AuthorizationProvider(session, realmModel, policyEvaluator);
         Answer<Object> providerAnswer = invocation -> {
             Object parameter = invocation.getArguments()[0];
             Class<? extends Provider> classToMock = (Class<? extends Provider>) parameter;
@@ -252,12 +254,12 @@ public abstract class AbstractRadiusTest {
         when(radiusUserInfo.getAddress()).thenReturn(new InetSocketAddress(0));
         when(radiusUserInfoGetter.getBuilder()).thenReturn(radiusUserInfoBuilder);
         when(radiusUserInfoGetter.getRadiusUserInfo()).thenReturn(radiusUserInfo);
-        when(radiusUserInfoBuilder.getRadiusUserInfoGetter()).thenReturn(radiusUserInfoGetter);
+        when(radiusUserInfoBuilder
+                .getRadiusUserInfoGetter()).thenReturn(radiusUserInfoGetter);
         when(session.getAttribute("RADIUS_INFO", IRadiusUserInfoGetter.class))
                 .thenReturn(radiusUserInfoGetter);
         when(keycloakTransactionManager.isActive()).thenReturn(true);
         when(keycloakTransactionManager.getRollbackOnly()).thenReturn(false);
-        when(session.userCredentialManager()).thenReturn(userCredentialManager);
         when(session.getKeycloakSessionFactory()).thenReturn(keycloakSessionFactory);
         userSessionProvider = session.getProvider(UserSessionProvider.class);
         assertNotNull(userSessionProvider);
@@ -286,19 +288,22 @@ public abstract class AbstractRadiusTest {
         when(userModel.isEnabled()).thenReturn(true);
         when(userModel.hasRole(radiusRole)).thenReturn(true);
         when(userModel.getAttributes()).thenReturn(new HashMap<>());
+        when(userModel.credentialManager()).thenReturn(subjectCredentialManager);
         when(configuration.getRadiusSettings())
                 .thenReturn(ModelBuilder.createRadiusServerSettings());
-        when(userCredentialManager
-                .getStoredCredentialsByType(realmModel, userModel,
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
-                .thenReturn(Collections
-                        .singletonList(ModelBuilder.createCredentialModel()));
+                .thenReturn(Stream.of(
+                        ModelBuilder.createCredentialModel()));
         when(userSessionProvider.getUserSessions(realmModel, userModel))
                 .thenReturn(Arrays.asList(userSessionModel));
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(userSessionModel);
         when(userSessionProvider
-                .createUserSession(any(), any(), anyString(), anyString(), anyString(), eq(false), anyString(), anyString()))
+                .createUserSession(any(), any(), anyString(),
+                        anyString(), anyString(), eq(false),
+                        anyString(), anyString()))
                 .thenReturn(userSessionModel);
         when(userSessionProvider
                 .createUserSession(any()
@@ -309,8 +314,10 @@ public abstract class AbstractRadiusTest {
         when(userSessionProvider
                 .createClientSession(realmModel, clientModel, userSessionModel))
                 .thenReturn(authenticatedClientSessionModel);
-        when(userSessionProvider.getUserSessions(realmModel, clientModel)).thenReturn(Collections.singletonList(userSessionModel));
-        when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION)).thenReturn(String.valueOf(Integer.MAX_VALUE));
+        when(userSessionProvider.getUserSessions(realmModel, clientModel))
+                .thenReturn(Collections.singletonList(userSessionModel));
+        when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION))
+                .thenReturn(String.valueOf(Integer.MAX_VALUE));
         when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD))
                 .thenReturn("123");
         when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD_TYPE))
@@ -318,23 +325,32 @@ public abstract class AbstractRadiusTest {
 
         when(userSessionModel.getRealm()).thenReturn(realmModel);
         when(userSessionModel.getUser()).thenReturn(userModel);
-        HashMap<String, AuthenticatedClientSessionModel> sessionModelHashMap = new HashMap<>();
+        HashMap<String, AuthenticatedClientSessionModel> sessionModelHashMap =
+                new HashMap<>();
         sessionModelHashMap.put("id", authenticatedClientSessionModel);
-        when(authenticatedClientSessionModel.getNote(AccountingSessionManager.RADIUS_SESSION_ID)).thenReturn(RADIUS_SESSION_ID);
-        when(authenticatedClientSessionModel.getUserSession()).thenReturn(userSessionModel);
-        when(userSessionModel.getAuthenticatedClientSessions()).thenReturn(
-                sessionModelHashMap);
+        when(authenticatedClientSessionModel
+                .getNote(AccountingSessionManager.RADIUS_SESSION_ID))
+                .thenReturn(RADIUS_SESSION_ID);
+        when(authenticatedClientSessionModel.getUserSession())
+                .thenReturn(userSessionModel);
+        when(userSessionModel.getAuthenticatedClientSessions())
+                .thenReturn(
+                        sessionModelHashMap);
         when(clientConnection.getRemoteAddr()).thenReturn("111.111.111.112");
         when(authProtocol.getRealm()).thenReturn(realmModel);
         when(authProtocol.verifyPassword(any())).thenReturn(true);
         when(authProtocol.isValid(any())).thenReturn(true);
         JpaConnectionProvider jpaConnectionProvider = session
                 .getProvider(JpaConnectionProvider.class);
-        when(jpaConnectionProvider.getEntityManager()).thenReturn(entityManager);
-        when(entityManager.createQuery(anyString(), any())).thenReturn(query);
+        when(jpaConnectionProvider.getEntityManager())
+                .thenReturn(entityManager);
+        when(entityManager.createQuery(anyString(), any()))
+                .thenReturn(query);
 
 
-        eventBuilder = new EventBuilder(realmModel, session, clientConnection);
+        eventBuilder = new EventBuilder(realmModel,
+                session,
+                clientConnection);
         List<?> objects = resetMock();
         if (objects != null) {
             reset(objects.toArray(new Object[objects.size()]));
@@ -370,7 +386,8 @@ public abstract class AbstractRadiusTest {
             dictionaryParser
                     .parseDictionary(realDictionary,
                             KeycloakRadiusServer.MS);
-            realDictionary.addAttributeType(new AttributeType(253, REALM_RADIUS, "string"));
+            realDictionary.addAttributeType(
+                    new AttributeType(253, REALM_RADIUS, "string"));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

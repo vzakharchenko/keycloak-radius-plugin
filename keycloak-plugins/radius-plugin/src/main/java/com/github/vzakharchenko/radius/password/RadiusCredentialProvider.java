@@ -5,15 +5,16 @@ import org.keycloak.common.util.Time;
 import org.keycloak.credential.*;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.SubjectCredentialManager;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.models.cache.OnUserCache;
-import org.keycloak.models.cache.UserCache;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.github.vzakharchenko.radius.password.UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD;
 
@@ -32,9 +33,9 @@ public class RadiusCredentialProvider implements
         this.session = session;
     }
 
-    protected UserCredentialStore getCredentialStore() {
-        return session
-                .userCredentialManager();
+    protected SubjectCredentialManager getCredentialStore(UserModel userModel) {
+        return userModel
+                .credentialManager();
     }
 
 
@@ -50,26 +51,21 @@ public class RadiusCredentialProvider implements
         if (credentialModel.getCreatedDate() == null) {
             credentialModel.setCreatedDate(Time.currentTimeMillis());
         }
-        UserCredentialStore credentialStore = getCredentialStore();
+        SubjectCredentialManager credentialStore = getCredentialStore(user);
         CredentialModel createdCredential = credentialStore
-                .getStoredCredentialById(realm,
-                        user, credentialModel.getId());
+                .getStoredCredentialById(credentialModel.getId());
         if (createdCredential != null) {
-            credentialStore.updateCredential(realm, user, credentialModel);
+            credentialStore.updateStoredCredential(credentialModel);
         } else {
             createdCredential = credentialStore
-                    .createCredential(realm, user, credentialModel);
-        }
-        UserCache userCache = session.userCache();
-        if (userCache != null) {
-            userCache.evict(realm, user);
+                    .createStoredCredential(credentialModel);
         }
         return createdCredential;
     }
 
     @Override
     public boolean deleteCredential(RealmModel realm, UserModel user, String credentialId) {
-        return getCredentialStore().removeStoredCredential(realm, user, credentialId);
+        return getCredentialStore(user).removeStoredCredentialById(credentialId);
     }
 
     @Override
@@ -83,13 +79,13 @@ public class RadiusCredentialProvider implements
         CredentialTypeMetadata.CredentialTypeMetadataBuilder metadataBuilder =
                 CredentialTypeMetadata
                         .builder().type(this.getType()).category(
-                        CredentialTypeMetadata.Category.BASIC_AUTHENTICATION)
+                                CredentialTypeMetadata.Category.BASIC_AUTHENTICATION)
                         .displayName("password-display-name")
                         .helpText("password-help-text")
                         .iconCssClass("kcAuthenticatorPasswordClass");
         UserModel user = metadataContext.getUser();
-        if (user != null && this.session.userCredentialManager()
-                .isConfiguredFor(this.session.getContext().getRealm(), user, this.getType())) {
+        if (user != null && user.credentialManager()
+                .isConfiguredFor(this.getType())) {
             metadataBuilder.updateAction(RADIUS_UPDATE_PASSWORD);
         } else {
             metadataBuilder.createAction(RADIUS_UPDATE_PASSWORD);
@@ -107,16 +103,16 @@ public class RadiusCredentialProvider implements
         if (!supportsCredentialType(credentialType)) {
             return false;
         }
-        return !getCredentialStore()
-                .getStoredCredentialsByType(realm, user, credentialType).isEmpty();
+        return getCredentialStore(user)
+                .getStoredCredentialsByTypeStream(credentialType).findAny().isPresent();
     }
 
     @Override
     public boolean isValid(RealmModel realm, UserModel user,
                            CredentialInput credentialInput) {
         if (Objects.equals(credentialInput.getType(), getType())) {
-            CredentialModel credentialModel = getCredentialStore()
-                    .getStoredCredentialById(realm, user,
+            CredentialModel credentialModel = getCredentialStore(user)
+                    .getStoredCredentialById(
                             credentialInput.getCredentialId());
             if (credentialModel != null) {
                 RadiusCredentialModel credential = getCredentialFromModel(credentialModel);
@@ -163,8 +159,8 @@ public class RadiusCredentialProvider implements
 
     @Override
     public void onCache(RealmModel realm, CachedUserModel user, UserModel delegate) {
-        List<CredentialModel> passwords = getCredentialStore()
-                .getStoredCredentialsByType(realm, user, getType());
+        List<CredentialModel> passwords = getCredentialStore(user)
+                .getStoredCredentialsByTypeStream(getType()).collect(Collectors.toList());
         if (passwords != null) {
             user.getCachedWith().put(PASSWORD_CACHE_KEY, passwords);
         }
@@ -181,7 +177,8 @@ public class RadiusCredentialProvider implements
 
         if (!(user instanceof CachedUserModel) || ((CachedUserModel) user)
                 .isMarkedForEviction()) {
-            passwords = getCredentialStore().getStoredCredentialsByType(realm, user, getType());
+            passwords = getCredentialStore(user)
+                    .getStoredCredentialsByTypeStream(getType()).collect(Collectors.toList());
         }
         if (passwords == null || passwords.isEmpty()) {
             return null;

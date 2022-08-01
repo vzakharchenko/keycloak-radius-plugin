@@ -45,7 +45,7 @@ public class ChapProtocolTest extends AbstractRadiusTest {
         HashMap<String, OtpHolder> hashMap = new HashMap<>();
         hashMap.put("otp", new OtpHolder("otp", new CredentialModel(),
                 Collections.singletonList("1")));
-        when(userCredentialManager.isValid(eq(realmModel), eq(userModel),
+        when(subjectCredentialManager.isValid(
                 any(CredentialInput.class))).thenReturn(false);
         otpPasswordInfo = new OtpPassword(false, clientModel);
         otpPasswordInfo.putAll(hashMap);

@@ -1,7 +1,7 @@
 // index.js
 const path = require('path');
 const express = require('express');
-const {engine} = require('express-handlebars/dist/index');
+const engine = require('express-handlebars');
 const Keycloak = require('keycloak-connect');
 var session = require('express-session');
 const Client = require('node-radius-client');

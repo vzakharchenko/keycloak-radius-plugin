@@ -2,7 +2,10 @@ package com.github.vzakharchenko.radius.radius.handlers.otp;
 
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
-import org.keycloak.credential.*;
+import org.keycloak.credential.CredentialModel;
+import org.keycloak.credential.CredentialProvider;
+import org.keycloak.credential.OTPCredentialProvider;
+import org.keycloak.credential.OTPCredentialProviderFactory;
 import org.keycloak.models.*;
 import org.keycloak.models.credential.OTPCredentialModel;
 import org.keycloak.models.credential.dto.OTPCredentialData;
@@ -27,8 +30,8 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
         this.otpPasswordFactories.put(TOTP, new TotpPassword());
     }
 
-    private UserCredentialStore getCredentialStore(KeycloakSession session) {
-        return session.userCredentialManager();
+    private SubjectCredentialManager getCredentialStore(UserModel userModel) {
+        return userModel.credentialManager();
     }
 
     private boolean isUserRequireOtp(UserModel userModel) {
@@ -51,15 +54,14 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
         }
     }
 
-    private List<CredentialModel> filterCredentials(KeycloakSession session,
-                                                    RealmModel realmModel,
+    private List<CredentialModel> filterCredentials(RealmModel realmModel,
                                                     UserModel userModel) {
-        List<CredentialModel> credentials = getCredentialStore(session)
-                .getStoredCredentialsByType(realmModel, userModel, OTPCredentialModel.TYPE);
-        return credentials.stream().filter(credentialModel -> Objects
-                .equals(OTPCredentialModel.createFromCredentialModel(credentialModel)
-                        .getOTPCredentialData().getSubType(), realmModel
-                        .getOTPPolicy().getType())).collect(Collectors.toList());
+        return getCredentialStore(userModel)
+                .getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE)
+                .filter(credentialModel -> Objects
+                        .equals(OTPCredentialModel.createFromCredentialModel(credentialModel)
+                                .getOTPCredentialData().getSubType(), realmModel
+                                .getOTPPolicy().getType())).collect(Collectors.toList());
     }
 
     @Override
@@ -68,7 +70,7 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
                 .getRadiusSessionInfo(session);
         UserModel userModel = radiusSessionInfo.getUserModel();
         RealmModel realm = radiusSessionInfo.getRealmModel();
-        List<CredentialModel> credentials = filterCredentials(session, realm, userModel);
+        List<CredentialModel> credentials = filterCredentials(realm, userModel);
         OtpPasswordInfo otpPasswordInfo = new OtpPassword(isUserRequireOtp(userModel),
                 radiusSessionInfo.getClientModel());
         for (CredentialModel credential : credentials) {

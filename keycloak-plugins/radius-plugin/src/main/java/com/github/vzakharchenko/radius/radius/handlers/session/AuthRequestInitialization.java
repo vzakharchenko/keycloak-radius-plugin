@@ -58,8 +58,7 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
         radiusUserInfoBuilder.realmModel(realmModel);
         List<PasswordData> passwords = new ArrayList<>(
                 getSessionPasswords(keycloakSession, realmModel, userModel));
-        String currentPassword = RadiusHelper.getCurrentPassword(
-                keycloakSession, realmModel, userModel
+        String currentPassword = RadiusHelper.getCurrentPassword(userModel
         );
         if (currentPassword != null && !currentPassword.isEmpty()) {
             passwords.add(PasswordData.create(currentPassword));

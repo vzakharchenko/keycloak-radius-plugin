@@ -51,6 +51,7 @@ public class OtpPasswordTest extends AbstractRadiusTest {
         otpPassword.putAll(otpHolderMap);
         Assert.assertTrue(otpPassword.isUseOtp());
     }
+
     @Test
     public void disabledInClient() {
         when(clientModel.getAttribute("radius.OTP")).thenReturn("false");
@@ -60,6 +61,7 @@ public class OtpPasswordTest extends AbstractRadiusTest {
         otpPassword.putAll(otpHolderMap);
         Assert.assertFalse(otpPassword.isUseOtp());
     }
+
     @Test
     public void disabledInClient2() {
         when(clientModel.getAttribute("radius.OTP")).thenReturn("False");

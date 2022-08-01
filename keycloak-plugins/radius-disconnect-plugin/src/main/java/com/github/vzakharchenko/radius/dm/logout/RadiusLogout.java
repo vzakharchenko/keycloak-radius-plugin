@@ -12,27 +12,26 @@ import com.github.vzakharchenko.radius.providers.IRadiusCOAProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusCOAProviderFactory;
 import com.github.vzakharchenko.radius.radius.RadiusLibraryUtils;
 import com.github.vzakharchenko.radius.radius.dictionary.DictionaryLoader;
+import com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.handlers.session.RadiusAccountState;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import org.jboss.logging.Logger;
 import org.keycloak.Config;
+import org.keycloak.events.EventType;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.utils.KeycloakModelUtils;
-import org.keycloak.services.scheduled.ClusterAwareScheduledTaskRunner;
 import org.keycloak.timer.TimerProvider;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccountingRequest;
+import org.tinyradius.packet.PacketType;
 import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.util.RadiusEndpoint;
 
 import java.net.InetSocketAddress;
 import java.util.List;
 
-import static com.github.vzakharchenko.radius.radius.handlers.session.AccountingSessionManager.ACCT_STATUS_TYPE;
-import static org.keycloak.events.EventType.LOGOUT_ERROR;
-import static org.tinyradius.packet.PacketType.*;
 import static org.tinyradius.packet.RadiusPackets.nextPacketId;
 
 public class RadiusLogout implements IRadiusCOAProvider,
@@ -79,7 +78,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
     private void timerSessions(KeycloakSession session) {
         TimerProvider provider = session.getProvider(TimerProvider.class);
         provider.schedule(
-                new ClusterAwareScheduledTaskRunner(
+                new RadiusClusterAwareScheduledTaskRunner(
                         session.getKeycloakSessionFactory(),
                         this::checkSessions,
                         60_000),
@@ -165,7 +164,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
     }
 
     protected RadiusEndpoint getRadiusHostEndpoint(DisconnectMessageModel dm,
-                                               IRadiusUserInfo radiusUserInfo) {
+                                                   IRadiusUserInfo radiusUserInfo) {
         return new RadiusEndpoint(new InetSocketAddress(dm.getAddress(), RadiusConfigHelper
                 .getCoASettings().getCoaPort()),
                 radiusUserInfo.getRadiusSecret());
@@ -180,10 +179,10 @@ public class RadiusLogout implements IRadiusCOAProvider,
                 .getRadiusSessionInfo(session);
         if (radiusUserInfo != null) {
             EventLoggerUtils.createEvent(session,
-                    radiusUserInfo.getRealmModel(),
-                    radiusUserInfo.getClientModel(),
-                    radiusUserInfo.getClientConnection())
-                    .user(radiusUserInfo.getUserModel()).event(LOGOUT_ERROR)
+                            radiusUserInfo.getRealmModel(),
+                            radiusUserInfo.getClientModel(),
+                            radiusUserInfo.getClientConnection())
+                    .user(radiusUserInfo.getUserModel()).event(EventType.LOGOUT_ERROR)
                     .error("Radius Logout Fail with message " +
                             answer.getAttributeValue(ERROR_CAUSE));
         }
@@ -205,7 +204,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
     protected void answerHandler(RadiusPacket answer,
                                  KeycloakSession session,
                                  DisconnectMessageModel dm) {
-        if (answer.getType() == DISCONNECT_ACK) {
+        if (answer.getType() == PacketType.DISCONNECT_ACK) {
             endSession(session, dm);
         } else {
             errorSession(session, dm, answer);
@@ -220,7 +219,7 @@ public class RadiusLogout implements IRadiusCOAProvider,
         Dictionary dictionary = DictionaryLoader.getInstance().loadDictionary(session);
         RadiusCoAClientHelper.requestCoA(dictionary, radiusClient -> {
             RadiusPacket radiusPacket = new RadiusPacket(dictionary,
-                    DISCONNECT_REQUEST, nextPacketId());
+                    PacketType.DISCONNECT_REQUEST, nextPacketId());
             prepareDisconnectMessagePacket(radiusPacket, dmm);
             LOGGER.info("Send CoA request to " + radiusEndpoint.getAddress());
             RadiusPacket answer = radiusClient.communicate(radiusPacket,
@@ -233,7 +232,8 @@ public class RadiusLogout implements IRadiusCOAProvider,
                                       AccountingRequest request,
                                       DisconnectMessageModel dm) {
         RadiusAccountState radiusState = RadiusAccountState
-                .getByRadiusState(request.getAttributeValue(ACCT_STATUS_TYPE));
+                .getByRadiusState(request.getAttributeValue(
+                        AccountingSessionManager.ACCT_STATUS_TYPE));
         if (radiusState == RadiusAccountState.STOP) {
             disconnectMessageManager.successEndSessionWithCause(
                     dm, request.getAttributeValue(ACCT_TERMINATE_CAUSE)

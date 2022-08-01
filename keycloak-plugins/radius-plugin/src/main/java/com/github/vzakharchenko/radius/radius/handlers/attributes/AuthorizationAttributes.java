@@ -43,7 +43,7 @@ public class AuthorizationAttributes extends AbstractKeycloakAttributes<Resource
                 .from(resources.stream().map(resource ->
                                 new ResourcePermission(resource, storeFactory
                                         .getResourceServerStore()
-                                        .findById(resource.getResourceServer().getId()),
+                                        .findById(realmModel, resource.getResourceServer().getId()),
                                         new HashMap<>())).collect(Collectors.toList()),
                         new DefaultEvaluationContext(
                                 new UserModelIdentity(realmModel, userModel), session));
@@ -66,7 +66,7 @@ public class AuthorizationAttributes extends AbstractKeycloakAttributes<Resource
         AuthorizationProvider authorizationProvider = session
                 .getProvider(AuthorizationProvider.class);
         ResourceServer resourceServer = authorizationProvider.getStoreFactory()
-                .getResourceServerStore().findById(clientModel.getId());
+                .getResourceServerStore().findById(realmModel, clientModel.getId());
         return resourceServer != null ?
                 getKeycloakTypes(authorizationProvider, resourceServer, userModel, realmModel) :
                 Collections.EMPTY_SET;
