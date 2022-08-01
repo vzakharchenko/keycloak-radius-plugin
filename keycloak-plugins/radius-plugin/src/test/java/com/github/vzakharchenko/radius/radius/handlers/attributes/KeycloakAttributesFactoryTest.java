@@ -18,35 +18,40 @@ public class KeycloakAttributesFactoryTest extends AbstractRadiusTest {
         keycloakAttributesFactory.init(null);
         keycloakAttributesFactory.postInit(null);
         assertNotNull(keycloakAttributesFactory.create(session));
-        assertEquals(keycloakAttributesFactory.getId(), KeycloakAttributesFactory.KEYCLOAK_ATTRIBUTES_DEFAULT);
+        assertEquals(keycloakAttributesFactory.getId(),
+                KeycloakAttributesFactory.KEYCLOAK_ATTRIBUTES_DEFAULT);
 
     }
 
     @Test
     public void createKeycloakAttributesUserTest() {
         KeycloakAttributes keycloakAttributes = keycloakAttributesFactory
-                .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.USER);
+                .createKeycloakAttributes(accessRequest, session,
+                        KeycloakAttributesType.USER);
         assertTrue(keycloakAttributes instanceof UserKeycloakAttributes);
     }
 
     @Test
     public void createKeycloakAttributesRoleTest() {
         KeycloakAttributes keycloakAttributes = keycloakAttributesFactory
-                .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.ROLE);
+                .createKeycloakAttributes(accessRequest, session,
+                        KeycloakAttributesType.ROLE);
         assertTrue(keycloakAttributes instanceof RoleKeycloakAttributes);
     }
 
     @Test
     public void createKeycloakAttributesGroupTest() {
         KeycloakAttributes keycloakAttributes = keycloakAttributesFactory
-                .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.GROUP);
+                .createKeycloakAttributes(accessRequest, session,
+                        KeycloakAttributesType.GROUP);
         assertTrue(keycloakAttributes instanceof GroupKeycloakAttributes);
     }
 
     @Test
     public void createKeycloakAttributesAuthorizationTest() {
         KeycloakAttributes keycloakAttributes = keycloakAttributesFactory
-                .createKeycloakAttributes(accessRequest, session, KeycloakAttributesType.AUTHORIZATION);
+                .createKeycloakAttributes(accessRequest, session,
+                        KeycloakAttributesType.AUTHORIZATION);
         assertTrue(keycloakAttributes instanceof AuthorizationAttributes);
     }
 
