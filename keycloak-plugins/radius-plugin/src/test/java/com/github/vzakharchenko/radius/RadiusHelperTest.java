@@ -69,14 +69,14 @@ public class RadiusHelperTest extends AbstractRadiusTest {
             assertNotEquals(randomByte3, 0);
             assertNotEquals(randomByte1 + randomByte2 + randomByte3, getRandomByte() + getRandomByte() + getRandomByte());
             assertNotEquals(getRandomByte() + getRandomByte() + getRandomByte(), getRandomByte() + getRandomByte() + getRandomByte());
-        } catch (Exception e){
+        } catch (Exception e) {
             testGetRandomByte();
         }
     }
 
     @Test
     public void testPassword() {
-        String password = RadiusHelper.getPassword( userModel);
+        String password = RadiusHelper.getPassword(userModel);
         assertEquals(password, "secret");
     }
 
@@ -101,7 +101,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     public void testCurrentPasswordNotValid() {
         when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
                 asList(UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD)));
-        String password = RadiusHelper.getCurrentPassword( userModel);
+        String password = RadiusHelper.getCurrentPassword(userModel);
         assertNull(password);
     }
 

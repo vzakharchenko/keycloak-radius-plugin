@@ -2,7 +2,6 @@ package com.github.vzakharchenko.radius.radius.handlers.otp;
 
 import com.github.vzakharchenko.radius.models.OtpHolder;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
-import com.github.vzakharchenko.radius.test.ModelBuilder;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.OTPCredentialProvider;
@@ -33,22 +32,28 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
 
     @BeforeMethod
     public void beforeMethods() {
-        OTPCredentialModel credentialModelOtp = OTPCredentialModel.createTOTP("secret", 6, 1, HmacOTP.DEFAULT_ALGORITHM);
+        OTPCredentialModel credentialModelOtp = OTPCredentialModel
+                .createTOTP("secret", 6, 1,
+                        HmacOTP.DEFAULT_ALGORITHM);
         credentialModelOtp.setId(CRED_ID);
-        OTPCredentialModel credentialModelHotp = OTPCredentialModel.createHOTP("secret", 6, 1, HmacOTP.DEFAULT_ALGORITHM);
+        OTPCredentialModel credentialModelHotp = OTPCredentialModel
+                .createHOTP("secret", 6, 1, HmacOTP.DEFAULT_ALGORITHM);
         credentialModelHotp.setId(CRED_ID);
         otpPolicy.setType(TOTP);
         otpPolicy.setAlgorithm(HmacOTP.DEFAULT_ALGORITHM);
         otpPolicy.setDigits(6);
         otpPolicy.setInitialCounter(1);
         otpPolicy.setPeriod(1);
-        when(subjectCredentialManager.getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE))
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE))
                 .thenReturn(Stream.of(credentialModelOtp, credentialModelHotp));
-        when(subjectCredentialManager.getStoredCredentialById(CRED_ID)).thenReturn(credentialModelOtp);
+        when(subjectCredentialManager.getStoredCredentialById(CRED_ID))
+                .thenReturn(credentialModelOtp);
         when(realmModel.getOTPPolicy()).thenReturn(otpPolicy);
         when(session
                 .getProvider(CredentialProvider.class,
-                        OTPCredentialProviderFactory.PROVIDER_ID)).thenReturn(new OTPCredentialProvider(session));
+                        OTPCredentialProviderFactory.PROVIDER_ID))
+                .thenReturn(new OTPCredentialProvider(session));
     }
 
     @Test
@@ -68,7 +73,8 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
         when(userModel.getRequiredActions())
                 .thenReturn(new HashSet<>(Arrays.asList(UserModel
                         .RequiredAction.CONFIGURE_TOTP.name())));
-        when(subjectCredentialManager.getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE))
+        when(subjectCredentialManager
+                .getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE))
                 .thenReturn(new ArrayList<CredentialModel>().stream());
         OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
         Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();
@@ -90,6 +96,9 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testValidOTP() {
-        otpPasswordFactory.validOTP(session, "1234", "credId", OTPCredentialModel.TYPE);
+        otpPasswordFactory.validOTP(session,
+                "1234",
+                "credId",
+                OTPCredentialModel.TYPE);
     }
 }
