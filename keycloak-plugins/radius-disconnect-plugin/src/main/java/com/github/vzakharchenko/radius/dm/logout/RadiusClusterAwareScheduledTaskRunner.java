@@ -20,7 +20,7 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
 
     protected void runTask(final KeycloakSession session) {
         session.getTransactionManager().begin();
-        ClusterProvider clusterProvider = (ClusterProvider) session.getProvider(ClusterProvider.class);
+        ClusterProvider clusterProvider = session.getProvider(ClusterProvider.class);
         ScheduledTask scheduledTask = this.task;
         String taskKey = scheduledTask.getClass().getSimpleName();
         ExecutionResult<Void> result = clusterProvider.executeIfNotExecuted(taskKey, this.intervalSecs, () -> {
