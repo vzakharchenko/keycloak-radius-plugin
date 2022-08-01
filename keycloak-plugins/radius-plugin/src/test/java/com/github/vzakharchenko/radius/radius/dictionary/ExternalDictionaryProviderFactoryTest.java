@@ -35,8 +35,9 @@ public class ExternalDictionaryProviderFactoryTest extends AbstractRadiusTest {
         dictionaryProviderFactory.parseDictionary(realDictionary);
         AttributeType attributeTypeByCode = realDictionary.getAttributeTypeByCode(12356, 1);
         assertNotNull(attributeTypeByCode);
-        assertEquals(attributeTypeByCode.toString(),"1/Fortinet-Group-Name: string (vendor 12356)");
+        assertEquals(attributeTypeByCode.toString(), "1/Fortinet-Group-Name: string (vendor 12356)");
     }
+
     @Test
     public void testMethodsNull() throws IOException {
         RadiusServerSettings radiusServerSettings = ModelBuilder.createRadiusServerSettings();
@@ -51,6 +52,7 @@ public class ExternalDictionaryProviderFactoryTest extends AbstractRadiusTest {
         AttributeType attributeTypeByCode = realDictionary.getAttributeTypeByCode(391, 1);
         assertNull(attributeTypeByCode);
     }
+
     @Test
     public void testMethodsEmpty() throws IOException {
         RadiusServerSettings radiusServerSettings = ModelBuilder.createRadiusServerSettings();
@@ -65,6 +67,7 @@ public class ExternalDictionaryProviderFactoryTest extends AbstractRadiusTest {
         AttributeType attributeTypeByCode = realDictionary.getAttributeTypeByCode(391, 1);
         assertNull(attributeTypeByCode);
     }
+
     @Test(expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "External dictionary test_dictionary does not exists")
     public void testMethodsNotExists() throws IOException {
         RadiusServerSettings radiusServerSettings = ModelBuilder.createRadiusServerSettings();

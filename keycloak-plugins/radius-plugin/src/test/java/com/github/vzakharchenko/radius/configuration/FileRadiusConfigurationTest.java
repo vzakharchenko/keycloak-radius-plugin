@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-import static com.github.vzakharchenko.radius.configuration.FileRadiusConfiguration.CONFIG;
 import static org.testng.Assert.*;
 
 public class FileRadiusConfigurationTest extends AbstractRadiusTest {
@@ -61,20 +60,21 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
 
     @Test
     public void testMethodsEnvs() throws Exception {
-      withEnvironmentVariable(FileRadiusConfiguration.FILE_VARIABLE, ".")
+        withEnvironmentVariable(FileRadiusConfiguration.FILE_VARIABLE, ".")
                 .execute(() -> {
-                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_VARIABLE),".");
+                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_VARIABLE), ".");
                     RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
                     assertNotNull(radiusSettings);
                     assertEquals(radiusSettings.getAccountPort(), 1813);
                 });
 
     }
+
     @Test
     public void testRadiusEnvs() throws Exception {
-      withEnvironmentVariable(FileRadiusConfiguration.FILE_CONFIG_VARIABLE, "./config")
+        withEnvironmentVariable(FileRadiusConfiguration.FILE_CONFIG_VARIABLE, "./config")
                 .execute(() -> {
-                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_CONFIG_VARIABLE),"./config");
+                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_CONFIG_VARIABLE), "./config");
                     RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
                     assertNotNull(radiusSettings);
                     assertEquals(radiusSettings.getAccountPort(), 1813);
