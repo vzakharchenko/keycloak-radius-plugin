@@ -78,7 +78,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
         when(promise.addListener(any())).thenReturn(promise);
         when(promise.syncUninterruptibly()).thenReturn(promise);
         when(channelFuture.channel()).thenReturn(channel);
-        radiusClient = new RadiusClient(bootstrap, new InetSocketAddress(0), timeoutHandler, channelHandler);
+        radiusClient = new RadiusClient(bootstrap, new
+                InetSocketAddress(0), timeoutHandler, channelHandler);
     }
 
     @BeforeMethod
@@ -99,7 +100,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     @Test
     public void initSession() {
-        AccountingRequest request = new AccountingRequest(realDictionary, 1, new byte[16]);
+        AccountingRequest request = new
+                AccountingRequest(realDictionary, 1, new byte[16]);
         request.setUserName(USER);
         radiusLogout.initSession(request, session, "testSession");
         verify(entityManager).persist(any());
@@ -107,7 +109,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     @Test
     public void logoutNull() {
-        AccountingRequest request = new AccountingRequest(realDictionary, 1, new byte[16]);
+        AccountingRequest request = new AccountingRequest(realDictionary,
+                1, new byte[16]);
         request.setUserName(USER);
         radiusLogout.logout(request, session);
     }
@@ -115,8 +118,10 @@ public class RadiusLogoutTest extends AbstractJPATest {
     @Test
     public void logoutNotNull() {
 
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
-        AccountingRequest request = new AccountingRequest(realDictionary, 1, new byte[16]);
+        when(typedQuery.getResultList()).thenReturn(Collections
+                .singletonList(createDisconnectMessageModel()));
+        AccountingRequest request = new AccountingRequest(realDictionary,
+                1, new byte[16]);
         request.setUserName(USER);
         radiusLogout.logout(request, session);
     }
@@ -127,7 +132,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(
                 createDisconnectMessageModel())).thenReturn(
                 Collections.emptyList());
-        AccountingRequest request = new AccountingRequest(realDictionary, 1, new byte[16]);
+        AccountingRequest request = new AccountingRequest(realDictionary,
+                1, new byte[16]);
         request.addAttribute(ACCT_STATUS_TYPE, "02");
         request.addAttribute(ACCT_TERMINATE_CAUSE, "02");
         request.setUserName(USER);
@@ -137,7 +143,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     @Test
     public void checkActiveSessionsTest() {
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        when(typedQuery.getResultList()).thenReturn(Arrays
+                .asList(createDisconnectMessageModel()));
         radiusLogout.checkSessions(session);
         verify(radiusCoAClient, never()).requestCoA(any(), any());
     }
@@ -146,7 +153,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
     public void checkInActiveSessionsTest() {
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(null);
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()));
+        when(typedQuery.getResultList()).thenReturn(Arrays
+                .asList(createDisconnectMessageModel()));
         radiusLogout.checkSessions(session);
         verify(radiusCoAClient).requestCoA(any(), any());
     }
@@ -155,9 +163,11 @@ public class RadiusLogoutTest extends AbstractJPATest {
     public void checkInActiveSessionsTest2() {
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(null);
-        DisconnectMessageModel disconnectMessageModel = createDisconnectMessageModel();
+        DisconnectMessageModel disconnectMessageModel =
+                createDisconnectMessageModel();
         disconnectMessageModel.setNasIp(null);
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
+        when(typedQuery.getResultList()).thenReturn(Arrays
+                .asList(disconnectMessageModel));
         radiusLogout.checkSessions(session);
         verify(radiusCoAClient).requestCoA(any(), any());
     }
@@ -168,7 +178,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
                 .thenReturn(null);
         DisconnectMessageModel disconnectMessageModel = createDisconnectMessageModel();
         disconnectMessageModel.setNasIp("");
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(disconnectMessageModel));
+        when(typedQuery.getResultList()).thenReturn(Arrays
+                .asList(disconnectMessageModel));
         radiusLogout.checkSessions(session);
         verify(radiusCoAClient).requestCoA(any(), any());
     }
@@ -177,8 +188,11 @@ public class RadiusLogoutTest extends AbstractJPATest {
     public void checkSessionsTestError() {
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(null);
-        doThrow(new IllegalStateException("test")).when(radiusCoAClient).requestCoA(any(), any());
-        when(typedQuery.getResultList()).thenReturn(Arrays.asList(createDisconnectMessageModel()), Collections.emptyList());
+        doThrow(new IllegalStateException("test")).when(radiusCoAClient)
+                .requestCoA(any(), any());
+        when(typedQuery.getResultList()).thenReturn(Arrays
+                .asList(createDisconnectMessageModel()),
+                Collections.emptyList());
         radiusLogout.checkSessions(session);
         verify(entityManager).persist(any());
     }
@@ -186,8 +200,10 @@ public class RadiusLogoutTest extends AbstractJPATest {
 
     @Test
     public void prepareDisconnectMessagePacketTest() {
-        RadiusPacket radiusPacket = new RadiusPacket(realDictionary, 40, 1);
-        radiusLogout.prepareDisconnectMessagePacket(radiusPacket, createDisconnectMessageModel());
+        RadiusPacket radiusPacket = new RadiusPacket(realDictionary,
+                40, 1);
+        radiusLogout.prepareDisconnectMessagePacket(radiusPacket,
+                createDisconnectMessageModel());
         assertEquals(radiusPacket.getAttributes().size(), 8);
     }
 
@@ -198,7 +214,8 @@ public class RadiusLogoutTest extends AbstractJPATest {
         DisconnectMessageModel disconnectMessageModel = createDisconnectMessageModel();
         disconnectMessageModel.setCallingStationId(null);
         disconnectMessageModel.setNasIp(null);
-        radiusLogout.prepareDisconnectMessagePacket(radiusPacket, disconnectMessageModel);
+        radiusLogout.prepareDisconnectMessagePacket(radiusPacket,
+                disconnectMessageModel);
         assertEquals(radiusPacket.getAttributes().size(), 6);
     }
 
@@ -253,15 +270,19 @@ public class RadiusLogoutTest extends AbstractJPATest {
     @Test
     public void requestCoATest() {
         DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
-        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, DISCONNECT_ACK, 1, new byte[16]);
+        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary,
+                DISCONNECT_ACK, 1, new byte[16]);
         when(promise.getNow()).thenReturn(radiusPacket);
         doAnswer((Answer<Void>) invocationOnMock -> {
-            ICoaRequestHandler coaRequestHandler = invocationOnMock.getArgument(1);
+            ICoaRequestHandler coaRequestHandler =
+                    invocationOnMock.getArgument(1);
             coaRequestHandler.call(radiusClient);
             return null;
         }).when(radiusCoAClient).requestCoA(any(), any());
         radiusLogout.requestCoA(
-                session, createDisconnectMessageModel(), new RadiusEndpoint(new InetSocketAddress(0), "test"), null);
+                session, createDisconnectMessageModel(),
+                new RadiusEndpoint(new InetSocketAddress(0),
+                        "test"), null);
 
     }
 

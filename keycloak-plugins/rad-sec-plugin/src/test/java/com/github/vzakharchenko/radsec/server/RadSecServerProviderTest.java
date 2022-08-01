@@ -101,7 +101,7 @@ public class RadSecServerProviderTest extends AbstractRadiusTest {
     }
 
     @Test
-    public void StartServerSkip() {
+    public void startServerSkip() {
         RadiusServerSettings settings = new RadiusServerSettings();
         when(configuration.getRadiusSettings()).thenReturn(settings);
         RadSecSettings radSecSettings = new RadSecSettings();

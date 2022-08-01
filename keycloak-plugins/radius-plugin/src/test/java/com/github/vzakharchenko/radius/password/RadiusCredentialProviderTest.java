@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 public class RadiusCredentialProviderTest extends AbstractRadiusTest {
-    RadiusCredentialModel credentialModel = RadiusCredentialModel
+    private final RadiusCredentialModel credentialModel = RadiusCredentialModel
             .createFromCredentialModel(ModelBuilder
                     .createCredentialModel());
     private RadiusCredentialProvider credentialProvider;

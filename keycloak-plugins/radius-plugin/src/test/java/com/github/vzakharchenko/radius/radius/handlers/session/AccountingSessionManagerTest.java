@@ -60,7 +60,8 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
     public void testManageSessionNotExists() {
         request.addAttribute(ACCT_SESSION_ID, "new Session");
         request.addAttribute(ACCT_STATUS_TYPE, "Alive");
-        assertFalse(this.accountingSessionManager.init().updateContext().manageSession().isValidSession());
+        assertFalse(this.accountingSessionManager.init()
+                .updateContext().manageSession().isValidSession());
     }
 
     @Test
@@ -87,7 +88,8 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
     public void testManageSessionRemoveSession() {
         request.addAttribute(ACCT_SESSION_ID, RADIUS_SESSION_ID);
         request.addAttribute(ACCT_STATUS_TYPE, "Stop");
-        IAccountingSessionManager manager = this.accountingSessionManager.init().updateContext().manageSession();
+        IAccountingSessionManager manager = this.accountingSessionManager
+                .init().updateContext().manageSession();
         verify(userSessionProvider).removeUserSession(realmModel,
                 userSessionModel);
         assertFalse(manager.isValidSession());
