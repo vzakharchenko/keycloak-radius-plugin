@@ -61,7 +61,7 @@
 
         <pmdVersion>6.17.0</pmdVersion>
 
-        <keycloak.version>19.0.2</keycloak.version>
+        <keycloak.version>20.0.1</keycloak.version>
         <checkStyleLocation>../analizers</checkStyleLocation>
         <pmdLocation>${basedir}/../analizers/</pmdLocation>
         <findBugsLocation>${basedir}/../analizers/</findBugsLocation>
