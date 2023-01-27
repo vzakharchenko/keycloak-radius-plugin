@@ -170,7 +170,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         when(subjectCredentialManager
                 .getStoredCredentialsByTypeStream(
                         credentialProvider.getType()))
-                .thenReturn(Stream.of(credentialModel));
+                .thenAnswer(i -> Stream.of(credentialModel));
         credentialProvider.onCache(realmModel,
                 cachedUserModel, userModel);
         assertTrue(!value.isEmpty());
@@ -231,7 +231,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         when(subjectCredentialManager
                 .getStoredCredentialsByTypeStream(
                         credentialProvider.getType()))
-                .thenReturn(Stream.of(credentialModel));
+                .thenAnswer(i -> Stream.of(credentialModel));
         assertNotNull(credentialProvider
                 .getPassword(realmModel, cachedUserModel));
     }
@@ -272,7 +272,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
         credentialProvider
                 .disableCredentialType(realmModel, userModel, "");
         assertEquals(credentialProvider
-                .getDisableableCredentialTypes(realmModel, userModel).size(), 0);
+                .getDisableableCredentialTypesStream(realmModel, userModel).count(), 0);
         assertTrue(credentialProvider
                 .supportsCredentialType(credentialProvider.getType()));
         assertTrue(credentialProvider.isConfiguredFor(realmModel, userModel,

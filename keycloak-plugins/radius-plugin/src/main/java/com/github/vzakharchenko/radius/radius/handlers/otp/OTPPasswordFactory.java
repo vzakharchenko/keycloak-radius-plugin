@@ -35,8 +35,8 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
     }
 
     private boolean isUserRequireOtp(UserModel userModel) {
-        return userModel.getRequiredActions().stream().anyMatch(s -> Objects
-                .equals(s, UserModel.RequiredAction.CONFIGURE_TOTP.name()));
+        return userModel.getRequiredActionsStream()
+            .anyMatch(action -> UserModel.RequiredAction.CONFIGURE_TOTP.name().equals(action));
     }
 
     private void initOTPPasswords(RealmModel realm,

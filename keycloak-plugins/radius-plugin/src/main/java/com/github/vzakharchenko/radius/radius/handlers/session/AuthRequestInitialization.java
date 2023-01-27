@@ -36,16 +36,15 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
     ) {
         List<PasswordData> passwords = new ArrayList<>();
         if (userModel.isEnabled()) {
-            List<UserSessionModel> userSessions = keycloakSession.sessions()
-                    .getUserSessions(realmModel, userModel);
-            for (UserSessionModel userSession : userSessions) {
-                String sessionPassword = RadiusSessionPasswordManager
-                        .getInstance().getCurrentPassword(userSession);
-                if (sessionPassword != null) {
-                    passwords.add(PasswordData.create(sessionPassword, true));
-                }
+            keycloakSession.sessions().getUserSessionsStream(realmModel, userModel)
+                .forEach(userSession -> {
+                    String sessionPassword = RadiusSessionPasswordManager.getInstance()
+                            .getCurrentPassword(userSession);
+                    if (sessionPassword != null) {
+                        passwords.add(PasswordData.create(sessionPassword, true));
+                    }
+                });
             }
-        }
         return passwords;
     }
 

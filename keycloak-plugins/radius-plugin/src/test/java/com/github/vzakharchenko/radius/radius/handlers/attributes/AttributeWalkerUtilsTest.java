@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -58,27 +59,25 @@ public class AttributeWalkerUtilsTest {
         reset(role3);
 
         when(groupModel.getAttributes()).thenReturn(map);
-        when(groupModel.getSubGroups())
-                .thenReturn(new HashSet<>(Arrays
-                        .asList(subGroupModel1, subGroupModel2)));
+        when(groupModel.getSubGroupsStream())
+                .thenAnswer(i -> Stream.of(subGroupModel1, subGroupModel2));
         when(subGroupModel1.getAttributes()).thenReturn(map);
         when(subGroupModel2.getAttributes()).thenReturn(map);
-        when(subGroupModel2.getSubGroups())
-                .thenReturn(new HashSet<>(Arrays.asList(subGroupModel3)));
+        when(subGroupModel2.getSubGroupsStream())
+                .thenAnswer(i -> Stream.of(subGroupModel3));
         when(subGroupModel2.getAttributes()).thenReturn(map);
-        when(subGroupModel2.getSubGroups()).thenReturn(null);
-        when(subGroupModel2.getRoleMappings())
-                .thenReturn(new HashSet<>(Collections.singletonList(role2)));
+        when(subGroupModel2.getSubGroupsStream()).thenAnswer(i -> Stream.empty());
+        when(subGroupModel2.getRoleMappingsStream())
+                .thenAnswer(i -> Stream.of(role2));
 
         when(role.getAttributes()).thenReturn(mapRole);
         when(role.isComposite()).thenReturn(true);
-        when(role.getComposites())
-                .thenReturn(new HashSet<>(Arrays
-                        .asList(role1, role2)));
+        when(role.getCompositesStream())
+                .thenAnswer(i -> Stream.of(role1, role2));
         when(role1.getAttributes()).thenReturn(mapRole);
         when(role2.getAttributes()).thenReturn(mapRole);
-        when(role2.getComposites())
-                .thenReturn(new HashSet<>(Arrays.asList(role3)));
+        when(role2.getCompositesStream())
+                .thenAnswer(i -> Stream.of(role3));
         when(role3.getAttributes()).thenReturn(map);
 
 

@@ -12,6 +12,7 @@ import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -35,8 +36,7 @@ public class GroupKeycloakAttributesTest extends AbstractRadiusTest {
         reset(groupModel);
         groupKeycloakAttributes =
                 new GroupKeycloakAttributes(session, accessRequest);
-        when(userModel.getGroups()).thenReturn(
-                new HashSet<>(Collections.singletonList(groupModel)));
+        when(userModel.getGroupsStream()).thenAnswer(i -> Stream.of(groupModel));
         HashMap<String, List<String>> map = new HashMap<>();
         map.put("testAttribute", Arrays.asList("0002", "0004"));
         map.put("testAttribute2", Collections.emptyList());

@@ -12,6 +12,7 @@ import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -36,8 +37,7 @@ public class RoleKeycloakAttributesTest extends AbstractRadiusTest {
         accessRequest = new AccessRequest(dictionary, 1, new byte[16]);
         roleKeycloakAttributes =
                 new RoleKeycloakAttributes(session, accessRequest);
-        when(userModel.getRoleMappings()).thenReturn(
-                new HashSet<>(Collections.singletonList(roleModel)));
+        when(userModel.getRoleMappingsStream()).thenAnswer(i -> Stream.of(roleModel));
         HashMap<String, List<String>> map = new HashMap<>();
         map.put("testAttribute", Arrays.asList("0002", "004b"));
         map.put("testAttribute2", Collections.emptyList());

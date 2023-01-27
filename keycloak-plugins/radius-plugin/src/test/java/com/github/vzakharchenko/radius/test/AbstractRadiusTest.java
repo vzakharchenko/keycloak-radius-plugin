@@ -272,17 +272,17 @@ public abstract class AbstractRadiusTest {
         when(clientModel.isEnabled()).thenReturn(true);
         when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(realmModel);
         when(realmProvider.getRealm(anyString())).thenReturn(realmModel);
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel));
+        when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel));
         when(realmModel.getClientByClientId(CLIENT_ID)).thenReturn(clientModel);
         when(realmModel.getName()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.getId()).thenReturn(REALM_RADIUS_NAME);
         when(realmModel.isEventsEnabled()).thenReturn(false);
         when(realmModel.getAttributes()).thenReturn(new HashMap<>());
-        when(realmModel.getClients()).thenReturn(Arrays.asList(clientModel));
+        when(realmModel.getClientsStream()).thenAnswer(i -> Stream.of(clientModel));
         when(session.users()).thenReturn(userProvider);
-        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(userModel);
-        when(userProvider.getUserById(USER, realmModel)).thenReturn(userModel);
-        when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(userModel);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(userModel);
+        when(userProvider.getUserById(realmModel, USER)).thenReturn(userModel);
+        when(userProvider.getUserByEmail(realmModel, USER)).thenReturn(userModel);
         when(userModel.getUsername()).thenReturn(USER);
         when(userModel.getEmail()).thenReturn(USER);
         when(userModel.isEnabled()).thenReturn(true);
@@ -296,8 +296,8 @@ public abstract class AbstractRadiusTest {
                         RadiusCredentialModel.TYPE))
                 .thenReturn(Stream.of(
                         ModelBuilder.createCredentialModel()));
-        when(userSessionProvider.getUserSessions(realmModel, userModel))
-                .thenReturn(Arrays.asList(userSessionModel));
+        when(userSessionProvider.getUserSessionsStream(realmModel, userModel))
+                .thenAnswer(i -> Stream.of(userSessionModel));
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(userSessionModel);
         when(userSessionProvider
@@ -314,8 +314,8 @@ public abstract class AbstractRadiusTest {
         when(userSessionProvider
                 .createClientSession(realmModel, clientModel, userSessionModel))
                 .thenReturn(authenticatedClientSessionModel);
-        when(userSessionProvider.getUserSessions(realmModel, clientModel))
-                .thenReturn(Collections.singletonList(userSessionModel));
+        when(userSessionProvider.getUserSessionsStream(realmModel, clientModel))
+                .thenAnswer(i -> Stream.of(userSessionModel));
         when(userSessionModel.getNote(RADIUS_SESSION_EXPIRATION))
                 .thenReturn(String.valueOf(Integer.MAX_VALUE));
         when(userSessionModel.getNote(RADIUS_SESSION_PASSWORD))

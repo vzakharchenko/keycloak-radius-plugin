@@ -14,18 +14,10 @@ public final class AttributeWalkerUtils {
     }
 
     public static void groupWalker(GroupModel groupModel, Map<String, Set<String>> attributes) {
-        Set<GroupModel> subGroups = groupModel.getSubGroups();
-        if (subGroups != null) {
-            for (GroupModel subGroup : subGroups) {
-                groupWalker(subGroup, attributes);
-            }
-        }
-        Set<RoleModel> roleMappings = groupModel.getRoleMappings();
-        if (roleMappings != null) {
-            for (RoleModel roleModel : roleMappings) {
-                roleWalker(roleModel, attributes);
-            }
-        }
+        groupModel.getSubGroupsStream().forEach(subGroup -> groupWalker(subGroup, attributes));
+
+        groupModel.getRoleMappingsStream().forEach(roleModel -> roleWalker(roleModel, attributes));
+
         Map<String, List<String>> modelAttributes = groupModel.getAttributes();
         mergeMaps(modelAttributes, attributes);
     }
@@ -49,10 +41,7 @@ public final class AttributeWalkerUtils {
 
     public static void roleWalker(RoleModel roleModel, Map<String, Set<String>> attributes) {
         if (roleModel.isComposite()) {
-            Set<RoleModel> composites = roleModel.getComposites();
-            for (RoleModel r : composites) {
-                roleWalker(r, attributes);
-            }
+            roleModel.getCompositesStream().forEach(compRole -> roleWalker(compRole, attributes));
         }
         mergeMaps(roleModel.getAttributes(), attributes);
     }

@@ -7,6 +7,7 @@ import org.keycloak.models.UserModel;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GroupProxyEndpointProvider extends AbstractProxyEndpointProvider<GroupModel> {
 
@@ -19,7 +20,7 @@ public class GroupProxyEndpointProvider extends AbstractProxyEndpointProvider<Gr
 
     @Override
     protected Collection<GroupModel> getTypes(UserModel userModel) {
-        return userModel.getGroups();
+        return userModel.getGroupsStream().collect(Collectors.toSet());
     }
 
     @Override

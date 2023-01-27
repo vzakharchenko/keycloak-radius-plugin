@@ -20,7 +20,6 @@ import org.tinyradius.packet.RadiusPacket;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Objects;
 
 import static com.github.vzakharchenko.radius.client.RadiusLoginProtocolFactory.RADIUS_PROTOCOL;
@@ -65,20 +64,18 @@ public final class RadiusLibraryUtils {
 
     public static UserModel getUserByUsername(KeycloakSession localSession,
                                               String username, RealmModel realm) {
-        UserModel user = localSession.users().getUserByUsername(username, realm);
+        UserModel user = localSession.users().getUserByUsername(realm, username);
         if (user == null) {
-            user = localSession.users().getUserByUsername(getRealUserName(username, realm),
-                    realm);
+            user = localSession.users().getUserByUsername(realm, getRealUserName(username, realm));
         }
         return user;
     }
 
     public static UserModel getServiceAccount(KeycloakSession localSession,
                                               String username, RealmModel realm) {
-        ClientModel clientModel = realm.getClients().stream().filter(clientModel1 ->
-                clientModel1.getClientId().equalsIgnoreCase(username) ||
-                        clientModel1.getClientId()
-                                .equalsIgnoreCase(getRealUserName(username, realm)))
+        ClientModel clientModel = realm.getClientsStream()
+                .filter(cm -> cm.getClientId().equalsIgnoreCase(username) ||
+                        cm.getClientId().equalsIgnoreCase(getRealUserName(username, realm)))
                 .findFirst().orElse(null);
 
         return clientModel != null ? localSession.users().getServiceAccount(clientModel) : null;
@@ -86,10 +83,9 @@ public final class RadiusLibraryUtils {
 
     public static UserModel getUserByEmail(KeycloakSession localSession,
                                            String username, RealmModel realm) {
-        UserModel user = localSession.users().getUserByEmail(username, realm);
+        UserModel user = localSession.users().getUserByEmail(realm, username);
         if (user == null) {
-            user = localSession.users().getUserByEmail(getRealUserName(username, realm),
-                    realm);
+            user = localSession.users().getUserByEmail(realm, getRealUserName(username, realm));
         }
         return user;
     }
@@ -116,20 +112,19 @@ public final class RadiusLibraryUtils {
     public static ClientModel getClient(ClientConnection clientConnection,
                                         KeycloakSession session,
                                         RealmModel realmModel) {
-        List<ClientModel> clients = realmModel.getClients();
-        for (ClientModel client : clients) {
-            if (Objects.equals(client.getProtocol(), RADIUS_PROTOCOL)) {
-                return client;
-            }
+        ClientModel client = realmModel.getClientsStream()
+                .filter(c -> Objects.equals(c.getProtocol(), RADIUS_PROTOCOL))
+                .findFirst().orElse(null);
+        if (client == null) {
+            EventBuilder event = EventLoggerUtils.createEvent(session, realmModel,
+                    clientConnection);
+            LOGGER.error("Client with radius protocol does not found");
+            event.event(EventType.LOGIN_ERROR)
+                    .detail(EventLoggerUtils.RADIUS_MESSAGE,
+                            "Client with radius protocol does not found")
+                    .error("Client with radius protocol does not found");
         }
-        EventBuilder event = EventLoggerUtils
-                .createEvent(session, realmModel,
-                        clientConnection);
-        LOGGER.error("Client with radius protocol does not found");
-        event.event(EventType.LOGIN_ERROR).detail(
-                EventLoggerUtils.RADIUS_MESSAGE, "Client with radius protocol does not found")
-                .error("Client with radius protocol does not found");
-        return null;
+        return client;
     }
 
     public static String getAttributeValue(RadiusPacket radiusPacket, String attributeName) {

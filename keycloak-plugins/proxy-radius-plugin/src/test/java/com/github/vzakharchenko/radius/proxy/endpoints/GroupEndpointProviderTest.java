@@ -9,6 +9,7 @@ import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.util.RadiusEndpoint;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.proxy.endpoints.GroupProxyEndpointProvider.RADIUS_GROUP_PROXY_ENDPOINT;
 import static org.mockito.Mockito.reset;
@@ -27,7 +28,7 @@ public class GroupEndpointProviderTest extends AbstractRadiusTest {
     @BeforeMethod
     public void beforeMethods() {
         reset(groupModel);
-        when(userModel.getGroups()).thenReturn(new HashSet<>(Collections.singletonList(groupModel)));
+        when(userModel.getGroupsStream()).thenAnswer(i -> Stream.of(groupModel));
         map = new HashMap<>();
         map.put("AccessRequestAddress", Collections.singletonList("127.0.0.1"));
         map.put("AccessRequestPort", Collections.singletonList("1814"));

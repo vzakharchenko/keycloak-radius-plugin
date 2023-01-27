@@ -82,7 +82,7 @@ public final class RadiusHelper {
         List<CredentialModel> credentials = userModel.credentialManager()
                 .getStoredCredentialsByTypeStream(RadiusCredentialModel.TYPE)
                 .collect(Collectors.toList());
-        if (userModel.getRequiredActions().stream()
+        if (userModel.getRequiredActionsStream()
                 .noneMatch(rAction -> Objects.equals(rAction,
                         UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD) ||
                         Objects.equals(rAction,
@@ -164,9 +164,8 @@ public final class RadiusHelper {
 
     private static RealmModel getDefaultRealm(KeycloakSession session) {
         List<RealmModel> realms = session.realms()
-                .getRealms().stream().filter(realmModel -> realmModel
-                        .getClients()
-                        .stream().anyMatch(clientModel -> Objects.equals(
+                .getRealmsStream().filter(realmModel -> realmModel
+                        .getClientsStream().anyMatch(clientModel -> Objects.equals(
                                 clientModel.getProtocol(),
                                 RadiusLoginProtocolFactory.RADIUS_PROTOCOL)))
                 .collect(Collectors.toList());

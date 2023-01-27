@@ -1,3 +1,3 @@
  set -e
  rm -rf data
- cp -r target/keycloak/keycloak-19.0.1/data data
+ cp -r target/keycloak/keycloak-20.0.3/data data

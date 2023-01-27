@@ -16,7 +16,6 @@ import org.keycloak.models.*;
 import org.tinyradius.packet.AccountingRequest;
 import org.tinyradius.util.RadiusEndpoint;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.github.vzakharchenko.radius.radius.handlers.session.RadiusAccountState.UNSUPPORTED;
@@ -83,18 +82,13 @@ public class AccountingSessionManager implements IAccountingSessionManager {
 
     private UserSessionModel getSession(String sessionId) {
         IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
-        List<UserSessionModel> userSessions = session.sessions()
-                .getUserSessions(radiusUserInfo.getRealmModel(),
-                        radiusUserInfo.getClientModel());
-
-        return userSessions.stream().filter(sm -> {
-                    authClientSession =
-                            findAuthClientSession(sm, sessionId);
-                    return authClientSession != null &&
-                            Objects.equals(sm.getUser().getId(),
-                                    radiusUserInfo.getUserModel().getId());
-                }
-        ).findFirst().orElse(null);
+        return session.sessions()
+            .getUserSessionsStream(radiusUserInfo.getRealmModel(), radiusUserInfo.getClientModel())
+                 .filter(sm -> {
+                     authClientSession = findAuthClientSession(sm, sessionId);
+                     return authClientSession != null && Objects.equals(sm.getUser().getId(),
+                         radiusUserInfo.getUserModel().getId());
+                 }).findFirst().orElse(null);
     }
 
     private void initSession(String sessionId) {

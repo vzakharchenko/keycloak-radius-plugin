@@ -104,7 +104,7 @@ public class RadiusServiceImpl implements RealmResourceProviderFactory,
         if (!accessToken.getRealmAccess().isUserInRole(RADIUS_SESSION_ROLE)) {
             throw new ForbiddenException("UnAuthorized");
         }
-        if (session.getContext().getRealm().getClients().stream().noneMatch(
+        if (session.getContext().getRealm().getClientsStream().noneMatch(
                 clientModel -> RadiusLoginProtocolFactory.RADIUS_PROTOCOL
                         .equalsIgnoreCase(clientModel.getProtocol())
                         && clientModel.isEnabled())) {
@@ -130,13 +130,13 @@ public class RadiusServiceImpl implements RealmResourceProviderFactory,
         String userId = dmm.getUserId();
         String realmId = dmm.getRealmId();
         RealmModel realm = session.realms().getRealm(realmId);
-        UserModel userModel = session.users().getUserById(userId, realm);
+        UserModel userModel = session.users().getUserById(realm, userId);
         RadiusServiceModel rsm = new RadiusServiceModel();
         transform(rsm, dmm);
         List<String> roles = new ArrayList<>(userModel
                 .getRoleMappingsStream().map(RoleModel::getName)
                 .collect(Collectors.toList()));
-        realm.getClients().forEach(app -> roles
+        realm.getClientsStream().forEach(app -> roles
                 .addAll(userModel.getClientRoleMappingsStream(app)
                         .map(RoleModel::getName)
                         .collect(Collectors.toList())));

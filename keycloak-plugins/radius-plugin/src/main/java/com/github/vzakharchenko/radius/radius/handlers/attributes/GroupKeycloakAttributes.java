@@ -7,6 +7,7 @@ import org.tinyradius.packet.AccessRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class  GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupModel> {
 
@@ -22,7 +23,8 @@ public class  GroupKeycloakAttributes extends AbstractKeycloakAttributes<GroupMo
 
     @Override
     protected Set<GroupModel> getKeycloakTypes() {
-        return radiusUserInfoGetter.getRadiusUserInfo().getUserModel().getGroups();
+        return radiusUserInfoGetter.getRadiusUserInfo().getUserModel().getGroupsStream()
+                .collect(Collectors.toSet());
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.keycloak.models.RoleModel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RoleKeycloakAttributes extends AbstractKeycloakAttributes<RoleModel> {
 
@@ -21,7 +22,8 @@ public class RoleKeycloakAttributes extends AbstractKeycloakAttributes<RoleModel
 
     @Override
     protected Set<RoleModel> getKeycloakTypes() {
-        return radiusUserInfoGetter.getRadiusUserInfo().getUserModel().getRoleMappings();
+        return radiusUserInfoGetter.getRadiusUserInfo().getUserModel().getRoleMappingsStream()
+            .collect(Collectors.toSet());
     }
 
     @Override
