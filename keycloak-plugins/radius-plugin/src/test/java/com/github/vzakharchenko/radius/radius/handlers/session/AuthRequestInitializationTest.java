@@ -13,8 +13,8 @@ import org.tinyradius.server.SecretProvider;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
@@ -48,8 +48,8 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
     @Test
     public void testgetRadiusPasswords() {
-        when(userSessionProvider.getUserSessions(realmModel, userModel))
-                .thenReturn(Collections.emptyList());
+        when(userSessionProvider.getUserSessionsStream(realmModel, userModel))
+                .thenAnswer(i -> Stream.empty());
         assertTrue(authRequestInitialization
                 .init(inetSocketAddress, USER, authProtocol, session));
 //        assertNotNull(radiusUserInfo);
@@ -72,7 +72,7 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
     @Test
     public void testclientEmpty() {
-        when(realmModel.getClients()).thenReturn(Collections.emptyList());
+        when(realmModel.getClientsStream()).thenAnswer(i -> Stream.empty());
         assertFalse(authRequestInitialization
                 .init(inetSocketAddress, USER, authProtocol, session));
 
@@ -88,8 +88,8 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
     @Test
     public void testgetRadiusPasswordsWithoutPassword() {
-        when(userSessionProvider.getUserSessions(realmModel, userModel))
-                .thenReturn(Collections.emptyList());
+        when(userSessionProvider.getUserSessionsStream(realmModel, userModel))
+                .thenAnswer(i -> Stream.empty());
         when(subjectCredentialManager
                 .getStoredCredentialsByTypeStream(
                         RadiusCredentialModel.TYPE))
@@ -122,15 +122,15 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
     @Test
     public void testgetRadiusPasswordsUserNameDoesNotExists() {
-        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
         testgetRadiusPasswords();
     }
 
 
     @Test
     public void testgetRadiusPasswordsUserDoesNotExists() {
-        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
-        when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(null);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
+        when(userProvider.getUserByEmail(realmModel, USER)).thenReturn(null);
         assertFalse(authRequestInitialization
                 .init(inetSocketAddress, USER, authProtocol, session));
 
@@ -138,24 +138,24 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
     @Test
     public void testgetafterAuthSUCCESS() {
-        when(userSessionProvider.getUserSessions(realmModel, userModel))
-                .thenReturn(Collections.emptyList());
+        when(userSessionProvider.getUserSessionsStream(realmModel, userModel))
+                .thenAnswer(i -> Stream.empty());
         authRequestInitialization
                 .afterAuth(2, session);
     }
 
     @Test
     public void testgetafterAuthReject() {
-        when(userSessionProvider.getUserSessions(realmModel, userModel))
-                .thenReturn(Collections.emptyList());
+        when(userSessionProvider.getUserSessionsStream(realmModel, userModel))
+                .thenAnswer(i -> Stream.empty());
         authRequestInitialization
                 .afterAuth(3, session);
     }
 
     @Test
     public void testgetafterAuthEROOR() {
-        when(userSessionProvider.getUserSessions(realmModel, userModel))
-                .thenReturn(Collections.emptyList());
+        when(userSessionProvider.getUserSessionsStream(realmModel, userModel))
+                .thenAnswer(i -> Stream.empty());
         authRequestInitialization
                 .afterAuth(4, session);
     }

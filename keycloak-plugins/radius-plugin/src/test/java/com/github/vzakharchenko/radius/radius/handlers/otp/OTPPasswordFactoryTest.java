@@ -14,8 +14,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -46,7 +44,7 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
         otpPolicy.setPeriod(1);
         when(subjectCredentialManager
                 .getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE))
-                .thenReturn(Stream.of(credentialModelOtp, credentialModelHotp));
+                .thenAnswer(i -> Stream.of(credentialModelOtp, credentialModelHotp));
         when(subjectCredentialManager.getStoredCredentialById(CRED_ID))
                 .thenReturn(credentialModelOtp);
         when(realmModel.getOTPPolicy()).thenReturn(otpPolicy);
@@ -70,9 +68,8 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
 
     @Test
     public void testGetOTPsRequiredAction() {
-        when(userModel.getRequiredActions())
-                .thenReturn(new HashSet<>(Arrays.asList(UserModel
-                        .RequiredAction.CONFIGURE_TOTP.name())));
+        when(userModel.getRequiredActionsStream())
+                .thenAnswer(i -> Stream.of(UserModel.RequiredAction.CONFIGURE_TOTP.name()));
         when(subjectCredentialManager
                 .getStoredCredentialsByTypeStream(OTPCredentialModel.TYPE))
                 .thenReturn(new ArrayList<CredentialModel>().stream());

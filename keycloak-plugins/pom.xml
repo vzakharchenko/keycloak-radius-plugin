@@ -15,7 +15,7 @@
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -61,7 +61,7 @@
 
         <pmdVersion>6.17.0</pmdVersion>
 
-        <keycloak.version>19.0.2</keycloak.version>
+        <keycloak.version>20.0.3</keycloak.version>
         <checkStyleLocation>../analizers</checkStyleLocation>
         <pmdLocation>${basedir}/../analizers/</pmdLocation>
         <findBugsLocation>${basedir}/../analizers/</findBugsLocation>
@@ -464,7 +464,6 @@
                 <version>3.2.0</version>
                 <configuration>
                     <configLocation>${checkStyleLocation}/checkstyle.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <failOnViolation>true</failOnViolation>

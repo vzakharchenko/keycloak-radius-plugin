@@ -7,6 +7,7 @@ import org.keycloak.models.UserModel;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RoleEndpointProvider extends AbstractProxyEndpointProvider<RoleModel> {
 
@@ -19,7 +20,7 @@ public class RoleEndpointProvider extends AbstractProxyEndpointProvider<RoleMode
 
     @Override
     protected Collection<RoleModel> getTypes(UserModel userModel) {
-        return userModel.getRoleMappings();
+        return userModel.getRoleMappingsStream().collect(Collectors.toSet());
     }
 
     @Override

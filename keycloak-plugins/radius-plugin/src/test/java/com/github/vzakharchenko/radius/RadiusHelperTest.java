@@ -25,6 +25,7 @@ import org.tinyradius.packet.RadiusPackets;
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.RadiusHelper.getRandomByte;
 import static org.mockito.Mockito.*;
@@ -99,16 +100,16 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testCurrentPasswordNotValid() {
-        when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
-                asList(UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD)));
+        when(userModel.getRequiredActionsStream())
+                .thenAnswer(i -> Stream.of(UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD));
         String password = RadiusHelper.getCurrentPassword(userModel);
         assertNull(password);
     }
 
     @Test
     public void testCurrentPasswordNotValidAction() {
-        when(userModel.getRequiredActions()).thenReturn(new HashSet<>(Arrays.
-                asList(UserModel.RequiredAction.UPDATE_PASSWORD.name())));
+        when(userModel.getRequiredActionsStream())
+                .thenAnswer(i -> Stream.of(UserModel.RequiredAction.UPDATE_PASSWORD.name()));
         String password = RadiusHelper.getCurrentPassword(userModel);
         assertNull(password);
     }
@@ -167,8 +168,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         when(secondRealm.getName()).thenReturn("second_realm");
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
-        when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
+        when(secondRealm.getClientsStream()).thenAnswer(i -> Stream.of(secondClientModel));
+        when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
         radiusPacket.addAttribute("User-Name",
@@ -180,7 +181,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
             "Radius Realm does not exist. " +
                     "Please create at least one realm with radius client")
     public void testRealmEmpty() {
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList());
+        when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.empty());
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
         radiusPacket.addAttribute("User-Name",
@@ -234,8 +235,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol())
                 .thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
-        when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
+        when(secondRealm.getClientsStream()).thenAnswer(i -> Stream.of(secondClientModel));
+        when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
         radiusPacket.addAttribute("User-Name", USER + "@second_realm");
@@ -245,15 +246,15 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testRealmInUserEmail() {
-        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
         RealmModel secondRealm = mock(RealmModel.class);
         when(secondRealm.getId()).thenReturn("second_realm");
         when(secondRealm.getName()).thenReturn("second_realm");
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol())
                 .thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
-        when(secondRealm.getClients()).thenReturn(Arrays.asList(secondClientModel));
-        when(realmProvider.getRealms()).thenReturn(Arrays.asList(realmModel, secondRealm));
+        when(secondRealm.getClientsStream()).thenAnswer(i -> Stream.of(secondClientModel));
+        when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel, secondRealm));
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
         radiusPacket.addAttribute("User-Name", USER + "@second_realm");
@@ -264,7 +265,8 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Test()
     public void testSecureRandomFailed() {
         SecureRandom secureRandom = RadiusHelper.getSecureRandom("error");
-        assertEquals(secureRandom.getAlgorithm(), "NativePRNG");
+        assertTrue("NativePRNG".equals(secureRandom.getAlgorithm()) ||
+                "DRBG".equals(secureRandom.getAlgorithm())); // DRBG since Java9
     }
 
     @Override

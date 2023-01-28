@@ -45,7 +45,7 @@ public class RadiusLibraryUtilsTest extends AbstractRadiusTest {
 
     @Test
     public void getByUserName() {
-        when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(null);
+        when(userProvider.getUserByEmail(realmModel, USER)).thenReturn(null);
         UserModel userModel = RadiusLibraryUtils.getUserModel(session, USER, realmModel);
         assertNotNull(userModel);
         UserModel userModel2 = RadiusLibraryUtils.getUserByUsername(session, USER, realmModel);
@@ -56,7 +56,7 @@ public class RadiusLibraryUtilsTest extends AbstractRadiusTest {
 
     @Test
     public void getByEmail() {
-        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
         UserModel userModel = RadiusLibraryUtils.getUserModel(session, USER, realmModel);
         assertNotNull(userModel);
         UserModel userModel2 = RadiusLibraryUtils.getUserByUsername(session, USER, realmModel);
@@ -67,8 +67,8 @@ public class RadiusLibraryUtilsTest extends AbstractRadiusTest {
 
     @Test
     public void getByServiceAccount() {
-        when(userProvider.getUserByUsername(USER, realmModel)).thenReturn(null);
-        when(userProvider.getUserByEmail(USER, realmModel)).thenReturn(null);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
+        when(userProvider.getUserByEmail(realmModel, USER)).thenReturn(null);
         when(userProvider.getServiceAccount(clientModel)).thenReturn(userModel);
         UserModel userModel = RadiusLibraryUtils
                 .getUserModel(session, CLIENT_ID, realmModel);

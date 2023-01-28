@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <keycloak.version>19.0.2</keycloak.version>
+        <keycloak.version>20.0.3</keycloak.version>
         <keyCloakVersion>${keycloak.version}</keyCloakVersion>
         <production>false</production>
         <keycloak-plugin>${project.version}</keycloak-plugin>
@@ -122,7 +122,6 @@
                     <!--<artifactId>ant-nodeps</artifactId>-->
                     <!--<version>1.8.1</version>-->
                     <!--</dependency>-->
-
                 </dependencies>
             </plugin>
             <plugin>

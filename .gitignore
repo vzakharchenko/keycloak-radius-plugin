@@ -89,3 +89,6 @@ keycloak.properties
 #keycloak.json
 keycloak/data
 release-steps.sh
+keycloak-plugins/*-plugin/git.properties
+keycloak-plugins/*-plugin/dependency-reduced-pom.xml
+keycloak-plugins/*-plugin/analizers

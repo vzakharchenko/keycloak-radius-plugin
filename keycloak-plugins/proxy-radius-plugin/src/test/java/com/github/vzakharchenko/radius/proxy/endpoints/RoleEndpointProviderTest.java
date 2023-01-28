@@ -7,6 +7,7 @@ import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.util.RadiusEndpoint;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.proxy.endpoints.RoleEndpointProvider.RADIUS_ROLE_PROXY_ENDPOINT;
 import static org.mockito.Mockito.when;
@@ -20,7 +21,7 @@ public class RoleEndpointProviderTest extends AbstractRadiusTest {
 
     @BeforeMethod
     public void beforeMethods() {
-        when(userModel.getRoleMappings()).thenReturn(new HashSet<>(Collections.singletonList(radiusRole)));
+        when(userModel.getRoleMappingsStream()).thenAnswer(i -> Stream.of(radiusRole));
         map = new HashMap<>();
         map.put("AccessRequestAddress", Collections.singletonList("127.0.0.1"));
         map.put("AccessRequestPort", Collections.singletonList("1813"));
