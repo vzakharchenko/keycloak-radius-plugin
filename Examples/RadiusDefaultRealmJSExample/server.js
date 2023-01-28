@@ -1,5 +1,5 @@
 const express = require('express');
-const engine = require('express-handlebars');
+const {engine} = require('express-handlebars');
 const Client = require('node-radius-client');
 const path = require('path');
 const {dictionaries} = require('node-radius-utils');
