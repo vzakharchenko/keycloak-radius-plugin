@@ -22,32 +22,43 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
         this.intervalSecs = (int) (intervalMillis / 1000L);
     }
 
-    @Override
-    protected void runTask(final KeycloakSession session) {
+    private void runIntransaction(InTransaction inTransaction,
+                                  KeycloakSession session,
+                                  ScheduledTask scheduledTask) {
         KeycloakTransactionManager transactionManager = session.getTransactionManager();
 
         boolean activeTransaction = transactionManager.isActive();
         if (!activeTransaction) {
             transactionManager.begin();
         }
-        ClusterProvider clusterProvider = session.getProvider(ClusterProvider.class);
-        ScheduledTask scheduledTask = this.task;
-        String taskKey = scheduledTask.getClass().getSimpleName();
-        ExecutionResult<Void> result = clusterProvider
-                .executeIfNotExecuted(taskKey, this.intervalSecs, () -> {
-                    scheduledTask.run(session);
-                    return null;
-                });
+        inTransaction.run(scheduledTask);
         if (!activeTransaction) {
             transactionManager.commit();
         }
-        if (result.isExecuted()) {
-            LOGGER.debugf("Executed scheduled task %s", taskKey);
-        } else {
-            LOGGER.debugf("Skipped execution of task %s as other cluster node is executing it",
-                    taskKey);
-        }
+    }
 
+    @Override
+    protected void runTask(final KeycloakSession session) {
+        this.runIntransaction(scheduledTask -> {
+            ClusterProvider clusterProvider = session.getProvider(ClusterProvider.class);
+            String taskKey = scheduledTask.getClass().getSimpleName();
+            ExecutionResult<Void> result = clusterProvider
+                    .executeIfNotExecuted(taskKey, intervalSecs, () -> {
+                        scheduledTask.run(session);
+                        return null;
+                    });
+            if (result.isExecuted()) {
+                LOGGER.debugf("Executed scheduled task %s", taskKey);
+            } else {
+                LOGGER.debugf("Skipped execution of task %s as other cluster node is executing it",
+                        taskKey);
+            }
+
+        }, session, this.task);
+    }
+
+    private interface InTransaction {
+        void run(ScheduledTask scheduledTask);
     }
 }
 
