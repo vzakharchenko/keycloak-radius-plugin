@@ -27,7 +27,7 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
         KeycloakTransactionManager transactionManager = session.getTransactionManager();
 
         boolean activeTransaction = transactionManager.isActive();
-        if (!activeTransaction){
+        if (!activeTransaction) {
             transactionManager.begin();
         }
         ClusterProvider clusterProvider = session.getProvider(ClusterProvider.class);
@@ -38,7 +38,7 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
                     scheduledTask.run(session);
                     return null;
                 });
-        if (!activeTransaction){
+        if (!activeTransaction) {
             transactionManager.commit();
         }
         if (result.isExecuted()) {
