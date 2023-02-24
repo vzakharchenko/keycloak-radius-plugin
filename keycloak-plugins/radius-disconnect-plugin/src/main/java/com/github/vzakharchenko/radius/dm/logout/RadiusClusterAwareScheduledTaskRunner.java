@@ -5,6 +5,9 @@ import org.keycloak.cluster.ClusterProvider;
 import org.keycloak.cluster.ExecutionResult;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
+import org.keycloak.models.KeycloakSessionTask;
+import org.keycloak.models.KeycloakTransactionManager;
+import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.services.scheduled.ClusterAwareScheduledTaskRunner;
 import org.keycloak.services.scheduled.ScheduledTaskRunner;
 import org.keycloak.timer.ScheduledTask;
@@ -23,7 +26,12 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
 
     @Override
     protected void runTask(final KeycloakSession session) {
-        session.getTransactionManager().begin();
+        KeycloakTransactionManager transactionManager = session.getTransactionManager();
+
+        boolean activeTransaction = transactionManager.isActive();
+        if (!activeTransaction){
+            transactionManager.begin();
+        }
         ClusterProvider clusterProvider = session.getProvider(ClusterProvider.class);
         ScheduledTask scheduledTask = this.task;
         String taskKey = scheduledTask.getClass().getSimpleName();
@@ -32,7 +40,9 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
                     scheduledTask.run(session);
                     return null;
                 });
-        session.getTransactionManager().commit();
+        if (!activeTransaction){
+            transactionManager.commit();
+        }
         if (result.isExecuted()) {
             LOGGER.debugf("Executed scheduled task %s", taskKey);
         } else {

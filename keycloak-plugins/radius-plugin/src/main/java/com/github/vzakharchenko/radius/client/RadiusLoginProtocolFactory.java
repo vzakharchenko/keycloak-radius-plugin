@@ -31,7 +31,8 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
     }
 
     @Override
-    public Object createProtocolEndpoint(RealmModel realm, EventBuilder event) {
+    public Object createProtocolEndpoint(KeycloakSession keycloakSession,
+                                         EventBuilder eventBuilder) {
         return null;
     }
 

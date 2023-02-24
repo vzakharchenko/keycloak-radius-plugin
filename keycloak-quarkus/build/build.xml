@@ -15,9 +15,6 @@
     <property name="KEYCLOAK_SOURCE_LOCAL" value="keycloak_source.zip"/>
     <property name="KEYCLOAK_DESTINATION" value="${KEYCLOAK_PATH}/keycloak-${KEYCLOAK_VERSION}"/>
 
-    <!-- Radius theme -->
-    <property name="KEYCLOAK_THEME" value="${BUILD_DIR}/artifacts/theme"/>
-
     <!-- Plugins -->
     <property name="KEYCLOAK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/radius-plugin"/>
     <property name="KEYCLOAK__MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
@@ -26,10 +23,6 @@
     <property name="KEYCLOAK_RAD_SEC_PLUGIN" value="${BUILD_DIR}/artifacts/rad-sec-plugin"/>
     <property name="KEYCLOAK_DISCONNECT_PLUGIN" value="${BUILD_DIR}/artifacts/radius-disconnect-plugin"/>
     <property name="KEYCLOAK_PROXY_PLUGIN" value="${BUILD_DIR}/artifacts/radius-proxy-plugin"/>
-
-    <first id="keycloakThemeZip">
-        <fileset dir="${KEYCLOAK_THEME}" includes="**"/>
-    </first>
 
     <first id="keycloakRadiusZip">
         <fileset dir="${KEYCLOAK_RADIUS_PLUGIN}" includes="**"/>
@@ -76,9 +69,6 @@
 
         <copydir src="build/ext" dest="${KEYCLOAK_DESTINATION}"/>
 
-        <!-- Install Theme-->
-        <unzip src="${toString:keycloakThemeZip}" dest="${BUILD_DIR}/themes" />
-        <copydir src="${BUILD_DIR}/themes/theme" dest="${KEYCLOAK_DESTINATION}/themes"/>
 
         <!-- Install Radius Plugin-->
         <copy file="${toString:keycloakRadiusZip}" todir="${KEYCLOAK_DESTINATION}/providers"/>

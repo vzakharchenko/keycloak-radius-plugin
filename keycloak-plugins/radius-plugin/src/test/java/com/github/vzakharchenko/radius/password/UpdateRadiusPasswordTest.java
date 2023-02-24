@@ -2,12 +2,12 @@ package com.github.vzakharchenko.radius.password;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
-import org.jboss.resteasy.spi.HttpRequest;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.forms.login.LoginFormsProvider;
+import org.keycloak.http.HttpRequest;
 import org.keycloak.models.ModelException;
 import org.keycloak.models.PasswordPolicy;
 import org.keycloak.sessions.AuthenticationSessionModel;

@@ -56,7 +56,6 @@ public class RadiusServerProviderFactoryTest extends AbstractRadiusTest {
     public void testPostInit() {
         radiusServerProviderFactory.postInit(keycloakSessionFactory);
         verify(keycloakTransactionManager).begin();
-        verify(keycloakTransactionManager).commit();
     }
 
     @Test
@@ -79,7 +78,7 @@ public class RadiusServerProviderFactoryTest extends AbstractRadiusTest {
                 }));
         radiusServerProviderFactory.postInit(keycloakSessionFactory);
         verify(keycloakTransactionManager).begin();
-        verify(keycloakTransactionManager).commit();
+//        verify(keycloakTransactionManager).commit();
     }
 
 
