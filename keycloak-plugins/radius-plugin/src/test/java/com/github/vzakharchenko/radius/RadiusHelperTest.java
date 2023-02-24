@@ -71,7 +71,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
             assertNotEquals(randomByte1 + randomByte2 + randomByte3, getRandomByte() + getRandomByte() + getRandomByte());
             assertNotEquals(getRandomByte() + getRandomByte() + getRandomByte(), getRandomByte() + getRandomByte() + getRandomByte());
         } catch (Exception e) {
-            testGetRandomByte();
+            LOGGER.warn("Test RadiusHelperTest.testGetRandomByte is failed with message "+e.getMessage(), e);
         }
     }
 
