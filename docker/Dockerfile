@@ -3,9 +3,7 @@ LABEL author="Vasyl Zakharchenko"
 LABEL email="vaszakharchenko@gmail.com"
 LABEL name="keycloak-radius-plugin"
 COPY ./scripts /opt/radius/scripts
-COPY ./config /config
-USER root
-RUN chown -R  1000 /config
+ENV RADIUS_CONFIG_PATH=/opt/keycloak/config
 USER 1000
 RUN /opt/radius/scripts/docker-radius.sh
 EXPOSE 8080
