@@ -29,6 +29,7 @@ RADIUS_SHARED_SECRET="secret"
 RADIUS_UDP=true
 RADIUS_UDP_AUTH_PORT=1812
 RADIUS_UDP_ACCOUNT_PORT=1813
+RADIUS_OTP=false
 RADIUS_RADSEC=false
 RADIUS_RADSEC_PRIVATEKEY="/config/private.key"
 RADIUS_RADSEC_CERTIFICATE="/config/public.crt"
@@ -41,6 +42,7 @@ RADIUS_COA_PORT="3799"
 - **RADIUS_UDP** - use Radius auth and Account
 - **RADIUS_UDP_AUTH_PORT** - Auth port(if RADIUS_UDP = true)
 - **RADIUS_UDP_ACCOUNT_PORT** - Accounting port(if RADIUS_UDP = true)
+- **RADIUS_OTP** - use OTP only for auth
 - **RADIUS_RADSEC** - use RadSec protocol
 - **RADIUS_RADSEC_PRIVATEKEY** - rsa private key for Rad Sec
 - **RADIUS_RADSEC_CERTIFICATE** - certificate for RadSec
