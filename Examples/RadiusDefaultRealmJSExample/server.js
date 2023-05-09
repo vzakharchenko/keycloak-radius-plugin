@@ -9,7 +9,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.engine('handlebars', engine());
+app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('main', './views');
 app.set('view engine', '.hbs');
