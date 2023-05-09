@@ -1,7 +1,7 @@
 // index.js
 const path = require('path');
 const express = require('express');
-const engine = require('express-handlebars');
+const handlebars = require('express-handlebars');
 const Keycloak = require('keycloak-connect');
 var session = require('express-session');
 const Client = require('node-radius-client');
@@ -28,7 +28,7 @@ app.use(keycloak.middleware({
     logout: '/logout',
 }));
 
-app.engine('handlebars', engine());
+app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('main', './views');
 
