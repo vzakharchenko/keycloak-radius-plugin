@@ -1,1 +1,1 @@
-- keycloak version 21.1.1
+- keycloak version 21.1.2
