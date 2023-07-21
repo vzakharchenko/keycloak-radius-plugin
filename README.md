@@ -57,20 +57,21 @@ features:
 [Run inside Docker Container](docker/README.md)
 ## Manual Setup
 ### build project
-***requirements***: java jdk 11 and above, maven 3.5 and above
+***requirements***: java jdk 17 and above, maven 3.5 and above
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
 ***requirements***: [keycloak 22.0.1](https://github.com/keycloak/keycloak/releases/download/22.0.1/keycloak-22.0.1.zip)
 ```bash
-cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/radius-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/rad-sec-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/mikrotik-radius-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-plugins/cisco-radius-plugin/target/cisco-radius-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/cisco-radius-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-plugins/chillispot-radius-plugin/target/chillispot-radius-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/chillispot-radius-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-plugins/radius-disconnect-plugin/target/radius-disconnect-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/radius-disconnect-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-plugins/proxy-radius-plugin/target/proxy-radius-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/proxy-radius-plugin-1.5.0-SNAPSHOT.jar
-cp ${SOURCE}/keycloak-radius-plugin/keycloak-plugins/radius-theme/target/radius-theme-1.5.0-SNAPSHOT.zip ${KEYCLOAK_PATH}/providers/radius-theme-1.5.0-SNAPSHOT.jar
+cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
+   ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-*.jar \
+   ${SOURCE}/keycloak-plugins/mikrotik-radius-plugin/target/mikrotik-radius-plugin-*.jar \
+   ${SOURCE}/keycloak-plugins/cisco-radius-plugin/target/cisco-radius-plugin-*.jar \
+   ${SOURCE}/keycloak-plugins/chillispot-radius-plugin/target/chillispot-radius-plugin-*.jar \
+   ${SOURCE}/keycloak-plugins/radius-disconnect-plugin/target/radius-disconnect-plugin-*.jar \
+   ${SOURCE}/keycloak-plugins/proxy-radius-plugin/target/proxy-radius-plugin-*.jar \
+   ${SOURCE}/keycloak-radius-plugin/keycloak-plugins/radius-theme/target/radius-theme-*.zip \
+     ${KEYCLOAK_PATH}/providers/
 ```
 where
 - **KEYCLOAK_PATH** - Path where you are unpacked keycloak-22.0.1.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)

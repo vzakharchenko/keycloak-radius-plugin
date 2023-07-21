@@ -49,14 +49,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <properties-maven-plugin>1.1.0</properties-maven-plugin>
+        <java.version>17</java.version>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.2.1</maven-enforcer-plugin>
-        <spotbugs-maven-plugin>4.7.3.2</spotbugs-maven-plugin>
         <maven-pmd-plugin>3.20.0</maven-pmd-plugin>
+        <properties-maven-plugin>1.1.0</properties-maven-plugin>
+        <spotbugs-maven-plugin>4.7.3.2</spotbugs-maven-plugin>
         <fast-build>false</fast-build>
 
         <pmdVersion>6.17.0</pmdVersion>
@@ -340,7 +338,6 @@
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>
-
                             </rules>
                             <fail>true</fail>
                         </configuration>
@@ -486,8 +483,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
             <plugin>
