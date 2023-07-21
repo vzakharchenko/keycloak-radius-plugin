@@ -22,8 +22,7 @@ public class TotpPasswordTest {
     @Test
     public void testHotpPassword() {
         OTPCredentialData credentialData =
-                new OTPCredentialData(HOTP, 6,
-                        1, 1, HmacOTP.HMAC_SHA1);
+                new OTPCredentialData(HOTP, 6, 1, 1, HmacOTP.HMAC_SHA1, null);
         OTPPolicy policy = new OTPPolicy(HOTP, ALGORITHM,
                 1, 6, 1, 1);
         CredentialModel credential = new CredentialModel();

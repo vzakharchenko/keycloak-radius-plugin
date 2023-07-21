@@ -301,15 +301,14 @@ public abstract class AbstractRadiusTest {
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))
                 .thenReturn(userSessionModel);
         when(userSessionProvider
-                .createUserSession(any(), any(), anyString(),
-                        anyString(), anyString(), eq(false),
-                        anyString(), anyString()))
+                .createUserSession(eq(null), any(), any(), anyString(), anyString(),
+                        anyString(), eq(false), anyString(), anyString(),
+                        eq(UserSessionModel.SessionPersistenceState.PERSISTENT)))
                 .thenReturn(userSessionModel);
         when(userSessionProvider
-                .createUserSession(any()
-                        , any(), any(),
-                        any(),
-                        eq("radius"), eq(false), isNull(), isNull()))
+                .createUserSession(eq(null), any(), any(), any(), any(),
+                        eq("radius"), eq(false), isNull(), isNull(),
+                eq(UserSessionModel.SessionPersistenceState.PERSISTENT)))
                 .thenReturn(userSessionModel);
         when(userSessionProvider
                 .createClientSession(realmModel, clientModel, userSessionModel))

@@ -1,6 +1,8 @@
 package com.github.vzakharchenko.radius.radius.handlers.session;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
+import org.keycloak.models.UserSessionModel;
+import org.keycloak.models.UserSessionProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tinyradius.packet.AccountingRequest;
@@ -46,14 +48,9 @@ public class AccountingSessionManagerTest extends AbstractRadiusTest {
         request.addAttribute(ACCT_SESSION_ID, "new Session");
         request.addAttribute(ACCT_STATUS_TYPE, "Start");
         this.accountingSessionManager.init().updateContext().manageSession();
-        verify(userSessionProvider).createUserSession(realmModel,
-                userModel,
-                "USER",
-                "0.0.0.0",
-                "radius",
-                false,
-                null,
-                null);
+        UserSessionProvider userSessionProvider1 = verify(userSessionProvider);
+        userSessionProvider1.createUserSession(null, realmModel, userModel, "USER", "0.0.0.0",
+                "radius", false, null, null, UserSessionModel.SessionPersistenceState.PERSISTENT);
     }
 
     @Test

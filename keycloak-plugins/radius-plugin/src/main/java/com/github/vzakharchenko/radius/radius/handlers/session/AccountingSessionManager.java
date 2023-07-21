@@ -105,10 +105,11 @@ public class AccountingSessionManager implements IAccountingSessionManager {
         if (sessionModel == null) {
             IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
             UserSessionProvider sessions = session.sessions();
-            sessionModel = sessions.createUserSession(
-                    radiusUserInfo.getRealmModel(), radiusUserInfo.getUserModel(), userName,
-                    radiusUserInfo.getClientConnection().getLocalAddr(),
-                    "radius", false, null, null);
+            sessionModel = sessions
+                    .createUserSession(null, radiusUserInfo.getRealmModel(),
+                            radiusUserInfo.getUserModel(), userName,
+                            radiusUserInfo.getClientConnection().getLocalAddr(), "radius", false,
+                            null, null, UserSessionModel.SessionPersistenceState.PERSISTENT);
             authClientSession = sessions
                     .createClientSession(radiusUserInfo.getRealmModel(),
                             radiusUserInfo.getClientModel(), sessionModel);
