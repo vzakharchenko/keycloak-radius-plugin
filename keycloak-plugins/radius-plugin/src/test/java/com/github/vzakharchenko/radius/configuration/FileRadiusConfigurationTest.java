@@ -16,8 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static org.testng.Assert.*;
+import static uk.org.webcompere.systemstubs.SystemStubs.withEnvironmentVariable;
 
 public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     private final FileRadiusConfiguration radiusConfiguration = new FileRadiusConfiguration();

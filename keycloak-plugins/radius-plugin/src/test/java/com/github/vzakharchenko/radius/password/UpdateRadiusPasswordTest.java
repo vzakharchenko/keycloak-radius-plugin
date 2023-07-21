@@ -8,8 +8,7 @@ import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.http.HttpRequest;
-import org.keycloak.models.ModelException;
-import org.keycloak.models.PasswordPolicy;
+import org.keycloak.models.*;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -49,6 +48,7 @@ public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
     @Mock
     private IRadiusCredentialProvider iRadiusCredentialProvider;
 
+
     @BeforeMethod
     public void beforeMethod() {
         reset(context);
@@ -56,6 +56,7 @@ public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
         reset(authenticationSessionModel);
         reset(loginFormsProvider);
         reset(passwordPolicy);
+
         when(context.getSession()).thenReturn(session);
         when(context
                 .getEvent())

@@ -134,6 +134,8 @@ public abstract class AbstractRadiusTest {
     protected RealmProvider realmProvider;
     @Mock
     protected RoleProvider roleProvider;
+    @Mock
+    private ClientProvider clientProvider;
 
     protected Map<Class, Provider> providerByClass = new HashMap<>();
 
@@ -237,6 +239,7 @@ public abstract class AbstractRadiusTest {
         when(session.getTransactionManager()).thenReturn(keycloakTransactionManager);
         when(session.getContext()).thenReturn(keycloakContext);
         when(session.roles()).thenReturn(roleProvider);
+        when(session.clients()).thenReturn(clientProvider);
         when(keycloakContext.getRealm()).thenReturn(realmModel);
         when(keycloakContext.getConnection()).thenReturn(clientConnection);
         when(keycloakContext.getClient()).thenReturn(clientModel);
