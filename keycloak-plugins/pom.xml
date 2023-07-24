@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.jboss.logmanager</groupId>
             <artifactId>jboss-logmanager</artifactId>
-            <version>2.1.19.Final</version>
+            <version>3.0.0.Final</version>
             <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-servlet-filter-adapter -->
