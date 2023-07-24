@@ -56,7 +56,7 @@
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.2.1</maven-enforcer-plugin>
         <spotbugs-maven-plugin>4.7.3.2</spotbugs-maven-plugin>
-        <maven-pmd-plugin>3.20.0</maven-pmd-plugin>
+        <maven-pmd-plugin>3.21.0</maven-pmd-plugin>
         <fast-build>false</fast-build>
 
         <pmdVersion>6.17.0</pmdVersion>
