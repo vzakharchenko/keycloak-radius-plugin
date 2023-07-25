@@ -55,7 +55,7 @@
         <properties-maven-plugin>1.1.0</properties-maven-plugin>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.2.1</maven-enforcer-plugin>
-        <spotbugs-maven-plugin>4.7.3.2</spotbugs-maven-plugin>
+        <spotbugs-maven-plugin>4.7.3.5</spotbugs-maven-plugin>
         <maven-pmd-plugin>3.21.0</maven-pmd-plugin>
         <fast-build>false</fast-build>
 
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.jboss.logmanager</groupId>
             <artifactId>jboss-logmanager</artifactId>
-            <version>3.0.0.Final</version>
+            <version>2.1.19.Final</version>
             <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-servlet-filter-adapter -->
@@ -197,7 +197,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.8.0</version>
+            <version>7.7.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -205,7 +205,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.4.0</version>
+            <version>5.1.1</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -248,7 +248,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.4.1</version>
                 <configuration>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -439,7 +439,7 @@
                     <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-databind</artifactId>
-                        <version>2.15.2</version>
+                        <version>2.14.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -471,7 +471,7 @@
                         <plugin>
                             <groupId>com.mebigfatguy.sb-contrib</groupId>
                             <artifactId>sb-contrib</artifactId>
-                            <version>7.6.0</version>
+                            <version>7.4.7</version>
                         </plugin>
                     </plugins>
                 </configuration>
@@ -486,7 +486,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.2.1</version>
                 <configuration>
                     <configLocation>${checkStyleLocation}/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
@@ -567,7 +567,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.10</version>
+                <version>0.8.8</version>
                 <configuration>
                     <excludes>
                         <exclude>**/models/**</exclude>
