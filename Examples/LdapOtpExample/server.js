@@ -1,5 +1,5 @@
 const express = require('express');
-const engine = require('express-handlebars');
+const handlebars = require('express-handlebars');
 const Client = require('node-radius-client');
 const path = require('path');
 const {dictionaries} = require('node-radius-utils');
@@ -9,7 +9,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.engine('handlebars', engine());
+app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('main', './views');
 
