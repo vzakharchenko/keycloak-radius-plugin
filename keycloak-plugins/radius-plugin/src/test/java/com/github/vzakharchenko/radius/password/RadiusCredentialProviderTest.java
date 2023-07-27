@@ -65,7 +65,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
 
     @Test
     public void testCreateCredentialEmptyDate() {
-        when(session.userCache()).thenReturn(null);
+        when(session.users()).thenReturn(null);
         CredentialModel credential = credentialProvider
                 .createCredential(realmModel, userModel
                         , RadiusCredentialModel
@@ -171,9 +171,8 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
                 .getStoredCredentialsByTypeStream(
                         credentialProvider.getType()))
                 .thenAnswer(i -> Stream.of(credentialModel));
-        credentialProvider.onCache(realmModel,
-                cachedUserModel, userModel);
-        assertTrue(!value.isEmpty());
+        credentialProvider.onCache(realmModel, cachedUserModel, userModel);
+        assertFalse(value.isEmpty());
     }
 
     @Test
@@ -188,7 +187,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
                         credentialProvider.getType()))
                 .thenReturn(new ArrayList<CredentialModel>().stream());
         credentialProvider.onCache(realmModel, cachedUserModel, userModel);
-        assertTrue(!value.isEmpty());
+        assertFalse(value.isEmpty());
     }
 
     @Test

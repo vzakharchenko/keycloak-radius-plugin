@@ -148,7 +148,7 @@ public class RadiusCredentialProvider implements
     public void disableCredentialType(RealmModel realm,
                                       UserModel user,
                                       String credentialType) {
-
+        // should not be called as #getDisableableCredentialTypesStream() always returns nothing
     }
 
     @Override
@@ -160,9 +160,7 @@ public class RadiusCredentialProvider implements
     public void onCache(RealmModel realm, CachedUserModel user, UserModel delegate) {
         List<CredentialModel> passwords = getCredentialStore(user)
                 .getStoredCredentialsByTypeStream(getType()).collect(Collectors.toList());
-        if (passwords != null) {
-            user.getCachedWith().put(PASSWORD_CACHE_KEY, passwords);
-        }
+        user.getCachedWith().put(PASSWORD_CACHE_KEY, passwords);
     }
 
     @Override
@@ -171,7 +169,6 @@ public class RadiusCredentialProvider implements
         if (user instanceof CachedUserModel && !((CachedUserModel) user).isMarkedForEviction()) {
             CachedUserModel cached = (CachedUserModel) user;
             passwords = (List<CredentialModel>) cached.getCachedWith().get(PASSWORD_CACHE_KEY);
-
         }
 
         if (!(user instanceof CachedUserModel) || ((CachedUserModel) user)

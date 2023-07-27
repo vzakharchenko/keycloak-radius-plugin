@@ -1,0 +1,3 @@
+- keycloak version 22.0.1
+- switch to JDK 17
+- replace test dependency com.github.stefanbirkner:system-lambda with the fork uk.org.webcompere:system-stubs-core to replace withEnvironmentVariable() by an applicable version for Java17

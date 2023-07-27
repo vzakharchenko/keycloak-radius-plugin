@@ -55,11 +55,12 @@
             <version>4.1.95.Final</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.github.stefanbirkner</groupId>
-            <artifactId>system-lambda</artifactId>
-            <version>1.2.1</version>
-            <scope>test</scope>
+            <!-- replacement for com.github.stefanbirkner:system-lambda -->
+            <groupId>uk.org.webcompere</groupId>
+            <artifactId>system-stubs-core</artifactId>
+            <version>2.0.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->

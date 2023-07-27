@@ -18,7 +18,7 @@ import org.tinyradius.attribute.Attributes;
 import org.tinyradius.dictionary.Dictionary;
 import org.tinyradius.packet.AccessRequest;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

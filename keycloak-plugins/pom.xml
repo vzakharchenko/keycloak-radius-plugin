@@ -49,20 +49,18 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <properties-maven-plugin>1.1.0</properties-maven-plugin>
+        <java.version>17</java.version>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.3.0</maven-enforcer-plugin>
-        <spotbugs-maven-plugin>4.7.3.5</spotbugs-maven-plugin>
         <maven-pmd-plugin>3.21.0</maven-pmd-plugin>
+        <properties-maven-plugin>1.1.0</properties-maven-plugin>
+        <spotbugs-maven-plugin>4.7.3.5</spotbugs-maven-plugin>
         <slf4j.version>2.0.7</slf4j.version>
         <fast-build>false</fast-build>
 
         <pmdVersion>6.17.0</pmdVersion>
 
-        <keycloak.version>21.0.0</keycloak.version>
+        <keycloak.version>22.0.1</keycloak.version>
         <checkStyleLocation>../analizers</checkStyleLocation>
         <pmdLocation>${basedir}/../analizers/</pmdLocation>
         <findBugsLocation>${basedir}/../analizers/</findBugsLocation>
@@ -185,7 +183,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.6</version>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -366,7 +364,6 @@
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>
-
                             </rules>
                             <fail>true</fail>
                         </configuration>
@@ -512,8 +509,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
             <plugin>
