@@ -63,9 +63,10 @@
 <!--    <exclude name="CyclomaticComplexity"/>-->
 <!--    <exclude name="NPathComplexity"/>-->
     <exclude name="AbstractClassWithoutAnyMethod"/>
+    <exclude name="LoosePackageCoupling"/>
   </rule>
   <rule ref="category/java/errorprone.xml">
-    <exclude name="BeanMembersShouldSerialize"/>
+    <exclude name="NonSerializableClass"/>
     <exclude name="DataflowAnomalyAnalysis"/>
     <exclude name="MissingSerialVersionUID"/>
   </rule>
