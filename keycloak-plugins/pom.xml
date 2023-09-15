@@ -51,7 +51,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
-        <maven-enforcer-plugin>3.3.0</maven-enforcer-plugin>
+        <maven-enforcer-plugin>3.4.1</maven-enforcer-plugin>
         <maven-pmd-plugin>3.21.0</maven-pmd-plugin>
         <properties-maven-plugin>1.1.0</properties-maven-plugin>
         <spotbugs-maven-plugin>4.7.3.5</spotbugs-maven-plugin>
