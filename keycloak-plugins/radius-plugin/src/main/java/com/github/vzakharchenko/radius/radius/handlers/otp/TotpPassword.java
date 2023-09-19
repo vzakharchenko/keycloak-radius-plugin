@@ -46,7 +46,7 @@ public class TotpPassword implements IOTPPassword {
         List<String> totPs = getTOTPs(validator, credentialData,
                 secretData.getValue().getBytes(StandardCharsets.UTF_8),
                 policy.getLookAheadWindow());
-        otpHolderMap.put(credentialData.getSubType(),
+        otpHolderMap.put(credential.getId(),
                 new OtpHolder(credentialData.getSubType(), credential, totPs));
         return otpHolderMap;
     }

@@ -36,7 +36,7 @@ public class HotpPassword implements IOTPPassword {
                 credentialData.getAlgorithm(), policy.getLookAheadWindow());
         List<String> hotPs = getHOTPs(validator, secretData.getValue(),
                 credentialData.getCounter(), policy.getLookAheadWindow());
-        otpHolderMap.put(credentialData.getSubType(),
+        otpHolderMap.put(credential.getId(),
                 new OtpHolder(credentialData.getSubType(), credential, hotPs));
         return otpHolderMap;
     }
