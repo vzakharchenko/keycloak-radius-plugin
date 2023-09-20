@@ -59,11 +59,12 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
         OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
         Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();
         assertEquals(otPs.size(), 1);
-        assertNotNull(otPs.get(TOTP));
-        assertEquals(otPs.get(TOTP).getSubType(), TOTP);
-        assertEquals(otPs.get(TOTP).getPasswords().size(), 1);
-        assertNotNull(otPs.get(TOTP).getPasswords().get(0));
-        assertEquals(otPs.get(TOTP).getPasswords().get(0).length(), 6);
+        OtpHolder otpHolder = otPs.get(CRED_ID);
+        assertNotNull(otpHolder);
+        assertEquals(otpHolder.getSubType(), TOTP);
+        assertEquals(otpHolder.getPasswords().size(), 1);
+        assertNotNull(otpHolder.getPasswords().get(0));
+        assertEquals(otpHolder.getPasswords().get(0).length(), 6);
     }
 
     @Test
@@ -84,18 +85,19 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
         OtpPasswordInfo otpPasswordInfo = otpPasswordFactory.getOTPs(session);
         Map<String, OtpHolder> otPs = otpPasswordInfo.getOtpHolderMap();
         assertEquals(otPs.size(), 1);
-        assertNotNull(otPs.get(HOTP));
-        assertEquals(otPs.get(HOTP).getSubType(), HOTP);
-        assertEquals(otPs.get(HOTP).getPasswords().size(), 1);
-        assertNotNull(otPs.get(HOTP).getPasswords().get(0));
-        assertEquals(otPs.get(HOTP).getPasswords().get(0).length(), 6);
+        OtpHolder otpHolder = otPs.get(CRED_ID);
+        assertNotNull(otpHolder);
+        assertEquals(otpHolder.getSubType(), HOTP);
+        assertEquals(otpHolder.getPasswords().size(), 1);
+        assertNotNull(otpHolder.getPasswords().get(0));
+        assertEquals(otpHolder.getPasswords().get(0).length(), 6);
     }
 
     @Test
     public void testValidOTP() {
         otpPasswordFactory.validOTP(session,
                 "1234",
-                "credId",
+                CRED_ID,
                 OTPCredentialModel.TYPE);
     }
 }

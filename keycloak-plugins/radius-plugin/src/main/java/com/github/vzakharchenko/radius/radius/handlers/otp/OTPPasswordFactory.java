@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.keycloak.models.credential.OTPCredentialModel.HOTP;
 import static org.keycloak.models.credential.OTPCredentialModel.TOTP;
@@ -61,7 +60,8 @@ public class OTPPasswordFactory implements IOtpPasswordFactory {
                 .filter(credentialModel -> Objects
                         .equals(OTPCredentialModel.createFromCredentialModel(credentialModel)
                                 .getOTPCredentialData().getSubType(), realmModel
-                                .getOTPPolicy().getType())).collect(Collectors.toList());
+                                .getOTPPolicy().getType()))
+                .toList();
     }
 
     @Override
