@@ -1,3 +1,4 @@
 - keycloak version 22.0.1
 - switch to JDK 17
 - replace test dependency com.github.stefanbirkner:system-lambda with the fork uk.org.webcompere:system-stubs-core to replace withEnvironmentVariable() by an applicable version for Java17
+- fix realm retrieval by name vs id (previously querying by name or by id was confused in some cases)

@@ -291,7 +291,7 @@ public class RadiusLogoutTest extends AbstractJPATest {
         disconnectMessageModel.setKeycloakSessionId("testSession");
         disconnectMessageModel.setUserId(USER);
         disconnectMessageModel.setClientId(CLIENT_ID);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
         disconnectMessageModel.setId("sessionId");
         disconnectMessageModel.setCreatedDate(new Date(10000L));
         disconnectMessageModel.setAddress("127.0.0.1");

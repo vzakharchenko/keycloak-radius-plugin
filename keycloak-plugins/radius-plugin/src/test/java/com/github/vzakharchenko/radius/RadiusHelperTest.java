@@ -34,6 +34,8 @@ import static org.testng.Assert.*;
 public class RadiusHelperTest extends AbstractRadiusTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RadiusHelperTest.class);
+    private static final String SECOND_REALM_ID = "second_realm_id";
+    private static final String SECOND_REALM_NAME = "second_realm_name";
     @Mock
     private IRadiusServiceProvider radiusServiceProvider1;
     @Mock
@@ -48,6 +50,7 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         reset(radiusServiceProvider1, radiusServiceProvider2, dictionary, stream);
         when(radiusServiceProvider1.attributeName()).thenReturn("n1");
         when(radiusServiceProvider2.attributeName()).thenReturn("n1");
+
         when(dictionary.getAttributeTypeByName("realm-attribute"))
                 .thenReturn(new AttributeType(1, "realm-attribute", "string"));
         when(dictionary.getAttributeTypeByName("r"))
@@ -56,6 +59,16 @@ public class RadiusHelperTest extends AbstractRadiusTest {
                 .thenReturn(new AttributeType(3, "r3", "string"));
         when(dictionary.getAttributeTypeByName("User-Name"))
                 .thenReturn(new AttributeType(4, "User-Name", "string"));
+
+        when(dictionary.getAttributeTypeByCode(-1, 1))
+                .thenReturn(new AttributeType(1, "realm-attribute", "string"));
+        when(dictionary.getAttributeTypeByCode(-1, 2))
+                .thenReturn(new AttributeType(2, "r", "string"));
+        when(dictionary.getAttributeTypeByCode(-1, 3))
+                .thenReturn(new AttributeType(3, "r3", "string"));
+        when(dictionary.getAttributeTypeByCode(-1,4))
+                .thenReturn(new AttributeType(4, "User-Name", "string"));
+
         DictionaryLoader.getInstance().setWritableDictionary(realDictionary);
     }
 
@@ -138,13 +151,19 @@ public class RadiusHelperTest extends AbstractRadiusTest {
 
     @Test
     public void testRealmAttributes() {
+        RealmModel secondRealm = mock(RealmModel.class);
+        when(secondRealm.getId()).thenReturn(REALM_RADIUS+"-id");
+        when(secondRealm.getName()).thenReturn(REALM_RADIUS);
+        when(realmProvider.getRealmByName(REALM_RADIUS)).thenReturn(secondRealm);
+
         RadiusHelper.setRealmAttributes(Collections.singletonList("realm-attribute"));
         RadiusPacket radiusPacket = RadiusPackets.create(dictionary, 1, 1);
-        radiusPacket.addAttribute("realm-attribute",
-                Hex.encodeHexString(REALM_RADIUS.getBytes(Charset.defaultCharset())));
+        radiusPacket.addAttribute("realm-attribute",REALM_RADIUS);
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
+
         assertNotNull(realmModel);
-        assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
+        assertEquals(realmModel.getName(), REALM_RADIUS);
+        assertEquals(realmModel.getId(), REALM_RADIUS+"-id");
     }
 
     @Test
@@ -155,17 +174,18 @@ public class RadiusHelperTest extends AbstractRadiusTest {
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
         assertNotNull(realmModel);
         assertEquals(realmModel.getName(), REALM_RADIUS_NAME);
+        assertEquals(realmModel.getId(), REALM_RADIUS_ID);
     }
 
     @Test(expectedExceptions = IllegalStateException.class,
             expectedExceptionsMessageRegExp =
-                    "Found more than one Radius Realm \\(RadiusName, second_realm\\). " +
+                    "Found more than one Radius Realm \\(RadiusRealmName, second_realm_name\\). " +
                             "If you expect to use the Default Realm," +
                             " than you should use only one realm with radius client")
     public void testRealmAttributesNullWith2DefaultRealm() {
         RealmModel secondRealm = mock(RealmModel.class);
-        when(secondRealm.getId()).thenReturn("second_realm");
-        when(secondRealm.getName()).thenReturn("second_realm");
+        when(secondRealm.getId()).thenReturn(SECOND_REALM_ID);
+        when(secondRealm.getName()).thenReturn(SECOND_REALM_NAME);
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(secondRealm.getClientsStream()).thenAnswer(i -> Stream.of(secondClientModel));
@@ -230,36 +250,27 @@ public class RadiusHelperTest extends AbstractRadiusTest {
     @Test
     public void testRealmInUserName() {
         RealmModel secondRealm = mock(RealmModel.class);
-        when(secondRealm.getId()).thenReturn("second_realm");
-        when(secondRealm.getName()).thenReturn("second_realm");
+        when(secondRealm.getId()).thenReturn(SECOND_REALM_ID);
+        when(secondRealm.getName()).thenReturn(SECOND_REALM_NAME);
         ClientModel secondClientModel = mock(ClientModel.class);
         when(secondClientModel.getProtocol())
                 .thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(secondRealm.getClientsStream()).thenAnswer(i -> Stream.of(secondClientModel));
         when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel, secondRealm));
+        when(realmProvider.getRealmByName(SECOND_REALM_NAME)).thenReturn(secondRealm);
         RadiusHelper.setRealmAttributes(Collections.emptyList());
         RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
-        radiusPacket.addAttribute("User-Name", USER + "@second_realm");
+        radiusPacket.addAttribute("User-Name", USER + "@second_realm_name");
         RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
         assertNotNull(realmModel);
+        assertEquals(realmModel.getName(), SECOND_REALM_NAME);
+        assertEquals(realmModel.getId(), SECOND_REALM_ID);
     }
-
     @Test
     public void testRealmInUserEmail() {
+        // TODO is this test still testing something different compared to #testRealmInUserName()
         when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
-        RealmModel secondRealm = mock(RealmModel.class);
-        when(secondRealm.getId()).thenReturn("second_realm");
-        when(secondRealm.getName()).thenReturn("second_realm");
-        ClientModel secondClientModel = mock(ClientModel.class);
-        when(secondClientModel.getProtocol())
-                .thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
-        when(secondRealm.getClientsStream()).thenAnswer(i -> Stream.of(secondClientModel));
-        when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel, secondRealm));
-        RadiusHelper.setRealmAttributes(Collections.emptyList());
-        RadiusPacket radiusPacket = RadiusPackets.create(realDictionary, 1, 1);
-        radiusPacket.addAttribute("User-Name", USER + "@second_realm");
-        RealmModel realmModel = RadiusHelper.getRealm(session, radiusPacket);
-        assertNotNull(realmModel);
+        testRealmInUserName();
     }
 
     @Test()

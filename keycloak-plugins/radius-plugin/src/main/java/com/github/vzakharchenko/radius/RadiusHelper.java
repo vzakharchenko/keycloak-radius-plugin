@@ -168,7 +168,7 @@ public final class RadiusHelper {
                         .getClientsStream().anyMatch(clientModel -> Objects.equals(
                                 clientModel.getProtocol(),
                                 RadiusLoginProtocolFactory.RADIUS_PROTOCOL)))
-                .collect(Collectors.toList());
+                .toList();
         switch (realms.size()) {
             case 0:
                 throw new IllegalStateException("Radius Realm does not exist. " +
@@ -191,7 +191,7 @@ public final class RadiusHelper {
                 .getValueString(), "@");
         RealmModel realm = null;
         if (StringUtils.isNotEmpty(realmName)) {
-            realm = session.realms().getRealm(realmName);
+            realm = session.realms().getRealmByName(realmName);
         }
         return (realm == null) ? getDefaultRealm(session) : realm;
     }
@@ -202,10 +202,9 @@ public final class RadiusHelper {
         for (String attribute : attributes) {
             String realmName = getRealmName(attribute, radiusPacket);
             if (realmName != null) {
-                return session.realms().getRealm(realmName);
+                return session.realms().getRealmByName(realmName);
             }
         }
-
         return getRealmFromUserName(session, radiusPacket);
     }
 

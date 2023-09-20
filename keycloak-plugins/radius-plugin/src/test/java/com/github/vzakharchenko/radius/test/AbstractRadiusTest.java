@@ -20,6 +20,7 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.keycloak.Config;
 import org.keycloak.authorization.AuthorizationProvider;
 import org.keycloak.authorization.policy.evaluation.PolicyEvaluator;
 import org.keycloak.authorization.store.ResourceServerStore;
@@ -62,7 +63,8 @@ public abstract class AbstractRadiusTest {
 
     public static final String RADIUS_SESSION_ID = "testSessionId";
     public static final String REALM_RADIUS = "realm-radius";
-    public static final String REALM_RADIUS_NAME = "RadiusName";
+    public static final String REALM_RADIUS_ID = "01234567-89ab-cdef-0123-456789abcdef";
+    public static final String REALM_RADIUS_NAME = "RadiusRealmName";
     public static final String CLIENT_ID = "CLIENT_ID";
     public static final String USER = "USER";
     @Mock
@@ -273,12 +275,14 @@ public abstract class AbstractRadiusTest {
         when(clientModel.getId()).thenReturn(CLIENT_ID);
         when(clientModel.getProtocol()).thenReturn(RadiusLoginProtocolFactory.RADIUS_PROTOCOL);
         when(clientModel.isEnabled()).thenReturn(true);
-        when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(realmModel);
-        when(realmProvider.getRealm(anyString())).thenReturn(realmModel);
+        when(realmProvider.getRealm(REALM_RADIUS_ID)).thenReturn(realmModel);
+        when(realmProvider.getRealmByName(REALM_RADIUS_NAME)).thenReturn(realmModel);
+        // next one is needed for EventLoggerUtils in case an error is raised
+        when(realmProvider.getRealmByName(Config.getAdminRealm())).thenReturn(realmModel);
         when(realmProvider.getRealmsStream()).thenAnswer(i -> Stream.of(realmModel));
         when(realmModel.getClientByClientId(CLIENT_ID)).thenReturn(clientModel);
         when(realmModel.getName()).thenReturn(REALM_RADIUS_NAME);
-        when(realmModel.getId()).thenReturn(REALM_RADIUS_NAME);
+        when(realmModel.getId()).thenReturn(REALM_RADIUS_ID);
         when(realmModel.isEventsEnabled()).thenReturn(false);
         when(realmModel.getAttributes()).thenReturn(new HashMap<>());
         when(realmModel.getClientsStream()).thenAnswer(i -> Stream.of(clientModel));
