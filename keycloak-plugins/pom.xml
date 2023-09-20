@@ -60,7 +60,7 @@
 
         <pmdVersion>6.17.0</pmdVersion>
 
-        <keycloak.version>22.0.1</keycloak.version>
+        <keycloak.version>22.0.3</keycloak.version>
         <checkStyleLocation>../analizers</checkStyleLocation>
         <pmdLocation>${basedir}/../analizers/</pmdLocation>
         <findBugsLocation>${basedir}/../analizers/</findBugsLocation>
@@ -274,6 +274,21 @@
                             <artifact>uk.org.webcompere:system-stubs-core</artifact>
                             <excludes>
                                 <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>net.bytebuddy:byte-buddy</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>net.bytebuddy:byte-buddy-agent</artifact>
+                            <excludes>
+                                <exclude>META-INF/versions/9/module-info.class</exclude>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                                <exclude>META-INF/LICENSE</exclude>
+                                <exclude>META-INF/NOTICE</exclude>
                             </excludes>
                         </filter>
                     </filters>

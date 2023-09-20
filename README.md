@@ -61,7 +61,7 @@ features:
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
-***requirements***: [keycloak 22.0.1](https://github.com/keycloak/keycloak/releases/download/22.0.1/keycloak-22.0.1.zip)
+***requirements***: [keycloak 22.0.3](https://github.com/keycloak/keycloak/releases/download/22.0.3/keycloak-22.0.3.zip)
 ```bash
 cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
    ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-*.jar \
@@ -74,7 +74,7 @@ cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
      ${KEYCLOAK_PATH}/providers/
 ```
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-22.0.1.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-22.0.3.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 
 ### Environment Variables
@@ -137,7 +137,7 @@ where
 ```bash
 #!/usr/bin/env bash
 set -e
-cd keycloak-22.0.1
+cd keycloak-22.0.3
 sh bin/kc.sh --debug 8190 start-dev --http-port=8090
 ```
 
