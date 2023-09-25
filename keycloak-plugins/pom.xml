@@ -54,7 +54,7 @@
         <maven-enforcer-plugin>3.4.1</maven-enforcer-plugin>
         <maven-pmd-plugin>3.21.0</maven-pmd-plugin>
         <properties-maven-plugin>1.2.0</properties-maven-plugin>
-        <spotbugs-maven-plugin>4.7.3.5</spotbugs-maven-plugin>
+        <spotbugs-maven-plugin>4.7.3.6</spotbugs-maven-plugin>
         <slf4j.version>2.0.7</slf4j.version>
         <fast-build>false</fast-build>
 
