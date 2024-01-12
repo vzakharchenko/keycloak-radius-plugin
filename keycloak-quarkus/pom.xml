@@ -24,12 +24,11 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>keycloak</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>copy</id>
@@ -127,20 +126,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.5.0</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>assembly/build.xml</descriptor>
-                    </descriptors>
-                    <finalName>keycloak-radius</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>package_keycloak_with_radius</id>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly/build.xml</descriptor>
+                            </descriptors>
+                            <finalName>keycloak-radius</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
