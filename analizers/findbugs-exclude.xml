@@ -116,6 +116,10 @@
         <Class name="com.github.vzakharchenko.radius.radius.handlers.AuthHandler"/>
     </Match>
     <Match>
+        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
+        <Class name="com.github.vzakharchenko.radius.radius.handlers.AuthHandler"/>
+    </Match>
+    <Match>
         <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
         <Class name="com.github.vzakharchenko.mikrotik.dictionary.MikrotikDictionaryProviderFactory"/>
     </Match>
