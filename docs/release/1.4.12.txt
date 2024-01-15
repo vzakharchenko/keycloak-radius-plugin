@@ -3,3 +3,4 @@
 - replace test dependency com.github.stefanbirkner:system-lambda with the fork uk.org.webcompere:system-stubs-core to replace withEnvironmentVariable() by an applicable version for Java17
 - fix OTP verification for users with multiple tokens of same type (previously only token was checked)
 - fix realm retrieval by name vs id (previously querying by name or by id was confused in some cases)
+- keykloack version 23.0.4

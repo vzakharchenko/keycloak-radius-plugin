@@ -1,2 +1,2 @@
 rm -f keycloak_source.zip
-wget https://github.com/keycloak/keycloak/releases/download/22.0.3/keycloak-22.0.3.zip -O keycloak_source.zip  -q --show-progress --progress=bar:force 2>&1
+wget https://github.com/keycloak/keycloak/releases/download/23.0.4/keycloak-23.0.4.zip -O keycloak_source.zip  -q --show-progress --progress=bar:force 2>&1
