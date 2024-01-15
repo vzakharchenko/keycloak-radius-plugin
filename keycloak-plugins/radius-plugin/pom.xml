@@ -61,6 +61,7 @@
             <groupId>uk.org.webcompere</groupId>
             <artifactId>system-stubs-core</artifactId>
             <version>2.1.6</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
