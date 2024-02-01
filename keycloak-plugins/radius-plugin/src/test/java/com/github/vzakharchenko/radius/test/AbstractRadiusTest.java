@@ -42,10 +42,10 @@ import org.tinyradius.dictionary.DictionaryParser;
 import org.tinyradius.dictionary.WritableDictionary;
 import org.tinyradius.packet.AccessRequest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.Security;
@@ -53,7 +53,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager.*;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;

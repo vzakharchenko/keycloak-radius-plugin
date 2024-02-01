@@ -6,8 +6,8 @@ import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.keycloak.models.KeycloakSession;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;

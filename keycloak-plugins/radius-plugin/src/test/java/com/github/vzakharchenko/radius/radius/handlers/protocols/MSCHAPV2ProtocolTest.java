@@ -12,7 +12,7 @@ import org.tinyradius.attribute.VendorSpecificAttribute;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 import java.util.List;
 
 import static org.testng.Assert.*;

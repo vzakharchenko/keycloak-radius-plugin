@@ -5,8 +5,8 @@ import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
