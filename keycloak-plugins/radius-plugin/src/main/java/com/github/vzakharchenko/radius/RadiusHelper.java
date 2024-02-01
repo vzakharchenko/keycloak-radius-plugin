@@ -144,12 +144,12 @@ public final class RadiusHelper {
             Set<IRadiusServiceProvider> allProviders = session
                     .getAllProviders(IRadiusServiceProvider.class);
             for (IRadiusServiceProvider provider : allProviders) {
-                String attrbuteName = provider.attributeName();
+                String attributeName = provider.attributeName();
                 List<IRadiusServiceProvider> serviceProviders = serviceMap
-                        .get(attrbuteName);
+                        .get(attributeName);
                 if (serviceProviders == null) {
                     serviceProviders = new ArrayList<>();
-                    serviceMap.put(attrbuteName, serviceProviders);
+                    serviceMap.put(attributeName, serviceProviders);
                 }
                 serviceProviders.add(provider);
             }
