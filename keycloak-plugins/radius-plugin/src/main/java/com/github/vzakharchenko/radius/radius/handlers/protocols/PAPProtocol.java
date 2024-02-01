@@ -36,7 +36,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
         String userPassword = accessRequest.getUserPassword();
         return
                 userPassword.equals(password) ||
-                        verifyPapPassword(password);
+                        verifyPapPassword(userPassword);
     }
 
     private boolean verifyProtocolPassword(UserModel userModel,
