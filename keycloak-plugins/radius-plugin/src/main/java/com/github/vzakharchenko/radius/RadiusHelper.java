@@ -191,7 +191,7 @@ public final class RadiusHelper {
                 .getValueString(), "@");
         RealmModel realm = null;
         if (StringUtils.isNotEmpty(realmName)) {
-            realm = session.realms().getRealm(realmName);
+            realm = session.realms().getRealmByName(realmName);
         }
         return (realm == null) ? getDefaultRealm(session) : realm;
     }
@@ -202,7 +202,7 @@ public final class RadiusHelper {
         for (String attribute : attributes) {
             String realmName = getRealmName(attribute, radiusPacket);
             if (realmName != null) {
-                return session.realms().getRealm(realmName);
+                return session.realms().getRealmByName(realmName);
             }
         }
 

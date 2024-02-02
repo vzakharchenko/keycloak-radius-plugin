@@ -114,7 +114,7 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
     @Test
     public void testgetRadiusPasswordsRealmDoesNotExists() {
         RealmProvider provider = getProvider(RealmProvider.class);
-        when(provider.getRealm(REALM_RADIUS_NAME)).thenReturn(null);
+        when(provider.getRealm(REALM_RADIUS_ID)).thenReturn(null);
         when(authProtocol.getRealm()).thenReturn(null);
         assertFalse(authRequestInitialization
                 .init(inetSocketAddress, USER, authProtocol, session));
@@ -163,7 +163,7 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
     @Test
     public void testgetafterAuthRealmERROR() {
         RealmProvider realmProvider = getProvider(RealmProvider.class);
-        when(realmProvider.getRealm(REALM_RADIUS_NAME)).thenReturn(null);
+        when(realmProvider.getRealm(REALM_RADIUS_ID)).thenReturn(null);
         authRequestInitialization
                 .afterAuth(4, session);
     }

@@ -171,7 +171,7 @@ public class PAPTest extends AbstractRadiusTest {
     public void testIsNotValid() {
         // request.addAttribute(REALM_RADIUS, "33");
         reset(realmProvider);
-        when(realmProvider.getRealm(Config.getAdminRealm())).thenReturn(realmModel);
+        when(realmProvider.getRealmByName(Config.getAdminRealm())).thenReturn(realmModel);
         PAPProtocol papProtocol = new PAPProtocol(request, session);
         assertFalse(papProtocol.isValid(new InetSocketAddress(0)));
     }
