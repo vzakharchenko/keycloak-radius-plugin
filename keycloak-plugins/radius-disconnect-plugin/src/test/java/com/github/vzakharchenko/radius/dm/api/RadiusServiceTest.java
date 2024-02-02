@@ -182,7 +182,7 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
         disconnectMessageModel.setClientId("clientId");
         disconnectMessageModel.setUserId(USER);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
         when(tableManager.getActiveSession(any(), any(), any())).thenReturn(disconnectMessageModel);
         RadiusServiceModel activeUser = radiusService.getActiveUser("test", "test");
         assertNotNull(activeUser);
@@ -195,7 +195,7 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
         disconnectMessageModel.setClientId("clientId");
         disconnectMessageModel.setUserId(USER);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
         when(tableManager.getActiveSession(any(), any(), any())).thenReturn(null);
         RadiusServiceModel activeUser = radiusService.getActiveUser("test", "test");
         assertNotNull(activeUser);
@@ -209,7 +209,7 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         DisconnectMessageModel disconnectMessageModel = new DisconnectMessageModel();
         disconnectMessageModel.setClientId("clientId");
         disconnectMessageModel.setUserId(USER);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
 
         when(tableManager.getAllActiveSessions(any(), any()))
                 .thenReturn(Arrays.asList(disconnectMessageModel));
@@ -226,7 +226,7 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         disconnectMessageModel.setClientId("clientId");
         disconnectMessageModel.setKeycloakSessionId("sessionId");
         disconnectMessageModel.setUserId(USER);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
         disconnectMessageModel.setFramedIp("test");
         when(tableManager.getActiveSession(any(), any(), any())).thenReturn(disconnectMessageModel);
         RadiusServiceModel test = radiusService.logout("test", "test");
@@ -249,7 +249,7 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         disconnectMessageModel.setClientId("clientId");
         disconnectMessageModel.setKeycloakSessionId("sessionId");
         disconnectMessageModel.setUserId(USER);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
         disconnectMessageModel.setFramedIp(null);
         when(tableManager.getActiveSession(any(), any(), any())).thenReturn(disconnectMessageModel);
         RadiusServiceModel test = radiusService.logout("test", "test");
@@ -264,7 +264,7 @@ public class RadiusServiceTest extends AbstractRadiusTest {
         disconnectMessageModel.setClientId("clientId");
         disconnectMessageModel.setKeycloakSessionId("sessionId");
         disconnectMessageModel.setUserId(USER);
-        disconnectMessageModel.setRealmId(REALM_RADIUS_NAME);
+        disconnectMessageModel.setRealmId(REALM_RADIUS_ID);
         disconnectMessageModel.setFramedIp("test");
         when(tableManager.getActiveSession(any(), any(), any())).thenReturn(disconnectMessageModel);
         when(userSessionProvider.getUserSession(eq(realmModel), anyString()))

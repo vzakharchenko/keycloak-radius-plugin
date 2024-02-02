@@ -20,7 +20,7 @@ public final class EventLoggerUtils {
             KeycloakSession session,
             ClientConnection clientConnection) {
 
-        return createEvent(session, session.realms().getRealm(Config.getAdminRealm()),
+        return createEvent(session, session.realms().getRealmByName(Config.getAdminRealm()),
                 clientConnection);
     }
 
