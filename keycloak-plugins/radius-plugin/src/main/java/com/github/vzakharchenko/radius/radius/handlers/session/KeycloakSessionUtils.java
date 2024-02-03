@@ -9,9 +9,9 @@ import org.keycloak.common.ClientConnection;
 import org.keycloak.common.util.Resteasy;
 import org.keycloak.models.*;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 public final class KeycloakSessionUtils {
 

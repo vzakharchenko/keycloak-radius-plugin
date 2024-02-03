@@ -25,7 +25,7 @@ public class TotpPassword implements IOTPPassword {
                 steps.insert(0, "0");
             }
             String candidate = timeBasedOTP
-                    .generateOTP(new String(secret, StandardCharsets.UTF_8), steps.toString(),
+                    .generateOTP(secret, steps.toString(),
                             credentialData.getDigits(), credentialData.getAlgorithm());
             passwords.add(candidate);
 

@@ -65,7 +65,7 @@ public class RadiusCredentialProviderTest extends AbstractRadiusTest {
 
     @Test
     public void testCreateCredentialEmptyDate() {
-        when(session.userCache()).thenReturn(null);
+        when(session.users()).thenReturn(null);
         CredentialModel credential = credentialProvider
                 .createCredential(realmModel, userModel
                         , RadiusCredentialModel

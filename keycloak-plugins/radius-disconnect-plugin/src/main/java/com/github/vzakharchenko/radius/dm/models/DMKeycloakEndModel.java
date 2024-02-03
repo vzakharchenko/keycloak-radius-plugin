@@ -1,6 +1,6 @@
 package com.github.vzakharchenko.radius.dm.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity

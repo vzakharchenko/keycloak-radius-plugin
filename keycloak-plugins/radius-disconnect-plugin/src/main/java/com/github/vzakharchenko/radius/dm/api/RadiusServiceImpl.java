@@ -16,7 +16,7 @@ import org.keycloak.representations.AccessToken;
 import org.keycloak.services.ForbiddenException;
 import org.keycloak.services.resource.RealmResourceProviderFactory;
 
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.QueryParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
