@@ -61,7 +61,7 @@ features:
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
-***requirements***: [keycloak 23.0.5](https://github.com/keycloak/keycloak/releases/download/23.0.5/keycloak-23.0.5.zip)
+***requirements***: [keycloak 23.0.6](https://github.com/keycloak/keycloak/releases/download/23.0.6/keycloak-23.0.6.zip)
 ```bash
 cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/radius-plugin-1.5.0-SNAPSHOT.jar
 cp ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-1.5.0-SNAPSHOT.jar ${KEYCLOAK_PATH}/providers/rad-sec-plugin-1.5.0-SNAPSHOT.jar
@@ -73,7 +73,7 @@ cp ${SOURCE}/keycloak-plugins/proxy-radius-plugin/target/proxy-radius-plugin-1.5
 cp ${SOURCE}/keycloak-radius-plugin/keycloak-plugins/radius-theme/target/radius-theme-1.5.0-SNAPSHOT.zip ${KEYCLOAK_PATH}/providers/radius-theme-1.5.0-SNAPSHOT.jar
 ```
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-23.0.5.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-23.0.6.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 
 ### Environment Variables
@@ -136,7 +136,7 @@ where
 ```bash
 #!/usr/bin/env bash
 set -e
-cd keycloak-23.0.5
+cd keycloak-23.0.6
 sh bin/kc.sh --debug 8190 start-dev --http-port=8090
 ```
 
