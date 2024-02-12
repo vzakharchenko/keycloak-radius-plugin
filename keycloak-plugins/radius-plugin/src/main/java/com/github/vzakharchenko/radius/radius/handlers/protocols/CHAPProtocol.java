@@ -28,16 +28,14 @@ public class CHAPProtocol extends AbstractAuthProtocol {
     }
 
     @Override
-    protected void answer(RadiusPacket answer,
-                          IRadiusUserInfoGetter radiusUserInfoGetter) {
-
-    }
-
-    @Override
     public ProtocolType getType() {
         return ProtocolType.CHAP;
     }
 
+    @Override
+    protected void answer(RadiusPacket answer, IRadiusUserInfoGetter radiusUserInfoGetter) {
+        // do nothing
+    }
 
     private MessageDigest getMd5Digest() {
         try {

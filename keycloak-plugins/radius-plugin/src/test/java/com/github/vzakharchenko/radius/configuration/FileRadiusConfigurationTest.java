@@ -5,6 +5,7 @@ import com.github.vzakharchenko.radius.models.file.CoASettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
 import com.github.vzakharchenko.radius.models.file.RadiusConfigModel;
+import com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import org.apache.commons.io.FileUtils;
 import org.keycloak.util.JsonSerialization;
@@ -14,7 +15,9 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Set;
 
 import static org.testng.Assert.*;
 import static uk.org.webcompere.systemstubs.SystemStubs.withEnvironmentVariable;
@@ -32,23 +35,34 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         radiusConfigModel.setSharedSecret("GlobalShared");
         radiusConfigModel.setNumberThreads(19);
         radiusConfigModel.setUseUdpRadius(true);
-        radiusConfigModel.setOtp(true);
+        radiusConfigModel.setOtpWithoutPassword(Set.of("CHAP", "MSCHAPV2", "PAP"));
         RadiusAccessModel radiusAccessModel = new RadiusAccessModel();
         radiusAccessModel.setIp("ip");
         radiusAccessModel.setSharedSecret("ip");
-        radiusConfigModel.setRadiusIpAccess(Arrays.asList(radiusAccessModel));
-        radiusConfiguration.setRadiusSettings(null);
+        radiusConfigModel.setRadiusIpAccess(List.of(radiusAccessModel));
         CoASettingsModel coASettingsModel = new CoASettingsModel();
         coASettingsModel.setPort(1000);
         coASettingsModel.setUseCoA(true);
         radiusConfigModel.setCoa(coASettingsModel);
-        FileUtils.write(config,
-                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
+        writeModelAndRestSettings();
     }
 
     @AfterMethod
-    public void afterNethods() {
+    public void afterMethods() {
         FileUtils.deleteQuietly(config);
+    }
+
+
+
+    private void writeModelAndRestSettings() throws IOException {
+        FileUtils.write(config,
+                JsonSerialization.writeValueAsPrettyString(radiusConfigModel),
+                Charset.defaultCharset());
+        radiusConfiguration.setRadiusSettings(null);
+    }
+    private RadiusServerSettings writeModelAndGetSettings() throws IOException {
+        writeModelAndRestSettings();
+        return radiusConfiguration.getRadiusSettings();
     }
 
     @Test
@@ -74,7 +88,8 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     public void testRadiusEnvs() throws Exception {
         withEnvironmentVariable(FileRadiusConfiguration.FILE_CONFIG_VARIABLE, "./config")
                 .execute(() -> {
-                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_CONFIG_VARIABLE), "./config");
+                    assertEquals(System.getenv(FileRadiusConfiguration.FILE_CONFIG_VARIABLE),
+                            "./config");
                     RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
                     assertNotNull(radiusSettings);
                     assertEquals(radiusSettings.getAccountPort(), 1813);
@@ -85,7 +100,6 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     @Test
     public void testMethods2() {
         RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
-        radiusSettings = radiusConfiguration.getRadiusSettings();
         assertNotNull(radiusSettings);
         assertEquals(radiusSettings.getAccountPort(), 1813);
     }
@@ -93,10 +107,7 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     @Test
     public void testRadSecConfigurationDefaultFalse() throws IOException {
         radiusConfigModel.setRadsec(new RadSecSettingsModel());
-        FileUtils.write(config,
-                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
-        radiusSettings = radiusConfiguration.getRadiusSettings();
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
         assertNotNull(radiusSettings);
         assertFalse(radiusSettings.getRadSecSettings().isUseRadSec());
     }
@@ -106,10 +117,7 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
         RadSecSettingsModel radsec = new RadSecSettingsModel();
         radsec.setUseRadSec(true);
         radiusConfigModel.setRadsec(radsec);
-        FileUtils.write(config,
-                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
-        radiusSettings = radiusConfiguration.getRadiusSettings();
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
         assertNotNull(radiusSettings);
         assertTrue(radiusSettings.getRadSecSettings().isUseRadSec());
     }
@@ -117,10 +125,7 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     @Test
     public void testRadSecConfigurationNull() throws IOException {
         radiusConfigModel.setRadsec(null);
-        FileUtils.write(config,
-                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
-        radiusSettings = radiusConfiguration.getRadiusSettings();
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
         assertNotNull(radiusSettings);
         assertFalse(radiusSettings.getRadSecSettings().isUseRadSec());
     }
@@ -128,24 +133,114 @@ public class FileRadiusConfigurationTest extends AbstractRadiusTest {
     @Test
     public void testCoaConfigurationNull() throws IOException {
         radiusConfigModel.setCoa(null);
-        FileUtils.write(config,
-                JsonSerialization.writeValueAsPrettyString(radiusConfigModel));
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
-        radiusSettings = radiusConfiguration.getRadiusSettings();
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
         assertNotNull(radiusSettings);
         assertFalse(radiusSettings.getCoASettings().isUseCoAPackage());
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
-    public void testMethodsDoesNotexists() {
+    public void testMethodsDoesNotExists() {
         FileUtils.deleteQuietly(config);
-        RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        radiusConfiguration.getRadiusSettings();
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
-    public void testMethodsWrongStrucure() throws IOException {
+    public void testMethodsWrongStructure() throws IOException {
         FileUtils.deleteQuietly(config);
-        FileUtils.write(config, "test");
+        FileUtils.write(config, "test", Charset.defaultCharset());
+        radiusConfiguration.getRadiusSettings();
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOnAll() {
         RadiusServerSettings radiusSettings = radiusConfiguration.getRadiusSettings();
+        assertNotNull(radiusSettings);
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOnChap() throws IOException {
+        radiusConfigModel.setOtpWithoutPassword(Set.of("CHAP"));
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOnMsChapV2() throws IOException {
+        radiusConfigModel.setOtpWithoutPassword(Set.of("MSCHAPV2"));
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOnPAP() throws IOException {
+        radiusConfigModel.setOtpWithoutPassword(Set.of("PAP"));
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOnChapMsChapV2MixedCase() throws IOException {
+        radiusConfigModel.setOtpWithoutPassword(Set.of("chap", "MSChapV2"));
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOWrongProtocol() throws IOException {
+        // this test logs an ERROR about an invalid protocol setting
+        radiusConfigModel.setOtpWithoutPassword(Set.of("chap", "foo"));
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordLegacyOff() throws IOException {
+        radiusConfigModel.setOtpWithoutPassword(null);
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    public void testOtpWithoutPasswordOff() throws IOException {
+        radiusConfigModel.setOtpWithoutPassword(null);
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testOtpWithoutPasswordLegacyOn() throws IOException {
+        // this test logs a WARNing about legacy otp setting
+        radiusConfigModel.setOtpWithoutPassword(null);
+        radiusConfigModel.setOtp(true);
+        RadiusServerSettings radiusSettings = writeModelAndGetSettings();
+        assertNotNull(radiusSettings);
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.CHAP));
+        assertTrue(radiusSettings.isOtpWithoutPassword(ProtocolType.MSCHAPV2));
+        assertFalse(radiusSettings.isOtpWithoutPassword(ProtocolType.PAP));
     }
 }

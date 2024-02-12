@@ -46,10 +46,10 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
     @Test
     public void testChapMethods() {
         AccessRequest request = new AccessRequest(realDictionary, 0, new byte[16]);
-        MSCHAPV2Protocol papProtocol = new MSCHAPV2Protocol(request, session);
-        assertEquals(papProtocol.getType(), ProtocolType.MSCHAPV2);
+        MSCHAPV2Protocol protocol = new MSCHAPV2Protocol(request, session);
+        assertEquals(protocol.getType(), ProtocolType.MSCHAPV2);
 
-        papProtocol.answer(
+        protocol.answer(
                 new RadiusPacket(realDictionary, 1, 0), null);
     }
 

@@ -34,7 +34,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     protected final KeycloakSession session;
     protected IOtpPasswordFactory otpPasswordGetter;
 
-    public AbstractAuthProtocol(AccessRequest accessRequest, KeycloakSession session) {
+    protected AbstractAuthProtocol(AccessRequest accessRequest, KeycloakSession session) {
         this.accessRequest = accessRequest;
         this.session = session;
         this.otpPasswordGetter = new OTPPasswordFactory();
@@ -46,8 +46,12 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return RadiusHelper.getRealm(session, accessRequest);
     }
 
-    protected abstract void answer(RadiusPacket answer,
-                                   IRadiusUserInfoGetter radiusUserInfoGetter);
+    /**
+     * Overwrite to add protocol specific attributes to the RADIUS answer package.
+     *
+     * @see MSCHAPV2Protocol#answer(RadiusPacket, IRadiusUserInfoGetter)
+     */
+    protected abstract void answer(RadiusPacket answer, IRadiusUserInfoGetter radiusUserInfoGetter);
 
 
     private void prepareAnswerAttributes(IRadiusAttributeProvider provider,
@@ -104,7 +108,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
 
 
     @Override
-    public final boolean verifyPassword(PasswordData password) {
+    public boolean verifyPassword(PasswordData password) {
         if (password == null || StringUtils.isEmpty(password.getPassword())) {
             return false;
         }
@@ -155,7 +159,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
     }
 
     protected boolean supportOtpWithoutPassword() {
-        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtp();
+        return RadiusConfigHelper.getConfig().getRadiusSettings().isOtpWithoutPassword(getType());
     }
 
     protected boolean verifyPasswordWithOtp(OtpPasswordInfo otPs) {

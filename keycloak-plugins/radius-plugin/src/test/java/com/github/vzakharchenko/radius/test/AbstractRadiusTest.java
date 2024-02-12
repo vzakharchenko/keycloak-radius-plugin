@@ -398,4 +398,11 @@ public abstract class AbstractRadiusTest {
             throw new IllegalStateException(e);
         }
     }
+
+    protected void enableOtpWithoutPassword() {
+        reset(configuration);
+        when(configuration.getRadiusSettings())
+                .thenReturn(ModelBuilder.createRadiusOtpServerSettings());
+        RadiusConfigHelper.setConfiguration(configuration);
+    }
 }

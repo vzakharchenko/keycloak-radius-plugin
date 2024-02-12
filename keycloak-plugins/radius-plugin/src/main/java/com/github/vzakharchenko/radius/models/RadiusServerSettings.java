@@ -1,6 +1,10 @@
 package com.github.vzakharchenko.radius.models;
 
+import com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType;
+
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 public class RadiusServerSettings {
     private String secret;
@@ -8,7 +12,7 @@ public class RadiusServerSettings {
     private boolean useUdpRadius;
     private int accountPort;
     private int numberThreads;
-    private boolean otp;
+    private final Set<ProtocolType> otpWithoutPassword = EnumSet.noneOf(ProtocolType.class);
     private String externalDictionary;
     private RadSecSettings radSecSettings;
     private CoASettings coASettings;
@@ -78,12 +82,16 @@ public class RadiusServerSettings {
         this.coASettings = coASettings;
     }
 
-    public boolean isOtp() {
-        return otp;
+    public boolean isOtpWithoutPassword(ProtocolType type) {
+        return otpWithoutPassword.contains(type);
     }
 
-    public void setOtp(boolean otp) {
-        this.otp = otp;
+    public void addOtpWithoutPassword(ProtocolType type) {
+        this.otpWithoutPassword.add(type);
+    }
+
+    public void removeOtpWithoutPassword(ProtocolType type) {
+        this.otpWithoutPassword.remove(type);
     }
 
     public String getExternalDictionary() {

@@ -5,7 +5,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-radius-plugin/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-radius-plugin?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.vzakharchenko/keycloak-plugins/badge.svg)]
 <a href="https://codeclimate.com/github/vzakharchenko/keycloak-radius-plugin/maintainability"><img src="https://api.codeclimate.com/v1/badges/499d56ae9242cfaf2cbb/maintainability" /></a>
-[![BCH compliance](https://bettercodehub.com/edge/badge/vzakharchenko/keycloak-radius-plugin?branch=master)](https://bettercodehub.com/)
 
 Run radius server inside [keycloak](https://www.keycloak.org/).
 features:
@@ -103,7 +102,7 @@ export KEYCLOAK_PATH= /opt/keycloak/
   "numberThreads": 8,
   "useUdpRadius": true,
   "externalDictionary": "/opt/dictionary",
-  "otp": false,
+  "otpWithoutPassword": [ ],
   "radsec": {
     "privateKey": "config/private.key",
     "certificate": "config/public.crt",
@@ -116,9 +115,9 @@ export KEYCLOAK_PATH= /opt/keycloak/
    }
 }
 </code></pre>
-where
 
- -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
+where
+   -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
    -  **authPort** - Authentication and authorization port
    -  **accountPort** - Accounting port
    -  **useUdpRadius** - if true, then listen to authPort and accountPort
@@ -130,7 +129,10 @@ where
    -  **coa** - CoA request configuration
    -  **port** - CoA port (Mikrotik:3799, Cisco:1700)
    -  **useCoA** - use CoA request
-   -  **otp** - use OTP without password
+   -  **otpWithoutPassword** - allow _OTP without password_ for the supplied protocols (CHAP, MSCHAPV2, PAP),
+      e.g. ```"otpWithoutPassword": [ "chap", "mschapv2", "pap" ]```
+   - **otp** - _deprecated_, ignored if **otpWithoutPassword** is defined, otherwise
+     ```"otp":true``` is interpreted for backward compatibility as ```"otpWithoutPassword": [ "chap", "mschapv2" ]```
    -  **externalDictionary** - path to the dictionary file in freeradius format
 ##
  Run Keycloak Locally
@@ -146,11 +148,17 @@ sh bin/kc.sh --debug 8190 start-dev --http-port=8090
 
 ### Mapping Radius Password to Keycloak Credentials
 
-| Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Kerberos credentials | Ldap credentials | [Keycloak Radius credentials](#keycloak-radius-credentials) | [Keycloak Radius credentials](#keycloak-radius-credentials) with OTP | Keycloak OTP(if config file contains "otp":true) |
-|-----------------|----------------------|-------------------------------|----------------------|------------------|-----------------------------|--------------------------------------|--------------------------------------------------|
-| PAP             | Yes                  | Yes                           | Yes                  | Yes              | Yes                         | Yes                                  | NO                                              |
-| CHAP            | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
-| MSCHAPV2        | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                                              |
+| Radius Protocol | Keycloak credentials | Keycloak credentials with OTP | Kerberos credentials | LDAP credentials | [Keycloak Radius credentials](#keycloak-radius-credentials) | [Keycloak Radius credentials](#keycloak-radius-credentials) with OTP | Keycloak OTP without password |
+|-----------------|----------------------|-------------------------------|----------------------|------------------|-----------------------------|--------------------------------------|-------------------------------|
+| PAP             | Yes                  | Yes                           | Yes                  | Yes              | Yes                         | Yes                                  | Yes *1                        |
+| CHAP            | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                           |
+| MSCHAPV2        | No                   | No                            | No                   | No               | Yes                         | Yes                                  | Yes                           |
+
+*1) In contrast to CHAP and MSCHAPV2, an OTP token must be registered with the account for 
+PAP and _OTP without a password_.
+This prevents authentication from being successful with the password only, even if the user does not yet have a token.
+An OTP token code is always required as a second factor (password plus code or code without password).
+
 
 ### Assign Radius Attributes to Role
 > **_NOTE:_**  Composite roles supported
@@ -367,25 +375,29 @@ Example:
      2. User sets his own Radius password ![RadiusUserPassword](./docs/RadiusUserPassword.png)
 
 
-### Otp Password
+### OTP Password
 
-1. enable Otp Password on Keycloak side. https://www.keycloak.org/docs/latest/server_admin/
+1. enable OTP Password on Keycloak side. https://www.keycloak.org/docs/latest/server_admin/
 ![impersonateUserExample3](./docs/impersonateUserExample3.png) ![impersonateUserExample4](./docs/impersonateUserExample4.png)
-2.  password in request must contain the password and otp.
+2. password in request must contain the password concatenated with OTP token code .
 3. Structure Password in request:
-    -  PAP password: ```<Keycloak Password/RADIUS Password><OTP>```
-           example: testPassword123456, where testPassword is password, 123456 is otp
-    -  MSCHAP/CHAP: ```<RADIUS Password><OTP>```
-           example: testPassword123456, where testPassword is password, 123456 is otp
-    -  PAP password with Otp (if config file contains "otp":true) : ```<OTP>```
-           example: 123456, where 123456 is otp
+    -  PAP password: ```<Keycloak Password/RADIUS Password><OTP>```,
+       example: testPassword123456, where testPassword is password, 123456 is OTP
+    -  MSCHAPV2/CHAP: ```<RADIUS Password><OTP>```,
+       example: testPassword123456, where testPassword is password, 123456 is OTP
+    -  PAP password with _OTP without password_ (if config file contains
+       ```"otpWithoutPassword": [ "pap", ... ]```): ```<OTP>``` or ```<RADIUS Password/Keycloak Password/RADIUS Password><OTP>```,
+       example: 123456, where 123456 is OTP
+   -  MSCHAPV2/CHAP password with _OTP without password_ (if config file contains
+      ```"otpWithoutPassword": [ "chap", "mschapv2", ... ]```): ```<OTP>``` or ```<RADIUS Password><OTP>``` or ```<RADIUS Password>``` if no OTP token is registered,
+      example: 123456, where 123456 is OTP
 
 [OTP Password example](Examples/OTPPasswordJSExample)
 
 ### WebAuthn Authentication
 [wiki page](https://github.com/vzakharchenko/keycloak-radius-plugin/wiki/WebAuthnRadius)
 
-## Add custom Radius Dictionary(example for Fortinet)
+## Add custom Radius Dictionary (example for Fortinet)
  - create dictionary Fortinet.dictionary:
 ```
 VENDOR		12356   Fortinet

@@ -1,1 +1,3 @@
 - Build and start scripts for development: Add support to save and restore configuration files (keycloak.conf, radius.config and cache-ispn.xml) along with the database files.
+- add 'OTP without password' support to RADIUS PAP authorization
+- configuration option "otp" is replaced by "otpWithoutPassword" to specifying the enabled protocols by name as array: CHAP, MSCHAPV2, PAP

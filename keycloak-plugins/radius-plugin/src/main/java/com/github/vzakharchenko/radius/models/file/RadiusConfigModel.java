@@ -1,7 +1,9 @@
 package com.github.vzakharchenko.radius.models.file;
 
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class RadiusConfigModel {
     private String sharedSecret;
@@ -10,7 +12,9 @@ public class RadiusConfigModel {
     private int authPort = 1812;
     private int accountPort = 1813;
     private int numberThreads = 8;
+    @Deprecated(since = "1.4.13")
     private boolean otp;
+    private Set<String> otpWithoutPassword = Collections.emptySet();
     private String externalDictionary;
     private List<RadiusAccessModel> radiusIpAccess;
     private boolean useUdpRadius;
@@ -79,12 +83,23 @@ public class RadiusConfigModel {
         this.coa = coa;
     }
 
+    @Deprecated(since = "1.4.13")
     public boolean isOtp() {
         return otp;
     }
 
+    @Deprecated(since = "1.4.13")
     public void setOtp(boolean otp) {
         this.otp = otp;
+    }
+
+    public Set<String> getOtpWithoutPassword() {
+        return otpWithoutPassword;
+    }
+
+    public void setOtpWithoutPassword(Set<String> otpWithoutPassword) {
+        this.otpWithoutPassword = otpWithoutPassword != null ?
+                Collections.unmodifiableSet(otpWithoutPassword) : Collections.emptySet();
     }
 
     public String getExternalDictionary() {
