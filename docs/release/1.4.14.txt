@@ -1,0 +1,1 @@
+- keykloack version 23.0.6
