@@ -4,14 +4,9 @@ import com.github.vzakharchenko.radius.mappers.IRadiusSessionPasswordManager;
 import com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
-import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.common.util.Resteasy;
 import org.keycloak.models.*;
-
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
 
 public final class KeycloakSessionUtils {
 
@@ -67,15 +62,9 @@ public final class KeycloakSessionUtils {
         Resteasy.pushContext(KeycloakSession.class, session);
         Resteasy.pushContext(KeycloakTransaction.class,
                 session.getTransactionManager());
-        MultivaluedMap<String, String> headers = new MultivaluedHashMap<>();
-        headers.add(HttpHeaders.USER_AGENT, "Radius/v0.01 rev. 001 (" + radiusUserInfo
-                .getClientConnection()
-                .getLocalAddr() + ")");
-        Resteasy.pushContext(HttpHeaders.class, new ResteasyHttpHeaders(headers));
         Resteasy.pushContext(ClientConnection.class, radiusUserInfo.getClientConnection());
         session.getContext().setRealm(radiusUserInfo.getRealmModel());
         session.getContext().setClient(radiusUserInfo.getClientModel());
-
     }
 
     public static void clearOneTimePassword(KeycloakSession session) {

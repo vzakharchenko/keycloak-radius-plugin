@@ -76,7 +76,7 @@ public class AuthorizationAttributesTest extends AbstractRadiusTest {
 
         when(resourceStore.findByResourceServer(resourceServer))
                 .thenReturn(Arrays.asList(resource));
-        when(resourceServerStore.findById(realmModel, CLIENT_ID)).thenReturn(resourceServer);
+        when(resourceServerStore.findById(CLIENT_ID)).thenReturn(resourceServer);
         resourcePermission = new ResourcePermission(resource, resourceServer, new HashMap<>());
 
         doAnswer(invocationOnMock -> {
@@ -119,7 +119,7 @@ public class AuthorizationAttributesTest extends AbstractRadiusTest {
 
     @Test
     public void testGetKeycloakTypes0() {
-        when(resourceServerStore.findById(realmModel, CLIENT_ID)).thenReturn(null);
+        when(resourceServerStore.findById(CLIENT_ID)).thenReturn(null);
         Set<Resource> keycloakTypes = authorizationAttributes
                 .getKeycloakTypes();
         assertNotNull(keycloakTypes);
