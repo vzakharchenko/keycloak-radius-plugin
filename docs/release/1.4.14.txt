@@ -1,1 +1,1 @@
-- keykloack version 23.0.6
+- keykloack version 24.0.4
