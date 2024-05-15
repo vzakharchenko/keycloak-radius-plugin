@@ -13,7 +13,7 @@ public final class RadiusSessionPasswordManager implements IRadiusSessionPasswor
 
 
     public static final String RADIUS_SESSION_PASSWORD = "RADIUS_SESSION_PASSWORD";
-    public static final String RADIUS_SESSION_EXPIRATION = "RADIUS_SESSION_EXPERATION";
+    public static final String RADIUS_SESSION_EXPIRATION = "RADIUS_SESSION_EXPIRATION";
     public static final String RADIUS_SESSION_PASSWORD_TYPE = "RADIUS_SESSION_PASSWORD_TYPE";
 
     private static final RadiusSessionPasswordManager
