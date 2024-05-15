@@ -55,7 +55,7 @@
         <maven-pmd-plugin>3.21.2</maven-pmd-plugin>
         <properties-maven-plugin>1.2.1</properties-maven-plugin>
         <spotbugs-maven-plugin>4.8.3.1</spotbugs-maven-plugin>
-        <slf4j.version>2.0.7</slf4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
         <fast-build>false</fast-build>
 
         <pmdVersion>6.17.0</pmdVersion>
