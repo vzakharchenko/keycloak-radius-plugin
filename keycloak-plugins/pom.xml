@@ -291,6 +291,12 @@
                                 <exclude>META-INF/NOTICE</exclude>
                             </excludes>
                         </filter>
+                        <filter>
+                            <artifact>commons-io:commons-io</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
                     </filters>
                 </configuration>
                 <executions>
