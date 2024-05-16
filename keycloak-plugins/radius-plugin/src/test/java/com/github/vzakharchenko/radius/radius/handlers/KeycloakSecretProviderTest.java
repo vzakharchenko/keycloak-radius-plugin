@@ -52,7 +52,7 @@ public class KeycloakSecretProviderTest extends AbstractRadiusTest {
     @Test
     public void testSharedSecretNull2() {
         String sharedSecret = keycloakSecretProvider
-                .getSharedSecret(new InetSocketAddress("dfsf", 0));
+                .getSharedSecret(new InetSocketAddress("not-existing-hostname.", 0));
         assertNull(sharedSecret);
     }
 
