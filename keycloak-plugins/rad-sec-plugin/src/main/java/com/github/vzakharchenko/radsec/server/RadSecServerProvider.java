@@ -27,7 +27,7 @@ import org.tinyradius.server.SecretProvider;
 
 import java.io.File;
 
-public class RadSecServerProvider
+public final class RadSecServerProvider
         extends AbstractRadiusServerProvider implements IRadSecServerProvider {
 
     private static final Logger LOGGER = Logger.getLogger(KeycloakRadiusServer.class);

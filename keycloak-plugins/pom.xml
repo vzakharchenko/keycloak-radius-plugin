@@ -50,11 +50,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
-        <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
+        <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.4.1</maven-enforcer-plugin>
-        <maven-pmd-plugin>3.21.2</maven-pmd-plugin>
+        <maven-pmd-plugin>3.22.0</maven-pmd-plugin>
         <properties-maven-plugin>1.2.1</properties-maven-plugin>
-        <spotbugs-maven-plugin>4.8.3.1</spotbugs-maven-plugin>
+        <spotbugs-maven-plugin>4.8.4.0</spotbugs-maven-plugin>
         <slf4j.version>2.0.13</slf4j.version>
         <fast-build>false</fast-build>
 
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>org.jboss.logmanager</groupId>
             <artifactId>jboss-logmanager</artifactId>
-            <version>3.0.5.Final</version>
+            <version>3.0.6.Final</version>
             <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-servlet-filter-adapter -->
@@ -196,7 +196,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.9.0</version>
+            <version>7.10.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -291,6 +291,12 @@
                                 <exclude>META-INF/NOTICE</exclude>
                             </excludes>
                         </filter>
+                        <filter>
+                            <artifact>commons-io:commons-io</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
                     </filters>
                 </configuration>
                 <executions>
@@ -374,7 +380,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.0.0</version>
+                                    <version>3.6.3</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
@@ -388,7 +394,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

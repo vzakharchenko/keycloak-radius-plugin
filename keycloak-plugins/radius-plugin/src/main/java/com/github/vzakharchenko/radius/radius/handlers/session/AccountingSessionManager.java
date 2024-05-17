@@ -126,6 +126,7 @@ public class AccountingSessionManager implements IAccountingSessionManager {
     }
 
     @Override
+    @SuppressWarnings("PMD.UnusedAssignment") // a PMD false positive
     public IAccountingSessionManager manageSession() {
         String sessionId = RadiusLibraryUtils.getAttributeValue(accountingRequest,
                 ACCT_SESSION_ID);

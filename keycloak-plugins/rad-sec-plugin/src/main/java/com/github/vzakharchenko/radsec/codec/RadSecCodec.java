@@ -136,7 +136,7 @@ public class RadSecCodec extends MessageToMessageCodec<ByteBuf, ResponseCtx> {
 
     protected void fillPackages(ByteBuf msg, int pos, List<ByteBuf> byteBufs) {
         ByteBuffer byteBuffer = msg.nioBuffer();
-        ByteBuffer content = (ByteBuffer) byteBuffer.position(pos);
+        ByteBuffer content = byteBuffer.position(pos);
         if (content.remaining() > HEADER_LENGTH) {
             fillPackages(content, msg, pos, byteBufs);
         }

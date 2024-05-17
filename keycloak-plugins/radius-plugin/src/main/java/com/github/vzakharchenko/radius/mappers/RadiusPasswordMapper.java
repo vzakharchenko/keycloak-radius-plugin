@@ -72,8 +72,7 @@ public class RadiusPasswordMapper extends AbstractOIDCProtocolMapper implements
         if (RadiusHelper.isUseRadius()) {
             token.getOtherClaims().put("s",
                     getPassword(userSession, token, BooleanUtils.toBooleanObject(
-                            mappingModel.getConfig()
-                                    .get(RadiusPasswordMapper.ONE_TIME_PASSWORD))));
+                            mappingModel.getConfig().get(ONE_TIME_PASSWORD))));
             token.getOtherClaims().put("n", userNameFieldMapper());
             token.getOtherClaims().put("np", passwordFieldMapper());
         }

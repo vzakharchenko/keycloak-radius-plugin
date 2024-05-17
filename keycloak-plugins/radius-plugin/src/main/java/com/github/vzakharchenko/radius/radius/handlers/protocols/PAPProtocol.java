@@ -47,6 +47,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
      * b) the supplied user password contains the valid password suffixed by the otpTokenCode
      */
     @Override
+    @SuppressWarnings("PMD.SimplifyBooleanReturns") // improves readability
     public boolean verifyProtocolPassword(String validOtpTokenCode) {
         if (StringUtils.isEmpty(validOtpTokenCode)) {
             return false;
@@ -84,6 +85,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
         return false;
     }
 
+    @SuppressWarnings("PMD.SimplifyBooleanReturns") // improves readability
     private boolean verifyProtocolPasswordAgainstPlaintext(String password) {
         if (StringUtils.isEmpty(password)) {
             return false;
