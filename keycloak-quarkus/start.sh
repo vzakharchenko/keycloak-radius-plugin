@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-kc_ver='23.0.6'
+kc_ver='24.0.4'
 kc_dir="target/keycloak/keycloak-$kc_ver"
 
 cd "${kc_dir}"
