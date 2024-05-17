@@ -15,6 +15,7 @@ import org.tinyradius.packet.RadiusPacket;
 
 import java.util.*;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements KeycloakAttributes {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractKeycloakAttributes.class);
@@ -70,6 +71,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
         return new HashMap<>();
     }
 
+    @SuppressWarnings("PMD.SimplifyBooleanReturns") // improves readability
     private boolean isValidConditional0(String radiusAttributeName, Collection<String> values) {
         RadiusAttribute attribute = accessRequest.getAttribute(radiusAttributeName);
         if (attribute == null) {

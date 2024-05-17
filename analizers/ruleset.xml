@@ -19,7 +19,7 @@
   </rule>
   <rule ref="category/java/design.xml/ExcessiveImports">
     <properties>
-      <property name="minimum" value="35.0" />
+      <property name="minimum" value="35" />
     </properties>
   </rule>
 
@@ -58,7 +58,7 @@
     <exclude name="AvoidRethrowingException"/>
     <exclude name="ExcessivePublicCount"/>
     <exclude name="UseObjectForClearerAPI"/>
-    <exclude name="ExcessiveMethodLength"/>
+<!--    <exclude name="ExcessiveMethodLength"/>-->
     <exclude name="NcssCount"/>
 <!--    <exclude name="CyclomaticComplexity"/>-->
 <!--    <exclude name="NPathComplexity"/>-->
@@ -67,7 +67,7 @@
   </rule>
   <rule ref="category/java/errorprone.xml">
     <exclude name="NonSerializableClass"/>
-    <exclude name="DataflowAnomalyAnalysis"/>
+<!--    <exclude name="DataflowAnomalyAnalysis"/>-->
     <exclude name="MissingSerialVersionUID"/>
   </rule>
   <rule ref="category/java/multithreading.xml">

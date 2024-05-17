@@ -9,14 +9,14 @@ public enum RadiusAccountState {
     UNSUPPORTED(""),
     INTERIM_UPDATE("Interim-Update");
 
-    private String radiusState;
+    private final String radiusState;
 
     RadiusAccountState(String radiusState) {
         this.radiusState = radiusState;
     }
 
     public static RadiusAccountState getByRadiusState(String value) {
-        return Arrays.stream(RadiusAccountState.values())
+        return Arrays.stream(values())
                 .filter(radiusAccountState -> radiusAccountState
                         .getRadiusState().equalsIgnoreCase(value)).findFirst().orElse(UNSUPPORTED);
     }

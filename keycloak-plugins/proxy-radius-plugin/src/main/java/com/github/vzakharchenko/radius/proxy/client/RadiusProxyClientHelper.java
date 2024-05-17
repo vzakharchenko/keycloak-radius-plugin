@@ -23,6 +23,6 @@ public final class RadiusProxyClientHelper {
     }
 
     public static void setRadiusProxyClient(IRadiusProxyClient radiusCoAClient) {
-        RadiusProxyClientHelper.radiusProxyClient = radiusCoAClient;
+        radiusProxyClient = radiusCoAClient;
     }
 }

@@ -12,7 +12,6 @@ import org.keycloak.models.cache.OnUserCache;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.vzakharchenko.radius.password.UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD;
@@ -98,6 +97,7 @@ public class RadiusCredentialProvider implements
     }
 
     @Override
+    @SuppressWarnings("PMD.SimplifyBooleanReturns") // improves readability
     public boolean isConfiguredFor(RealmModel realm, UserModel user, String credentialType) {
         if (!supportsCredentialType(credentialType)) {
             return false;
@@ -159,22 +159,20 @@ public class RadiusCredentialProvider implements
     @Override
     public void onCache(RealmModel realm, CachedUserModel user, UserModel delegate) {
         List<CredentialModel> passwords = getCredentialStore(user)
-                .getStoredCredentialsByTypeStream(getType()).collect(Collectors.toList());
+                .getStoredCredentialsByTypeStream(getType()).toList();
         user.getCachedWith().put(PASSWORD_CACHE_KEY, passwords);
     }
 
     @Override
     public RadiusCredentialModel getPassword(RealmModel realm, UserModel user) {
         List<CredentialModel> passwords = null;
-        if (user instanceof CachedUserModel && !((CachedUserModel) user).isMarkedForEviction()) {
-            CachedUserModel cached = (CachedUserModel) user;
+        if (user instanceof CachedUserModel cached && !cached.isMarkedForEviction()) {
             passwords = (List<CredentialModel>) cached.getCachedWith().get(PASSWORD_CACHE_KEY);
         }
 
-        if (!(user instanceof CachedUserModel) || ((CachedUserModel) user)
-                .isMarkedForEviction()) {
+        if (!(user instanceof CachedUserModel cached) || cached.isMarkedForEviction()) {
             passwords = getCredentialStore(user)
-                    .getStoredCredentialsByTypeStream(getType()).collect(Collectors.toList());
+                    .getStoredCredentialsByTypeStream(getType()).toList();
         }
         if (passwords == null || passwords.isEmpty()) {
             return null;

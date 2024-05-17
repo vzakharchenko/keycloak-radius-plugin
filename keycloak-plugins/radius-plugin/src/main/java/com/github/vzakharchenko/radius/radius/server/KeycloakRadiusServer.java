@@ -28,7 +28,7 @@ import java.net.InetSocketAddress;
 import static com.github.vzakharchenko.radius.password.UpdateRadiusPassword.RADIUS_UPDATE_PASSWORD;
 import static com.github.vzakharchenko.radius.password.UpdateRadiusPassword.UPDATE_RADIUS_PASSWORD_ID;
 
-public class KeycloakRadiusServer
+public final class KeycloakRadiusServer
         extends AbstractRadiusServerProvider {
 
     public static final String MS = "MS";
