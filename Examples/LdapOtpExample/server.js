@@ -10,11 +10,8 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.engine('handlebars', handlebars.engine());
-app.set('view engine', 'handlebars');
 app.set('main', './views');
-
 app.set('view engine', '.hbs');
-
 app.set('views', path.join(__dirname, 'views'));
 
 function renderUI(request, response, status) {
@@ -24,7 +21,7 @@ function renderUI(request, response, status) {
 }
 
 const radiusClient = new Client({
-    host: 'ssotest01.mgm-tp.com',
+    host: 'localhost',
     timeout: 25000,
     dictionaries: [
         dictionaries.rfc2865.file,
@@ -33,20 +30,23 @@ const radiusClient = new Client({
 });
 
 app.post('/', (request, response) => {
-    radiusClient.accessRequest({
+    const req = {
         secret: request.body.secret,
         attributes: [
             [dictionaries.rfc2865.attributes.USER_NAME, request.body.userName],
-            [dictionaries.rfc2865.attributes.USER_PASSWORD, request.body.otpPassword],
-            // [],
-            // TODO - disable realm
-            // ['Vendor-Specific', 14988,
-            //     [[dictionaries.mikrotik.attributes.MIKROTIK_REALM, Buffer.from(request.body.realm)]]],
+            [dictionaries.rfc2865.attributes.USER_PASSWORD, request.body.otpPassword]
         ],
-    }).then((result) => {
+    };
+
+    if (request.body.realm !== "") {
+        req.attributes.push(
+        ['Vendor-Specific', 14988,
+            [[dictionaries.mikrotik.attributes.MIKROTIK_REALM, Buffer.from(request.body.realm)]]]);
+    }
+
+    radiusClient.accessRequest(req).then((result) => {
         console.log('result', result.code);
         renderUI(request, response, 'SUCCESS');
-
     }).catch((error) => {
         console.log('error', error);
         renderUI(request, response,
@@ -55,12 +55,11 @@ app.post('/', (request, response) => {
 
 });
 
-
 app.get('/', (request, response) => {
     renderUI(request, response, "<<==");
 });
 
-app.listen(3001, () =>{
+app.listen(3001, () => {
     console.log('open link http://localhost:3001');
 });
 
