@@ -51,10 +51,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
         <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
-        <maven-enforcer-plugin>3.4.1</maven-enforcer-plugin>
+        <maven-enforcer-plugin>3.5.0</maven-enforcer-plugin>
         <maven-pmd-plugin>3.22.0</maven-pmd-plugin>
         <properties-maven-plugin>1.2.1</properties-maven-plugin>
-        <spotbugs-maven-plugin>4.8.4.0</spotbugs-maven-plugin>
+        <spotbugs-maven-plugin>4.8.5.0</spotbugs-maven-plugin>
         <slf4j.version>2.0.13</slf4j.version>
         <fast-build>false</fast-build>
 
@@ -247,7 +247,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.0</version>
                 <configuration>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -498,7 +498,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.8.3</version>
+                        <version>4.8.5</version>
                     </dependency>
                 </dependencies>
             </plugin>
