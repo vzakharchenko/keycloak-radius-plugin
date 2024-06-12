@@ -52,7 +52,7 @@
         <java.version>17</java.version>
         <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.5.0</maven-enforcer-plugin>
-        <maven-pmd-plugin>3.22.0</maven-pmd-plugin>
+        <maven-pmd-plugin>3.23.0</maven-pmd-plugin>
         <properties-maven-plugin>1.2.1</properties-maven-plugin>
         <spotbugs-maven-plugin>4.8.6.1</spotbugs-maven-plugin>
         <slf4j.version>2.0.13</slf4j.version>
