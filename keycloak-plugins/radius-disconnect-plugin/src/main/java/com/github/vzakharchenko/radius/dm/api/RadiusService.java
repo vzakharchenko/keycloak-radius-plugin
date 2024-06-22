@@ -2,7 +2,7 @@ package com.github.vzakharchenko.radius.dm.api;
 
 import com.github.vzakharchenko.radius.dm.models.RadiusInfoModel;
 import com.github.vzakharchenko.radius.dm.models.RadiusServiceModel;
-import org.jboss.resteasy.annotations.cache.NoCache;
+import org.jboss.resteasy.reactive.NoCache;
 import org.keycloak.models.ClientModel;
 import org.keycloak.services.resource.RealmResourceProvider;
 import org.keycloak.utils.MediaType;

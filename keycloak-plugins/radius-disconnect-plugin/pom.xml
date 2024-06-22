@@ -20,6 +20,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.quarkus.resteasy.reactive</groupId>
+            <artifactId>resteasy-reactive</artifactId>
+            <version>3.8.5</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>radius-plugin</artifactId>
             <version>${project.version}</version>

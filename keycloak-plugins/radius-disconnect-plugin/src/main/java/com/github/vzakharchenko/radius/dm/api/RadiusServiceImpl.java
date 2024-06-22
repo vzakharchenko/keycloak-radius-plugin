@@ -9,11 +9,11 @@ import com.github.vzakharchenko.radius.dm.models.RadiusInfoModel;
 import com.github.vzakharchenko.radius.dm.models.RadiusServiceModel;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.ws.rs.ForbiddenException;
 import org.keycloak.Config;
 import org.keycloak.models.*;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.representations.AccessToken;
-import org.keycloak.services.ForbiddenException;
 import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 import jakarta.ws.rs.QueryParam;
