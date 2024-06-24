@@ -67,8 +67,9 @@
             <arg line="-o -q ${KEYCLOAK_SOURCE_LOCAL} -d ${KEYCLOAK_PATH}"/>
         </exec>
 
-        <copydir src="build/ext" dest="${KEYCLOAK_DESTINATION}"/>
-
+        <copy todir="${KEYCLOAK_DESTINATION}">
+            <fileset dir="build/ext" />
+        </copy>
 
         <!-- Install Radius Plugin-->
         <copy file="${toString:keycloakRadiusZip}" todir="${KEYCLOAK_DESTINATION}/providers"/>
