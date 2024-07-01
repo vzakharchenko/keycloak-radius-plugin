@@ -1,5 +1,6 @@
 package com.github.vzakharchenko.radius.radius.handlers.protocols.mschapv2;
 
+import org.eclipse.angus.mail.auth.MD4;
 import org.jboss.logging.Logger;
 
 import javax.crypto.Cipher;
@@ -238,9 +239,6 @@ public final class MSCHAPHelper {
 
     private static byte[] unicode(byte[] in) {
         byte[] b = new byte[in.length * 2];
-//        for (int i = 0; i < b.length; i++) {
-//            b[i] = 0;
-//        }
         for (int i = 0; i < in.length; i++) {
             b[(2 * i)] = in[i];
         }
@@ -260,14 +258,8 @@ public final class MSCHAPHelper {
         return challenge;
     }
 
-    public static byte[] ntPasswordHash(byte[] password)
-            throws NoSuchAlgorithmException {
-        byte[] passwordHash = new byte[16];
-        byte[] uniPassword = unicode(password);
-        MessageDigest md = MessageDigest.getInstance("MD4");
-        md.update(uniPassword, 0, uniPassword.length);
-        System.arraycopy(md.digest(), 0, passwordHash, 0, 16);
-        return passwordHash;
+    public static byte[] ntPasswordHash(byte[] password) {
+        return md4Digest(unicode(password));
     }
 
     //CHECKSTYLE:OFF
@@ -333,13 +325,14 @@ public final class MSCHAPHelper {
         return Arrays.equals(ntResponse, sentNtResponse);
     }
 
+    public static byte[] hashNtPasswordHash(byte[] passwordHash) {
+        // ensure that only the first 16 bytes are used, if present, ignore the rest
+        byte[] passwordHash16 = new byte[16];
+        System.arraycopy(passwordHash, 0, passwordHash16, 0, 16);
+        return md4Digest(passwordHash16);
+    }
 
-    public static byte[] hashNtPasswordHash(byte[] passwordHash)
-            throws NoSuchAlgorithmException {
-        byte[] passwordHashHash = new byte[16];
-        MessageDigest md = MessageDigest.getInstance("MD4");
-        md.update(passwordHash, 0, 16);
-        System.arraycopy(md.digest(), 0, passwordHashHash, 0, 16);
-        return passwordHashHash;
+    private static byte[] md4Digest(byte[] value) {
+        return new MD4().digest(value); // MD4 instances are not thread-safe
     }
 }
