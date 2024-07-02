@@ -12,7 +12,6 @@ import com.github.vzakharchenko.radius.radius.handlers.otp.OtpPasswordInfo;
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
@@ -190,7 +189,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         radiusUserInfoGetter.getBuilder().activePassword(userPassword);
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setOtpPasswordGetter(IOtpPasswordFactory otpPasswordGetter) {
         this.otpPasswordGetter = otpPasswordGetter;
     }

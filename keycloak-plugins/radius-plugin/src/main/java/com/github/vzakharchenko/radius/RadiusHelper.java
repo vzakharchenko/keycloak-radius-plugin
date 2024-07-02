@@ -8,7 +8,6 @@ import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
 import com.github.vzakharchenko.radius.password.UpdateRadiusPassword;
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusServiceProvider;
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
@@ -213,12 +212,12 @@ public final class RadiusHelper {
         return getRealm(session, radiusPacket, attributes);
     }
 
-    @VisibleForTesting
+    // use for testing only
     public static Map<String, List<IRadiusServiceProvider>> getServiceMap0() {
         return serviceMap;
     }
 
-    @VisibleForTesting
+    // use for testing only
     public static void setRealmAttributes(List<String> realmAttributes) {
         RadiusHelper.realmAttributes = realmAttributes;
     }

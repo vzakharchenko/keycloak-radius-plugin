@@ -1,7 +1,6 @@
 package com.github.vzakharchenko.radius.radius.dictionary;
 
 import com.github.vzakharchenko.radius.providers.IRadiusDictionaryProvider;
-import com.google.common.annotations.VisibleForTesting;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.tinyradius.dictionary.Dictionary;
@@ -42,7 +41,7 @@ public final class DictionaryLoader {
         return writableDictionary;
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setWritableDictionary(WritableDictionary writableDictionary) {
         this.writableDictionary = writableDictionary;
     }
