@@ -8,8 +8,6 @@ import com.github.vzakharchenko.radius.models.file.RadSecSettingsModel;
 import com.github.vzakharchenko.radius.models.file.RadiusAccessModel;
 import com.github.vzakharchenko.radius.models.file.RadiusConfigModel;
 import com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType;
-import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
-import com.google.common.annotations.VisibleForTesting;
 import org.jboss.logging.Logger;
 import org.keycloak.util.JsonSerialization;
 
@@ -27,7 +25,7 @@ import static com.github.vzakharchenko.radius.radius.handlers.protocols.Protocol
 import static com.github.vzakharchenko.radius.radius.handlers.protocols.ProtocolType.PAP;
 
 public class FileRadiusConfiguration implements IRadiusConfiguration {
-    private static final Logger LOGGER = Logger.getLogger(KeycloakRadiusServer.class);
+    private static final Logger LOGGER = Logger.getLogger(FileRadiusConfiguration.class);
     public static final String FILE_VARIABLE = "KEYCLOAK_PATH";
     public static final String FILE_CONFIG_VARIABLE = "RADIUS_CONFIG_PATH";
     public static final String CONFIG = "config";
@@ -64,7 +62,7 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
         return radiusSettings;
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setRadiusSettings(RadiusServerSettings radiusSettings) {
         this.radiusSettings = radiusSettings;
     }
@@ -136,9 +134,10 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
 
     private static void transformOtpLegacy(RadiusServerSettings radiusServerSettings) {
         // legacy support for pre 1.4.13 configuration
-        LOGGER.warnf("RADIUS configuration \"otp\":true is superseded by \"otpWithoutPassword" +
-                        "\" setting, please update your configuration. " + "Instead " +
-                        "\"otpWithoutPassword\":[\"%1$s\", \"%2$s\"] is used, not \"%3$s\".",
+        LOGGER.warnf("RADIUS configuration \"otp\":true is superseded by " + //
+                        "\"otpWithoutPassword\" setting, please update your configuration. " + //
+                        "Instead \"otpWithoutPassword\":[\"%1$s\", \"%2$s\"] is used, " + //
+                        "not \"%3$s\".",
                 CHAP.name(), MSCHAPV2.name(), PAP.name());
         radiusServerSettings.addOtpWithoutPassword(CHAP);
         radiusServerSettings.addOtpWithoutPassword(MSCHAPV2);

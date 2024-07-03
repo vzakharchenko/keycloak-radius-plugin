@@ -46,8 +46,7 @@ public final class MSCHAPV2AuthenticatorUtils {
         return MessageDigest.getInstance(SHA_1);
     }
 
-    public static byte[] getPasswordHashHash(byte[] password)
-            throws NoSuchAlgorithmException {
+    public static byte[] getPasswordHashHash(byte[] password) {
         byte[] passwordHash = MSCHAPHelper.ntPasswordHash(password);
         return MSCHAPHelper.hashNtPasswordHash(passwordHash);
     }

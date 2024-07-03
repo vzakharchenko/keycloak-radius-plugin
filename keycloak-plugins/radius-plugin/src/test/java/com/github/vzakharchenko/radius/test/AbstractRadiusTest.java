@@ -19,7 +19,6 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.keycloak.Config;
 import org.keycloak.authorization.AuthorizationProvider;
 import org.keycloak.authorization.policy.evaluation.PolicyEvaluator;
@@ -140,10 +139,6 @@ public abstract class AbstractRadiusTest {
     private ClientProvider clientProvider;
 
     protected Map<Class, Provider> providerByClass = new HashMap<>();
-
-    {
-        Security.addProvider(new BouncyCastleProvider());
-    }
 
     protected List<? extends Object> resetMock() {
         return null;

@@ -45,7 +45,7 @@ public final class RadiusSessionPasswordManager implements IRadiusSessionPasswor
         if (sessionNote == null) {
             sessionNote = RadiusHelper.generatePassword();
             sessionModel.setNote(RADIUS_SESSION_PASSWORD, sessionNote);
-            sessionModel.setNote(RADIUS_SESSION_EXPIRATION, String.valueOf(token.getExpiration()));
+            sessionModel.setNote(RADIUS_SESSION_EXPIRATION, String.valueOf(token.getExp()));
             sessionModel.setNote(RADIUS_SESSION_PASSWORD_TYPE, String.valueOf(BooleanUtils
                     .toBooleanDefaultIfNull(oneTomePassword, true)));
         }

@@ -4,8 +4,6 @@ import com.github.vzakharchenko.radius.mappers.IRadiusSessionPasswordManager;
 import com.github.vzakharchenko.radius.mappers.RadiusSessionPasswordManager;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
-import org.keycloak.common.ClientConnection;
-import org.keycloak.common.util.Resteasy;
 import org.keycloak.models.*;
 
 public final class KeycloakSessionUtils {
@@ -57,12 +55,7 @@ public final class KeycloakSessionUtils {
     public static void context(KeycloakSession session,
                                IRadiusUserInfoGetter radiusUserInfoGetter) {
         IRadiusUserInfo radiusUserInfo = radiusUserInfoGetter.getRadiusUserInfo();
-        Resteasy.getProvider().pushContext(ClientConnection.class,
-                radiusUserInfo.getClientConnection());
-        Resteasy.pushContext(KeycloakSession.class, session);
-        Resteasy.pushContext(KeycloakTransaction.class,
-                session.getTransactionManager());
-        Resteasy.pushContext(ClientConnection.class, radiusUserInfo.getClientConnection());
+        session.getContext().setConnection(radiusUserInfo.getClientConnection());
         session.getContext().setRealm(radiusUserInfo.getRealmModel());
         session.getContext().setClient(radiusUserInfo.getClientModel());
     }

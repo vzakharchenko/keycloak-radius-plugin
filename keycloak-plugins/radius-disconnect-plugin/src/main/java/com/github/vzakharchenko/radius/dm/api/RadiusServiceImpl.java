@@ -8,12 +8,11 @@ import com.github.vzakharchenko.radius.dm.models.DisconnectMessageModel;
 import com.github.vzakharchenko.radius.dm.models.RadiusInfoModel;
 import com.github.vzakharchenko.radius.dm.models.RadiusServiceModel;
 import com.github.vzakharchenko.radius.models.RadiusServerSettings;
-import com.google.common.annotations.VisibleForTesting;
+import jakarta.ws.rs.ForbiddenException;
 import org.keycloak.Config;
 import org.keycloak.models.*;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.representations.AccessToken;
-import org.keycloak.services.ForbiddenException;
 import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 import jakarta.ws.rs.QueryParam;
@@ -197,12 +196,12 @@ public class RadiusServiceImpl implements RealmResourceProviderFactory,
         return radiusInfoModel;
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setTableManager(DmTableManager tableManager) {
         this.tableManager = tableManager;
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setKeycloakStaticHelper(KeycloakStaticHelper keycloakStaticHelper) {
         this.keycloakStaticHelper = keycloakStaticHelper;
     }

@@ -1,6 +1,5 @@
 package com.github.vzakharchenko.radius.providers;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -41,7 +40,7 @@ public abstract class AbstractRadiusServerProviderFactory
                 postInit(session, create(session)));
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setRadiusServer(IRadiusServerProvider radiusServer) {
         this.radiusServerProvider = radiusServer;
     }

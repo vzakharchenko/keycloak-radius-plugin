@@ -9,7 +9,6 @@ import com.github.vzakharchenko.radius.radius.handlers.session.IAuthRequestIniti
 import com.github.vzakharchenko.radius.radius.handlers.session.KeycloakSessionUtils;
 import com.github.vzakharchenko.radius.radius.handlers.session.PasswordData;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
-import com.google.common.annotations.VisibleForTesting;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang3.StringUtils;
@@ -159,7 +158,7 @@ public class AuthHandler extends AbstractHandler<IRadiusAuthHandlerProvider>
         channelReadRadius(ctx, msg);
     }
 
-    @VisibleForTesting
+    // use for testing only
     public void setAuthRequestInitialization(
             IAuthRequestInitialization authRequestInitialization) {
         this.authRequestInitialization = authRequestInitialization;

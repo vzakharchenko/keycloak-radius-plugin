@@ -4,7 +4,6 @@ import com.github.vzakharchenko.radius.providers.IRadiusProxyProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusProxyProviderFactory;
 import com.github.vzakharchenko.radius.proxy.proxy.IComponentProxy;
 import com.github.vzakharchenko.radius.proxy.proxy.RadiusComponentProxy;
-import com.google.common.annotations.VisibleForTesting;
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -59,7 +58,7 @@ public class RadiusProxy implements IRadiusProxyProvider, IRadiusProxyProviderFa
         return RADIUS_PROXY;
     }
 
-    @VisibleForTesting
+    // use for testing only
     void setComponentProxy(IComponentProxy componentProxy) {
         this.componentProxy = componentProxy;
     }

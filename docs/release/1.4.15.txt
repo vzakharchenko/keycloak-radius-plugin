@@ -1,0 +1,3 @@
+- Keycloak version 25.0.1
+- BouncyCastle dependency removed. The MD4 digest algorithm used is now provided by org.eclipse.angus:angus-mail.
+- RESTEasy Classic is replaced by RESTEeasy Reactive.

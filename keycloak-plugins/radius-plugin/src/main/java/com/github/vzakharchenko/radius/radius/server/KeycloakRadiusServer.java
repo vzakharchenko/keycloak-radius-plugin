@@ -6,7 +6,6 @@ import com.github.vzakharchenko.radius.providers.AbstractRadiusServerProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusAccountHandlerProvider;
 import com.github.vzakharchenko.radius.providers.IRadiusAuthHandlerProvider;
 import com.github.vzakharchenko.radius.radius.handlers.KeycloakSecretProvider;
-import com.google.common.annotations.VisibleForTesting;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
@@ -116,7 +115,7 @@ public final class KeycloakRadiusServer
         return changed;
     }
 
-    @VisibleForTesting
+    // use for testing only
     RadiusServer getServer() {
         return server;
     }

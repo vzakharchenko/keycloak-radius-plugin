@@ -1,7 +1,6 @@
 package com.github.vzakharchenko.radius.configuration;
 
 import com.github.vzakharchenko.radius.models.CoASettings;
-import com.google.common.annotations.VisibleForTesting;
 
 public final class RadiusConfigHelper {
 
@@ -19,7 +18,7 @@ public final class RadiusConfigHelper {
         return getConfig().getRadiusSettings().getCoASettings();
     }
 
-    @VisibleForTesting
+    // use for testing only
     public static void setConfiguration(IRadiusConfiguration flowConfiguration) {
         configuration = flowConfiguration;
     }
