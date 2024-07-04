@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.vzakharchenko</groupId>
     <artifactId>keycloak</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
