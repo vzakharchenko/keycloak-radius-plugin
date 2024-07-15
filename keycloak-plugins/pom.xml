@@ -52,13 +52,11 @@
         <java.version>17</java.version>
         <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.5.0</maven-enforcer-plugin>
-        <maven-pmd-plugin>3.23.0</maven-pmd-plugin>
+        <maven-pmd-plugin>3.26.0</maven-pmd-plugin>
         <properties-maven-plugin>1.2.1</properties-maven-plugin>
         <spotbugs-maven-plugin>4.8.6.5</spotbugs-maven-plugin>
         <slf4j.version>2.0.13</slf4j.version>
         <fast-build>false</fast-build>
-
-        <pmdVersion>6.17.0</pmdVersion>
 
         <keycloak.version>25.0.1</keycloak.version>
         <checkStyleLocation>../analizers</checkStyleLocation>
@@ -439,7 +437,6 @@
                     <execution>
                         <id>pmd_execute</id>
                         <goals>
-                            <goal>pmd</goal>
                             <goal>pmd</goal>
                             <goal>check</goal>
                             <goal>cpd-check</goal>
