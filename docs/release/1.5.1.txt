@@ -1,1 +1,3 @@
-- TODO: add change log entries
+- updated dependencies and build tooling
+- enhance testing scripts (save.sh/startDb.sh/buildAndStartDb.sh) to support additional provider JARs
+- Keycloak version 25.0.2
