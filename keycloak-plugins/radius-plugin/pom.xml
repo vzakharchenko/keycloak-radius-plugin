@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>3.1.7</version>
+            <version>3.1.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
