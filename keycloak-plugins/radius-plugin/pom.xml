@@ -56,14 +56,14 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.111.Final</version>
+            <version>4.1.115.Final</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <!-- needed for MD4 implementation in MSCHAPHelper, transitive dependency of keycloak-services -->
             <groupId>org.eclipse.angus</groupId>
             <artifactId>angus-mail</artifactId>
-            <version>2.0.1</version>
+            <version>2.0.3</version>
             <scope>provided</scope>
         </dependency>
 
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>3.1.7</version>
+            <version>3.1.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

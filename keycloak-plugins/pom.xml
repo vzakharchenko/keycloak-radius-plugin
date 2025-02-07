@@ -52,13 +52,11 @@
         <java.version>17</java.version>
         <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
         <maven-enforcer-plugin>3.5.0</maven-enforcer-plugin>
-        <maven-pmd-plugin>3.23.0</maven-pmd-plugin>
+        <maven-pmd-plugin>3.26.0</maven-pmd-plugin>
         <properties-maven-plugin>1.2.1</properties-maven-plugin>
-        <spotbugs-maven-plugin>4.8.6.1</spotbugs-maven-plugin>
+        <spotbugs-maven-plugin>4.8.6.5</spotbugs-maven-plugin>
         <slf4j.version>2.0.13</slf4j.version>
         <fast-build>false</fast-build>
-
-        <pmdVersion>6.17.0</pmdVersion>
 
         <keycloak.version>25.0.1</keycloak.version>
         <checkStyleLocation>../analizers</checkStyleLocation>
@@ -204,7 +202,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.14.0</version>
+            <version>3.17.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -440,7 +438,6 @@
                         <id>pmd_execute</id>
                         <goals>
                             <goal>pmd</goal>
-                            <goal>pmd</goal>
                             <goal>check</goal>
                             <goal>cpd-check</goal>
                         </goals>
@@ -451,7 +448,7 @@
                     <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-databind</artifactId>
-                        <version>2.17.1</version>
+                        <version>2.18.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -498,7 +495,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <configLocation>${checkStyleLocation}/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
@@ -652,7 +649,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1</version>
                 <configuration>
                     <checkModificationExcludes>
                         <checkModificationExclude>pom.xml</checkModificationExclude>
