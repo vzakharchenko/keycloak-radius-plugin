@@ -16,11 +16,11 @@ cp -r "${kc_dir}/config/radius.config" data/
 
 # save additional plugins and themes
 find "${kc_dir}/providers" -type f -name "*.jar" \! \( \
-       -name "cisco-radius-plugin-1.5.1-SNAPSHOT.jar" \
-    -o -name "mikrotik-radius-plugin-1.5.1-SNAPSHOT.jar" \
-    -o -name "chillispot-radius-plugin-1.5.1-SNAPSHOT.jar" \
-    -o -name "rad-sec-plugin-1.5.1-SNAPSHOT.jar" \
-    -o -name "radius-disconnect-plugin-1.5.1-SNAPSHOT.jar" \
-    -o -name "proxy-radius-plugin-1.5.1-SNAPSHOT.jar" \
-    -o -name "radius-plugin-1.5.1-SNAPSHOT.jar" \
+       -name "cisco-radius-plugin-*.jar" \
+    -o -name "mikrotik-radius-plugin-*.jar" \
+    -o -name "chillispot-radius-plugin-*.jar" \
+    -o -name "rad-sec-plugin-*.jar" \
+    -o -name "radius-disconnect-plugin-*.jar" \
+    -o -name "proxy-radius-plugin-*.jar" \
+    -o -name "radius-plugin-*.jar" \
   \) -exec cp -v "{}" data/providers/ \;
