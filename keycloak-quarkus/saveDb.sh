@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-set -e -x
+set -e
 
-kc_ver='25.0.1'
+kc_ver='25.0.6'
 kc_dir="target/keycloak/keycloak-$kc_ver"
 timestamp="$(date +%Y%m%d-%H%M%S)"
 

@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <keycloak.version>25.0.1</keycloak.version>
+        <keycloak.version>25.0.6</keycloak.version>
         <keyCloakVersion>${keycloak.version}</keyCloakVersion>
         <production>false</production>
         <keycloak-plugin>${project.version}</keycloak-plugin>
