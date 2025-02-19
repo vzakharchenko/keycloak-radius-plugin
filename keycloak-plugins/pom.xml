@@ -57,12 +57,12 @@
     <checkStyleLocation>../analizers</checkStyleLocation>
     <coveralls>true</coveralls>
     <fast-build>false</fast-build>
-    <findBugsLocation>${basedir}/../analizers/</findBugsLocation>
+    <findBugsLocation>${basedir}/../analyzers/</findBugsLocation>
     <java.version>17</java.version>
-    <javadoc>${basedir}/../analizers/javadoc</javadoc>
+    <javadoc>${basedir}/../analyzers/javadoc</javadoc>
 
     <keycloak.version>25.0.6</keycloak.version>
-    <pmdLocation>${basedir}/../analizers/</pmdLocation>
+    <pmdLocation>${basedir}/../analyzers/</pmdLocation>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <release-detail-message>installation steps:
@@ -74,7 +74,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>vzakharchenko</sonar.organization>
     <sonar.projectKey>vzakharchenko_keycloak-radius-plugin</sonar.projectKey>
-    <sources>${basedir}/../analizers/sources</sources>
+    <sources>${basedir}/../analyzers/sources</sources>
   </properties>
 
   <dependencies>

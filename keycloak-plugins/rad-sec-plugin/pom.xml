@@ -10,10 +10,10 @@
   <name>RadSec(Radius over TLS) plugin</name>
   <description>Extension of Radius-plugin for working as RadSec Server.</description>
   <properties>
-    <checkStyleLocation>../../analizers</checkStyleLocation>
-    <findBugsLocation>${basedir}/../../analizers/</findBugsLocation>
-    <javadoc>${basedir}/../../analizers/javadoc</javadoc>
-    <pmdLocation>${basedir}/../../analizers/</pmdLocation>
+    <checkStyleLocation>../../analyzers</checkStyleLocation>
+    <findBugsLocation>${basedir}/../../analyzers/</findBugsLocation>
+    <javadoc>${basedir}/../../analyzers/javadoc</javadoc>
+    <pmdLocation>${basedir}/../../analyzers/</pmdLocation>
   </properties>
 
   <dependencies>

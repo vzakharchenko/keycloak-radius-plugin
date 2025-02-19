@@ -12,10 +12,10 @@
   <description>Extension for keycloak for sending Disconnect Messages(rfc3576) to Radius Client.</description>
 
   <properties>
-    <checkStyleLocation>../../analizers</checkStyleLocation>
-    <findBugsLocation>${basedir}/../../analizers/</findBugsLocation>
-    <javadoc>${basedir}/../../analizers/javadoc</javadoc>
-    <pmdLocation>${basedir}/../../analizers/</pmdLocation>
+    <checkStyleLocation>../../analyzers</checkStyleLocation>
+    <findBugsLocation>${basedir}/../../analyzers/</findBugsLocation>
+    <javadoc>${basedir}/../../analyzers/javadoc</javadoc>
+    <pmdLocation>${basedir}/../../analyzers/</pmdLocation>
   </properties>
 
   <dependencies>
