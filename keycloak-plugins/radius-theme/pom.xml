@@ -11,11 +11,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <checkStyleLocation>../../analyzers</checkStyleLocation>
-    <findBugsLocation>${basedir}/../../analyzers/</findBugsLocation>
-    <javadoc>${basedir}/../../analyzers/javadoc</javadoc>
-    <pmdLocation>${basedir}/../../analyzers/</pmdLocation>
-    <sources>${basedir}/../../analyzers/sources</sources>
+    <analyzersLocation>${project.parent.basedir}/../analyzers</analyzersLocation>
   </properties>
 
   <build>

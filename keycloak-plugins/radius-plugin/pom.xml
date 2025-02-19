@@ -13,10 +13,7 @@
   <description>Extension for keycloak for working as Radius Server.</description>
 
   <properties>
-    <checkStyleLocation>../../analyzers</checkStyleLocation>
-    <findBugsLocation>${basedir}/../../analyzers/</findBugsLocation>
-    <javadoc>${basedir}/../../analyzers/javadoc</javadoc>
-    <pmdLocation>${basedir}/../../analyzers/</pmdLocation>
+    <analyzersLocation>${project.parent.basedir}/../analyzers</analyzersLocation>
   </properties>
 
   <dependencies>

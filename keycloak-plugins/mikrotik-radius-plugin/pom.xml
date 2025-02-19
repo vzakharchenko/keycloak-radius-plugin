@@ -12,10 +12,7 @@
   <name>Mikrotik Radius plugin</name>
   <description>Extension of Radius-plugin for working with routerOS.</description>
   <properties>
-    <checkStyleLocation>../../analyzers</checkStyleLocation>
-    <findBugsLocation>${basedir}/../../analyzers/</findBugsLocation>
-    <javadoc>${basedir}/../../analyzers/javadoc</javadoc>
-    <pmdLocation>${basedir}/../../analyzers/</pmdLocation>
+    <analyzersLocation>${project.parent.basedir}/../analyzers</analyzersLocation>
   </properties>
 
   <dependencies>

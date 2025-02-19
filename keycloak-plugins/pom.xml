@@ -54,27 +54,31 @@
   </distributionManagement>
 
   <properties>
-    <checkStyleLocation>../analizers</checkStyleLocation>
-    <coveralls>true</coveralls>
-    <fast-build>false</fast-build>
-    <findBugsLocation>${basedir}/../analyzers/</findBugsLocation>
-    <java.version>17</java.version>
-    <javadoc>${basedir}/../analyzers/javadoc</javadoc>
+    <analyzersLocation>${project.basedir}/../analyzers</analyzersLocation>
+    <checkStyleLocation>${analyzersLocation}</checkStyleLocation>
+    <findBugsLocation>${analyzersLocation}</findBugsLocation>
+    <pmdLocation>${analyzersLocation}/</pmdLocation>
+    <sources>${analyzersLocation}/sources</sources>
+    <javadoc>${analyzersLocation}/javadoc</javadoc>
 
-    <keycloak.version>25.0.6</keycloak.version>
-    <pmdLocation>${basedir}/../analyzers/</pmdLocation>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <release-detail-message>installation steps:
-      1. download and unzip keycloak-radius.zip
-      2. sh bin/standalone.sh -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190
-      -Djboss.http.port=8090</release-detail-message>
+    <java.version>17</java.version>
+
+    <fast-build>false</fast-build>
+
+    <coveralls>true</coveralls>
     <repoToken>repoToken</repoToken>
-    <slf4j.version>2.0.13</slf4j.version>
+
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>vzakharchenko</sonar.organization>
     <sonar.projectKey>vzakharchenko_keycloak-radius-plugin</sonar.projectKey>
-    <sources>${basedir}/../analyzers/sources</sources>
+
+    <release-detail-message>installation steps:
+      1. download and unzip keycloak-radius.zip
+      2. sh bin/standalone.sh -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</release-detail-message>
+    <keycloak.version>25.0.6</keycloak.version>
+    <slf4j.version>2.0.13</slf4j.version>
   </properties>
 
   <dependencies>
@@ -232,7 +236,7 @@
           <expandEmptyElements>false</expandEmptyElements>
           <keepBlankLines>true</keepBlankLines>
           <lineSeparator>\n</lineSeparator>
-          <sortProperties>true</sortProperties>
+          <sortProperties>false</sortProperties>
           <sortDependencies>scope,groupId,artifactId</sortDependencies>
           <sortPlugins>groupId,artifactId</sortPlugins>
         </configuration>
