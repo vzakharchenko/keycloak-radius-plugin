@@ -62,24 +62,19 @@
     <javadoc>${basedir}/../analizers/javadoc</javadoc>
 
     <keycloak.version>25.0.6</keycloak.version>
-    <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
-    <maven-enforcer-plugin>3.5.0</maven-enforcer-plugin>
-    <maven-pmd-plugin>3.26.0</maven-pmd-plugin>
     <pmdLocation>${basedir}/../analizers/</pmdLocation>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <properties-maven-plugin>1.2.1</properties-maven-plugin>
     <release-detail-message>installation steps:
-            1. download and unzip keycloak-radius.zip
-            2. sh bin/standalone.sh -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190
-            -Djboss.http.port=8090</release-detail-message>
+      1. download and unzip keycloak-radius.zip
+      2. sh bin/standalone.sh -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190
+      -Djboss.http.port=8090</release-detail-message>
     <repoToken>repoToken</repoToken>
     <slf4j.version>2.0.13</slf4j.version>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>vzakharchenko</sonar.organization>
     <sonar.projectKey>vzakharchenko_keycloak-radius-plugin</sonar.projectKey>
     <sources>${basedir}/../analizers/sources</sources>
-    <spotbugs-maven-plugin>4.8.6.5</spotbugs-maven-plugin>
   </properties>
 
   <dependencies>
@@ -227,19 +222,11 @@
   </repositories>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>com.github.ekryd.sortpom</groupId>
-          <artifactId>sortpom-maven-plugin</artifactId>
-          <version>4.0.0</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
+        <version>4.0.0</version>
         <configuration>
           <createBackupFile>false</createBackupFile>
           <expandEmptyElements>false</expandEmptyElements>
@@ -264,7 +251,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${spotbugs-maven-plugin}</version>
+        <version>4.8.6.5</version>
         <configuration>
           <effort>Max</effort>
           <threshold>Low</threshold>
@@ -298,6 +285,40 @@
               <goal>check</goal>
             </goals>
             <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>9.0.1</version>
+        <configuration>
+          <verbose>true</verbose>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
+          <format>properties</format>
+          <injectAllReactorProjects>false</injectAllReactorProjects>
+          <failOnNoGitDirectory>true</failOnNoGitDirectory>
+          <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
+          <dateFormatTimeZone>UTC</dateFormatTimeZone>
+          <includeOnlyProperties>
+            <includeOnlyProperty>git.branch</includeOnlyProperty>
+            <includeOnlyProperty>git.build.host</includeOnlyProperty>
+            <includeOnlyProperty>git.build.version</includeOnlyProperty>
+            <includeOnlyProperty>git.build.user.name</includeOnlyProperty>
+            <includeOnlyProperty>git.build.time</includeOnlyProperty>
+            <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+            <includeOnlyProperty>git.commit.id</includeOnlyProperty>
+            <includeOnlyProperty>git.commit.message.full</includeOnlyProperty>
+          </includeOnlyProperties>
+        </configuration>
+        <executions>
+          <execution>
+            <id>get-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
           </execution>
         </executions>
       </plugin>
@@ -347,7 +368,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin}</version>
+        <version>3.13.0</version>
         <configuration>
           <release>${java.version}</release>
         </configuration>
@@ -355,7 +376,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>${maven-enforcer-plugin}</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>enforce-versions</id>
@@ -380,7 +401,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${maven-pmd-plugin}</version>
+        <version>3.26.0</version>
         <configuration>
           <failOnViolation>true</failOnViolation>
           <printFailingErrors>true</printFailingErrors>
@@ -398,7 +419,7 @@
           <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.18.1</version>
+            <version>2.18.2</version>
           </dependency>
         </dependencies>
         <executions>
@@ -432,6 +453,7 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.6.0</version>
         <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
           <transformers>
             <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
               <manifestEntries>
@@ -508,7 +530,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
-        <version>${properties-maven-plugin}</version>
+        <version>1.2.1</version>
         <executions>
           <execution>
             <goals>
@@ -518,31 +540,8 @@
             <configuration>
               <quiet>true</quiet>
               <files>
-                <file>git.properties</file>
+                <file>target/git.properties</file>
               </files>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>templating-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>filter-src</id>
-            <goals>
-              <goal>filter-sources</goal>
-            </goals>
-            <configuration>
-              <!--
-                                            Note the two following parameters are the default one.
-                                            These are specified here just as a reminder.
-                                            But as the Maven philosophy is strongly about conventions,
-                                            it's better to just not specify them.
-                                          -->
-              <sourceDirectory>${basedir}/src/main/java-templates</sourceDirectory>
-              <outputDirectory>${project.build.directory}/generated-sources/java-templates</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -646,45 +645,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <version>4.9.10</version>
-
-        <configuration>
-          <verbose>true</verbose>
-          <generateGitPropertiesFile>true</generateGitPropertiesFile>
-          <generateGitPropertiesFilename>git.properties</generateGitPropertiesFilename>
-          <format>properties</format>
-          <injectAllReactorProjects>false</injectAllReactorProjects>
-          <failOnNoGitDirectory>true</failOnNoGitDirectory>
-          <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
-          <skip>false</skip>
-          <dateFormatTimeZone>UTC</dateFormatTimeZone>
-          <includeOnlyProperties>
-            <includeOnlyProperty>git.branch</includeOnlyProperty>
-            <includeOnlyProperty>git.build.host</includeOnlyProperty>
-            <includeOnlyProperty>git.build.version</includeOnlyProperty>
-            <includeOnlyProperty>git.build.user.name</includeOnlyProperty>
-            <includeOnlyProperty>git.build.time</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.time</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.id</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.message.full</includeOnlyProperty>
-          </includeOnlyProperties>
-
-        </configuration>
-        <executions>
-
-          <execution>
-            <id>validate-the-git-infos</id>
-            <goals>
-              <goal>revision</goal>
-            </goals>
-            <phase>initialize</phase>
-          </execution>
-        </executions>
-
-      </plugin>
     </plugins>
   </build>
 
@@ -696,7 +656,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.4</version>
+            <version>3.2.7</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
