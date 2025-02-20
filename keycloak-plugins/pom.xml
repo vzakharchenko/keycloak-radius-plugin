@@ -77,146 +77,318 @@
     <release-detail-message>installation steps:
       1. download and unzip keycloak-radius.zip
       2. sh bin/standalone.sh -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</release-detail-message>
+
+    <!-- dependency versions -->
+    <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
     <keycloak.version>25.0.6</keycloak.version>
-    <slf4j.version>2.0.13</slf4j.version>
+
+    <!-- dependency versions provided by the selected ${keycloak.version} -->
+    <kc.angus-mail.version>2.0.1</kc.angus-mail.version>
+    <kc.commons-codec.version>1.16.1</kc.commons-codec.version>
+    <kc.commons-io.version>2.15.1</kc.commons-io.version>
+    <kc.commons-lang3.version>3.14.0</kc.commons-lang3.version>
+    <kc.freemarker.version>2.3.32</kc.freemarker.version>
+    <kc.jboss-logging.version>3.5.1.Final</kc.jboss-logging.version>
+    <kc.jboss-logmanager.version>3.0.4.Final</kc.jboss-logmanager.version>
+    <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
+    <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
+    <kc.jakarta.xml.bind-api.version>4.0.1</kc.jakarta.xml.bind-api.version>
+    <kc.netty.version>4.1.108.Final</kc.netty.version>
+    <kc.resteasy-reactive.version>3.8.5</kc.resteasy-reactive.version>
+    <kc.slf4j.version>2.0.6</kc.slf4j.version>
+
+    <!-- test scope only dependency versions -->
+    <jersey-common.version>3.1.9</jersey-common.version>
+    <mockito-core.version>5.14.2</mockito-core.version>
+    <testng.version>7.10.2</testng.version>
+    <system-stubs-core.version>2.1.6</system-stubs-core.version>
   </properties>
 
-  <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.17.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
-    <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>2.3.33</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logmanager</groupId>
-      <artifactId>jboss-logmanager</artifactId>
-      <version>3.0.6.Final</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-authz-client</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-authz-policy-common -->
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-authz-policy-common</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.github.vzakharchenko</groupId>
+        <artifactId>radius-plugin</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.vzakharchenko</groupId>
+        <artifactId>tinyradius-netty</artifactId>
+        <version>${vzakharchenko-tinyradius-netty.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${kc.commons-codec.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${kc.commons-io.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-buffer</artifactId>
+        <version>${kc.netty.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec</artifactId>
+        <version>${kc.netty.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-common</artifactId>
+        <version>${kc.netty.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler</artifactId>
+        <version>${kc.netty.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport</artifactId>
+        <version>${kc.netty.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus.resteasy.reactive</groupId>
+        <artifactId>resteasy-reactive</artifactId>
+        <version>${kc.resteasy-reactive.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus.resteasy.reactive</groupId>
+        <artifactId>resteasy-reactive-common</artifactId>
+        <version>${kc.resteasy-reactive.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>${kc.jakarta.persistence-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.ws.rs</groupId>
+        <artifactId>jakarta.ws.rs-api</artifactId>
+        <version>${kc.jakarta.ws.rs-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>${kc.jakarta.xml.bind-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${kc.commons-lang3.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.angus</groupId>
+        <artifactId>angus-mail</artifactId>
+        <version>${kc.angus-mail.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>${kc.freemarker.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>${kc.jboss-logging.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logmanager</groupId>
+        <artifactId>jboss-logmanager</artifactId>
+        <version>${kc.jboss-logmanager.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-authz-client</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-authz-policy-common -->
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-authz-policy-common</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-common</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-core</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-kerberos-federation -->
+        <artifactId>keycloak-kerberos-federation</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-ldap-federation -->
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-ldap-federation</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-model-infinispan -->
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-model-infinispan</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-model-jpa</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-model-storage</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-model-storage-private</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-server-spi</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-server-spi-private</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-services</artifactId>
+        <version>${keycloak.version}</version>
+        <scope>provided</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-core</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-kerberos-federation -->
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-kerberos-federation</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-ldap-federation -->
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-ldap-federation</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-model-infinispan -->
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-model-infinispan</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>radius-plugin</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.core</groupId>
+        <artifactId>jersey-common</artifactId>
+        <version>${jersey-common.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito-core.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${kc.slf4j.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${kc.slf4j.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>${testng.version}</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <!-- replacement for com.github.stefanbirkner:system-lambda -->
+        <groupId>uk.org.webcompere</groupId>
+        <artifactId>system-stubs-core</artifactId>
+        <version>${system-stubs-core.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-model-jpa</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-server-spi</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-server-spi-private</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-services</artifactId>
-      <version>${keycloak.version}</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>5.12.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>7.10.2</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-  </dependencies>
   <repositories>
     <repository>
       <id>jboss</id>
@@ -226,11 +398,99 @@
   </repositories>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.github.ekryd.sortpom</groupId>
+          <artifactId>sortpom-maven-plugin</artifactId>
+          <version>4.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.8.6.5</version>
+        </plugin>
+        <plugin>
+          <groupId>io.github.git-commit-id</groupId>
+          <artifactId>git-commit-id-maven-plugin</artifactId>
+          <version>9.0.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.4.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.26.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>1.2.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eluder.coveralls</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
+          <version>4.3.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.12</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
-        <version>4.0.0</version>
         <configuration>
           <createBackupFile>false</createBackupFile>
           <expandEmptyElements>false</expandEmptyElements>
@@ -251,11 +511,9 @@
           <execution/>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.8.6.5</version>
         <configuration>
           <effort>Max</effort>
           <threshold>Low</threshold>
@@ -266,7 +524,6 @@
               <groupId>com.h3xstream.findsecbugs</groupId>
               <artifactId>findsecbugs-plugin</artifactId>
               <version>1.13.0</version>
-              <!-- Auto-update to the latest stable -->
             </plugin>
             <plugin>
               <groupId>com.mebigfatguy.sb-contrib</groupId>
@@ -295,7 +552,6 @@
       <plugin>
         <groupId>io.github.git-commit-id</groupId>
         <artifactId>git-commit-id-maven-plugin</artifactId>
-        <version>9.0.1</version>
         <configuration>
           <verbose>true</verbose>
           <generateGitPropertiesFile>true</generateGitPropertiesFile>
@@ -329,16 +585,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.7.1</version>
         <configuration>
           <descriptors>
             <descriptor>${javadoc}/build.xml</descriptor>
-            <descriptor>${sources}/build.xml</descriptor>
           </descriptors>
           <appendAssemblyId>true</appendAssemblyId>
         </configuration>
         <executions>
           <execution>
+            <id>assembly-single-javadoc</id>
             <goals>
               <goal>single</goal>
             </goals>
@@ -349,7 +604,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.6.0</version>
         <configuration>
           <configLocation>${checkStyleLocation}/checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
@@ -372,15 +626,54 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
         <configuration>
           <release>${java.version}</release>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dependencies--analyze-only</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <failOnWarning>true</failOnWarning>
+              <ignoreNonCompile>false</ignoreNonCompile>
+              <ignoredUnusedDeclaredDependencies>
+                <!-- needed during tests by the radius-plugin test-jar -->
+                <ignoredUnusedDeclaredDependency>commons-io:commons-io:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>io.netty:netty-transport:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>io.quarkus.resteasy.reactive:resteasy-reactive:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>jakarta.persistence:jakarta.persistence-api:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>jakarta.ws.rs:jakarta.ws.rs-api:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>org.glassfish.jersey.core:jersey-common:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-jpa:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-server-spi-private:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>org.mockito:mockito-core:jar:*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>org.slf4j:slf4j-simple:jar:*</ignoredUnusedDeclaredDependency>
+                <!-- needed to compile derived classes -->
+                <ignoredUnusedDeclaredDependency>io.netty:netty-codec:jar:*</ignoredUnusedDeclaredDependency>
+              </ignoredUnusedDeclaredDependencies>
+              <ignoredNonTestScopedDependencies/>
+              <verbose>true</verbose>
+            </configuration>
+          </execution>
+          <execution>
+            <id>dependencies--analyze-duplicate</id>
+            <goals>
+              <goal>analyze-duplicate</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.5.0</version>
         <executions>
           <execution>
             <id>enforce-versions</id>
@@ -405,7 +698,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.26.0</version>
         <configuration>
           <failOnViolation>true</failOnViolation>
           <printFailingErrors>true</printFailingErrors>
@@ -441,7 +733,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>3.1.1</version>
         <configuration>
           <checkModificationExcludes>
             <checkModificationExclude>pom.xml</checkModificationExclude>
@@ -454,73 +745,7 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <createDependencyReducedPom>false</createDependencyReducedPom>
-          <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-              <manifestEntries>
-                <Multi-Release>true</Multi-Release>
-              </manifestEntries>
-            </transformer>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-          </transformers>
-          <filters>
-            <filter>
-              <artifact>com.github.vzakharchenko:tinyradius-netty</artifact>
-              <excludes>
-                <exclude>META-INF/MANIFEST.MF</exclude>
-              </excludes>
-            </filter>
-            <filter>
-              <artifact>org.mockito:mockito-inline</artifact>
-              <excludes>
-                <exclude>META-INF/MANIFEST.MF</exclude>
-              </excludes>
-            </filter>
-            <filter>
-              <artifact>uk.org.webcompere:system-stubs-core</artifact>
-              <excludes>
-                <exclude>META-INF/MANIFEST.MF</exclude>
-              </excludes>
-            </filter>
-            <filter>
-              <artifact>net.bytebuddy:byte-buddy</artifact>
-              <excludes>
-                <exclude>META-INF/MANIFEST.MF</exclude>
-              </excludes>
-            </filter>
-            <filter>
-              <artifact>net.bytebuddy:byte-buddy-agent</artifact>
-              <excludes>
-                <exclude>META-INF/versions/9/module-info.class</exclude>
-                <exclude>META-INF/MANIFEST.MF</exclude>
-                <exclude>META-INF/LICENSE</exclude>
-                <exclude>META-INF/NOTICE</exclude>
-              </excludes>
-            </filter>
-            <filter>
-              <artifact>commons-io:commons-io</artifact>
-              <excludes>
-                <exclude>META-INF/MANIFEST.MF</exclude>
-              </excludes>
-            </filter>
-          </filters>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -534,7 +759,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
-        <version>1.2.1</version>
         <executions>
           <execution>
             <goals>
@@ -553,7 +777,6 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
         <configuration>
           <repoToken>${repoToken}</repoToken>
           <skip>${coveralls}</skip>
@@ -578,7 +801,6 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.12</version>
         <configuration>
           <excludes>
             <exclude>**/models/**</exclude>
@@ -660,7 +882,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.7</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -675,5 +896,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
