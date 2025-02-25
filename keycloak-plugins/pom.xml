@@ -343,6 +343,12 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>1.15.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.glassfish.jersey.core</groupId>
         <artifactId>jersey-common</artifactId>
         <version>${jersey-common.version}</version>
@@ -468,6 +474,26 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
           <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.5.2</version>
+          <configuration>
+            <workingDirectory>${project.basedir}</workingDirectory>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            <useFile>false</useFile>
+            <forkCount>1</forkCount>
+            <!--
+            '@{argLine}' is needed for JaCoCo to inject its configured agent arguments on plugin runtime
+              (see https://www.jacoco.org/jacoco/trunk/doc/agent.html and https://github.com/khmarbaise/example-jacoco)
+            '-Xshare:off' is needed for JaCoCo to avoid JVM waring about sharing and bootstrap classpath
+            '-javaagent:${org.mockito:mockito-core:jar}' is needed setting up instrumentation for inline mocking by
+              Mockito (see https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3)
+            -->
+            <!--suppress UnresolvedMavenProperty -->
+            <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar} -Xshare:off -Djdk.instrument.traceUsage</argLine>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -634,6 +660,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
+          <execution>
+            <id>dependencies--properties</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
           <execution>
             <id>dependencies--analyze-only</id>
             <goals>
