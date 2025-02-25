@@ -89,7 +89,7 @@ $releaseNotes
 </pre>
 - [Docker Installation](https://github.com/vzakharchenko/keycloak-radius-plugin/blob/master/docker/README.md)
 
-requirements: **openjdk 17**
+requirements: **openjdk 21**
 
 **Keycloak Quarkus installation steps**:
 1. download and unzip keycloak-radius.zip <pre>unzip keycloak-radius.zip -d keycloak-radius</pre>
