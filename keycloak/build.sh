@@ -4,5 +4,5 @@ set -e
 cd ../keycloak-plugins
 mvn clean install -DskipTests -Dfast-build
 
-cd ../keycloak-quarkus
+cd ../keycloak
 mvn clean install

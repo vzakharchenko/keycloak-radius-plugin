@@ -4,7 +4,7 @@ set -e
 kc_ver='25.0.6'
 kc_dir="target/keycloak/keycloak-$kc_ver"
 
-cd ../keycloak-quarkus
+cd ../keycloak
 
 ./build.sh
 

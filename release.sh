@@ -70,15 +70,8 @@ fi
 # get perform release
 cd keycloak-plugins
 mvn -Psign clean release:perform -Darguments=-Dgpg.passphrase=${password} -DskipTests
-## build keycloak-radius
-#cd ../keycloak
-## update version of keycloak-radius-legacy
-#mvn versions:set -DnewVersion=$tagVersion
-## build keycloak-radius-legacy
-#mvn clean install -Dkeycloak-plugin=$tagVersion -Dproduction=true -DskipTests
-## update version of keycloak-radius-legacy
-#mvn versions:set -DnewVersion=$tagDevVersion
-cd ../keycloak-quarkus
+
+cd ../keycloak
 # update version of keycloak-radius
 mvn versions:set -DnewVersion=$tagVersion
 mvn clean install -Dkeycloak-plugin=$tagVersion -Dproduction=true -DskipTests
@@ -87,7 +80,7 @@ mvn versions:set -DnewVersion=$tagDevVersion
 cd ..
 # create release
 git pull
-hub release create -a ./keycloak-quarkus/target/keycloak-radius.zip -m "Keycloak with radius server ${tagName}
+hub release create -a ./keycloak/target/keycloak-radius.zip -m "Keycloak with radius server ${tagName}
 
 
 **releaseNotes**:
