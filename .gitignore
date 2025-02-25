@@ -88,4 +88,5 @@ radius.config
 keycloak.properties
 keycloak/data/*
 keycloak/data.*/*
+keycloak/keycloak-distribution-*.zip
 release-steps.sh

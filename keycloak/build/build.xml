@@ -6,18 +6,18 @@
     <!-- directory settings -->
     <property name="BUILD_DIR" value="target"/>
     <property name="CACHE_DIR" value="cache"/>
-    <property name="KEYCLOAK_VERSION" value="8.0.2"/>
+    <property name="KEYCLOAK_VERSION" value="0.0.0"/>
     <property name="PRODUCTION" value="false"/>
     <property name="KEYCLOAK_URL"
               value="https://github.com/keycloak/keycloak/releases/download/${KEYCLOAK_VERSION}/keycloak-${KEYCLOAK_VERSION}.zip"/>
     <property name="KEYCLOAK_PATH" value="${BUILD_DIR}/keycloak"/>
-    <property name="KEYCLOAK_SOURCE" value="${BUILD_DIR}/keycloak_source.zip"/>
-    <property name="KEYCLOAK_SOURCE_LOCAL" value="keycloak_source.zip"/>
+    <property name="KEYCLOAK_SOURCE" value="${BUILD_DIR}/keycloak-distribution-${KEYCLOAK_VERSION}.zip"/>
+    <property name="KEYCLOAK_SOURCE_LOCAL" value="keycloak-distribution-${KEYCLOAK_VERSION}.zip"/>
     <property name="KEYCLOAK_DESTINATION" value="${KEYCLOAK_PATH}/keycloak-${KEYCLOAK_VERSION}"/>
 
     <!-- Plugins -->
     <property name="KEYCLOAK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/radius-plugin"/>
-    <property name="KEYCLOAK__MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
+    <property name="KEYCLOAK_MIKROTIK_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/mikrotik-radius-plugin"/>
     <property name="KEYCLOAK_CISCO_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/cisco-radius-plugin"/>
     <property name="KEYCLOAK_CHILLISPOT_RADIUS_PLUGIN" value="${BUILD_DIR}/artifacts/chillispot-radius-plugin"/>
     <property name="KEYCLOAK_RAD_SEC_PLUGIN" value="${BUILD_DIR}/artifacts/rad-sec-plugin"/>
@@ -28,7 +28,7 @@
         <fileset dir="${KEYCLOAK_RADIUS_PLUGIN}" includes="**"/>
     </first>
     <first id="keycloakMikrotikRadiusZip">
-        <fileset dir="${KEYCLOAK__MIKROTIK_RADIUS_PLUGIN}" includes="**"/>
+        <fileset dir="${KEYCLOAK_MIKROTIK_RADIUS_PLUGIN}" includes="**"/>
     </first>
     <first id="keycloakCiscoRadiusZip">
         <fileset dir="${KEYCLOAK_CISCO_RADIUS_PLUGIN}" includes="**"/>
