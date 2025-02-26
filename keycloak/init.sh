@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-kc_ver='25.0.6'
+kc_ver='26.1.4'
 kc_url="https://github.com/keycloak/keycloak/releases/download/$kc_ver/keycloak-$kc_ver.zip"
 kc_zip="keycloak-distribution-$kc_ver.zip"
 
