@@ -47,7 +47,7 @@ public class HotpPasswordTest {
         assertEquals(otpHolder.getSubType(), HOTP);
         List<String> passwords = otpHolder.getPasswords();
         assertEquals(passwords.size(), 2);
-        assertEquals(passwords.get(0), "711154");
+        assertEquals(passwords.getFirst(), "711154");
         assertEquals(passwords.get(1), "844269");
     }
 }

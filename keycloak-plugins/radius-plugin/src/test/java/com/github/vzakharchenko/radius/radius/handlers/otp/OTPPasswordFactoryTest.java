@@ -63,8 +63,8 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
         assertNotNull(otpHolder);
         assertEquals(otpHolder.getSubType(), TOTP);
         assertEquals(otpHolder.getPasswords().size(), 1);
-        assertNotNull(otpHolder.getPasswords().get(0));
-        assertEquals(otpHolder.getPasswords().get(0).length(), 6);
+        assertNotNull(otpHolder.getPasswords().getFirst());
+        assertEquals(otpHolder.getPasswords().getFirst().length(), 6);
     }
 
     @Test
@@ -89,8 +89,8 @@ public class OTPPasswordFactoryTest extends AbstractRadiusTest {
         assertNotNull(otpHolder);
         assertEquals(otpHolder.getSubType(), HOTP);
         assertEquals(otpHolder.getPasswords().size(), 1);
-        assertNotNull(otpHolder.getPasswords().get(0));
-        assertEquals(otpHolder.getPasswords().get(0).length(), 6);
+        assertNotNull(otpHolder.getPasswords().getFirst());
+        assertEquals(otpHolder.getPasswords().getFirst().length(), 6);
     }
 
     @Test

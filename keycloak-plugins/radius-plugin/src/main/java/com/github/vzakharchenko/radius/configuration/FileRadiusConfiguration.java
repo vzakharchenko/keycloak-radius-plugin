@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,8 +50,8 @@ public class FileRadiusConfiguration implements IRadiusConfiguration {
                 throw new IllegalStateException(file.getAbsolutePath() + " does not exist");
             }
 
-            try (InputStream fileInputStream = Files.newInputStream(Paths
-                    .get(file.toURI()))) {
+            try (InputStream fileInputStream = Files.newInputStream(Path
+                    .of(file.toURI()))) {
                 RadiusConfigModel configModel = JsonSerialization
                         .readValue(fileInputStream, RadiusConfigModel.class);
                 radiusSettings = transform(configModel);

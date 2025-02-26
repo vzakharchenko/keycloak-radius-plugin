@@ -111,7 +111,7 @@ public class MSCHAPV2ProtocolTest extends AbstractRadiusTest {
         chapProtocol.answer(answer, radiusUserInfoGetter);
         List<RadiusAttribute> attributes = answer.getAttributes();
         assertEquals(attributes.size(), 1);
-        VendorSpecificAttribute vendorSpecific = (VendorSpecificAttribute) attributes.get(0);
+        VendorSpecificAttribute vendorSpecific = (VendorSpecificAttribute) attributes.getFirst();
         List<RadiusAttribute> subAttributes = vendorSpecific.getSubAttributes();
         assertEquals(subAttributes.size(), 5);
         RadiusAttribute subAttribute = vendorSpecific.getSubAttribute("MS-CHAP2-Success");

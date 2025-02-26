@@ -72,7 +72,7 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         radSecCodec.decode(context, Unpooled.copiedBuffer(Hex
                 .decodeHex(RADIUS_PACKAGE.toCharArray())), objects);
         assertEquals(objects.size(), 1);
-        RequestCtx requestCtx = (RequestCtx) objects.get(0);
+        RequestCtx requestCtx = (RequestCtx) objects.getFirst();
         assertEquals(Hex.encodeHexString(requestCtx
                 .getRequest().getAuthenticator()), "cb454b6f149bac108cf538a750a4d778");
 
@@ -97,7 +97,7 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         radSecCodec.decode(context, Unpooled.copiedBuffer(Hex
                 .decodeHex(RADIUS_PACKAGE.toCharArray())), objects);
         assertEquals(objects.size(), 1);
-        RequestCtx requestCtx = (RequestCtx) objects.get(0);
+        RequestCtx requestCtx = (RequestCtx) objects.getFirst();
         ResponseCtx responseCtx = new ResponseCtx(
                 requestCtx.getRequest(),
                 requestCtx.getEndpoint(),
@@ -106,7 +106,7 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         List<Object> responses = new ArrayList<>();
         radSecCodec.encode(context, responseCtx, responses);
         assertEquals(responses.size(), 1);
-        ByteBuf byteBuf = (ByteBuf) responses.get(0);
+        ByteBuf byteBuf = (ByteBuf) responses.getFirst();
         assertEquals(Hex.encodeHexString(byteBuf.array()),
                 ENCODED_PACKAGE);
         RadiusPacket radiusPacket = packetEncoder.fromByteBuf(byteBuf);
@@ -120,7 +120,7 @@ public class RadSecCodecTest extends AbstractRadiusTest {
         radSecCodec.decode(context, Unpooled.copiedBuffer(Hex
                 .decodeHex(RADIUS_PACKAGE.toCharArray())), objects);
         assertEquals(objects.size(), 1);
-        RequestCtx requestCtx = (RequestCtx) objects.get(0);
+        RequestCtx requestCtx = (RequestCtx) objects.getFirst();
         ResponseCtx responseCtx = new ResponseCtx(
                 requestCtx.getRequest(),
                 requestCtx.getEndpoint(),

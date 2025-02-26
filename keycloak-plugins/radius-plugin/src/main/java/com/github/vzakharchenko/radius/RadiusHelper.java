@@ -87,7 +87,7 @@ public final class RadiusHelper {
                         Objects.equals(rAction,
                                 UserModel.RequiredAction.UPDATE_PASSWORD.name())) &&
                 !credentials.isEmpty()) {
-            CredentialModel credentialModel = credentials.get(0);
+            CredentialModel credentialModel = credentials.getFirst();
             RadiusCredentialModel model = RadiusCredentialModel
                     .createFromCredentialModel(credentialModel);
             return model.getSecret().getPassword();
@@ -181,7 +181,7 @@ public final class RadiusHelper {
                         "). If you expect to use the Default Realm, " +
                         "than you should use only one realm with radius client");
         }
-        return realms.get(0);
+        return realms.getFirst();
     }
 
     private static RealmModel getRealmFromUserName(KeycloakSession session,

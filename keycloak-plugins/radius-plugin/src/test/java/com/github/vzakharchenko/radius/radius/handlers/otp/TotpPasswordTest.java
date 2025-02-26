@@ -47,7 +47,7 @@ public class TotpPasswordTest {
         assertEquals(otpHolder.getSubType(), TOTP);
         List<String> passwords = otpHolder.getPasswords();
         assertEquals(passwords.size(), 2);
-        assertEquals(passwords.get(0).length(), 6);
+        assertEquals(passwords.getFirst().length(), 6);
         assertEquals(passwords.get(1).length(), 6);
     }
 }
