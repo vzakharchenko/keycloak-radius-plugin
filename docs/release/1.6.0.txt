@@ -13,3 +13,4 @@
   - add version to radius-plugin zip
 - migration to Java 21 as minimal JDK version
 - update to Keycloak version 26.1.4
+  - remove test dependency slf4j-simple, logging adapter is now supplied by jboss-logging

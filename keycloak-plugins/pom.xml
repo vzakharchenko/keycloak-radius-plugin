@@ -374,12 +374,6 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-simple</artifactId>
-        <version>${kc.slf4j.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
         <version>${testng.version}</version>
@@ -714,7 +708,6 @@
                 <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-jpa:jar:*</ignoredUnusedDeclaredDependency>
                 <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-server-spi-private:jar:*</ignoredUnusedDeclaredDependency>
                 <ignoredUnusedDeclaredDependency>org.mockito:mockito-core:jar:*</ignoredUnusedDeclaredDependency>
-                <ignoredUnusedDeclaredDependency>org.slf4j:slf4j-simple:jar:*</ignoredUnusedDeclaredDependency>
                 <!-- needed to compile derived classes -->
                 <ignoredUnusedDeclaredDependency>io.netty:netty-codec:jar:*</ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
