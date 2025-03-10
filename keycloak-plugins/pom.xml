@@ -492,7 +492,7 @@
               Mockito (see https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3)
             -->
             <!--suppress UnresolvedMavenProperty -->
-            <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar} -Xshare:off -Djdk.instrument.traceUsage</argLine>
+            <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar} -Xshare:off</argLine>
           </configuration>
         </plugin>
         <plugin>

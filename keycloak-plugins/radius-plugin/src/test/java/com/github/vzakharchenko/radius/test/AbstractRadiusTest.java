@@ -19,6 +19,10 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.radius.server.KeycloakRadiusServer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import org.keycloak.Config;
 import org.keycloak.authorization.AuthorizationProvider;
 import org.keycloak.authorization.policy.evaluation.PolicyEvaluator;
@@ -32,6 +36,10 @@ import org.keycloak.models.*;
 import org.keycloak.models.cache.authorization.CachedStoreFactoryProvider;
 import org.keycloak.provider.Provider;
 import org.keycloak.representations.AccessToken;
+import org.keycloak.tracing.NoopTracingProvider;
+import org.keycloak.tracing.NoopTracingProviderFactory;
+import org.keycloak.tracing.TracingProvider;
+import org.keycloak.tracing.TracingProviderFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
@@ -42,13 +50,8 @@ import org.tinyradius.dictionary.DictionaryParser;
 import org.tinyradius.dictionary.WritableDictionary;
 import org.tinyradius.packet.AccessRequest;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MultivaluedHashMap;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.security.Security;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -136,7 +139,7 @@ public abstract class AbstractRadiusTest {
     @Mock
     protected RoleProvider roleProvider;
     @Mock
-    private ClientProvider clientProvider;
+    protected ClientProvider clientProvider;
 
     protected Map<Class, Provider> providerByClass = new HashMap<>();
 
@@ -195,8 +198,13 @@ public abstract class AbstractRadiusTest {
         reset(resourceStore);
         reset(realmProvider);
         reset(roleProvider);
+
         providerByClass.clear();
         accessToken = new AccessToken();
+
+        TracingProviderFactory tracingProviderFactory = new NoopTracingProviderFactory();
+        TracingProvider tracingProvider = new NoopTracingProvider();
+
         authorizationProvider = new
                 AuthorizationProvider(session, realmModel, policyEvaluator);
         Answer<Object> providerAnswer = invocation -> {
@@ -229,7 +237,10 @@ public abstract class AbstractRadiusTest {
             set.add(provider);
             return set;
         };
+
         when(keycloakSessionFactory.create()).thenReturn(session);
+        when(keycloakSessionFactory.getProviderFactory(eq(TracingProvider.class)))
+                .thenReturn(tracingProviderFactory);
         when(session.getProvider(any())).thenAnswer(providerAnswer);
         when(session.getProvider(any(), anyString())).thenAnswer(providerAnswer);
         when(session.getAllProviders(any())).thenAnswer(providerAnswers);
@@ -237,6 +248,7 @@ public abstract class AbstractRadiusTest {
         when(session.getContext()).thenReturn(keycloakContext);
         when(session.roles()).thenReturn(roleProvider);
         when(session.clients()).thenReturn(clientProvider);
+        when(session.getProvider(eq(TracingProvider.class))).thenReturn(tracingProvider);
         when(keycloakContext.getRealm()).thenReturn(realmModel);
         when(keycloakContext.getConnection()).thenReturn(clientConnection);
         when(keycloakContext.getClient()).thenReturn(clientModel);
