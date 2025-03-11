@@ -710,6 +710,8 @@
                 <ignoredUnusedDeclaredDependency>org.mockito:mockito-core:jar:*</ignoredUnusedDeclaredDependency>
                 <!-- needed to compile derived classes -->
                 <ignoredUnusedDeclaredDependency>io.netty:netty-codec:jar:*</ignoredUnusedDeclaredDependency>
+                <!-- useful provided libs while debugging the plugins inside Keycloak -->
+                <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-infinispan:jar:*</ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
               <ignoredNonTestScopedDependencies/>
               <verbose>true</verbose>
