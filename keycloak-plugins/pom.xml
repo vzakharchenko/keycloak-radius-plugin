@@ -107,7 +107,7 @@
     <jersey-common.version>3.1.9</jersey-common.version>
     <mockito-core.version>5.14.2</mockito-core.version>
     <testng.version>7.10.2</testng.version>
-    <system-stubs-core.version>2.1.6</system-stubs-core.version>
+    <system-stubs-core.version>2.1.8</system-stubs-core.version>
   </properties>
 
   <dependencyManagement>
