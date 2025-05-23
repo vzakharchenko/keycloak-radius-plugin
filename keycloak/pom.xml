@@ -7,7 +7,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <keycloak.version>26.1.4</keycloak.version>
+    <keycloak.version>26.2.4</keycloak.version>
     <production>false</production>
     <keycloak-plugin.version>${project.version}</keycloak-plugin.version>
   </properties>

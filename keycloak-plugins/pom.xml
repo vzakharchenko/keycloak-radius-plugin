@@ -82,7 +82,7 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.1.4</keycloak.version>
+    <keycloak.version>26.2.4</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
@@ -90,17 +90,17 @@
                            )?|jakarta.(persistence|ws.rs|xml.bind)|netty-com|resteasy-reactive-\d|org.slf4j)"
     -->
     <kc.angus-mail.version>2.0.3</kc.angus-mail.version>
-    <kc.commons-codec.version>1.17.1</kc.commons-codec.version>
-    <kc.commons-io.version>2.16.1</kc.commons-io.version>
-    <kc.commons-lang3.version>3.14.0</kc.commons-lang3.version>
+    <kc.commons-codec.version>1.18.0</kc.commons-codec.version>
+    <kc.commons-io.version>2.18.0</kc.commons-io.version>
+    <kc.commons-lang3.version>3.17.0</kc.commons-lang3.version>
     <kc.freemarker.version>2.3.32</kc.freemarker.version>
-    <kc.jboss-logging.version>3.6.0.Final</kc.jboss-logging.version>
-    <kc.jboss-logmanager.version>3.1.1.Final</kc.jboss-logmanager.version>
+    <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
+    <kc.jboss-logmanager.version>3.1.2.Final</kc.jboss-logmanager.version>
     <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
     <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
     <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
     <kc.netty.version>4.1.118.Final</kc.netty.version>
-    <kc.resteasy-reactive.version>3.15.3.1</kc.resteasy-reactive.version>
+    <kc.resteasy-reactive.version>3.20.0</kc.resteasy-reactive.version>
     <kc.slf4j.version>2.0.6</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
@@ -246,12 +246,6 @@
         <groupId>org.jboss.logmanager</groupId>
         <artifactId>jboss-logmanager</artifactId>
         <version>${kc.jboss-logmanager.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-authz-client</artifactId>
-        <version>${keycloak.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
