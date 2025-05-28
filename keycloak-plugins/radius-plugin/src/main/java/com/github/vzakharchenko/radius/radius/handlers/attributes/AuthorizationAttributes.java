@@ -5,7 +5,7 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import org.keycloak.authorization.AuthorizationProvider;
 import org.keycloak.authorization.Decision;
 import org.keycloak.authorization.common.DefaultEvaluationContext;
-import org.keycloak.authorization.common.UserModelIdentity;
+import org.keycloak.authorization.identity.UserModelIdentity;
 import org.keycloak.authorization.model.Resource;
 import org.keycloak.authorization.model.ResourceServer;
 import org.keycloak.authorization.permission.ResourcePermission;

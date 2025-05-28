@@ -44,7 +44,7 @@ features:
  - [WebAuthn authentication. Radius Authentication using your fingerprint or FIDO2 security key](Examples/WebAuthnJSExample)
 
 ## Donate
-<a href="https://secure.wayforpay.com/button/bf1e79d05af0c" style="display:inline-block!important;background:#2B3160 url('https://s3.eu-central-1.amazonaws.com/w4p-merch/button/bg6x2.png') no-repeat center right;background-size:cover;width: 256px!important;height:54px!important;border:none!important;border-radius:14px!important;padding:18px!important;text-decoration:none!important;box-shadow:3px 2px 8px rgba(71,66,66,0.22)!important;text-align:left!important;box-sizing:border-box!important;" onmouseover="this.style.opacity='0.8';" onmouseout="this.style.opacity='1';"><span style="font-family:Verdana,Arial,sans-serif!important;font-weight:bold!important;font-size:14px!important;color:#ffffff!important;line-height:18px!important;vertical-align:middle!important;">Donate</span></a>
+<a href="https://secure.wayforpay.com/button/bf1e79d05af0c" style="display:inline-block!important;background:#2B3160 url('https://s3.eu-central-1.amazonaws.com/w4p-merch/button/bg6x2.png') no-repeat center right;background-size:cover;width: 256px!important;height:54px!important;border:none!important;border-radius:14px!important;padding:5px 14px!important;text-decoration:none!important;box-shadow:3px 2px 8px rgba(71,66,66,0.22)!important;text-align:left!important;box-sizing:border-box!important;" onmouseover="this.style.opacity='0.8';" onmouseout="this.style.opacity='1';"><span style="font-family:Verdana,Arial,sans-serif!important;font-weight:bold!important;font-size:14px!important;color:#ffffff!important;line-height:18px!important;vertical-align:middle!important;">Donate to<br>@vzakharchenko</span></a>
 
 ## Release Setup
 1. Download  keycloak-radius.zip asset from [github releases](https://github.com/vzakharchenko/keycloak-radius-plugin/releases)
@@ -60,7 +60,7 @@ features:
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
-***requirements***: [keycloak 26.1.4](https://github.com/keycloak/keycloak/releases/download/26.1.4/keycloak-26.1.4.zip)
+***requirements***: [keycloak 26.2.4](https://github.com/keycloak/keycloak/releases/download/26.2.4/keycloak-26.2.4.zip)
 ```bash
 cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
    ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-*.jar \
@@ -73,7 +73,7 @@ cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
      ${KEYCLOAK_PATH}/providers/
 ```
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-26.1.4.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-26.2.4.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 
 ### Environment Variables
@@ -91,31 +91,43 @@ or
 ```
 export KEYCLOAK_PATH= /opt/keycloak/
 ```
+## Developer Setup
+requirements: java jdk 21 and above, maven 3.9 and above, bash, GIT repo checked out
+- ```keycloak/init.sh``` - downloads the current Keycloak release
+- ```keycloak/build.sh``` - cleans, builds and installs the development Keycloak with radius-plugin(s)
+- ```keycloak/buildAndStart.sh``` - calls build.sh and start.sh
+- ```keycloak/buildAndStartDb.sh``` - calls build.sh, restores your saved db etc. and calls start.sh
+- ```keycloak/start.sh``` - starts the development Keycloak
+- ```keycloak/saveDb.sh``` - saves a copy your db/realms, config, additional plugins/themes
+
+During development, you usually use `buildAndStartDb.sh`, test some stuff, kill your Keycloak and `saveDb.sh`.
+Change the radius-plugin code and start again with: `buildAndStartDb.sh`, …
 
 ## Configuration
 ### Radius server config file
--  create file ${KEYCLOAK_PATH}config/radius.config or ${RADIUS_CONFIG_PATH}/radius.config
--  example <pre><code>{
-  "sharedSecret": "radsec",
-  "authPort": 1812,
-  "accountPort": 1813,
-  "numberThreads": 8,
-  "useUdpRadius": true,
-  "externalDictionary": "/opt/dictionary",
-  "otpWithoutPassword": [ ],
-  "radsec": {
-    "privateKey": "config/private.key",
-    "certificate": "config/public.crt",
-    "numberThreads": 8,
-    "useRadSec": true
-  },
-   "coa":{
-      "port":3799,
-      "useCoA":true
-   }
-}
-</code></pre>
-
+-  create file `${KEYCLOAK_PATH}config/radius.config` or `${RADIUS_CONFIG_PATH}/radius.config`
+-  example
+    ```json
+    {
+      "sharedSecret": "radsec",
+      "authPort": 1812,
+      "accountPort": 1813,
+      "numberThreads": 8,
+      "useUdpRadius": true,
+      "externalDictionary": "/opt/dictionary",
+      "otpWithoutPassword": [ ],
+      "radsec": {
+        "privateKey": "config/private.key",
+        "certificate": "config/public.crt",
+        "numberThreads": 8,
+        "useRadSec": true
+      },
+       "coa":{
+          "port":3799,
+          "useCoA":true
+       }
+    }
+    ```
 where
    -  **sharedSecret** - Used to secure communication between a RADIUS server and a RADIUS client.
    -  **authPort** - Authentication and authorization port
@@ -134,13 +146,10 @@ where
    - **otp** - _deprecated_, ignored if **otpWithoutPassword** is defined, otherwise
      ```"otp":true``` is interpreted for backward compatibility as ```"otpWithoutPassword": [ "chap", "mschapv2" ]```
    -  **externalDictionary** - path to the dictionary file in freeradius format
-##
- Run Keycloak Locally
-```bash
-#!/usr/bin/env bash
-set -e
-cd keycloak-26.1.4
-sh bin/kc.sh --debug 8190 start-dev --http-port=8090
+## Run Keycloak Locally
+   ```bash
+cd keycloak-26.2.4
+sh bin/kc.sh --debug 8190 start-dev --http-port=8090 --features-disabled=organization
 ```
 
 ### Keycloak Client with Radius Protocol
