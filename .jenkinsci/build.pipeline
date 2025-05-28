@@ -1,0 +1,83 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent {
+        label 'linux-node'
+    }
+    tools {
+        git 'Default'
+        jdk 'OpenJDK21'
+        maven 'Maven3'
+        nodejs 'Node22'
+    }
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(
+            logRotator(
+                // artifacts are kept for days
+                artifactDaysToKeepStr: '2',
+                // number of builds have their artifacts kept
+                artifactNumToKeepStr: '10',
+                // history to keep in days
+                daysToKeepStr: '14',
+                // number of build logs to keep
+                numToKeepStr: '30'))
+    }
+    stages {
+        stage('build') {
+            steps {
+                dir('keycloak-plugins') {
+                    withBuildConfiguration {
+                        script {
+                            currentBuild.displayName += ' (' + getMavenProjectVersion() + ')'
+                        }
+                        // add -DskipTests -Dfast-build for fast builds (pipeline testing only)
+                        sh 'mvn clean install -B'
+                    }
+                }
+            }
+        }
+        stage('package') {
+            steps {
+                dir('keycloak') {
+                    withBuildConfiguration {
+                        sh 'mvn clean install -B'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            junit '**/target/surefire-reports/junitreports/*.xml'
+        }
+        cleanup {
+            cleanWs cleanWhenFailure: false, cleanWhenNotBuilt: false, cleanWhenUnstable: false, notFailBuild: true
+        }
+        failure {
+            emailext to: 'knut.sander@mgm-sp.com',
+                     subject: "Build failed in SSO Jenkins: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                     body: "Check Jenkins for details: ${env.BUILD_URL}"
+        }
+    }
+}
+
+void withBuildConfiguration(Closure body) {
+    withMaven(globalMavenSettingsConfig: 'maven-settings',
+              mavenLocalRepo: "${env.WORKSPACE_TMP}/m2_repository",
+              mavenOpts: '-Dfile.encoding=UTF-8') {
+        body()
+    }
+}
+
+private String getMavenProjectVersion() {
+    String mvnProjectVersion = sh(returnStdout: true, script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout").trim()
+    echo "Project version from Maven: ${mvnProjectVersion}"
+
+    // if (mvnProjectVersion.endsWith("-SNAPSHOT")) {
+    //     echo "mvnProjectVersion ends with '-SNAPSHOT', truncating it"
+    //     mvnProjectVersion = mvnProjectVersion.replace("-SNAPSHOT", "")
+    //     echo "mvnProjectVersion after truncating: ${mvnProjectVersion}"
+    // }
+    return mvnProjectVersion
+}
