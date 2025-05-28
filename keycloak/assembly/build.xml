@@ -1,13 +1,13 @@
 <assembly>
-    <id>sources</id>
+    <id>keycloak</id>
     <!-- START SNIPPET: formats -->
     <formats>
-        <format>jar</format>
+        <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${sources}/jar</directory>
+            <directory>target/keycloak/keycloak-${keycloak.version}</directory>
             <outputDirectory>.</outputDirectory>
             <includes>
                 <include>**</include>

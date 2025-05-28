@@ -86,9 +86,7 @@ Thumbs.db
 .env
 radius.config
 keycloak.properties
-keycloak-quarkus/data/*
-keycloak-quarkus/data.*/*
+keycloak/data/*
+keycloak/data.*/*
+keycloak/keycloak-distribution-*.zip
 release-steps.sh
-keycloak-plugins/*-plugin/git.properties
-keycloak-plugins/*-plugin/dependency-reduced-pom.xml
-keycloak-plugins/*-plugin/analizers

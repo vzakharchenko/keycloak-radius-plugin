@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>keycloak-plugins</artifactId>
-        <groupId>com.github.vzakharchenko</groupId>
-        <version>1.6.0-SNAPSHOT</version>
-    </parent>
-    <packaging>pom</packaging>
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.github.vzakharchenko</groupId>
+    <artifactId>keycloak-plugins</artifactId>
+    <version>1.6.0-SNAPSHOT</version>
+  </parent>
 
-    <artifactId>radius-theme</artifactId>
+  <artifactId>radius-theme</artifactId>
+  <packaging>pom</packaging>
 
-    <properties>
-        <checkStyleLocation>../../analizers</checkStyleLocation>
-        <pmdLocation>${basedir}/../../analizers/</pmdLocation>
-        <findBugsLocation>${basedir}/../../analizers/</findBugsLocation>
-        <javadoc>${basedir}/../../analizers/javadoc</javadoc>
-        <sources>${basedir}/../../analizers/sources</sources>
-    </properties>
+  <properties>
+    <analyzersLocation>${project.parent.basedir}/../analyzers</analyzersLocation>
+  </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.1</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>assembly/theme.xml</descriptor>
-                    </descriptors>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly/theme.xml</descriptor>
+          </descriptors>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

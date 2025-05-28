@@ -1,1 +1,13 @@
-- TODO: add change log entries
+- big overhaul and cleanup of the build scripts
+  - introduce sortpom Maven plugin
+  - introduce dependency declarations check
+  - define all dependency and plugin version in management section
+  - move all dependency declarations into submodules
+  - extract all Keycloak provided dependency versions to properties and align with current Keycloak version
+  - remove unused dependencies and fix scopes
+  - remove TestNG transitive dependency to slf4j-api v1
+  - remove obsolet Hibernate ORM dependency
+  - rename folder "analizes" to "analyzers", refactor "analyzers" folder handling
+  - rename keycloak-quarkus module directory to keycloak
+  - add version to Keycloak distribution zips
+  - add version to radius-plugin zip

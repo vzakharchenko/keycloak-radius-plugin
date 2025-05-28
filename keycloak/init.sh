@@ -3,9 +3,9 @@ set -e
 
 kc_ver='25.0.6'
 kc_url="https://github.com/keycloak/keycloak/releases/download/$kc_ver/keycloak-$kc_ver.zip"
-kc_zip='keycloak_source.zip'
+kc_zip="keycloak-distribution-$kc_ver.zip"
 
-cd ../keycloak-quarkus
+cd ../keycloak
 
 rm -f "$kc_zip"
 wget "$kc_url" -O "$kc_zip" -q --show-progress --progress=bar:force 2>&1

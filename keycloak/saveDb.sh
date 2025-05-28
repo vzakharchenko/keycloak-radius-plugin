@@ -5,7 +5,7 @@ kc_ver='25.0.6'
 kc_dir="target/keycloak/keycloak-$kc_ver"
 timestamp="$(date +%Y%m%d-%H%M%S)"
 
-cd ../keycloak-quarkus
+cd ../keycloak
 
 mv data "data.$timestamp"
 mkdir -p data/providers
