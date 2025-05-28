@@ -132,8 +132,8 @@ public class UpdateRadiusPassword implements RequiredActionProvider,
     protected void exceptionHandler(EventBuilder errorEvent,
                                     RequiredActionContext context,
                                     Exception e) {
-        Object[] parameters = (e instanceof ModelException) ?
-                ((ModelException) e).getParameters() :
+        Object[] parameters = (e instanceof ModelException me) ?
+                me.getParameters() :
                 new Object[0];
         errorEvent.detail(Details.REASON, e.getMessage()).error(Errors.PASSWORD_REJECTED);
         Response challenge = context.form()

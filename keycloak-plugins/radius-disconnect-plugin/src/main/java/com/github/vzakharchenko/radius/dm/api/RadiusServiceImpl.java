@@ -48,18 +48,14 @@ public class RadiusServiceImpl implements RealmResourceProviderFactory,
     @Override
     public void postInit(KeycloakSessionFactory factory) {
         factory.register(event -> {
-            if (event instanceof ClientModel.ClientCreationEvent) {
-                ClientModel.ClientCreationEvent postCreateEvent =
-                        (ClientModel.ClientCreationEvent) event;
+            if (event instanceof ClientModel.ClientCreationEvent postCreateEvent) {
                 KeycloakModelUtils.runJobInTransaction(factory,
                         keycloakSession ->
                                 create(keycloakSession)
                                         .init(postCreateEvent.getCreatedClient()));
 
             }
-            if (event instanceof ClientModel.ClientUpdatedEvent) {
-                ClientModel.ClientUpdatedEvent postCreateEvent =
-                        (ClientModel.ClientUpdatedEvent) event;
+            if (event instanceof ClientModel.ClientUpdatedEvent postCreateEvent) {
                 KeycloakModelUtils.runJobInTransaction(factory,
                         keycloakSession ->
                                 create(keycloakSession).init(postCreateEvent.getUpdatedClient()));

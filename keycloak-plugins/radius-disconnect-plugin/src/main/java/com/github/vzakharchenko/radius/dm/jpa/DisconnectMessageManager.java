@@ -42,7 +42,7 @@ public class DisconnectMessageManager implements DmTableManager {
         query.setParameter("userName", userName);
         query.setParameter("radiusSessionId", radiusSessionId);
         List<DisconnectMessageModel> list = query.getResultList();
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? null : list.getFirst();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class DisconnectMessageManager implements DmTableManager {
                         m);
         query.setParameter("id", dmm.getId());
         List<T> list = query.getResultList();
-        return list.isEmpty() ? null : list.get(0);
+        return list.isEmpty() ? null : list.getFirst();
     }
 
     private void increaseEndAttempts(DMKeycloakEndModel kem, String message) {

@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/radius-plugin # directory where steps will run
 
     docker: # run the steps with Docker
-      - image: circleci/openjdk:17.0-node
+      - image: circleci/openjdk:21.0-node
 
     steps: # a collection of executable commands
 

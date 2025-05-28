@@ -23,9 +23,7 @@ public class RadiusServerProviderFactory
     @Override
     public void postInit(KeycloakSession session, IRadiusServerProvider serverProvider) {
         session.getKeycloakSessionFactory().register(event -> {
-            if (event instanceof RealmModel.RealmPostCreateEvent) {
-                RealmModel.RealmPostCreateEvent postCreateEvent = (RealmModel
-                        .RealmPostCreateEvent) event;
+            if (event instanceof RealmModel.RealmPostCreateEvent postCreateEvent) {
                 serverProvider.init(postCreateEvent.getCreatedRealm());
             }
         });

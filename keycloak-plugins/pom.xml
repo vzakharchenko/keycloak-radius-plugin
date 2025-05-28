@@ -63,7 +63,9 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
+
+    <maven.version>3.9.0</maven.version>
 
     <fast-build>false</fast-build>
 
@@ -343,6 +345,12 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>1.15.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.glassfish.jersey.core</groupId>
         <artifactId>jersey-common</artifactId>
         <version>${jersey-common.version}</version>
@@ -428,7 +436,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
+          <version>3.14.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -470,6 +478,26 @@
           <version>3.3.1</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.5.2</version>
+          <configuration>
+            <workingDirectory>${project.basedir}</workingDirectory>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            <useFile>false</useFile>
+            <forkCount>1</forkCount>
+            <!--
+            '@{argLine}' is needed for JaCoCo to inject its configured agent arguments on plugin runtime
+              (see https://www.jacoco.org/jacoco/trunk/doc/agent.html and https://github.com/khmarbaise/example-jacoco)
+            '-Xshare:off' is needed for JaCoCo to avoid JVM waring about sharing and bootstrap classpath
+            '-javaagent:${org.mockito:mockito-core:jar}' is needed setting up instrumentation for inline mocking by
+              Mockito (see https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3)
+            -->
+            <!--suppress UnresolvedMavenProperty -->
+            <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar} -Xshare:off -Djdk.instrument.traceUsage</argLine>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>properties-maven-plugin</artifactId>
           <version>1.2.1</version>
@@ -483,6 +511,28 @@
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.12</version>
+        </plugin>
+        <plugin>
+          <!-- run this by mvn -U rewrite:run -->
+          <groupId>org.openrewrite.maven</groupId>
+          <artifactId>rewrite-maven-plugin</artifactId>
+          <version>6.2.1</version>
+          <configuration>
+            <exportDatatables>true</exportDatatables>
+            <activeRecipes>
+              <recipe>
+                <!-- https://docs.openrewrite.org/recipes/java/migrate/upgradetojava21 -->
+                org.openrewrite.java.migrate.UpgradeToJava21
+              </recipe>
+            </activeRecipes>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.openrewrite.recipe</groupId>
+              <artifactId>rewrite-migrate-java</artifactId>
+              <version>3.3.0</version>
+            </dependency>
+          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -635,6 +685,12 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
+            <id>dependencies--properties</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>dependencies--analyze-only</id>
             <goals>
               <goal>analyze-only</goal>
@@ -684,7 +740,7 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>3.6.3</version>
+                  <version>${maven.version}</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
                   <version>${java.version}</version>
@@ -783,9 +839,9 @@
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${kc.jakarta.xml.bind-api.version}</version>
           </dependency>
         </dependencies>
         <executions>

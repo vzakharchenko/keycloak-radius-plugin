@@ -178,6 +178,6 @@ public class RadiusCredentialProvider implements
             return null;
         }
 
-        return RadiusCredentialModel.createFromCredentialModel(passwords.get(0));
+        return RadiusCredentialModel.createFromCredentialModel(passwords.getFirst());
     }
 }

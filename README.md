@@ -56,7 +56,7 @@ features:
 [Run inside Docker Container](docker/README.md)
 ## Manual Setup
 ### build project
-***requirements***: java jdk 17 and above, maven 3.5 and above
+***requirements***: java jdk 21 and above, maven 3.9 and above
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)

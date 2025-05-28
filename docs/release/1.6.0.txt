@@ -11,3 +11,4 @@
   - rename keycloak-quarkus module directory to keycloak
   - add version to Keycloak distribution zips
   - add version to radius-plugin zip
+- migration to Java 21 as minimal JDK version
