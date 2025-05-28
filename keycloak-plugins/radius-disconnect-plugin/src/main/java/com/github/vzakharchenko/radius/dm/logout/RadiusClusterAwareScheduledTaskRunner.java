@@ -22,7 +22,7 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
         this.intervalSecs = (int) (intervalMillis / 1000L);
     }
 
-    private void runIntransaction(InTransaction inTransaction,
+    private void runInTransaction(InTransaction inTransaction,
                                   KeycloakSession session,
                                   ScheduledTask scheduledTask) {
         KeycloakTransactionManager transactionManager = session.getTransactionManager();
@@ -39,7 +39,7 @@ public class RadiusClusterAwareScheduledTaskRunner extends ScheduledTaskRunner {
 
     @Override
     protected void runTask(final KeycloakSession session) {
-        this.runIntransaction(scheduledTask -> {
+        this.runInTransaction(scheduledTask -> {
             ClusterProvider clusterProvider = session.getProvider(ClusterProvider.class);
             String taskKey = scheduledTask.getClass().getSimpleName();
             ExecutionResult<Void> result = clusterProvider

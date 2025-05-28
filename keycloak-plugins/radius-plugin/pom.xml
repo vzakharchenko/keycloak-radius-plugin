@@ -42,6 +42,10 @@
       <artifactId>netty-transport</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus.resteasy.reactive</groupId>
+      <artifactId>resteasy-reactive</artifactId>
+    </dependency>
+    <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
     </dependency>
@@ -72,6 +76,11 @@
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-core</artifactId>
+    </dependency>
+    <dependency>
+      <!-- not referenced, but useful while debugging -->
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-model-infinispan</artifactId>
     </dependency>
     <dependency>
       <groupId>org.keycloak</groupId>
@@ -117,11 +126,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

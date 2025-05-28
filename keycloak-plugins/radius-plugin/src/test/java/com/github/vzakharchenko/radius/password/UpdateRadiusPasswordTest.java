@@ -2,21 +2,22 @@ package com.github.vzakharchenko.radius.password;
 
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.http.HttpRequest;
-import org.keycloak.models.*;
+import org.keycloak.models.ModelException;
+import org.keycloak.models.PasswordPolicy;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,6 @@ public class UpdateRadiusPasswordTest extends AbstractRadiusTest {
 
     @Mock
     private IRadiusCredentialProvider iRadiusCredentialProvider;
-
 
     @BeforeMethod
     public void beforeMethod() {

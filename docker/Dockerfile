@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:25.0.6
+FROM quay.io/keycloak/keycloak:26.1.4
 LABEL author="Vasyl Zakharchenko"
 LABEL email="vaszakharchenko@gmail.com"
 LABEL name="keycloak-radius-plugin"

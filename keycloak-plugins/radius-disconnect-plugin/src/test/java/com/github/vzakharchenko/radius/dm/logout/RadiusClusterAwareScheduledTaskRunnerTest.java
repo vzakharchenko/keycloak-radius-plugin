@@ -57,7 +57,6 @@ public class RadiusClusterAwareScheduledTaskRunnerTest extends AbstractRadiusTes
     @Test
     public void testClusterEventNotExecuted2() throws InterruptedException {
         reset(provider);
-
         when(provider.executeIfNotExecuted(anyString(), anyInt(), any()))
                 .then(invocationOnMock -> {
                     Callable argument = invocationOnMock.getArgument(2, Callable.class);

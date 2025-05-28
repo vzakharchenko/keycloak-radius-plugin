@@ -12,3 +12,7 @@
   - add version to Keycloak distribution zips
   - add version to radius-plugin zip
 - migration to Java 21 as minimal JDK version
+- update to Keycloak version 26.1.4
+  - remove test dependency slf4j-simple, logging adapter is now supplied by jboss-logging
+  - add test support for OpenTelemetry
+  - fix not yet initialized realm reference for organization support handling

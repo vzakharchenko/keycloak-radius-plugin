@@ -12,7 +12,10 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.radius.holder.RadiusUserInfoBuilder;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
-import org.keycloak.models.*;
+import org.keycloak.models.ClientModel;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.RealmModel;
+import org.keycloak.models.UserModel;
 import org.tinyradius.server.SecretProvider;
 
 import java.net.InetSocketAddress;
@@ -37,14 +40,14 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
         List<PasswordData> passwords = new ArrayList<>();
         if (userModel.isEnabled()) {
             keycloakSession.sessions().getUserSessionsStream(realmModel, userModel)
-                .forEach(userSession -> {
-                    String sessionPassword = RadiusSessionPasswordManager.getInstance()
-                            .getCurrentPassword(userSession);
-                    if (sessionPassword != null) {
-                        passwords.add(PasswordData.create(sessionPassword, true));
-                    }
-                });
-            }
+                    .forEach(userSession -> {
+                        String sessionPassword = RadiusSessionPasswordManager.getInstance()
+                                .getCurrentPassword(userSession);
+                        if (sessionPassword != null) {
+                            passwords.add(PasswordData.create(sessionPassword, true));
+                        }
+                    });
+        }
         return passwords;
     }
 
@@ -91,8 +94,8 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
             return true;
         } else {
             event.event(EventType.LOGIN_ERROR).detail(
-                    EventLoggerUtils.RADIUS_MESSAGE, "USER DOES NOT EXIST")
-                    .error("Login to RADIUS " + username + ", user disabled or does not exists");
+                            EventLoggerUtils.RADIUS_MESSAGE, "USER DOES NOT EXIST")
+                    .error("Login to RADIUS " + username + ", user disabled or does not exist");
         }
         return false;
     }
@@ -106,6 +109,8 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
         boolean successInit = false;
         RealmModel realm = protocol.getRealm();
         if (realm != null) {
+            // set realm as early as possible to provide realm information for further processing
+            threadSession.getContext().setRealm(realm);
             RadiusClientConnection clientConnection = new RadiusClientConnection(
                     address, protocol.getAccessRequest());
             ClientModel client = RadiusLibraryUtils.getClient(clientConnection,
