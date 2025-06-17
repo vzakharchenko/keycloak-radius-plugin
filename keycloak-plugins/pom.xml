@@ -82,7 +82,7 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.2.4</keycloak.version>
+    <keycloak.version>26.2.5</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
@@ -99,7 +99,7 @@
     <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
     <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
     <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
-    <kc.netty.version>4.1.118.Final</kc.netty.version>
+    <kc.netty.version>4.1.119.Final</kc.netty.version>
     <kc.resteasy-reactive.version>3.20.0</kc.resteasy-reactive.version>
     <kc.slf4j.version>2.0.6</kc.slf4j.version>
 
