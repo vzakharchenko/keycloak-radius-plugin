@@ -12,8 +12,8 @@ import org.keycloak.models.UserModel;
 import org.tinyradius.packet.AccessRequest;
 import org.tinyradius.packet.RadiusPacket;
 
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 public class PAPProtocol extends AbstractAuthProtocol {
 
@@ -102,7 +102,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
         if (password == null || StringUtils.isEmpty(password.getPassword())) {
             return false;
         }
-        Collection<String> passwordsWithOtp = addOtpToPassword(password);
+        Set<String> passwordsWithOtp = addOtpToPassword(password);
         String passwordOtp = passwordsWithOtp.stream()
                 .filter(this::verifyProtocolPasswordAgainstPlaintext)
                 .findFirst().orElse(null);
@@ -128,7 +128,7 @@ public class PAPProtocol extends AbstractAuthProtocol {
         } else {
             // expect OTP token code always prefixed by UserPassword
             // getPasswordsWithOtp() here returns the password if OTP suffix is valid or nothing
-            Collection<String> passwordsWithValidOtp =
+            Set<String> passwordsWithValidOtp =
                     getPasswordsWithOtp(accessRequest.getUserPassword());
             return passwordsWithValidOtp.stream().anyMatch(this::verifyPapPassword);
         }

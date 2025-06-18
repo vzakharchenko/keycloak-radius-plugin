@@ -1,4 +1,7 @@
 <FindBugsFilter>
+    <!-- see https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html for spotbugs bug descriptions -->
+    <!-- see https://fb-contrib.sourceforge.net/bugdescriptions.html for sb-contrib bug descriptions -->
+    <!-- see https://find-sec-bugs.github.io/bugs.htm for findsecbugs-plugin bug descriptions -->
     <Match>
         <Bug pattern="SE_NO_SERIALVERSIONID"/>
     </Match>
