@@ -22,8 +22,6 @@ import org.tinyradius.packet.RadiusPacket;
 import org.tinyradius.packet.RadiusPackets;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
 import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
@@ -111,7 +109,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         if (password == null || StringUtils.isEmpty(password.getPassword())) {
             return false;
         }
-        Collection<String> passwordsWithOtp = addOtpToPassword(password);
+        Set<String> passwordsWithOtp = addOtpToPassword(password);
         String passwordOtp = passwordsWithOtp.stream()
                 .filter(this::verifyProtocolPassword)
                 .findFirst().orElse(null);
@@ -128,7 +126,7 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
         return accessRequest.copy();
     }
 
-    private Collection<String> getPasswordOtp(PasswordData originPassword, boolean exclude) {
+    private Set<String> getPasswordOtp(PasswordData originPassword, boolean exclude) {
         OtpPasswordInfo otpPasswordInfo = otpPasswordGetter.getOTPs(session);
         if (otpPasswordInfo.isUseOtp() && !originPassword.isSessionPassword()) {
             return exclude ?
@@ -137,15 +135,15 @@ public abstract class AbstractAuthProtocol implements AuthProtocol {
                     otpPasswordInfo.addOtpPasswords(originPassword.getPassword(),
                             supportOtpWithoutPassword());
         } else {
-            return Collections.singletonList(originPassword.getPassword());
+            return Set.of(originPassword.getPassword());
         }
     }
 
-    protected Collection<String> getPasswordsWithOtp(String originPassword) {
+    protected Set<String> getPasswordsWithOtp(String originPassword) {
         return getPasswordOtp(PasswordData.create(originPassword), true);
     }
 
-    protected Collection<String> addOtpToPassword(PasswordData originPassword) {
+    protected Set<String> addOtpToPassword(PasswordData originPassword) {
         return getPasswordOtp(originPassword, false);
     }
 
