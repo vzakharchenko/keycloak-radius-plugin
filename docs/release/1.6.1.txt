@@ -1,1 +1,29 @@
-- TODO
+- updated dependencies and build tooling
+- enhance testing scripts (save.sh/startDb.sh/buildAndStartDb.sh) to support additional provider JARs
+- replace test dependency com.github.stefanbirkner:system-lambda with the fork uk.org.webcompere:system-stubs-core to replace withEnvironmentVariable() by an applicable version for Java17
+- fix OTP verification for users with multiple tokens of same type (previously only token was checked)
+- fix realm retrieval by name vs id (previously querying by name or by id was confused in some cases)
+- big overhaul and cleanup of the build scripts
+  - introduce sortpom Maven plugin
+  - introduce dependency declarations check
+  - define all dependency and plugin version in management section
+  - move all dependency declarations into submodules
+  - extract all Keycloak provided dependency versions to properties and align with current Keycloak version
+  - remove unused dependencies and fix scopes
+  - remove TestNG transitive dependency to slf4j-api v1
+  - remove obsolet Hibernate ORM dependency
+  - rename folder "analizes" to "analyzers", refactor "analyzers" folder handling
+  - rename keycloak-quarkus module directory to keycloak
+  - add version to Keycloak distribution zips
+  - add version to radius-plugin zip
+- migration to Java 21 as minimal JDK version
+- update to Keycloak version 26.1.4
+  - remove test dependency slf4j-simple, logging adapter is now supplied by jboss-logging
+  - add test support for OpenTelemetry
+  - fix not yet initialized realm reference for organization support handling
+- update to Keycloak version 26.2.5
+  - remove managed dependency org.keycloak:keycloak-authz-clientkeycloak-authz-client which
+    is no longer part of the Keycloak server (moved to Keycloak authorization client)
+  - fix import of UserModelIdentity, was moved from package
+    org.keycloak.authorization.common to org.keycloak.authorization.identity
+  - enhance readme.md
