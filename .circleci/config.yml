@@ -1,14 +1,13 @@
-version: 2 # use CircleCI 2.0
+version: 2
 jobs:
   build:
-    working_directory: ~/radius-plugin # directory where steps will run
+    working_directory: ~/radius-plugin
 
-    docker: # run the steps with Docker
-      - image: cimg/openjdk:openjdk:21.0.6-node
+    docker:
+      - image: cimg/openjdk:21.0.6-node
 
-    steps: # a collection of executable commands
-
-      - checkout # check out source code to working directory
+    steps:
+      - checkout
 
       - run:
           name: build and test plugins
