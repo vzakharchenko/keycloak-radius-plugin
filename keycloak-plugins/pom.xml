@@ -65,7 +65,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>21</java.version>
 
-    <maven.version>3.9.0</maven.version>
+    <maven.version>3.6.3</maven.version>
 
     <fast-build>false</fast-build>
 
@@ -406,6 +406,11 @@
           <version>4.0.0</version>
         </plugin>
         <plugin>
+          <groupId>com.github.hazendaz.maven</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
+          <version>4.7.0</version>
+        </plugin>
+        <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
           <version>4.9.3.0</version>
@@ -496,11 +501,6 @@
           <version>1.2.1</version>
         </plugin>
         <plugin>
-          <groupId>org.eluder.coveralls</groupId>
-          <artifactId>coveralls-maven-plugin</artifactId>
-          <version>4.3.0</version>
-        </plugin>
-        <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.13</version>
@@ -552,6 +552,30 @@
             <phase>validate</phase>
           </execution>
           <execution/>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.hazendaz.maven</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <configuration>
+          <repoToken>${repoToken}</repoToken>
+          <skip>${coveralls}</skip>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${kc.jakarta.xml.bind-api.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <phase>post-site</phase>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -821,30 +845,6 @@
                 <file>target/git.properties</file>
               </files>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <configuration>
-          <repoToken>${repoToken}</repoToken>
-          <skip>${coveralls}</skip>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${kc.jakarta.xml.bind-api.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <phase>post-site</phase>
           </execution>
         </executions>
       </plugin>
