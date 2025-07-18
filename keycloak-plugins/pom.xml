@@ -93,7 +93,7 @@
     <kc.commons-codec.version>1.18.0</kc.commons-codec.version>
     <kc.commons-io.version>2.18.0</kc.commons-io.version>
     <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
-    <kc.freemarker.version>2.3.32</kc.freemarker.version>
+    <kc.freemarker.version>2.3.34</kc.freemarker.version>
     <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
     <kc.jboss-logmanager.version>3.1.2.Final</kc.jboss-logmanager.version>
     <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
