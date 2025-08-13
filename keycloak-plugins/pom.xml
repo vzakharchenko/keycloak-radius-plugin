@@ -91,7 +91,7 @@
     -->
     <kc.angus-mail.version>2.0.3</kc.angus-mail.version>
     <kc.commons-codec.version>1.18.0</kc.commons-codec.version>
-    <kc.commons-io.version>2.18.0</kc.commons-io.version>
+    <kc.commons-io.version>2.20.0</kc.commons-io.version>
     <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
     <kc.freemarker.version>2.3.34</kc.freemarker.version>
     <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
