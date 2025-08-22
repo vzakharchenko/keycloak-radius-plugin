@@ -82,14 +82,14 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.3.2</keycloak.version>
+    <keycloak.version>26.3.3</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
                 | grep -E "(angus-mail|commons-(codec|io|lang)|freemarker|\.jboss-(logging|logmanager)-\d(\
                            )?|jakarta.(persistence|ws.rs|xml.bind)|netty-com|resteasy-reactive-\d|org.slf4j)"
     -->
-    <kc.angus-mail.version>2.0.3</kc.angus-mail.version>
+    <kc.angus-mail.version>2.0.4</kc.angus-mail.version>
     <kc.commons-codec.version>1.18.0</kc.commons-codec.version>
     <kc.commons-io.version>2.20.0</kc.commons-io.version>
     <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
