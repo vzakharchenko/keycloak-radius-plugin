@@ -104,7 +104,7 @@
     <kc.slf4j.version>2.0.6</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
-    <jersey-common.version>3.1.10</jersey-common.version>
+    <jersey-common.version>3.1.11</jersey-common.version>
     <mockito-core.version>5.18.0</mockito-core.version>
     <testng.version>7.11.0</testng.version>
     <system-stubs-core.version>2.1.8</system-stubs-core.version>
