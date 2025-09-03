@@ -99,7 +99,7 @@
     <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
     <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
     <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
-    <kc.netty.version>4.1.119.Final</kc.netty.version>
+    <kc.netty.version>4.1.125.Final</kc.netty.version>
     <kc.resteasy-reactive.version>3.26.2</kc.resteasy-reactive.version>
     <kc.slf4j.version>2.0.6</kc.slf4j.version>
 
