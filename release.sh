@@ -55,7 +55,7 @@ tagName=`cat $PROPERTY_FILE | grep "scm.tag" | grep -i -v -E "scm.tagNameFormat"
 # get release version
 tagVersion=`cat $PROPERTY_FILE | grep "project.rel.com.github.vzakharchenko..keycloak-plugins"  | cut -d'=' -f2`
 tagDevVersion=`cat $PROPERTY_FILE | grep "project.dev.com.github.vzakharchenko..keycloak-plugins"  | cut -d'=' -f2`
-
+keycloakVersion="${tagName#v${tagVersion}-}"
 releaseNotes=`cat docs/release/${tagVersion}.txt`;
 
 if [[ "x${tagVersion}" == "x" ]]; then
@@ -80,7 +80,7 @@ mvn versions:set -DnewVersion=$tagDevVersion
 cd ..
 # create release
 git pull
-hub release create -a ./keycloak/target/keycloak-radius.zip -m "Keycloak with radius server ${tagName}
+hub release create -a ./keycloak/target/keycloak-radius-${tagVersion}-${keycloakVersion}.zip -m "Keycloak with radius server ${tagName}
 
 
 **releaseNotes**:
@@ -92,16 +92,9 @@ $releaseNotes
 requirements: **openjdk 21**
 
 **Keycloak Quarkus installation steps**:
-1. download and unzip keycloak-radius.zip <pre>unzip keycloak-radius.zip -d keycloak-radius</pre>
+1. download and unzip keycloak-radius-${tagVersion}-${keycloakVersion}.zip <pre>unzip keycloak-radius-${tagVersion}-${keycloakVersion}.zip -d keycloak-radius</pre>
 2. <pre>cd keycloak-radius</pre>
 3. <pre>sh bin/kc.sh --debug 8190 start-dev --http-port=8090</pre>
-4. open http://localhost:8090
-5. default radius shared Secret: <pre>secret</pre>
-
-**Keycloak WildFly (deprecated) installation steps**:
-1. download and unzip keycloak-radius.zip <pre>unzip keycloak-radius-legacy.zip -d keycloak-radius</pre>
-2. <pre>cd keycloak-radius</pre>
-3. <pre>sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</pre>
 4. open http://localhost:8090
 5. default radius shared Secret: <pre>secret</pre>
 
