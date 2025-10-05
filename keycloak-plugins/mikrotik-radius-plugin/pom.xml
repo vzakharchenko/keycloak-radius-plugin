@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.github.vzakharchenko</groupId>
     <artifactId>keycloak-plugins</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.6.1</version>
   </parent>
 
   <artifactId>mikrotik-radius-plugin</artifactId>
