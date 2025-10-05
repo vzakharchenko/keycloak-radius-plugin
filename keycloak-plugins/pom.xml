@@ -4,7 +4,7 @@
 
   <groupId>com.github.vzakharchenko</groupId>
   <artifactId>keycloak-plugins</artifactId>
-  <version>1.6.1</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Keycloak Radius Server</name>
@@ -41,7 +41,7 @@
 
   <scm>
     <connection>scm:git:git@github.com:vzakharchenko/keycloak-radius-plugin.git</connection>
-    <tag>v1.6.1-26.4.0</tag>
+    <tag>HEAD</tag>
     <url>git@github.com:vzakharchenko/keycloak-radius-plugin.git</url>
   </scm>
 
@@ -392,6 +392,24 @@
   <build>
     <pluginManagement>
       <plugins>
+          <plugin>
+              <groupId>org.sonatype.central</groupId>
+              <artifactId>central-publishing-maven-plugin</artifactId>
+              <version>0.9.0</version>
+              <extensions>true</extensions>
+              <configuration>
+                  <publishingServerId>central</publishingServerId>
+              </configuration>
+          </plugin>
+        <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.9.0</version>
+            <extensions>true</extensions>
+            <configuration>
+                <publishingServerId>central</publishingServerId>
+            </configuration>
+        </plugin>
         <plugin>
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
@@ -518,24 +536,6 @@
               <version>3.15.0</version>
             </dependency>
           </dependencies>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.central</groupId>
-          <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.9.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <publishingServerId>central</publishingServerId>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.central</groupId>
-          <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.9.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <publishingServerId>central</publishingServerId>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
