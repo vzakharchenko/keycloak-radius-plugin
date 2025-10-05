@@ -82,30 +82,30 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.3.3</keycloak.version>
+    <keycloak.version>26.4.0</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
                 | grep -E "(angus-mail|commons-(codec|io|lang)|freemarker|\.jboss-(logging|logmanager)-\d(\
                            )?|jakarta.(persistence|ws.rs|xml.bind)|netty-com|resteasy-reactive-\d|org.slf4j)"
     -->
-    <kc.angus-mail.version>2.0.4</kc.angus-mail.version>
-    <kc.commons-codec.version>1.18.0</kc.commons-codec.version>
+    <kc.angus-mail.version>2.0.5</kc.angus-mail.version>
+    <kc.commons-codec.version>1.19.0</kc.commons-codec.version>
     <kc.commons-io.version>2.20.0</kc.commons-io.version>
-    <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
+    <kc.commons-lang3.version>3.19.0</kc.commons-lang3.version>
     <kc.freemarker.version>2.3.34</kc.freemarker.version>
     <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
     <kc.jboss-logmanager.version>3.1.2.Final</kc.jboss-logmanager.version>
-    <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
-    <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
-    <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
-    <kc.netty.version>4.1.119.Final</kc.netty.version>
-    <kc.resteasy-reactive.version>3.26.2</kc.resteasy-reactive.version>
-    <kc.slf4j.version>2.0.6</kc.slf4j.version>
+    <kc.jakarta.persistence-api.version>3.2.0</kc.jakarta.persistence-api.version>
+    <kc.jakarta.ws.rs-api.version>4.0.0</kc.jakarta.ws.rs-api.version>
+    <kc.jakarta.xml.bind-api.version>4.0.4</kc.jakarta.xml.bind-api.version>
+    <kc.netty.version>4.1.127.Final</kc.netty.version>
+    <kc.resteasy-reactive.version>3.28.2</kc.resteasy-reactive.version>
+    <kc.slf4j.version>2.0.17</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
-    <jersey-common.version>3.1.10</jersey-common.version>
-    <mockito-core.version>5.18.0</mockito-core.version>
+    <jersey-common.version>3.1.11</jersey-common.version>
+    <mockito-core.version>5.20.0</mockito-core.version>
     <testng.version>7.11.0</testng.version>
     <system-stubs-core.version>2.1.8</system-stubs-core.version>
   </properties>
@@ -458,7 +458,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.26.0</version>
+          <version>3.27.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
