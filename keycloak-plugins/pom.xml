@@ -45,14 +45,6 @@
     <url>git@github.com:vzakharchenko/keycloak-radius-plugin.git</url>
   </scm>
 
-  <distributionManagement>
-    <repository>
-      <id>sonatype</id>
-      <name>sonatype repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
-
   <properties>
     <analyzersLocation>${project.basedir}/../analyzers</analyzersLocation>
     <checkStyleLocation>${analyzersLocation}</checkStyleLocation>
@@ -400,6 +392,15 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.9.0</version>
+            <extensions>true</extensions>
+            <configuration>
+                <publishingServerId>central</publishingServerId>
+            </configuration>
+        </plugin>
         <plugin>
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
