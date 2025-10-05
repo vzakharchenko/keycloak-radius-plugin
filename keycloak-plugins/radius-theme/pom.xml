@@ -9,7 +9,9 @@
 
   <artifactId>radius-theme</artifactId>
   <packaging>pom</packaging>
-
+    <name>Keycloak Radius Theme</name>
+    <description>Keycloak theme bundle for the Keycloak Radius Server project</description>
+    <url>https://github.com/vzakharchenko/keycloak-radius-plugin</url>
   <properties>
     <analyzersLocation>${project.parent.basedir}/../analyzers</analyzersLocation>
   </properties>
