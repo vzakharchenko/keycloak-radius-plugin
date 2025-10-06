@@ -605,7 +605,7 @@
             <plugin>
               <groupId>com.mebigfatguy.sb-contrib</groupId>
               <artifactId>sb-contrib</artifactId>
-              <version>7.6.11</version>
+              <version>7.6.15</version>
             </plugin>
           </plugins>
         </configuration>
