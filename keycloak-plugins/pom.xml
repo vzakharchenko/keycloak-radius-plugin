@@ -74,7 +74,7 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.4.0</keycloak.version>
+    <keycloak.version>26.4.2</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
@@ -561,7 +561,7 @@
             </goals>
             <phase>validate</phase>
           </execution>
-          <execution />
+          <execution/>
         </executions>
       </plugin>
       <plugin>
@@ -742,7 +742,7 @@
                 <!-- useful provided libs while debugging the plugins inside Keycloak -->
                 <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-infinispan:jar:*</ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
-              <ignoredNonTestScopedDependencies />
+              <ignoredNonTestScopedDependencies/>
               <verbose>true</verbose>
             </configuration>
           </execution>
