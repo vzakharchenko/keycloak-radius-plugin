@@ -522,16 +522,7 @@
         <plugin>
           <groupId>org.sonatype.central</groupId>
           <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.9.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <publishingServerId>central</publishingServerId>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.central</groupId>
-          <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.9.0</version>
+          <version>0.10.0</version>
           <extensions>true</extensions>
           <configuration>
             <publishingServerId>central</publishingServerId>
@@ -561,7 +552,7 @@
             </goals>
             <phase>validate</phase>
           </execution>
-          <execution />
+          <execution/>
         </executions>
       </plugin>
       <plugin>
@@ -742,7 +733,7 @@
                 <!-- useful provided libs while debugging the plugins inside Keycloak -->
                 <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-infinispan:jar:*</ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
-              <ignoredNonTestScopedDependencies />
+              <ignoredNonTestScopedDependencies/>
               <verbose>true</verbose>
             </configuration>
           </execution>
@@ -934,11 +925,6 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.9.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <publishingServerId>central</publishingServerId>
-        </configuration>
       </plugin>
     </plugins>
   </build>
