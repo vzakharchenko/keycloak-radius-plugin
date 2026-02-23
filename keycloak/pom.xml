@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.vzakharchenko</groupId>
   <artifactId>keycloak</artifactId>
-  <version>1.6.1-SNAPSHOT</version>
+  <version>1.6.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <keycloak.version>26.2.5</keycloak.version>
+    <keycloak.version>26.4.0</keycloak.version>
     <production>false</production>
     <keycloak-plugin.version>${project.version}</keycloak-plugin.version>
   </properties>

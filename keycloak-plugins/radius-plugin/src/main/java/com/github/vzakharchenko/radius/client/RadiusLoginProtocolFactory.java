@@ -9,6 +9,7 @@ import org.keycloak.protocol.LoginProtocolFactory;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
 import org.keycloak.provider.ProviderFactory;
 import org.keycloak.representations.idm.ClientRepresentation;
+import org.keycloak.representations.idm.ClientScopeRepresentation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,11 @@ public class RadiusLoginProtocolFactory implements LoginProtocolFactory {
     @Override
     public void setupClientDefaults(ClientRepresentation rep, ClientModel newClient) {
         newClient.setAttribute(OTP, TRUE);
+    }
+
+    @Override
+    public void addClientScopeDefaults(ClientScopeRepresentation clientScopeRepresentation) {
+
     }
 
     @Override

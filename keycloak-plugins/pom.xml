@@ -4,7 +4,7 @@
 
   <groupId>com.github.vzakharchenko</groupId>
   <artifactId>keycloak-plugins</artifactId>
-  <version>1.6.1-SNAPSHOT</version>
+  <version>1.6.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Keycloak Radius Server</name>
@@ -45,14 +45,6 @@
     <url>git@github.com:vzakharchenko/keycloak-radius-plugin.git</url>
   </scm>
 
-  <distributionManagement>
-    <repository>
-      <id>sonatype</id>
-      <name>sonatype repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
-
   <properties>
     <analyzersLocation>${project.basedir}/../analyzers</analyzersLocation>
     <checkStyleLocation>${analyzersLocation}</checkStyleLocation>
@@ -82,30 +74,30 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.2.5</keycloak.version>
+    <keycloak.version>26.4.0</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
                 | grep -E "(angus-mail|commons-(codec|io|lang)|freemarker|\.jboss-(logging|logmanager)-\d(\
                            )?|jakarta.(persistence|ws.rs|xml.bind)|netty-com|resteasy-reactive-\d|org.slf4j)"
     -->
-    <kc.angus-mail.version>2.0.3</kc.angus-mail.version>
-    <kc.commons-codec.version>1.18.0</kc.commons-codec.version>
-    <kc.commons-io.version>2.18.0</kc.commons-io.version>
-    <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
-    <kc.freemarker.version>2.3.32</kc.freemarker.version>
+    <kc.angus-mail.version>2.0.5</kc.angus-mail.version>
+    <kc.commons-codec.version>1.19.0</kc.commons-codec.version>
+    <kc.commons-io.version>2.20.0</kc.commons-io.version>
+    <kc.commons-lang3.version>3.19.0</kc.commons-lang3.version>
+    <kc.freemarker.version>2.3.34</kc.freemarker.version>
     <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
     <kc.jboss-logmanager.version>3.1.2.Final</kc.jboss-logmanager.version>
-    <kc.jakarta.persistence-api.version>3.1.0</kc.jakarta.persistence-api.version>
-    <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
-    <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
-    <kc.netty.version>4.1.119.Final</kc.netty.version>
-    <kc.resteasy-reactive.version>3.20.0</kc.resteasy-reactive.version>
-    <kc.slf4j.version>2.0.6</kc.slf4j.version>
+    <kc.jakarta.persistence-api.version>3.2.0</kc.jakarta.persistence-api.version>
+    <kc.jakarta.ws.rs-api.version>4.0.0</kc.jakarta.ws.rs-api.version>
+    <kc.jakarta.xml.bind-api.version>4.0.4</kc.jakarta.xml.bind-api.version>
+    <kc.netty.version>4.1.127.Final</kc.netty.version>
+    <kc.resteasy-reactive.version>3.28.2</kc.resteasy-reactive.version>
+    <kc.slf4j.version>2.0.17</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
-    <jersey-common.version>3.1.10</jersey-common.version>
-    <mockito-core.version>5.18.0</mockito-core.version>
+    <jersey-common.version>3.1.11</jersey-common.version>
+    <mockito-core.version>5.20.0</mockito-core.version>
     <testng.version>7.11.0</testng.version>
     <system-stubs-core.version>2.1.8</system-stubs-core.version>
   </properties>
@@ -345,7 +337,7 @@
       <dependency>
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
-        <version>1.17.6</version>
+        <version>1.17.7</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -413,7 +405,7 @@
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.9.3.0</version>
+          <version>4.9.6.0</version>
         </plugin>
         <plugin>
           <groupId>io.github.git-commit-id</groupId>
@@ -458,7 +450,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.26.0</version>
+          <version>3.27.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -509,7 +501,7 @@
           <!-- run this by mvn -U rewrite:run -->
           <groupId>org.openrewrite.maven</groupId>
           <artifactId>rewrite-maven-plugin</artifactId>
-          <version>6.11.0</version>
+          <version>6.17.0</version>
           <configuration>
             <exportDatatables>true</exportDatatables>
             <activeRecipes>
@@ -523,9 +515,27 @@
             <dependency>
               <groupId>org.openrewrite.recipe</groupId>
               <artifactId>rewrite-migrate-java</artifactId>
-              <version>3.11.0</version>
+              <version>3.15.0</version>
             </dependency>
           </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.9.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.9.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -551,7 +561,7 @@
             </goals>
             <phase>validate</phase>
           </execution>
-          <execution/>
+          <execution />
         </executions>
       </plugin>
       <plugin>
@@ -732,7 +742,7 @@
                 <!-- useful provided libs while debugging the plugins inside Keycloak -->
                 <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-infinispan:jar:*</ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
-              <ignoredNonTestScopedDependencies/>
+              <ignoredNonTestScopedDependencies />
               <verbose>true</verbose>
             </configuration>
           </execution>
@@ -789,7 +799,7 @@
           <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.19.1</version>
+            <version>2.19.2</version>
           </dependency>
         </dependencies>
         <executions>
@@ -920,6 +930,15 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.9.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+        </configuration>
       </plugin>
     </plugins>
   </build>

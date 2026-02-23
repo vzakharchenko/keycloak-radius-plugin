@@ -60,7 +60,7 @@ features:
  - ```cd keycloak-plugins```
  - ```mvn clean install```
 ### Configure Keycloak (based on Quarkus)
-***requirements***: [keycloak 26.2.5](https://github.com/keycloak/keycloak/releases/download/26.2.5/keycloak-26.2.5.zip)
+***requirements***: [keycloak 26.4.0](https://github.com/keycloak/keycloak/releases/download/26.4.0/keycloak-26.4.0.zip)
 ```bash
 cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
    ${SOURCE}/keycloak-plugins/rad-sec-plugin/target/rad-sec-plugin-*.jar \
@@ -73,7 +73,7 @@ cp ${SOURCE}/keycloak-plugins/radius-plugin/target/radius-plugin-*.jar \
      ${KEYCLOAK_PATH}/providers/
 ```
 where
-- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-26.2.5.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
+- **KEYCLOAK_PATH** - Path where you are unpacked keycloak-26.4.0.zip [(you can use RADIUS_CONFIG_PATH instead of KEYCLOAK_PATH)](#environment-variables)
 - **SOURCE** - Path where you checked out the code and built the project
 
 ### Environment Variables
@@ -148,7 +148,7 @@ where
    -  **externalDictionary** - path to the dictionary file in freeradius format
 ## Run Keycloak Locally
    ```bash
-cd keycloak-26.2.5
+cd keycloak-26.4.0
 sh bin/kc.sh --debug 8190 start-dev --http-port=8090 --features-disabled=organization
 ```
 

@@ -27,3 +27,4 @@
   - fix import of UserModelIdentity, was moved from package
     org.keycloak.authorization.common to org.keycloak.authorization.identity
   - enhance readme.md
+ - update to Keycloak version 26.4.0
