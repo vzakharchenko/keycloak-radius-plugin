@@ -1,2 +1,3 @@
 - fix a build warning (duplicated central-publishing-maven-plugin declaration)
 - remove deprecated (since Keycloak 26.4.0) call to AuthenticatedClientSessionModel#setTimestamp(int)
+- update to Keycloak version 26.5.4
