@@ -26,8 +26,9 @@ public class DisconnectMessageManager implements DmTableManager {
 
     @Override
     public void saveRadiusSession(DisconnectMessageModel disconnectMessageModel) {
-        disconnectMessageModel.setCreatedDate(new Date());
-        disconnectMessageModel.setModifyDate(new Date());
+        Date now = new Date();
+        disconnectMessageModel.setCreatedDate(now);
+        disconnectMessageModel.setModifyDate(now);
         disconnectMessageModel.setId(UUID.randomUUID().toString());
         em.persist(disconnectMessageModel);
     }
@@ -101,9 +102,10 @@ public class DisconnectMessageManager implements DmTableManager {
         if (kem == null) {
             kem = new DMKeycloakEndModel();
         }
-        kem.setEndDate(new Date());
+        Date now = new Date();
+        kem.setEndDate(now);
         kem.setId(dmm.getId());
-        kem.setModifyDate(new Date());
+        kem.setModifyDate(now);
         kem.setEndStatus("ACK");
         kem.setEndMessage("Disconnected");
         em.persist(kem);
@@ -115,9 +117,10 @@ public class DisconnectMessageManager implements DmTableManager {
         if (cem == null) {
             cem = new DMClientEndModel();
         }
-        cem.setEndDate(new Date());
+        Date now = new Date();
+        cem.setEndDate(now);
         cem.setId(dmm.getId());
-        cem.setModifyDate(new Date());
+        cem.setModifyDate(now);
         cem.setEndCause(cause);
         em.persist(cem);
     }
@@ -128,9 +131,10 @@ public class DisconnectMessageManager implements DmTableManager {
         if (kem == null) {
             kem = new DMKeycloakEndModel();
         }
-        kem.setEndDate(new Date());
+        Date now = new Date();
+        kem.setEndDate(now);
         kem.setId(dmm.getId());
-        kem.setModifyDate(new Date());
+        kem.setModifyDate(now);
         kem.setEndStatus("NAK");
         kem.setEndMessage(message);
         em.persist(kem);
@@ -149,8 +153,9 @@ public class DisconnectMessageManager implements DmTableManager {
     private void increaseEndAttempts(DMKeycloakEndModel kem, String message) {
         Integer attempts = kem.getAttempts();
         if (attempts > MAX_ATTEMPTS) {
-            kem.setEndDate(new Date());
-            kem.setModifyDate(new Date());
+            Date now = new Date();
+            kem.setEndDate(now);
+            kem.setModifyDate(now);
             kem.setEndStatus("MAX_ATTEMPTS");
             kem.setEndMessage(message);
         } else {

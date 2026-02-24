@@ -16,7 +16,7 @@ import org.tinyradius.packet.RadiusPacket;
 import java.util.*;
 
 @SuppressWarnings("PMD.CouplingBetweenObjects")
-public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements KeycloakAttributes {
+public abstract class AbstractKeycloakAttributes<T> implements KeycloakAttributes {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractKeycloakAttributes.class);
     public static final String REJECT_CONDITIONS = "REJECT_";
@@ -27,7 +27,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
     protected final IRadiusUserInfoGetter radiusUserInfoGetter;
     protected final AccessRequest accessRequest;
 
-    private final List<RadiusAttributeHolder<KEYCLOAK_TYPE>> attributeHolders = new ArrayList<>();
+    private final List<RadiusAttributeHolder<T>> attributeHolders = new ArrayList<>();
 
     public AbstractKeycloakAttributes(KeycloakSession session,
                                       AccessRequest accessRequest) {
@@ -141,18 +141,18 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
 
     protected abstract KeycloakAttributesType getType();
 
-    protected abstract Set<KEYCLOAK_TYPE> getKeycloakTypes();
+    protected abstract Set<T> getKeycloakTypes();
 
-    protected abstract Map<String, Set<String>> getAttributes(KEYCLOAK_TYPE type);
+    protected abstract Map<String, Set<String>> getAttributes(T type);
 
     @Override
     public KeycloakAttributes read() {
-        Set<KEYCLOAK_TYPE> groups = getKeycloakTypes();
-        for (KEYCLOAK_TYPE type : groups) {
+        Set<T> groups = getKeycloakTypes();
+        for (T type : groups) {
             Map<String, Set<String>> attributes = getAttributes(type);
             if (attributes != null) {
                 for (Map.Entry<String, Set<String>> entry : attributes.entrySet()) {
-                    RadiusAttributeHolder<KEYCLOAK_TYPE> attributeHolder =
+                    RadiusAttributeHolder<T> attributeHolder =
                             new RadiusAttributeHolder<>(getType(), type);
                     attributeHolder.addAttribute(entry.getKey(), entry.getValue());
                     attributeHolders.add(attributeHolder);
@@ -175,7 +175,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
 
     @Override
     public KeycloakAttributes ignoreUndefinedAttributes(Dictionary dictionary) {
-        for (RadiusAttributeHolder<KEYCLOAK_TYPE> attributeHolder : attributeHolders) {
+        for (RadiusAttributeHolder<T> attributeHolder : attributeHolders) {
             attributeHolder.filter(entry -> entry.getValue() != null &&
                     !entry.getValue().isEmpty() &&
                     testAttribute(entry.getKey(), dictionary));
@@ -185,7 +185,7 @@ public abstract class AbstractKeycloakAttributes<KEYCLOAK_TYPE> implements Keycl
 
     @Override
     public void fillAnswer(RadiusPacket answer) {
-        for (RadiusAttributeHolder<KEYCLOAK_TYPE> attributeHolder : attributeHolders) {
+        for (RadiusAttributeHolder<T> attributeHolder : attributeHolders) {
             Map<String, Set<String>> attributes = attributeHolder.getAttributes();
             for (Map.Entry<String, Set<String>> entry : attributes.entrySet()) {
                 String attributeName = entry.getKey();
