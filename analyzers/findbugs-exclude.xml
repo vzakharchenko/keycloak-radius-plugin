@@ -138,4 +138,8 @@
         <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
         <Class name="com.github.vzakharchenko.radsec.server.RadSecServerProvider"/>
     </Match>
+    <Match>
+        <Bug pattern="MUI_RETURNING_MUTABLE_STATIC_MAP"/>
+        <Class name="com.github.vzakharchenko.radius.RadiusHelper"/>
+    </Match>
 </FindBugsFilter>

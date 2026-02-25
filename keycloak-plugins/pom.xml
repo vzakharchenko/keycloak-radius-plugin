@@ -49,7 +49,7 @@
     <analyzersLocation>${project.basedir}/../analyzers</analyzersLocation>
     <checkStyleLocation>${analyzersLocation}</checkStyleLocation>
     <findBugsLocation>${analyzersLocation}</findBugsLocation>
-    <pmdLocation>${analyzersLocation}/</pmdLocation>
+    <pmdLocation>${analyzersLocation}</pmdLocation>
     <sources>${analyzersLocation}/sources</sources>
     <javadoc>${analyzersLocation}/javadoc</javadoc>
 
@@ -74,31 +74,32 @@
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.4.0</keycloak.version>
+    <keycloak.version>26.5.4</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
     <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
                 | grep -E "(angus-mail|commons-(codec|io|lang)|freemarker|\.jboss-(logging|logmanager)-\d(\
                            )?|jakarta.(persistence|ws.rs|xml.bind)|netty-com|resteasy-reactive-\d|org.slf4j)"
     -->
-    <kc.angus-mail.version>2.0.5</kc.angus-mail.version>
+    <kc.angus-mail.version>2.0.4</kc.angus-mail.version>
     <kc.commons-codec.version>1.19.0</kc.commons-codec.version>
     <kc.commons-io.version>2.20.0</kc.commons-io.version>
-    <kc.commons-lang3.version>3.19.0</kc.commons-lang3.version>
-    <kc.freemarker.version>2.3.34</kc.freemarker.version>
+    <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
+    <kc.freemarker.version>2.3.32</kc.freemarker.version>
     <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
     <kc.jboss-logmanager.version>3.1.2.Final</kc.jboss-logmanager.version>
     <kc.jakarta.persistence-api.version>3.2.0</kc.jakarta.persistence-api.version>
-    <kc.jakarta.ws.rs-api.version>4.0.0</kc.jakarta.ws.rs-api.version>
-    <kc.jakarta.xml.bind-api.version>4.0.4</kc.jakarta.xml.bind-api.version>
-    <kc.netty.version>4.1.127.Final</kc.netty.version>
-    <kc.resteasy-reactive.version>3.28.2</kc.resteasy-reactive.version>
+    <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
+    <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
+    <kc.netty.version>4.1.130.Final</kc.netty.version>
+    <kc.resteasy-reactive.version>3.27.2</kc.resteasy-reactive.version>
     <kc.slf4j.version>2.0.17</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
+    <byte-buddy.version>1.18.5</byte-buddy.version>
     <jersey-common.version>3.1.11</jersey-common.version>
-    <mockito-core.version>5.20.0</mockito-core.version>
-    <testng.version>7.11.0</testng.version>
+    <mockito-core.version>5.21.0</mockito-core.version>
+    <testng.version>7.12.0</testng.version>
     <system-stubs-core.version>2.1.8</system-stubs-core.version>
   </properties>
 
@@ -337,7 +338,7 @@
       <dependency>
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
-        <version>1.17.7</version>
+        <version>${byte-buddy.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -396,16 +397,57 @@
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
           <version>4.0.0</version>
+          <configuration>
+            <createBackupFile>false</createBackupFile>
+            <expandEmptyElements>false</expandEmptyElements>
+            <keepBlankLines>true</keepBlankLines>
+            <lineSeparator>\n</lineSeparator>
+            <sortProperties>false</sortProperties>
+            <sortDependencies>scope,groupId,artifactId</sortDependencies>
+            <sortPlugins>groupId,artifactId</sortPlugins>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>com.github.hazendaz.maven</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
-          <version>4.7.0</version>
+          <version>5.0.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>jakarta.xml.bind</groupId>
+              <artifactId>jakarta.xml.bind-api</artifactId>
+              <version>${kc.jakarta.xml.bind-api.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.9.6.0</version>
+          <version>4.9.8.2</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+            <excludeFilterFile>${findBugsLocation}/findbugs-exclude.xml</excludeFilterFile>
+            <skip>${fast-build}</skip>
+            <plugins>
+              <plugin>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>findsecbugs-plugin</artifactId>
+                <version>1.14.0</version>
+              </plugin>
+              <plugin>
+                <groupId>com.mebigfatguy.sb-contrib</groupId>
+                <artifactId>sb-contrib</artifactId>
+                <version>7.7.4</version>
+              </plugin>
+            </plugins>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs</artifactId>
+              <version>4.9.8</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>io.github.git-commit-id</groupId>
@@ -415,62 +457,103 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.7.1</version>
+          <version>3.8.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>3.6.0</version>
+          <configuration>
+            <configLocation>${checkStyleLocation}/checkstyle.xml</configLocation>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>true</failsOnError>
+            <failOnViolation>true</failOnViolation>
+            <logViolationsToConsole>true</logViolationsToConsole>
+            <linkXRef>false</linkXRef>
+            <skip>${fast-build}</skip>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.0</version>
+          <version>3.15.0</version>
+          <configuration>
+            <release>${java.version}</release>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.10.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
-          <version>3.2.7</version>
+          <version>3.2.8</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.4.2</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.27.0</version>
+          <version>3.28.0</version>
+          <configuration>
+            <failOnViolation>true</failOnViolation>
+            <printFailingErrors>true</printFailingErrors>
+            <skip>${fast-build}</skip>
+            <linkXRef>false</linkXRef>
+            <rulesets>
+              <ruleset>${pmdLocation}/ruleset.xml</ruleset>
+            </rulesets>
+            <excludes>
+              <exclude>**/models/**</exclude>
+            </excludes>
+            <excludeFromFailureFile>${pmdLocation}/exclude-pmd.properties</excludeFromFailureFile>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>tools.jackson.core</groupId>
+              <artifactId>jackson-databind</artifactId>
+              <version>3.1.0</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.3.1</version>
+          <configuration>
+            <checkModificationExcludes>
+              <checkModificationExclude>pom.xml</checkModificationExclude>
+            </checkModificationExcludes>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <tagNameFormat>v@{project.version}-${keycloak.version}</tagNameFormat>
+            <branchName>@{project.version}</branchName>
+            <branchBase>master</branchBase>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.3</version>
+          <version>3.5.5</version>
           <configuration>
             <workingDirectory>${project.basedir}</workingDirectory>
             <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -490,18 +573,18 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>properties-maven-plugin</artifactId>
-          <version>1.2.1</version>
+          <version>1.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.13</version>
+          <version>0.8.14</version>
         </plugin>
         <plugin>
           <!-- run this by mvn -U rewrite:run -->
           <groupId>org.openrewrite.maven</groupId>
           <artifactId>rewrite-maven-plugin</artifactId>
-          <version>6.17.0</version>
+          <version>6.29.0</version>
           <configuration>
             <exportDatatables>true</exportDatatables>
             <activeRecipes>
@@ -515,23 +598,14 @@
             <dependency>
               <groupId>org.openrewrite.recipe</groupId>
               <artifactId>rewrite-migrate-java</artifactId>
-              <version>3.15.0</version>
+              <version>3.27.1</version>
             </dependency>
           </dependencies>
         </plugin>
         <plugin>
           <groupId>org.sonatype.central</groupId>
           <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.9.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <publishingServerId>central</publishingServerId>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.central</groupId>
-          <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.9.0</version>
+          <version>0.10.0</version>
           <extensions>true</extensions>
           <configuration>
             <publishingServerId>central</publishingServerId>
@@ -544,15 +618,6 @@
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
-        <configuration>
-          <createBackupFile>false</createBackupFile>
-          <expandEmptyElements>false</expandEmptyElements>
-          <keepBlankLines>true</keepBlankLines>
-          <lineSeparator>\n</lineSeparator>
-          <sortProperties>false</sortProperties>
-          <sortDependencies>scope,groupId,artifactId</sortDependencies>
-          <sortPlugins>groupId,artifactId</sortPlugins>
-        </configuration>
         <executions>
           <execution>
             <id>sortpom-sort</id>
@@ -561,23 +626,12 @@
             </goals>
             <phase>validate</phase>
           </execution>
-          <execution />
+          <execution/>
         </executions>
       </plugin>
       <plugin>
         <groupId>com.github.hazendaz.maven</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <configuration>
-          <repoToken>${repoToken}</repoToken>
-          <skip>${coveralls}</skip>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${kc.jakarta.xml.bind-api.version}</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
             <id>report</id>
@@ -585,37 +639,16 @@
               <goal>report</goal>
             </goals>
             <phase>post-site</phase>
+            <configuration>
+              <repoToken>${repoToken}</repoToken>
+              <skip>${coveralls}</skip>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <configuration>
-          <effort>Max</effort>
-          <threshold>Low</threshold>
-          <excludeFilterFile>${findBugsLocation}/findbugs-exclude.xml</excludeFilterFile>
-          <skip>${fast-build}</skip>
-          <plugins>
-            <plugin>
-              <groupId>com.h3xstream.findsecbugs</groupId>
-              <artifactId>findsecbugs-plugin</artifactId>
-              <version>1.14.0</version>
-            </plugin>
-            <plugin>
-              <groupId>com.mebigfatguy.sb-contrib</groupId>
-              <artifactId>sb-contrib</artifactId>
-              <version>7.6.11</version>
-            </plugin>
-          </plugins>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs</artifactId>
-            <version>4.9.3</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
             <id>analyze-compile</id>
@@ -629,26 +662,6 @@
       <plugin>
         <groupId>io.github.git-commit-id</groupId>
         <artifactId>git-commit-id-maven-plugin</artifactId>
-        <configuration>
-          <verbose>true</verbose>
-          <generateGitPropertiesFile>true</generateGitPropertiesFile>
-          <generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
-          <format>properties</format>
-          <injectAllReactorProjects>false</injectAllReactorProjects>
-          <failOnNoGitDirectory>true</failOnNoGitDirectory>
-          <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
-          <dateFormatTimeZone>UTC</dateFormatTimeZone>
-          <includeOnlyProperties>
-            <includeOnlyProperty>git.branch</includeOnlyProperty>
-            <includeOnlyProperty>git.build.host</includeOnlyProperty>
-            <includeOnlyProperty>git.build.version</includeOnlyProperty>
-            <includeOnlyProperty>git.build.user.name</includeOnlyProperty>
-            <includeOnlyProperty>git.build.time</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.time</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.id</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.message.full</includeOnlyProperty>
-          </includeOnlyProperties>
-        </configuration>
         <executions>
           <execution>
             <id>get-git-infos</id>
@@ -656,18 +669,32 @@
               <goal>revision</goal>
             </goals>
             <phase>initialize</phase>
+            <configuration>
+              <verbose>true</verbose>
+              <generateGitPropertiesFile>true</generateGitPropertiesFile>
+              <generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
+              <format>properties</format>
+              <injectAllReactorProjects>false</injectAllReactorProjects>
+              <failOnNoGitDirectory>true</failOnNoGitDirectory>
+              <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
+              <dateFormatTimeZone>UTC</dateFormatTimeZone>
+              <includeOnlyProperties>
+                <includeOnlyProperty>git.branch</includeOnlyProperty>
+                <includeOnlyProperty>git.build.host</includeOnlyProperty>
+                <includeOnlyProperty>git.build.version</includeOnlyProperty>
+                <includeOnlyProperty>git.build.user.name</includeOnlyProperty>
+                <includeOnlyProperty>git.build.time</includeOnlyProperty>
+                <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+                <includeOnlyProperty>git.commit.id</includeOnlyProperty>
+                <includeOnlyProperty>git.commit.message.full</includeOnlyProperty>
+              </includeOnlyProperties>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>${javadoc}/build.xml</descriptor>
-          </descriptors>
-          <appendAssemblyId>true</appendAssemblyId>
-        </configuration>
         <executions>
           <execution>
             <id>assembly-single-javadoc</id>
@@ -675,21 +702,18 @@
               <goal>single</goal>
             </goals>
             <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>${javadoc}/build.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>true</appendAssemblyId>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <configLocation>${checkStyleLocation}/checkstyle.xml</configLocation>
-          <consoleOutput>true</consoleOutput>
-          <failsOnError>true</failsOnError>
-          <failOnViolation>true</failOnViolation>
-          <logViolationsToConsole>true</logViolationsToConsole>
-          <linkXRef>false</linkXRef>
-          <skip>${fast-build}</skip>
-        </configuration>
         <executions>
           <execution>
             <id>validate</id>
@@ -703,9 +727,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <release>${java.version}</release>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -742,7 +763,7 @@
                 <!-- useful provided libs while debugging the plugins inside Keycloak -->
                 <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-model-infinispan:jar:*</ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
-              <ignoredNonTestScopedDependencies />
+              <ignoredNonTestScopedDependencies/>
               <verbose>true</verbose>
             </configuration>
           </execution>
@@ -782,31 +803,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <failOnViolation>true</failOnViolation>
-          <printFailingErrors>true</printFailingErrors>
-          <skip>${fast-build}</skip>
-          <linkXRef>false</linkXRef>
-          <rulesets>
-            <ruleset>${pmdLocation}ruleset.xml</ruleset>
-          </rulesets>
-          <excludes>
-            <exclude>**/models/**</exclude>
-          </excludes>
-          <excludeFromFailureFile>${pmdLocation}/exclude-pmd.properties</excludeFromFailureFile>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.19.2</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
-            <id>pmd_execute</id>
+            <id>pmd</id>
             <goals>
-              <goal>pmd</goal>
               <goal>check</goal>
               <goal>cpd-check</goal>
             </goals>
@@ -817,15 +817,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <checkModificationExcludes>
-            <checkModificationExclude>pom.xml</checkModificationExclude>
-          </checkModificationExcludes>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-          <tagNameFormat>v@{project.version}-${keycloak.version}</tagNameFormat>
-          <branchName>@{project.version}</branchName>
-          <branchBase>master</branchBase>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -934,11 +925,6 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.9.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <publishingServerId>central</publishingServerId>
-        </configuration>
       </plugin>
     </plugins>
   </build>

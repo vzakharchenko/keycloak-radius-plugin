@@ -177,7 +177,6 @@ public class AccountingSessionManager implements IAccountingSessionManager {
     private void updateSession() {
         if (sessionModel != null) {
             sessionModel.setLastSessionRefresh(Time.currentTime());
-            authClientSession.setTimestamp(Time.currentTime());
         }
     }
 
