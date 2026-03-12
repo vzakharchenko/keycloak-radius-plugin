@@ -3,3 +3,4 @@
 - update to Keycloak version 26.5.4
 - update test dependencies
 - update Maven plugins and plugin dependencies
+- update to Keycloak version 26.5.5
