@@ -15,7 +15,7 @@ public final class KeycloakRadiusUtils {
                                             KeycloakSessionTaskWithReturn<T> task) {
         KeycloakSession session = factory.create();
         KeycloakTransaction tx = session.getTransactionManager();
-        try {
+        try (session) {
             tx.begin();
             T response = task.run(session);
             if (tx.isActive()) {
@@ -33,8 +33,6 @@ public final class KeycloakRadiusUtils {
             }
             LOGGER.error("Keycloak session error", re);
             throw re;
-        } finally {
-            session.close();
         }
     }
 

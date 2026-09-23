@@ -70,35 +70,44 @@
 
     <release-detail-message>installation steps:
       1. download and unzip keycloak-radius.zip
-      2. sh bin/standalone.sh -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090</release-detail-message>
+      2. sh bin/kc.sh start-dev</release-detail-message>
 
     <!-- dependency versions -->
     <vzakharchenko-tinyradius-netty.version>1.1.4.1</vzakharchenko-tinyradius-netty.version>
-    <keycloak.version>26.5.4</keycloak.version>
+    <javax.jaxb-api.version>2.3.1</javax.jaxb-api.version>
+    <keycloak.version>26.7.4</keycloak.version>
 
     <!-- dependency versions provided by the selected ${keycloak.version} -->
-    <!-- use: find ../keycloak/target/keycloak -name "*.jar" |cut -d/ -f 5- | sort \
-                | grep -E "(angus-mail|commons-(codec|io|lang)|freemarker|\.jboss-(logging|logmanager)-\d(\
-                           )?|jakarta.(persistence|ws.rs|xml.bind)|netty-com|resteasy-reactive-\d|org.slf4j)"
+    <!-- use: find ../keycloak/target/keycloak -name "*.jar" | cut -d/ -f 4- | sort \
+                | grep -E -e 'angus-mail' \
+                          -e "cdi-api" \
+                          -e 'commons-(codec|io|lang)' \
+                          -e 'freemarker' \
+                          -e '\.jboss-(logging|logmanager)-[0-9]' \
+                          -e 'jakarta\.(persistence|ws\.rs|xml\.bind)' \
+                          -e 'netty-com' \
+                          -e 'resteasy-reactive-[0-9]' \
+                          -e 'org\.slf4j'
     -->
-    <kc.angus-mail.version>2.0.4</kc.angus-mail.version>
-    <kc.commons-codec.version>1.19.0</kc.commons-codec.version>
-    <kc.commons-io.version>2.20.0</kc.commons-io.version>
-    <kc.commons-lang3.version>3.18.0</kc.commons-lang3.version>
+    <kc.angus-mail.version>2.0.5</kc.angus-mail.version>
+    <kc.commons-codec.version>1.21.0</kc.commons-codec.version>
+    <kc.commons-io.version>2.21.0</kc.commons-io.version>
+    <kc.commons-lang3.version>3.20.0</kc.commons-lang3.version>
     <kc.freemarker.version>2.3.32</kc.freemarker.version>
-    <kc.jboss-logging.version>3.6.1.Final</kc.jboss-logging.version>
-    <kc.jboss-logmanager.version>3.1.2.Final</kc.jboss-logmanager.version>
+    <kc.jboss-logging.version>3.6.2.Final</kc.jboss-logging.version>
+    <kc.jboss-logmanager.version>3.2.1.Final</kc.jboss-logmanager.version>
+    <kc.jakarta.enterprise-cdi-api.version>4.1.0</kc.jakarta.enterprise-cdi-api.version>
     <kc.jakarta.persistence-api.version>3.2.0</kc.jakarta.persistence-api.version>
     <kc.jakarta.ws.rs-api.version>3.1.0</kc.jakarta.ws.rs-api.version>
-    <kc.jakarta.xml.bind-api.version>4.0.2</kc.jakarta.xml.bind-api.version>
-    <kc.netty.version>4.1.130.Final</kc.netty.version>
-    <kc.resteasy-reactive.version>3.27.2</kc.resteasy-reactive.version>
+    <kc.jakarta.xml.bind-api.version>4.0.5</kc.jakarta.xml.bind-api.version>
+    <kc.netty.version>4.1.136.Final</kc.netty.version>
+    <kc.resteasy-reactive.version>3.33.3.2</kc.resteasy-reactive.version>
     <kc.slf4j.version>2.0.17</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
-    <byte-buddy.version>1.18.5</byte-buddy.version>
-    <jersey-common.version>3.1.11</jersey-common.version>
-    <mockito-core.version>5.21.0</mockito-core.version>
+    <byte-buddy.version>1.18.14</byte-buddy.version>
+    <jersey-common.version>3.1.12</jersey-common.version>
+    <mockito-core.version>5.23.0</mockito-core.version>
     <testng.version>7.12.0</testng.version>
     <system-stubs-core.version>2.1.8</system-stubs-core.version>
   </properties>
@@ -122,10 +131,6 @@
           <exclusion>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
           </exclusion>
           <exclusion>
             <groupId>org.apache.logging.log4j</groupId>
@@ -189,6 +194,12 @@
         <groupId>io.quarkus.resteasy.reactive</groupId>
         <artifactId>resteasy-reactive-common</artifactId>
         <version>${kc.resteasy-reactive.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        <version>${kc.jakarta.enterprise-cdi-api.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -327,7 +338,17 @@
           </exclusion>
         </exclusions>
       </dependency>
-
+      <dependency>
+        <!-- The patched version 'tinyradius-netty:1.1.4.1' uses 'javax.xml.bind.DatatypeConverter' from
+             'javax.xml.bind:jaxb-api', which is no longer included with Keycloak (Keycloak now only includes
+             'jakarta.xml.bind'). In addition, this also includes the deprecated
+             'javax.activation:javax.activation-api.'. Both are shaded into the plugin JAR.
+        -->
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${javax.jaxb-api.version}</version>
+        <scope>runtime</scope>
+      </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>radius-plugin</artifactId>
@@ -422,7 +443,7 @@
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.9.8.2</version>
+          <version>4.9.8.5</version>
           <configuration>
             <effort>Max</effort>
             <threshold>Low</threshold>
@@ -452,7 +473,7 @@
         <plugin>
           <groupId>io.github.git-commit-id</groupId>
           <artifactId>git-commit-id-maven-plugin</artifactId>
-          <version>9.0.2</version>
+          <version>10.0.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -476,7 +497,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.15.0</version>
+          <version>3.16.0</version>
           <configuration>
             <release>${java.version}</release>
           </configuration>
@@ -484,12 +505,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.2</version>
+          <version>3.6.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -499,7 +520,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.5.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -522,7 +543,7 @@
             <dependency>
               <groupId>tools.jackson.core</groupId>
               <artifactId>jackson-databind</artifactId>
-              <version>3.1.0</version>
+              <version>3.2.2</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -543,7 +564,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -553,7 +574,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.5</version>
+          <version>3.6.0</version>
           <configuration>
             <workingDirectory>${project.basedir}</workingDirectory>
             <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -573,18 +594,18 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>properties-maven-plugin</artifactId>
-          <version>1.3.0</version>
+          <version>1.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.14</version>
+          <version>0.8.15</version>
         </plugin>
         <plugin>
           <!-- run this by mvn -U rewrite:run -->
           <groupId>org.openrewrite.maven</groupId>
           <artifactId>rewrite-maven-plugin</artifactId>
-          <version>6.29.0</version>
+          <version>6.46.1</version>
           <configuration>
             <exportDatatables>true</exportDatatables>
             <activeRecipes>
@@ -598,14 +619,14 @@
             <dependency>
               <groupId>org.openrewrite.recipe</groupId>
               <artifactId>rewrite-migrate-java</artifactId>
-              <version>3.27.1</version>
+              <version>3.42.1</version>
             </dependency>
           </dependencies>
         </plugin>
         <plugin>
           <groupId>org.sonatype.central</groupId>
           <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.10.0</version>
+          <version>0.11.0</version>
           <extensions>true</extensions>
           <configuration>
             <publishingServerId>central</publishingServerId>

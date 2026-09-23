@@ -46,6 +46,10 @@
       <artifactId>resteasy-reactive</artifactId>
     </dependency>
     <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
     </dependency>
@@ -177,6 +181,21 @@
             <filter>
               <artifact>com.github.vzakharchenko:tinyradius-netty</artifact>
               <excludes>
+                <exclude>META-INF/MANIFEST.MF</exclude>
+              </excludes>
+            </filter>
+            <filter>
+              <artifact>javax.activation:javax.activation-api</artifact>
+              <excludes>
+                <exclude>META-INF/LICENSE.txt</exclude>
+                <exclude>META-INF/MANIFEST.MF</exclude>
+              </excludes>
+            </filter>
+            <filter>
+              <artifact>javax.xml.bind:jaxb-api</artifact>
+              <excludes>
+                <exclude>module-info.class</exclude>
+                <exclude>META-INF/LICENSE.txt</exclude>
                 <exclude>META-INF/MANIFEST.MF</exclude>
               </excludes>
             </filter>

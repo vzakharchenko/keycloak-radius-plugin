@@ -10,6 +10,8 @@ import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfo;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoBuilder;
 import com.github.vzakharchenko.radius.radius.holder.IRadiusUserInfoGetter;
 import com.github.vzakharchenko.radius.radius.holder.RadiusUserInfoBuilder;
+import jakarta.enterprise.context.ContextNotActiveException;
+import org.jboss.logging.Logger;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
 import org.keycloak.models.ClientModel;
@@ -26,10 +28,26 @@ import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
 import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 
 public class AuthRequestInitialization implements IAuthRequestInitialization {
+
+    private static final Logger LOGGER = Logger.getLogger(AuthRequestInitialization.class);
+
     private final SecretProvider secretProvider;
 
     public AuthRequestInitialization(SecretProvider secretProvider) {
         this.secretProvider = secretProvider;
+    }
+
+    private void dispatchEvent(Runnable eventDispatch) {
+        try {
+            eventDispatch.run();
+        } catch (ContextNotActiveException e) {
+            // Keycloak's built-in event listener for email notification require a real
+            // HTTP request context, which RADIUS requests never have.
+            // The events are still saved properly saved to the event log, only the email
+            // processing fails.
+            LOGGER.info("event listener dispatch failed (no HTTP request context available): " +
+                    "exception=" + e);
+        }
     }
 
     private List<PasswordData> getSessionPasswords(
@@ -93,9 +111,12 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
             KeycloakSessionUtils.context(threadSession, radiusUserInfoGetter);
             return true;
         } else {
-            event.event(EventType.LOGIN_ERROR).detail(
+            if (user != null) {
+                event.user(user);
+            }
+            dispatchEvent(() -> event.event(EventType.LOGIN_ERROR).detail(
                             EventLoggerUtils.RADIUS_MESSAGE, "USER DOES NOT EXIST")
-                    .error("Login to RADIUS " + username + ", user disabled or does not exist");
+                    .error("Login to RADIUS " + username + ", user disabled or does not exist"));
         }
         return false;
     }
@@ -139,13 +160,14 @@ public class AuthRequestInitialization implements IAuthRequestInitialization {
             UserModel user = radiusInfo.getUserModel();
             if (action == ACCESS_ACCEPT) {
                 event.user(user);
-                event.event(EventType.LOGIN).detail("RADIUS", "success Login to RADIUS" +
-                        " for user " + user.getUsername()).success();
+                dispatchEvent(() -> event.event(EventType.LOGIN).detail("RADIUS",
+                        "success Login to RADIUS for user " + user.getUsername()).success());
             } else if (action == ACCESS_REJECT) {
                 event.user(user);
-                event.event(EventType.LOGIN_ERROR).detail("RADIUS", "Login to RADIUS" +
-                        " fail for user " + user.getUsername()
-                        + ", please check password and try again").error("RADIUS ERROR");
+                dispatchEvent(() -> event.event(EventType.LOGIN_ERROR).detail("RADIUS",
+                                "Login to RADIUS fail for user " + user.getUsername()
+                                        + ", please check password and try again")
+                        .error("RADIUS ERROR"));
             }
         }
     }

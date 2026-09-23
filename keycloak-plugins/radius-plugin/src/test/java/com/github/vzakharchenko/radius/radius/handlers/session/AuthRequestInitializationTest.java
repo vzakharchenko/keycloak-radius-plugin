@@ -3,7 +3,10 @@ package com.github.vzakharchenko.radius.radius.handlers.session;
 import com.github.vzakharchenko.radius.password.RadiusCredentialModel;
 import com.github.vzakharchenko.radius.test.AbstractRadiusTest;
 import com.github.vzakharchenko.radius.test.ModelBuilder;
+import jakarta.enterprise.context.ContextNotActiveException;
 import org.keycloak.credential.CredentialModel;
+import org.keycloak.events.Event;
+import org.keycloak.events.EventStoreProvider;
 import org.keycloak.models.RealmProvider;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -17,10 +20,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static org.tinyradius.packet.PacketType.ACCESS_ACCEPT;
+import static org.tinyradius.packet.PacketType.ACCESS_REJECT;
 
 public class AuthRequestInitializationTest extends AbstractRadiusTest {
 
@@ -168,6 +175,34 @@ public class AuthRequestInitializationTest extends AbstractRadiusTest {
                 .afterAuth(4, session);
     }
 
+    @Test
+    public void testInitWithContextNotActiveExceptionAndUserDoesNotExist() {
+        EventStoreProvider eventStoreProvider = getProvider(EventStoreProvider.class);
+        when(userProvider.getUserByUsername(realmModel, USER)).thenReturn(null);
+        when(userProvider.getUserByEmail(realmModel, USER)).thenReturn(null);
+        when(realmModel.isEventsEnabled()).thenReturn(true);
+        doThrow(new ContextNotActiveException("no HTTP request context")).when(session).close();
+        assertFalse(authRequestInitialization.init(inetSocketAddress, USER, authProtocol, session));
+        verify(eventStoreProvider).onEvent(any(Event.class));
+    }
+
+    @Test
+    public void testAfterAuthAcceptWithContextNotActiveException() {
+        EventStoreProvider eventStoreProvider = getProvider(EventStoreProvider.class);
+        when(realmModel.isEventsEnabled()).thenReturn(true);
+        doThrow(new ContextNotActiveException("no HTTP request context")).when(session).close();
+        authRequestInitialization.afterAuth(ACCESS_ACCEPT, session);
+        verify(eventStoreProvider).onEvent(any(Event.class));
+    }
+
+    @Test
+    public void testAfterAuthRejectWithContextNotActiveException() {
+        EventStoreProvider eventStoreProvider = getProvider(EventStoreProvider.class);
+        when(realmModel.isEventsEnabled()).thenReturn(true);
+        doThrow(new ContextNotActiveException("no HTTP request context")).when(session).close();
+        authRequestInitialization.afterAuth(ACCESS_REJECT, session);
+        verify(eventStoreProvider).onEvent(any(Event.class));
+    }
 
     @Override
     protected List<? extends Object> resetMock() {
