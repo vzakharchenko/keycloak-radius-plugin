@@ -96,7 +96,7 @@
     <kc.slf4j.version>2.0.17</kc.slf4j.version>
 
     <!-- test scope only dependency versions -->
-    <byte-buddy.version>1.18.5</byte-buddy.version>
+    <byte-buddy.version>1.18.14-jdk5</byte-buddy.version>
     <jersey-common.version>3.1.11</jersey-common.version>
     <mockito-core.version>5.21.0</mockito-core.version>
     <testng.version>7.12.0</testng.version>
